@@ -1,6 +1,8 @@
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    textview/textviewer.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    textview/textviewer.h

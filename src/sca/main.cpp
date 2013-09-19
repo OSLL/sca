@@ -1,7 +1,7 @@
 // Comments go here TBD
 
 
-#include <QApplication>
+#include <QtWidgets/QApplication>
 #include "mainwindow.h"
 
 int main(int c, char **v)
