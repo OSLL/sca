@@ -8,3 +8,6 @@ SOURCES += \
 HEADERS += \
     mainwindow.h \
     sourcebrowser.h
+
+FORMS += \
+    mainwindow.ui
