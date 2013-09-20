@@ -1,8 +1,15 @@
+QT += core gui widgets
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    textview/textviewer.cpp
+    sourcebrowser.cpp \
+    objecttextviewer.cpp
 
 HEADERS += \
     mainwindow.h \
-    textview/textviewer.h
+    sourcebrowser.h \
+    objecttextviewer.h
+
+FORMS += \
+    mainwindow.ui

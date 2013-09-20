@@ -1,0 +1,5 @@
+#Qt files
+*.pro.user
+*.pro.user.*
+build-*
+*.autosave

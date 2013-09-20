@@ -1,9 +1,8 @@
-#include "textviewer.h"
+#include "objecttextviewer.h"
 
-TextViewer::TextViewer(QWidget *parent) :
+ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
     QTextEdit(parent)
 {
-
     setReadOnly(true);
     QFontMetrics metrics(currentFont());
     setTabStopWidth(4 * metrics.width(' '));
