@@ -2,10 +2,12 @@ QT += core gui declarative
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    sourcebrowser.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainwindow.h \
+    sourcebrowser.h
 
 FORMS += \
     mainwindow.ui
