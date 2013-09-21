@@ -5,3 +5,4 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
 {
 
 }
+

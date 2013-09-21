@@ -12,7 +12,6 @@ public:
 signals:
     
 public slots:
-    
 };
 
 #endif // OBJECTTEXTVIEWER_H

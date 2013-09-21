@@ -2,6 +2,8 @@
 #define SOURCEBROWSER_H
 
 #include <QTreeView>
+#include <QTextDocument>
+#include <QFile>
 
 class SourceBrowser : public QTreeView
 {
@@ -10,7 +12,7 @@ public:
     explicit SourceBrowser(QWidget *parent = 0);
     
 signals:
-    
+
 public slots:
     
 };
