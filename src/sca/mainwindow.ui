@@ -30,7 +30,7 @@
          </widget>
         </item>
         <item>
-         <widget class="ObjectTextViwer" name="textViewer"/>
+         <widget class="ObjectTextViewer" name="textViewer"/>
         </item>
        </layout>
       </item>
@@ -44,7 +44,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -53,13 +53,13 @@
  <customwidgets>
   <customwidget>
    <class>SourceBrowser</class>
-   <extends>QTextEdit</extends>
+   <extends>QTreeView</extends>
    <header>sourcebrowser.h</header>
   </customwidget>
   <customwidget>
-   <class>ObjectTextViwer</class>
+   <class>ObjectTextViewer</class>
    <extends>QTextEdit</extends>
-   <header location="global">objecttextviwer.h</header>
+   <header>objecttextviewer.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

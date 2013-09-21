@@ -4,8 +4,9 @@
 
 #include <QMainWindow>
 #include <QFileSystemModel>
+#include "sourcebrowser.h"
 #include <ui_mainwindow.h>
-#include <objecttextviewer.h>
+#include "objecttextviewer.h"
 
 class MainWindow : public QMainWindow
 {
