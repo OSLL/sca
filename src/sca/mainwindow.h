@@ -4,8 +4,10 @@
 
 #include <QMainWindow>
 #include <QFileSystemModel>
-#include "sourcebrowser.h"
+#include <QMessageBox>
 #include <ui_mainwindow.h>
+
+#include "sourcebrowser.h"
 #include "objecttextviewer.h"
 
 class MainWindow : public QMainWindow
@@ -16,11 +18,10 @@ private:
     QFileSystemModel *fileModel;
 public:
     explicit MainWindow(QWidget *parent = 0);
-    
 signals:
     
 public slots:
-    
+    void loadTextFile();
 };
 
 #endif // MAINWINDOW_H
