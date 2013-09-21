@@ -18,7 +18,6 @@ private:
     QFileSystemModel *fileModel;
 public:
     explicit MainWindow(QWidget *parent = 0);
-    
 signals:
     
 public slots:

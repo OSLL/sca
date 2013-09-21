@@ -10,10 +10,16 @@ MainWindow::MainWindow(QWidget *parent) :
     fileModel->setRootPath("");
     m_ui->sourceBrowser->setModel(fileModel);
 
+    m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(m_ui->sourceBrowser, &SourceBrowser::customContextMenuRequested,
+            m_ui->sourceBrowser, &SourceBrowser::ShowContextMenu);
+
     //Connect clicking on file to opening it in textViewer
-    connect(m_ui->sourceBrowser, &SourceBrowser::clicked,
+    connect(m_ui->sourceBrowser, &SourceBrowser::openFile,
             this, &MainWindow::loadTextFile);
 }
+
+
 
 void MainWindow::loadTextFile()
 {
@@ -28,5 +34,6 @@ void MainWindow::loadTextFile()
     }
     QTextDocument *doc = new QTextDocument(m_ui->textViewer);
     doc->setPlainText(file.readAll());
+    m_ui->textViewer->document()->deleteLater();
     m_ui->textViewer->setDocument(doc);
 }
