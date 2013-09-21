@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QMenu>
 #include <QAction>
+#include <QFileSystemModel>
 
 class SourceBrowser : public QTreeView
 {
