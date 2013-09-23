@@ -10,12 +10,18 @@ MainWindow::MainWindow(QWidget *parent) :
     fileModel->setRootPath("");
     m_ui->sourceBrowser->setModel(fileModel);
 
+    m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
+
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_ui->sourceBrowser, &SourceBrowser::customContextMenuRequested,
             m_ui->sourceBrowser, &SourceBrowser::ShowContextMenu);
 
     //Connect clicking on file to opening it in textViewer
     connect(m_ui->sourceBrowser, &SourceBrowser::openFile,
+            this, &MainWindow::loadTextFile);
+    connect(m_ui->openButton, &QPushButton::clicked,
+            this, &MainWindow::loadTextFile);
+    connect(m_ui->sourceBrowser, &SourceBrowser::doubleClicked,
             this, &MainWindow::loadTextFile);
 }
 

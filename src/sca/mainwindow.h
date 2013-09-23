@@ -5,6 +5,7 @@
 #include <QMainWindow>
 #include <QFileSystemModel>
 #include <QMessageBox>
+#include <QPushButton>
 #include <ui_mainwindow.h>
 
 #include "sourcebrowser.h"
@@ -22,6 +23,7 @@ signals:
     
 public slots:
     void loadTextFile();
+private slots:
 };
 
 #endif // MAINWINDOW_H
