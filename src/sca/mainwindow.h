@@ -6,9 +6,11 @@
 #include <QFileSystemModel>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QDebug>
 #include <ui_mainwindow.h>
 
 #include "sourcebrowser.h"
+#include "FileLoader.h"
 #include "objecttextviewer.h"
 
 class MainWindow : public QMainWindow

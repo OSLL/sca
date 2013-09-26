@@ -18,28 +18,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Connect clicking on file to opening it in textViewer
     connect(m_ui->sourceBrowser, SIGNAL(openFile()),
-            this, SIGNAL(loadTextFile()));
+            this, SLOT(loadTextFile()));
     connect(m_ui->openButton, SIGNAL(clicked()),
-            this, SIGNAL(loadTextFile()));
+            this, SLOT(loadTextFile()));
     connect(m_ui->sourceBrowser, SIGNAL(doubleClicked(QModelIndex)),
-            this, SIGNAL(loadTextFile()));
+            this, SLOT(loadTextFile()));
 }
-
-
 
 void MainWindow::loadTextFile()
 {
+    FileLoader *floader = new FileLoader();
     QFileInfo fileInf = fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
-    if (fileInf.isDir() || fileInf.isRoot())
-        return;
-    QFile file(fileInf.filePath());
 
-    if (!file.open(QFile::ReadOnly))
-    {
-        QMessageBox::information(this, "Can\'t open file.", "Error opening " + fileInf.filePath(), QMessageBox::Ok);
-    }
-    QTextDocument *doc = new QTextDocument(m_ui->textViewer);
-    doc->setPlainText(file.readAll());
-    m_ui->textViewer->document()->deleteLater();
-    m_ui->textViewer->setDocument(doc);
+    floader->Open(fileInf.filePath());
+
+    floader->LoadToDoc(m_ui->textViewer->document());
+    floader->deleteLater();
 }
