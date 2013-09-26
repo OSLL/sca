@@ -49,9 +49,19 @@ FileLoader::FileLoader()
 FileLoader::~FileLoader()
 {
     qDebug() << "Deleting loader of " << QFileInfo(*m_file).filePath();
-    if (m_file->isOpen())
-        m_file->close();
+    closeFile();
     delete m_file;
+}
+
+void FileLoader::closeFile()
+{
+    if (m_file)
+    {
+        if (m_file->isOpen())
+        {
+            m_file->close();
+        }
+    }
 }
 
 void FileLoader::deletemFile()

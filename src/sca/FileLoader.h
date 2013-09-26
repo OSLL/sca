@@ -60,12 +60,13 @@ public:
 
     ~FileLoader();
 
-    void deletemFile();
+    void closeFile();
     void Open(QString path);
     void LoadToDoc(QTextDocument *doc);
     QString getPath();
     
 private:
+    void deletemFile();
     QFile *m_file;
 
 }; // class FileLoader
