@@ -76,7 +76,7 @@ void FileLoader::deletemFile()
     }
 }
 
-void FileLoader::Open(QString path)
+void FileLoader::openFile(const QString &path)
 {
     deletemFile();
     if (!QFileInfo(path).isFile())
@@ -92,7 +92,7 @@ void FileLoader::Open(QString path)
     }
 }
 
-void FileLoader::LoadToDoc(QTextDocument *doc)
+void FileLoader::loadToTextDoc(QTextDocument *doc)
 {
     doc->setPlainText(m_file->readAll());
 }

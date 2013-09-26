@@ -61,8 +61,8 @@ public:
     ~FileLoader();
 
     void closeFile();
-    void Open(QString path);
-    void LoadToDoc(QTextDocument *doc);
+    void openFile(const QString &path);
+    void loadToTextDoc(QTextDocument *doc);
     QString getPath();
     
 private:

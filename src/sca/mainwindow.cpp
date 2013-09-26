@@ -30,8 +30,8 @@ void MainWindow::loadTextFile()
     FileLoader *floader = new FileLoader();
     QFileInfo fileInf = fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
 
-    floader->Open(fileInf.filePath());
+    floader->openFile(fileInf.filePath());
 
-    floader->LoadToDoc(m_ui->textViewer->document());
+    floader->loadToTextDoc(m_ui->textViewer->document());
     floader->deleteLater();
 }
