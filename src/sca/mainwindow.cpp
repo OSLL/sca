@@ -6,9 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->setupUi(this);
 
     //Set up file model
-    fileModel = new QFileSystemModel(this);
-    fileModel->setRootPath("");
-    m_ui->sourceBrowser->setModel(fileModel);
+    m_fileModel = new QFileSystemModel(this);
+    m_fileModel->setRootPath("");
+    m_ui->sourceBrowser->setModel(m_fileModel);
 
     m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
 
@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::loadTextFile()
 {
     FileLoader *floader = new FileLoader();
-    QFileInfo fileInf = fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
 
     floader->openFile(fileInf.filePath());
 

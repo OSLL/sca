@@ -18,7 +18,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 private:
     Ui::MainWindow *m_ui;
-    QFileSystemModel *fileModel;
+    QFileSystemModel *m_fileModel;
 public:
     explicit MainWindow(QWidget *parent = 0);
 signals:
