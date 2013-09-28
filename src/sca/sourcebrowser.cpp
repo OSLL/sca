@@ -53,9 +53,9 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
     QTreeView(parent)
 {
     m_menu = new SourceBrowserMenu(this);
-    m_menu->connectActionByName("Open in Text Viewer", this, SIGNAL(openFile()));
-    m_menu->connectActionByName("Open in Binary Viewer", this, SIGNAL(openBinaryFile()));
-    m_menu->connectActionByName("Add to scene", this, SIGNAL(addToScene()));
+    m_menu->connectActionByName(OPEN_IN_TEXT_VIEWER , this, SIGNAL(openFile()));
+    m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
+    m_menu->connectActionByName(ADD_TO_SCENE, this, SIGNAL(addToScene()));
 
 }
 
@@ -74,7 +74,7 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
     QFileSystemModel *fileModel = dynamic_cast<QFileSystemModel *>(this->model());
     if (fileModel != NULL)
     {
-        QAction *action = m_menu->getActionByName("Open in Text Viewer");
+        QAction *action = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER);
         QFileInfo currentFile = fileModel->fileInfo(this->currentIndex());
         //Enable only if it is file
         action->setEnabled(currentFile.isFile());

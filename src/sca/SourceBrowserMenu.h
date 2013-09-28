@@ -52,6 +52,7 @@
  */
 
 #include <QMenu>
+#include "StringConstants.h"
 
 class SourceBrowserMenu : public QMenu
 {

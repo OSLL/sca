@@ -48,9 +48,9 @@
 SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
     QMenu(parent)
 {
-    addAction("Open in Text Viewer");
-    addAction("Open in Binary Viewer")->setEnabled(false);
-    addAction("Add to scene")->setEnabled(false);
+    addAction(OPEN_IN_TEXT_VIEWER);
+    addAction(OPEN_IN_BINARY_VIEWER)->setEnabled(false);
+    addAction(ADD_TO_SCENE)->setEnabled(false);
 }
 
 SourceBrowserMenu::~SourceBrowserMenu()

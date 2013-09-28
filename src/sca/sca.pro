@@ -13,7 +13,8 @@ HEADERS += \
     sourcebrowser.h \
     objecttextviewer.h \
     FileLoader.h \
-    SourceBrowserMenu.h
+    SourceBrowserMenu.h \
+    StringConstants.h
 
 FORMS += \
     mainwindow.ui
