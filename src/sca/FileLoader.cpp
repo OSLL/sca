@@ -80,8 +80,6 @@ void FileLoader::openFile(const QString &path)
     deletemFile();
     if (!QFileInfo(path).isFile())
     {
-        QMessageBox::warning(0, "Wrong file given.",
-                             "Wrong path given to loader: " + path, QMessageBox::Ok);
         return;
     }
     m_file = new QFile(path);

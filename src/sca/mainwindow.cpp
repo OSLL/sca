@@ -27,12 +27,21 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::loadTextFile()
 {
-    FileLoader *fLoader = new FileLoader();
     QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    //Check if the file has already been opened
+    //or it is not file at all
+    if (m_ui->textViewer->getCurrentPath() == fileInf.filePath()
+            || !fileInf.isFile())
+    {
+        return;
+    }
+
+    FileLoader *fLoader = new FileLoader();
 
     fLoader->openFile(fileInf.filePath());
 
     fLoader->loadToTextDoc(m_ui->textViewer->document());
+    m_ui->textViewer->setCurrentPath(fileInf.filePath());
 
     fLoader->deleteLater();
 }

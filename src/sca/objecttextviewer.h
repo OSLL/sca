@@ -56,9 +56,15 @@ class ObjectTextViewer : public QTextEdit
 public:
     explicit ObjectTextViewer(QWidget *parent = 0);
     
+    QString getCurrentPath() const;
+    void setCurrentPath(const QString &value);
+
 signals:
     
 public slots:
+
+private:
+    QString currentPath;
 };
 
 #endif //_ObjectTextViewer_H_FD315731_667E_45A5_AA99_53E0B6BD49D1_INCLUDED_

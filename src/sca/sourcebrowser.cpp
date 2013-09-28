@@ -42,6 +42,12 @@
 
 
 #include "sourcebrowser.h"
+#include <QTextDocument>
+#include <QFile>
+#include <QMenu>
+#include <QAction>
+#include <QFileSystemModel>
+#include <QMessageBox>
 
 SourceBrowser::SourceBrowser(QWidget *parent) :
     QTreeView(parent)
@@ -66,9 +72,12 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
 
     //Get current item selected and check if it is file
     QFileSystemModel *fileModel = dynamic_cast<QFileSystemModel *>(this->model());
-    if (fileModel)
+    if (fileModel != NULL)
     {
-        m_menu->getActionByName("Open in Text Viewer")->setEnabled(fileModel->fileInfo(this->currentIndex()).isFile());
+        QAction *action = m_menu->getActionByName("Open in Text Viewer");
+        QFileInfo currentFile = fileModel->fileInfo(this->currentIndex());
+        //Enable only if it is file
+        action->setEnabled(currentFile.isFile());
     }
 
     //Show menu and process input

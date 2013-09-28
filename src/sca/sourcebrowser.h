@@ -44,12 +44,6 @@
 #define _SourceBrowser_H_FFA4491B_B282_4A61_972A_1470A2944293_INCLUDED_
 
 #include <QTreeView>
-#include <QTextDocument>
-#include <QFile>
-#include <QMenu>
-#include <QAction>
-#include <QFileSystemModel>
-#include <QMessageBox>
 
 #include "SourceBrowserMenu.h"
 

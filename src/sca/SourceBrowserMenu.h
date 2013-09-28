@@ -52,9 +52,6 @@
  */
 
 #include <QMenu>
-#include <QMessageBox>
-#include <QAction>
-#include <QDebug>
 
 class SourceBrowserMenu : public QMenu
 {

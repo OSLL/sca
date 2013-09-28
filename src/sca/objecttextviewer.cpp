@@ -48,4 +48,14 @@ ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
     setReadOnly(true);
     QFontMetrics metrics(currentFont());
     setTabStopWidth(4 * metrics.width(' '));
+    currentPath = "";
+}
+QString ObjectTextViewer::getCurrentPath() const
+{
+    return currentPath;
+}
+
+void ObjectTextViewer::setCurrentPath(const QString &value)
+{
+    currentPath = value;
 }

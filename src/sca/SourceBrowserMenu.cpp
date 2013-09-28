@@ -41,6 +41,10 @@
 
 #include "SourceBrowserMenu.h"
 
+#include <QMessageBox>
+#include <QAction>
+#include <QDebug>
+
 SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
     QMenu(parent)
 {
@@ -64,7 +68,7 @@ QAction *SourceBrowserMenu::addNewMenuEntry(const QString &name, bool enabled, Q
 
 void SourceBrowserMenu::connectActionByName(const QString &name, QObject *receiver, const char *slot)
 {
-    if (name == 0 || receiver == 0 || slot == 0)
+    if (name.isEmpty() || receiver == NULL || slot == NULL)
     {
         qDebug() << "Error in params in connectActionByName:"
                  << "\nobject: " << this
@@ -74,10 +78,11 @@ void SourceBrowserMenu::connectActionByName(const QString &name, QObject *receiv
         return;
     }
     QAction *sender = getActionByName(name);
-    if (sender == 0)
+    if (sender == NULL)
     {
         qDebug() << "Can\'t find action for name: " << name
                  << " while connecting to " << receiver << slot;
+        return;
     }
     connect(sender, SIGNAL(triggered()), receiver, slot);
 }
