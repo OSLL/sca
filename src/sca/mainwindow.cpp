@@ -19,10 +19,13 @@ MainWindow::MainWindow(QWidget *parent) :
     //Connect clicking on file to opening it in textViewer
     connect(m_ui->sourceBrowser, SIGNAL(openFile()),
             this, SLOT(loadTextFile()));
-    connect(m_ui->openButton, SIGNAL(clicked()),
-            this, SLOT(loadTextFile()));
     connect(m_ui->sourceBrowser, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(loadTextFile()));
+    //MenuBar connections
+    connect(m_ui->actionOpenInTextViewer, SIGNAL(triggered()),
+            this, SLOT(loadTextFile()));
+    //connect(m_ui->actionAddToScene, SIGNAL(triggered()),
+    //        something, SLOT(something()));
 }
 
 void MainWindow::loadTextFile()
