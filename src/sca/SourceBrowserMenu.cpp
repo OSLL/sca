@@ -73,16 +73,7 @@ void SourceBrowserMenu::connectActionByName(const QString &name, QObject *receiv
                  << "\nslot: " << slot;
         return;
     }
-    QList<QAction *>acts = actions();
-    QAction *sender = 0;
-    foreach(QAction *act, acts)
-    {
-        if (act->text() == name)
-        {
-            sender = act;
-            break;
-        }
-    }
+    QAction *sender = getActionByName(name);
     if (sender == 0)
     {
         qDebug() << "Can\'t find action for name: " << name
