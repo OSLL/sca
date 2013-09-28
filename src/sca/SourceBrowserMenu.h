@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    
+ * Copyright 2013
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,98 +30,46 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file FileLoader.cpp
- * \brief FileLoader implementation
+ * \file SourceBrowserMenu.h
+ * \brief Header of SourceBrowserMenu
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "FileLoader.h"
 
-FileLoader::FileLoader()
-{
-    m_file = 0;
-}
+#ifndef _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
+#define _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
 
-FileLoader::~FileLoader()
-{
-    if (m_file)
-    {
-        qDebug() << "Deleting loader of " << QFileInfo(*m_file).filePath();
-    }
-    deletemFile();
-}
+/*!
+ * Class description. May use HTML formatting
+ *
+ * Class for storing actions for context menu in
+ * SourceBrowser class
+ *
+ */
 
-void FileLoader::closeFile()
-{
-    if (m_file)
-    {
-        if (m_file->isOpen())
-        {
-            m_file->close();
-        }
-    }
-}
+#include <QMenu>
+#include <QMessageBox>
+#include <QAction>
+#include <QDebug>
 
-void FileLoader::deletemFile()
+class SourceBrowserMenu : public QMenu
 {
-    if (m_file != NULL)
-    {
-        closeFile();
-        m_file->deleteLater();
-    }
-}
+public:
+    explicit SourceBrowserMenu(QWidget *parent = 0);
+    ~SourceBrowserMenu();
 
-void FileLoader::openFile(const QString &path)
-{
-    deletemFile();
-    if (!QFileInfo(path).isFile())
-    {
-        QMessageBox::warning(0, "Wrong file given.",
-                             "Wrong path given to loader: " + path, QMessageBox::Ok);
-        return;
-    }
-    m_file = new QFile(path);
-    if (!m_file->open(QFile::ReadOnly | QFile::Text))
-    {
-        QMessageBox::warning(0, "Can\'t open file.",
-                             "Error opening " + path, QMessageBox::Ok);
-        return;
-    }
-}
+    QAction *addNewMenuEntry(const QString &name, bool enabled = true, QObject *receiver = 0, const char *slot = 0);
+    void connectActionByName(const QString &name, QObject *receiver, const char *slot);
+    QAction *getActionByName(const QString &name);
 
-void FileLoader::loadToTextDoc(QTextDocument *doc)
-{
-    if (m_file == NULL)
-    {
-        return;
-    }
-    if (!m_file->isReadable())
-    {
-        return;
-    }
-    doc->setPlainText(m_file->readAll());
-}
+private:
 
-QString FileLoader::getPath()
-{
-    if (!m_file)
-        return 0;
-    QFileInfo fileInfo(*m_file);
-    return fileInfo.filePath();
-}
+}; // class SourceBrowserMenu
 
-FileLoader::FileLoader(const FileLoader &obj) :
-   QObject(obj.parent()), m_file(obj.m_file)
-{
-}
 
-FileLoader &FileLoader::operator=(const FileLoader &obj)
-{
-    deletemFile();
-    m_file = obj.m_file;
-    return *this;
-}
+#endif //_SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
+

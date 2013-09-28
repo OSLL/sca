@@ -5,13 +5,15 @@ SOURCES += \
     mainwindow.cpp \
     sourcebrowser.cpp \
     objecttextviewer.cpp \
-    FileLoader.cpp
+    FileLoader.cpp \
+    SourceBrowserMenu.cpp
 
 HEADERS += \
     mainwindow.h \
     sourcebrowser.h \
     objecttextviewer.h \
-    FileLoader.h
+    FileLoader.h \
+    SourceBrowserMenu.h
 
 FORMS += \
     mainwindow.ui

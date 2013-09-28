@@ -55,8 +55,6 @@ class FileLoader : public QObject
     Q_OBJECT
 public:
     FileLoader();
-    FileLoader(const FileLoader& obj);
-    FileLoader &operator=(const FileLoader& obj);
 
     ~FileLoader();
 
@@ -66,6 +64,8 @@ public:
     QString getPath();
     
 private:
+    FileLoader(const FileLoader& obj);
+    FileLoader &operator=(const FileLoader& obj);
     void deletemFile();
     QFile *m_file;
 

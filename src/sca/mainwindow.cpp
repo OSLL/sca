@@ -27,11 +27,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
 void MainWindow::loadTextFile()
 {
-    FileLoader *floader = new FileLoader();
+    FileLoader *fLoader = new FileLoader();
     QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
 
-    floader->openFile(fileInf.filePath());
+    fLoader->openFile(fileInf.filePath());
 
-    floader->loadToTextDoc(m_ui->textViewer->document());
-    floader->deleteLater();
+    fLoader->loadToTextDoc(m_ui->textViewer->document());
+
+    fLoader->deleteLater();
 }

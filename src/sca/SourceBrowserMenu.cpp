@@ -31,97 +31,73 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file FileLoader.cpp
- * \brief FileLoader implementation
+ * \file SourceBrowserMenu.cpp
+ * \brief SourceBrowserMenu implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "FileLoader.h"
+#include "SourceBrowserMenu.h"
 
-FileLoader::FileLoader()
+SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
+    QMenu(parent)
 {
-    m_file = 0;
+    addAction("Open in Text Viewer");
+    addAction("Open in Binary Viewer")->setEnabled(false);
+    addAction("Add to scene")->setEnabled(false);
 }
 
-FileLoader::~FileLoader()
+SourceBrowserMenu::~SourceBrowserMenu()
 {
-    if (m_file)
+
+}
+
+QAction *SourceBrowserMenu::addNewMenuEntry(const QString &name, bool enabled, QObject *receiver, const char *slot)
+{
+    QAction *act = QMenu::addAction(name, receiver, slot);
+    act->setEnabled(enabled);
+    return act;
+}
+
+
+void SourceBrowserMenu::connectActionByName(const QString &name, QObject *receiver, const char *slot)
+{
+    if (name == 0 || receiver == 0 || slot == 0)
     {
-        qDebug() << "Deleting loader of " << QFileInfo(*m_file).filePath();
+        qDebug() << "Error in params in connectActionByName:"
+                 << "\nobject: " << this
+                 << "name: " << name
+                 << "\nreceiver: " << receiver
+                 << "\nslot: " << slot;
+        return;
     }
-    deletemFile();
-}
-
-void FileLoader::closeFile()
-{
-    if (m_file)
+    QList<QAction *>acts = actions();
+    QAction *sender = 0;
+    foreach(QAction *act, acts)
     {
-        if (m_file->isOpen())
+        if (act->text() == name)
         {
-            m_file->close();
+            sender = act;
+            break;
         }
     }
-}
-
-void FileLoader::deletemFile()
-{
-    if (m_file != NULL)
+    if (sender == 0)
     {
-        closeFile();
-        m_file->deleteLater();
+        qDebug() << "Can\'t find action for name: " << name
+                 << " while connecting to " << receiver << slot;
     }
+    connect(sender, SIGNAL(triggered()), receiver, slot);
 }
 
-void FileLoader::openFile(const QString &path)
+QAction *SourceBrowserMenu::getActionByName(const QString &name)
 {
-    deletemFile();
-    if (!QFileInfo(path).isFile())
+    QList<QAction *> acts = actions();
+    foreach(QAction *act, acts)
     {
-        QMessageBox::warning(0, "Wrong file given.",
-                             "Wrong path given to loader: " + path, QMessageBox::Ok);
-        return;
+        if (act->text() == name)
+            return act;
     }
-    m_file = new QFile(path);
-    if (!m_file->open(QFile::ReadOnly | QFile::Text))
-    {
-        QMessageBox::warning(0, "Can\'t open file.",
-                             "Error opening " + path, QMessageBox::Ok);
-        return;
-    }
-}
-
-void FileLoader::loadToTextDoc(QTextDocument *doc)
-{
-    if (m_file == NULL)
-    {
-        return;
-    }
-    if (!m_file->isReadable())
-    {
-        return;
-    }
-    doc->setPlainText(m_file->readAll());
-}
-
-QString FileLoader::getPath()
-{
-    if (!m_file)
-        return 0;
-    QFileInfo fileInfo(*m_file);
-    return fileInfo.filePath();
-}
-
-FileLoader::FileLoader(const FileLoader &obj) :
-   QObject(obj.parent()), m_file(obj.m_file)
-{
-}
-
-FileLoader &FileLoader::operator=(const FileLoader &obj)
-{
-    deletemFile();
-    m_file = obj.m_file;
-    return *this;
+    return 0;
 }

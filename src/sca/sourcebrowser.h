@@ -51,14 +51,16 @@
 #include <QFileSystemModel>
 #include <QMessageBox>
 
+#include "SourceBrowserMenu.h"
+
 class SourceBrowser : public QTreeView
 {
     Q_OBJECT
 public:
     explicit SourceBrowser(QWidget *parent = 0);
-    void setMenu(QMenu *_menu);
+    void setMenu(SourceBrowserMenu *_menu);
 private:
-    QMenu *m_menu;
+    SourceBrowserMenu *m_menu;
 signals:
     void addToScene();
     void openBinaryFile();

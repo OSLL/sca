@@ -46,13 +46,14 @@
 SourceBrowser::SourceBrowser(QWidget *parent) :
     QTreeView(parent)
 {
-    m_menu = new QMenu(this);
-    QAction *open = m_menu->addAction("Open in Text Viewer");
-    m_menu->addAction("Open in Binary Viewer")->setEnabled(false);
-    m_menu->addAction("Add to scene")->setEnabled(false);
+    m_menu = new SourceBrowserMenu(this);
+    m_menu->connectActionByName("Open in Text Viewer", this, SIGNAL(openFile()));
+    m_menu->connectActionByName("Open in Binary Viewer", this, SIGNAL(openBinaryFile()));
+    m_menu->connectActionByName("Add to scene", this, SIGNAL(addToScene()));
+
 }
 
-void SourceBrowser::setMenu(QMenu *_menu)
+void SourceBrowser::setMenu(SourceBrowserMenu *_menu)
 {
     m_menu->deleteLater();
     m_menu = _menu;
@@ -67,14 +68,7 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
     QFileSystemModel *fileModel = dynamic_cast<QFileSystemModel *>(this->model());
     if (fileModel)
     {
-        if (!fileModel->fileInfo(this->currentIndex()).isFile())
-        {
-            m_menu->actions().at(0)->setEnabled(false);
-        }
-        else
-        {
-            m_menu->actions().at(0)->setEnabled(true);
-        }
+        m_menu->getActionByName("Open in Text Viewer")->setEnabled(fileModel->fileInfo(this->currentIndex()).isFile());
     }
 
     //Show menu and process input
@@ -82,22 +76,5 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
     if (!action)
     {
         return;
-    }
-
-    int index = m_menu->actions().indexOf(action);
-    switch(index)
-    {
-    case 0: //"Open in Text Viewer"
-        emit openFile();
-        break;
-    case 1: //"Open in Binary Viewer"
-        emit openBinaryFile();
-        break;
-    case 2: //"Add to scene"
-        emit addToScene();
-        break;
-    default:
-        QMessageBox::information(this, "Wrong menu index", "Got wrong index:" + QString::number(index), QMessageBox::Ok);
-        break;
     }
 }
