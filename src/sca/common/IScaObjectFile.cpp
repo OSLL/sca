@@ -31,31 +31,38 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file IScaObject.cpp
- * \brief IScaObject implementation
+ * \file IScaObjectFile.cpp
+ * \brief IScaObjectFile implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObject.h"
+#include "IScaObjectFile.h"
 
-unsigned int IScaObject::s_lastIndex = 0;
-
-IScaObject::IScaObject()
+IScaObjectFile::IScaObjectFile():
+    IScaObject()
 {
-    m_index = s_lastIndex;
-    s_lastIndex += 1;
 }
 
-int IScaObject::getType() const
+IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo):
+    IScaObject()
 {
-    return Type;
+    m_fileInfo = fileInfo;
 }
 
-unsigned int IScaObject::getIndex() const
+QFileInfo IScaObjectFile::getFile() const
 {
-    return m_index;
+    return m_fileInfo;
 }
 
+void IScaObjectFile::setFile(const QString &filePath)
+{
+    m_fileInfo.setFile(filePath);
+}
+
+void IScaObjectFile::setFile(const QFile &file)
+{
+    m_fileInfo.setFile(file);
+}

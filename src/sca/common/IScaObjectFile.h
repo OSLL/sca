@@ -30,32 +30,41 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file IScaObject.cpp
- * \brief IScaObject implementation
+ * \file IScaObjectFile.h
+ * \brief Header of IScaObjectFile
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObject.h"
 
-unsigned int IScaObject::s_lastIndex = 0;
+#ifndef _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
+#define _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
 
-IScaObject::IScaObject()
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+
+#include <common/IScaObject.h>
+#include <QFileInfo>
+#include <QFile>
+
+class IScaObjectFile: public IScaObject
 {
-    m_index = s_lastIndex;
-    s_lastIndex += 1;
-}
+public:
+  IScaObjectFile();
+  IScaObjectFile(const QFileInfo &fileInfo);
 
-int IScaObject::getType() const
-{
-    return Type;
-}
+  QFileInfo getFile() const;
+  void setFile(const QString &filePath);
+  void setFile(const QFile &file);
+private:
+  QFileInfo m_fileInfo;
 
-unsigned int IScaObject::getIndex() const
-{
-    return m_index;
-}
+}; // class IScaObjectFile
+  
 
+#endif //_IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_

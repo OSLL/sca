@@ -50,20 +50,22 @@
 class IScaObject
 {
 public:
-  IScaObject()
-  {
-      index = 0;
-  }
+  IScaObject();
 
   enum {UserType = 0 , Type = UserType};
 
-  int type() const;
+  int getType() const;
 
   unsigned int getIndex() const;
-  void setIndex(unsigned int value);
 
+  //IScaAnnotation getAnnotation() const;
+  //void setAnnotation(IScaAnnotation &annotation) const;
 private:
-  unsigned int index;
+  unsigned int m_index;
+  static unsigned int s_lastIndex;
+
+  //IScaAnnotation m_annotation;
+
 }; // class IScaObject
 
 
