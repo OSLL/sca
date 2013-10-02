@@ -6,7 +6,8 @@ SOURCES += \
     sourcebrowser.cpp \
     objecttextviewer.cpp \
     FileLoader.cpp \
-    SourceBrowserMenu.cpp
+    SourceBrowserMenu.cpp \
+    common/IScaObject.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -14,7 +15,8 @@ HEADERS += \
     objecttextviewer.h \
     FileLoader.h \
     SourceBrowserMenu.h \
-    StringConstants.h
+    StringConstants.h \
+    common/IScaObject.h
 
 FORMS += \
     mainwindow.ui
