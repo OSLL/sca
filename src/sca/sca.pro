@@ -9,7 +9,8 @@ SOURCES += \
     SourceBrowserMenu.cpp \
     common/IScaObject.cpp \
     common/IScaObjectFile.cpp \
-    common/IScaObjectText.cpp
+    common/IScaObjectText.cpp \
+    common/IScaObjectBinary.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -20,7 +21,8 @@ HEADERS += \
     StringConstants.h \
     common/IScaObject.h \
     common/IScaObjectFile.h \
-    common/IScaObjectText.h
+    common/IScaObjectText.h \
+    common/IScaObjectBinary.h
 
 FORMS += \
     mainwindow.ui

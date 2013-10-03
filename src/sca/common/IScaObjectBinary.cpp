@@ -30,45 +30,40 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectText.h
- * \brief Header of IScaObjectText
- * \todo add comment here
  *
- * m_offset - number of symblos before text block
+ * \file IScaObjectBinary.cpp
+ * \brief IScaObjectBinary implementation
+ *
+ * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "IScaObjectBinary.h"
 
-#ifndef _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
-#define _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
 
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-#include <QString>
-#include "common/IScaObject.h"
-
-class IScaObjectText: public IScaObject
+IScaObjectBinary::IScaObjectBinary():
+    IScaObject()
 {
-public:
-    IScaObjectText();
-  
-    enum {Type = UserType + 2};
 
-    QString getBlock() const;
-    void setBlock(const QString &text);
+}
+QByteArray IScaObjectBinary::getBlock() const
+{
+    return m_block;
+}
 
-    unsigned int getOffset() const;
-    void setOffset(unsigned int offset);
+void IScaObjectBinary::setBlock(const QByteArray &value)
+{
+    m_block = value;
+}
+unsigned int IScaObjectBinary::getOffset() const
+{
+    return m_offset;
+}
 
-private:
-    QString m_block;
-    unsigned int m_offset;
+void IScaObjectBinary::setOffset(unsigned int offset)
+{
+    m_offset = offset;
+}
 
-}; // class IScaObjectText
-  
 
-#endif //_IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_

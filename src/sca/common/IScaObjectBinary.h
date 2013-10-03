@@ -30,45 +30,45 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectText.h
- * \brief Header of IScaObjectText
+ * \file IScaObjectBinary.h
+ * \brief Header of IScaObjectBinary
  * \todo add comment here
  *
- * m_offset - number of symblos before text block
+ * m_offset - number of bytes before binary block
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
 
-#ifndef _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
-#define _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
+#ifndef _IScaObjectBinary_H_7C395A44_235A_4C44_BFB1_9178EAA79A75_INCLUDED_
+#define _IScaObjectBinary_H_7C395A44_235A_4C44_BFB1_9178EAA79A75_INCLUDED_
 
 /*!
  * Class description. May use HTML formatting
  *
  */
 
-#include <QString>
 #include "common/IScaObject.h"
+#include <QByteArray>
 
-class IScaObjectText: public IScaObject
+class IScaObjectBinary: public IScaObject
 {
 public:
-    IScaObjectText();
+  IScaObjectBinary();
   
-    enum {Type = UserType + 2};
+  enum {Type = UserType + 3};
 
-    QString getBlock() const;
-    void setBlock(const QString &text);
 
-    unsigned int getOffset() const;
-    void setOffset(unsigned int offset);
+  QByteArray getBlock() const;
+  void setBlock(const QByteArray &value);
+
+  unsigned int getOffset() const;
+  void setOffset(unsigned int offset);
 
 private:
-    QString m_block;
-    unsigned int m_offset;
+  QByteArray m_block;
+  unsigned int m_offset;
+}; // class IScaObjectBinary
 
-}; // class IScaObjectText
-  
 
-#endif //_IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
+#endif //_IScaObjectBinary_H_7C395A44_235A_4C44_BFB1_9178EAA79A75_INCLUDED_

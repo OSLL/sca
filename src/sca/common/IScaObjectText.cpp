@@ -41,19 +41,20 @@
 
 #include "IScaObjectText.h"
 
-IScaObjectText::IScaObjectText():IScaObject()
+IScaObjectText::IScaObjectText():
+    IScaObject()
 {
     m_offset = 0;
 }
 
-QString IScaObjectText::getText() const
+QString IScaObjectText::getBlock() const
 {
-    return m_text;
+    return m_block;
 }
 
-void IScaObjectText::setText(const QString &text)
+void IScaObjectText::setBlock(const QString &text)
 {
-    m_text = text;
+    m_block = text;
 }
 unsigned int IScaObjectText::getOffset() const
 {
