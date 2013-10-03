@@ -65,4 +65,14 @@ void IScaObjectText::setOffset(unsigned int offset)
 {
     m_offset = offset;
 }
+QFile *IScaObjectText::getFile() const
+{
+    return m_file;
+}
+
+void IScaObjectText::setFile(QFile *file)
+{
+    m_file = file;
+}
+
 

@@ -65,5 +65,15 @@ void IScaObjectBinary::setOffset(unsigned int offset)
 {
     m_offset = offset;
 }
+QFile *IScaObjectBinary::getFile() const
+{
+    return m_file;
+}
+
+void IScaObjectBinary::setFile(QFile *file)
+{
+    m_file = file;
+}
+
 
 

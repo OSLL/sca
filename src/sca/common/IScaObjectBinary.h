@@ -50,6 +50,7 @@
 
 #include "common/IScaObject.h"
 #include <QByteArray>
+#include <QFile>
 
 class IScaObjectBinary: public IScaObject
 {
@@ -65,9 +66,13 @@ public:
   unsigned int getOffset() const;
   void setOffset(unsigned int offset);
 
+  QFile *getFile() const;
+  void setFile(QFile *file);
+
 private:
   QByteArray m_block;
   unsigned int m_offset;
+  QFile *m_file;
 }; // class IScaObjectBinary
 
 
