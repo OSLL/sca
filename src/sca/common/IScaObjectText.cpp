@@ -30,43 +30,38 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectFile.h
- * \brief Header of IScaObjectFile
- * \todo add comment here
+ *
+ * \file IScaObjectText.cpp
+ * \brief IScaObjectText implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "IScaObjectText.h"
 
-#ifndef _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
-#define _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-#include <common/IScaObject.h>
-#include <QFileInfo>
-#include <QFile>
-
-class IScaObjectFile: public IScaObject
+IScaObjectText::IScaObjectText():IScaObject()
 {
-public:
-  IScaObjectFile();
-  IScaObjectFile(const QFileInfo &fileInfo);
+    m_offset = 0;
+}
 
-  enum {Type = UserType + 1};
+QString IScaObjectText::getText() const
+{
+    return m_text;
+}
 
-  QFileInfo getFile() const;
-  void setFile(const QString &filePath);
-  void setFile(const QFile &file);
-private:
-  QFileInfo m_fileInfo;
+void IScaObjectText::setText(const QString &text)
+{
+    m_text = text;
+}
+unsigned int IScaObjectText::getOffset() const
+{
+    return m_offset;
+}
 
-}; // class IScaObjectFile
-  
+void IScaObjectText::setOffset(unsigned int offset)
+{
+    m_offset = offset;
+}
 
-#endif //_IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_

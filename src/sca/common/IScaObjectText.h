@@ -30,43 +30,45 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectFile.h
- * \brief Header of IScaObjectFile
+ * \file IScaObjectText.h
+ * \brief Header of IScaObjectText
  * \todo add comment here
  *
- * File description
+ * m_offset - number of symblos before text block
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
 
-#ifndef _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
-#define _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
+#ifndef _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
+#define _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
 
 /*!
  * Class description. May use HTML formatting
  *
  */
 
-#include <common/IScaObject.h>
-#include <QFileInfo>
-#include <QFile>
+#include <QString>
+#include "common/IScaObject.h"
 
-class IScaObjectFile: public IScaObject
+class IScaObjectText: public IScaObject
 {
 public:
-  IScaObjectFile();
-  IScaObjectFile(const QFileInfo &fileInfo);
+    IScaObjectText();
+  
+    enum {Type = UserType + 2};
 
-  enum {Type = UserType + 1};
+    QString getText() const;
+    void setText(const QString &text);
 
-  QFileInfo getFile() const;
-  void setFile(const QString &filePath);
-  void setFile(const QFile &file);
+    unsigned int getOffset() const;
+    void setOffset(unsigned int offset);
+
 private:
-  QFileInfo m_fileInfo;
+    QString m_text;
+    unsigned int m_offset;
 
-}; // class IScaObjectFile
+}; // class IScaObjectText
   
 
-#endif //_IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
+#endif //_IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
