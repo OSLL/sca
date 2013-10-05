@@ -9,7 +9,6 @@ SOURCES += \
     SourceBrowserMenu.cpp \
     common/IScaObject.cpp \
     common/IScaObjectFile.cpp \
-    common/IScaObjectBinary.cpp \
     common/IScaObjectSymbol.cpp \
     common/IScaObjectLine.cpp \
     common/IScaObjectBlock.cpp \
