@@ -44,21 +44,22 @@
 #define _IScaObjectSymbol_H_DAA42064_BA5A_435E_9221_B321E06E981C_INCLUDED_
 
 /*!
- * m_offset - number of bytes before symbol
+ * m_offset - number of bytes/symbols before symbol
  *
  */
 
 #include "common/IScaObject.h"
 #include "common/IScaObjectFile.h"
 
+
 class IScaObjectSymbol: public IScaObject
 {
 public:
     IScaObjectSymbol();
-    IScaObjectSymbol(IScaObjectFile *file, unsigned int offset, QChar symbol);
+    IScaObjectSymbol(IScaObjectFile *file, unsigned int offset = 0, qint8 symbol = 0);
 
-    QChar symbol() const;
-    void setSymbol(const QChar &symbol);
+    qint8 symbol() const;
+    void setSymbol(const qint8 &symbol);
 
     unsigned int offset() const;
     void setOffset(unsigned int offset);
@@ -67,7 +68,7 @@ public:
     void setFile(IScaObjectFile *file);
 
 private:
-    QChar m_symbol;
+    qint8 m_symbol;
     unsigned int m_offset;
     IScaObjectFile *m_file;
 
