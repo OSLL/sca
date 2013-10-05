@@ -31,48 +31,60 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file IScaObjectText.cpp
- * \brief IScaObjectText implementation
+ * \file IScaObjectSymbol.cpp
+ * \brief IScaObjectSymbol implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObjectText.h"
+#include "IScaObjectSymbol.h"
 
-IScaObjectText::IScaObjectText():
+
+IScaObjectSymbol::IScaObjectSymbol():
     IScaObject()
 {
+    m_symbol = 0;
     m_offset = 0;
+    m_file   = NULL;
 }
 
-QString IScaObjectText::getBlock() const
+IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset, QChar symbol):
+    IScaObject()
 {
-    return m_block;
+    m_file   = file;
+    m_offset = offset;
+    m_symbol = symbol;
+
+}
+QChar IScaObjectSymbol::symbol() const
+{
+    return m_symbol;
 }
 
-void IScaObjectText::setBlock(const QString &text)
+void IScaObjectSymbol::setSymbol(const QChar &symbol)
 {
-    m_block = text;
+    m_symbol = symbol;
 }
-unsigned int IScaObjectText::getOffset() const
+unsigned int IScaObjectSymbol::offset() const
 {
     return m_offset;
 }
 
-void IScaObjectText::setOffset(unsigned int offset)
+void IScaObjectSymbol::setOffset(unsigned int offset)
 {
     m_offset = offset;
 }
-QFile *IScaObjectText::getFile() const
+IScaObjectFile *IScaObjectSymbol::file() const
 {
     return m_file;
 }
 
-void IScaObjectText::setFile(QFile *file)
+void IScaObjectSymbol::setFile(IScaObjectFile *file)
 {
     m_file = file;
 }
+
 
 

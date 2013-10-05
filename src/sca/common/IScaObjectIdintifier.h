@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObject.h
- * \brief Header of IScaObject
+ * \file IScaObjectIdintifier.h
+ * \brief Header of IScaObjectIdintifier
  * \todo add comment here
  *
  * File description
@@ -40,51 +40,26 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
-#define _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#ifndef _IScaObjectIdintifier_H_BED47E9D_E7B3_45CB_A44B_729F32858DED_INCLUDED_
+#define _IScaObjectIdintifier_H_BED47E9D_E7B3_45CB_A44B_729F32858DED_INCLUDED_
+
 /*!
  * Class description. May use HTML formatting
  *
  */
 
+#include "common/IScaObject.h"
+#include "common/IScaObjectFile.h"
 
-#include <QString>
-
-class IScaObject
+class IScaObjectIdintifier: public IScaObject
 {
 public:
-  IScaObject();
+  IScaObjectIdintifier();
 
-  int getType() const;
+private:    
+    unsigned int m_offset;
+    QString idintifier;
+}; // class IScaObjectIdintifier
+  
 
-  unsigned int getIndex() const;
-
-  QString getAnnotation() const;
-  void setAnnotation(const QString &annotation);
-
-  enum IScaObjectType{
-      OBJECT,
-      DIRECTORY,
-      FILE,
-      IDENTIFIER,
-      LINE,
-      SYMBOL,
-      TEXTBLOCK,
-      BINARYBLOCK,
-      GROUP
-  };
-
-private:
-  unsigned int m_index;
-
-  QString m_annotation;
-
-  static unsigned int s_lastIndex;
-
-protected:
-  IScaObjectType m_type;
-
-}; // class IScaObject
-
-
-#endif //_IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#endif //_IScaObjectIdintifier_H_BED47E9D_E7B3_45CB_A44B_729F32858DED_INCLUDED_

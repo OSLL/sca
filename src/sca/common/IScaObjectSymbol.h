@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObject.h
- * \brief Header of IScaObject
+ * \file IScaObjectSymbol.h
+ * \brief Header of IScaObjectSymbol
  * \todo add comment here
  *
  * File description
@@ -40,51 +40,38 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
-#define _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#ifndef _IScaObjectSymbol_H_DAA42064_BA5A_435E_9221_B321E06E981C_INCLUDED_
+#define _IScaObjectSymbol_H_DAA42064_BA5A_435E_9221_B321E06E981C_INCLUDED_
+
 /*!
- * Class description. May use HTML formatting
+ * m_offset - number of bytes before symbol
  *
  */
 
+#include "common/IScaObject.h"
+#include "common/IScaObjectFile.h"
 
-#include <QString>
-
-class IScaObject
+class IScaObjectSymbol: public IScaObject
 {
 public:
-  IScaObject();
+    IScaObjectSymbol();
+    IScaObjectSymbol(IScaObjectFile *file, unsigned int offset, QChar symbol);
 
-  int getType() const;
+    QChar symbol() const;
+    void setSymbol(const QChar &symbol);
 
-  unsigned int getIndex() const;
+    unsigned int offset() const;
+    void setOffset(unsigned int offset);
 
-  QString getAnnotation() const;
-  void setAnnotation(const QString &annotation);
-
-  enum IScaObjectType{
-      OBJECT,
-      DIRECTORY,
-      FILE,
-      IDENTIFIER,
-      LINE,
-      SYMBOL,
-      TEXTBLOCK,
-      BINARYBLOCK,
-      GROUP
-  };
+    IScaObjectFile *file() const;
+    void setFile(IScaObjectFile *file);
 
 private:
-  unsigned int m_index;
+    QChar m_symbol;
+    unsigned int m_offset;
+    IScaObjectFile *m_file;
 
-  QString m_annotation;
-
-  static unsigned int s_lastIndex;
-
-protected:
-  IScaObjectType m_type;
-
-}; // class IScaObject
+}; // class IScaObjectSymbol
 
 
-#endif //_IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#endif //_IScaObjectSymbol_H_DAA42064_BA5A_435E_9221_B321E06E981C_INCLUDED_

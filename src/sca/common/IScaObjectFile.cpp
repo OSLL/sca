@@ -44,12 +44,19 @@
 IScaObjectFile::IScaObjectFile():
     IScaObject()
 {
+    m_type = FILE;
 }
 
 IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo):
     IScaObject()
 {
     m_fileInfo = fileInfo;
+    m_type = FILE;
+
+    if(m_fileInfo.isDir())
+    {
+        m_type = DIRECTORY;
+    }
 }
 
 QFileInfo IScaObjectFile::getFile() const

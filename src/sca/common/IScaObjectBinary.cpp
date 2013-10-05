@@ -45,7 +45,7 @@
 IScaObjectBinary::IScaObjectBinary():
     IScaObject()
 {
-
+    m_type = BINARYBLOCK;
 }
 QByteArray IScaObjectBinary::getBlock() const
 {

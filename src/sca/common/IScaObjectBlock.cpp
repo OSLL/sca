@@ -30,50 +30,63 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectText.h
- * \brief Header of IScaObjectText
- * \todo add comment here
  *
- * m_offset - number of symblos before text block
+ * \file IScaObjectText.cpp
+ * \brief IScaObjectText implementation
+ *
+ * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "IScaObjectBlock.h"
 
-#ifndef _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
-#define _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-#include <QString>
-#include "common/IScaObject.h"
-#include <QFile>
-
-class IScaObjectText: public IScaObject
+IScaObjectText::IScaObjectText():
+    IScaObject()
 {
-public:
-    IScaObjectText();
-  
-    enum {Type = UserType + 2};
+    m_type = BINARYBLOCK;
+    m_offset = 0;
+    m_length = 0;
+}
 
-    QString getBlock() const;
-    void setBlock(const QString &text);
+IScaObjectText::IScaObjectText(IScaObjectFile *file, IScaObjectType type, unsigned int offset, unsigned int length)
+{
+    m_type = type;
 
-    unsigned int getOffset() const;
-    void setOffset(unsigned int offset);
+    m_file = file;
+    m_offset = offset;
+    m_length = length;
+}
 
-    QFile *getFile() const;
-    void setFile(QFile *file);
+unsigned int IScaObjectText::getOffset() const
+{
+    return m_offset;
+}
 
-private:
-    QString m_block;
-    unsigned int m_offset;
-    QFile *m_file;
+void IScaObjectText::setOffset(unsigned int offset)
+{
+    m_offset = offset;
+}
 
-}; // class IScaObjectText
-  
+IScaObjectFile *IScaObjectText::getFile() const
+{
+    return m_file;
+}
 
-#endif //_IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
+void IScaObjectText::setFile(IScaObjectFile *file)
+{
+    m_file = file;
+}
+
+unsigned int IScaObjectText::getLength() const
+{
+    return m_length;
+}
+
+void IScaObjectText::setLength(unsigned int length)
+{
+    m_length = length;
+}
+
+
+

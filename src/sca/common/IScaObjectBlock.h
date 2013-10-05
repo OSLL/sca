@@ -30,61 +30,51 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObject.h
- * \brief Header of IScaObject
+ * \file IScaObjectText.h
+ * \brief Header of IScaObjectText
  * \todo add comment here
  *
- * File description
+ * m_offset - number of symblos before text block
+ * m_length - length of text-block in symbols
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
 
-#ifndef _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
-#define _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#ifndef _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
+#define _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
+
 /*!
  * Class description. May use HTML formatting
  *
  */
 
-
 #include <QString>
+#include "common/IScaObject.h"
+#include "common/IScaObjectFile.h"
 
-class IScaObject
+class IScaObjectText: public IScaObject
 {
 public:
-  IScaObject();
+    IScaObjectText();
+    IScaObjectText(IScaObjectFile *file, IScaObjectType type = BINARYBLOCK,
+                   unsigned int offset = 0, unsigned int length = 0);
 
-  int getType() const;
+    unsigned int getOffset() const;
+    void setOffset(unsigned int offset);
 
-  unsigned int getIndex() const;
+    IScaObjectFile *getFile() const;
+    void setFile(IScaObjectFile *file);
 
-  QString getAnnotation() const;
-  void setAnnotation(const QString &annotation);
-
-  enum IScaObjectType{
-      OBJECT,
-      DIRECTORY,
-      FILE,
-      IDENTIFIER,
-      LINE,
-      SYMBOL,
-      TEXTBLOCK,
-      BINARYBLOCK,
-      GROUP
-  };
+    unsigned int getLength() const;
+    void setLength(unsigned int length);
 
 private:
-  unsigned int m_index;
+    unsigned int m_length;
+    unsigned int m_offset;
+    IScaObjectFile *m_file;
 
-  QString m_annotation;
+}; // class IScaObjectText
+  
 
-  static unsigned int s_lastIndex;
-
-protected:
-  IScaObjectType m_type;
-
-}; // class IScaObject
-
-
-#endif //_IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#endif //_IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_

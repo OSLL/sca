@@ -58,14 +58,11 @@ public:
   IScaObjectFile();
   IScaObjectFile(const QFileInfo &fileInfo);
 
-  enum {Type = UserType + 1};
-
   QFileInfo getFile() const;
   void setFile(const QString &filePath);
   void setFile(const QFile &file);
 private:
   QFileInfo m_fileInfo;
-
 }; // class IScaObjectFile
   
 

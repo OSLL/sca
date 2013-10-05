@@ -45,17 +45,29 @@ unsigned int IScaObject::s_lastIndex = 0;
 
 IScaObject::IScaObject()
 {
+    m_type = OBJECT;
     m_index = s_lastIndex;
     s_lastIndex += 1;
 }
 
 int IScaObject::getType() const
 {
-    return Type;
+    return m_type;
 }
 
 unsigned int IScaObject::getIndex() const
 {
     return m_index;
 }
+
+QString IScaObject::getAnnotation() const
+{
+    return m_annotation;
+}
+
+void IScaObject::setAnnotation(const QString &annotation)
+{
+    m_annotation = annotation;
+}
+
 

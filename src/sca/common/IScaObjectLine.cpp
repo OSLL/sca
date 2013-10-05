@@ -30,50 +30,56 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectBinary.h
- * \brief Header of IScaObjectBinary
- * \todo add comment here
  *
- * m_offset - number of bytes before binary block
+ * \file IScaObjectLine.cpp
+ * \brief IScaObjectLine implementation
+ *
+ * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "IScaObjectLine.h"
 
-#ifndef _IScaObjectBinary_H_7C395A44_235A_4C44_BFB1_9178EAA79A75_INCLUDED_
-#define _IScaObjectBinary_H_7C395A44_235A_4C44_BFB1_9178EAA79A75_INCLUDED_
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-#include "common/IScaObject.h"
-#include <QByteArray>
-#include <QFile>
-
-class IScaObjectBinary: public IScaObject
+IScaObjectLine::IScaObjectLine(): IScaObject()
 {
-public:
-  IScaObjectBinary();
-  
-  enum {Type = UserType + 3};
+    m_offset = 0;
+    m_file = NULL;
+}
+
+IScaObjectLine::IScaObjectLine(IScaObjectFile *file, unsigned int offset, QString line)
+{
+    m_file = file;
+    m_offset = offset;
+    m_line = line;
+}
+
+QString IScaObjectLine::line() const
+{
+    return m_line;
+}
+
+void IScaObjectLine::setLine(const QString &line)
+{
+    m_line = line;
+}
+unsigned int IScaObjectLine::offset() const
+{
+    return m_offset;
+}
+
+void IScaObjectLine::setOffset(unsigned int offset)
+{
+    m_offset = offset;
+}
+IScaObjectFile *IScaObjectLine::file() const
+{
+    return m_file;
+}
+
+void IScaObjectLine::setFile(IScaObjectFile *file)
+{
+    m_file = file;
+}
 
 
-  QByteArray getBlock() const;
-  void setBlock(const QByteArray &value);
-
-  unsigned int getOffset() const;
-  void setOffset(unsigned int offset);
-
-  QFile *getFile() const;
-  void setFile(QFile *file);
-
-private:
-  QByteArray m_block;
-  unsigned int m_offset;
-  QFile *m_file;
-}; // class IScaObjectBinary
-
-
-#endif //_IScaObjectBinary_H_7C395A44_235A_4C44_BFB1_9178EAA79A75_INCLUDED_
