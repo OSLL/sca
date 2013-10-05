@@ -40,6 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectFile.h"
+#include <QFile>
 
 IScaObjectFile::IScaObjectFile():
     IScaObject()

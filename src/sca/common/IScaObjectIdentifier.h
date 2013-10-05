@@ -57,13 +57,13 @@ public:
   IScaObjectIdentifier();
   IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier);
 
-  unsigned int offset() const;
+  unsigned int getOffset() const;
   void setOffset(unsigned int offset);
 
   QString getIdintifier() const;
   void setIdintifier(const QString &value);
 
-  IScaObjectFile *file() const;
+  IScaObjectFile *getFile() const;
   void setFile(IScaObjectFile *file);
 
 private:

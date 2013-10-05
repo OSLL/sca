@@ -47,7 +47,6 @@
  *
  */
 
-
 #include <QString>
 
 class IScaObject

@@ -40,6 +40,8 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectLine.h"
+#include "common/IScaObjectFile.h"
+#include <QString>
 
 IScaObjectLine::IScaObjectLine(): IScaObject()
 {
@@ -54,7 +56,7 @@ IScaObjectLine::IScaObjectLine(IScaObjectFile *file, unsigned int offset, QStrin
     m_line = line;
 }
 
-QString IScaObjectLine::line() const
+QString IScaObjectLine::getLine() const
 {
     return m_line;
 }
@@ -63,7 +65,7 @@ void IScaObjectLine::setLine(const QString &line)
 {
     m_line = line;
 }
-unsigned int IScaObjectLine::offset() const
+unsigned int IScaObjectLine::getOffset() const
 {
     return m_offset;
 }
@@ -72,7 +74,7 @@ void IScaObjectLine::setOffset(unsigned int offset)
 {
     m_offset = offset;
 }
-IScaObjectFile *IScaObjectLine::file() const
+IScaObjectFile *IScaObjectLine::getFile() const
 {
     return m_file;
 }

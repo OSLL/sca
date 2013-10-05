@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013    
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectFile.h
- * \brief Header of IScaObjectFile
+ * \file Link.h
+ * \brief Header of Link
  * \todo add comment here
  *
  * File description
@@ -40,30 +40,38 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
-#define _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
+#ifndef _Link_H_DCF3C0AC_DBF1_4D8D_B8BD_6E10F500FD33_INCLUDED_
+#define _Link_H_DCF3C0AC_DBF1_4D8D_B8BD_6E10F500FD33_INCLUDED_
+
+#include "common/IScaObject.h"
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-
-#include <common/IScaObject.h>
-#include <QFileInfo>
-class QFile;
-
-class IScaObjectFile: public IScaObject
+class Link: public IScaObject
 {
 public:
-  IScaObjectFile();
-  IScaObjectFile(const QFileInfo &fileInfo);
+  Link();
+  Link(IScaObject *objectFrom, IScaObject *objectTo);
 
-  QFileInfo getFile() const;
-  void setFile(const QString &filePath);
-  void setFile(const QFile &file);
+  ~Link();
+  
+  IScaObject *getObjectFrom() const;
+  void setObjectFrom(IScaObject *objectFrom);
+
+  IScaObject *getObjectTo() const;
+  void setObjectTo(IScaObject *objectTo);
+
 private:
-  QFileInfo m_fileInfo;
-}; // class IScaObjectFile
+  Link(const Link& obj);
+  Link& operator=(const Link& obj);
+
+  IScaObject *m_objectFrom;
+  IScaObject *m_objectTo;
+
+}; // class Link
   
 
-#endif //_IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
+#endif //_Link_H_DCF3C0AC_DBF1_4D8D_B8BD_6E10F500FD33_INCLUDED_
+

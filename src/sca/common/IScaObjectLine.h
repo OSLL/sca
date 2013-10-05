@@ -50,7 +50,7 @@
 
 #include "common/IScaObject.h"
 #include "common/IScaObjectFile.h"
-#include "QString"
+#include <QString>
 
 class IScaObjectLine: public IScaObject
 {
@@ -58,13 +58,13 @@ public:
     IScaObjectLine();
     IScaObjectLine(IScaObjectFile *file, unsigned int offset = 0, QString line = "");
 
-    QString line() const;
+    QString getLine() const;
     void setLine(const QString &line);
 
-    unsigned int offset() const;
+    unsigned int getOffset() const;
     void setOffset(unsigned int offset);
 
-    IScaObjectFile *file() const;
+    IScaObjectFile *getFile() const;
     void setFile(IScaObjectFile *file);
 
 private:

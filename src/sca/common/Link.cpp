@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013    
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,40 +30,44 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectFile.h
- * \brief Header of IScaObjectFile
- * \todo add comment here
+ *
+ * \file Link.cpp
+ * \brief Link implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "Link.h"
 
-#ifndef _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
-#define _IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-#include <common/IScaObject.h>
-#include <QFileInfo>
-class QFile;
-
-class IScaObjectFile: public IScaObject
+Link::Link() :
+    IScaObject()
 {
-public:
-  IScaObjectFile();
-  IScaObjectFile(const QFileInfo &fileInfo);
+}
+IScaObject *Link::getObjectTo() const
+{
+    return m_objectTo;
+}
 
-  QFileInfo getFile() const;
-  void setFile(const QString &filePath);
-  void setFile(const QFile &file);
-private:
-  QFileInfo m_fileInfo;
-}; // class IScaObjectFile
-  
+void Link::setObjectTo(IScaObject *objectTo)
+{
+    m_objectTo = objectTo;
+}
 
-#endif //_IScaObjectFile_H_B15EBBCD_E8D3_408C_86F6_C689DFCB6AE6_INCLUDED_
+IScaObject *Link::getObjectFrom() const
+{
+    return m_objectFrom;
+}
+
+void Link::setObjectFrom(IScaObject *objectFrom)
+{
+    m_objectFrom = objectFrom;
+}
+
+
+Link::Link(IScaObject *objectFrom, IScaObject *objectTo) :
+    IScaObject(),
+    m_objectFrom(objectFrom), m_objectTo(objectTo)
+{
+}
