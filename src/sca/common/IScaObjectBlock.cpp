@@ -41,7 +41,7 @@
 
 #include "IScaObjectBlock.h"
 
-IScaObjectText::IScaObjectText():
+IScaObjectBlock::IScaObjectBlock():
     IScaObject()
 {
     m_type = BINARYBLOCK;
@@ -49,7 +49,7 @@ IScaObjectText::IScaObjectText():
     m_length = 0;
 }
 
-IScaObjectText::IScaObjectText(IScaObjectFile *file, IScaObjectType type, unsigned int offset, unsigned int length)
+IScaObjectBlock::IScaObjectBlock(IScaObjectFile *file, IScaObjectType type, unsigned int offset, unsigned int length)
 {
     m_type = type;
 
@@ -58,32 +58,32 @@ IScaObjectText::IScaObjectText(IScaObjectFile *file, IScaObjectType type, unsign
     m_length = length;
 }
 
-unsigned int IScaObjectText::getOffset() const
+unsigned int IScaObjectBlock::getOffset() const
 {
     return m_offset;
 }
 
-void IScaObjectText::setOffset(unsigned int offset)
+void IScaObjectBlock::setOffset(unsigned int offset)
 {
     m_offset = offset;
 }
 
-IScaObjectFile *IScaObjectText::getFile() const
+IScaObjectFile *IScaObjectBlock::getFile() const
 {
     return m_file;
 }
 
-void IScaObjectText::setFile(IScaObjectFile *file)
+void IScaObjectBlock::setFile(IScaObjectFile *file)
 {
     m_file = file;
 }
 
-unsigned int IScaObjectText::getLength() const
+unsigned int IScaObjectBlock::getLength() const
 {
     return m_length;
 }
 
-void IScaObjectText::setLength(unsigned int length)
+void IScaObjectBlock::setLength(unsigned int length)
 {
     m_length = length;
 }

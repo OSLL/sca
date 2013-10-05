@@ -31,12 +31,58 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file IScaObjectIdintifier.cpp
- * \brief IScaObjectIdintifier implementation
+ * \file IScaObjectIdentifier.cpp
+ * \brief IScaObjectIdentifier implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObjectIdintifier.h"
+#include "IScaObjectIdentifier.h"
+
+IScaObjectIdentifier::IScaObjectIdentifier()
+{
+    m_type     = IDENTIFIER;
+    m_file     = NULL;
+    m_offset   = 0;
+    m_identifier = "";
+}
+
+IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier)
+{
+    m_type       = IDENTIFIER;
+    m_file       = file;
+    m_offset     = offset;
+    m_identifier = identifier;
+}
+
+unsigned int IScaObjectIdentifier::offset() const
+{
+    return m_offset;
+}
+
+void IScaObjectIdentifier::setOffset(unsigned int offset)
+{
+    m_offset = offset;
+}
+QString IScaObjectIdentifier::getIdintifier() const
+{
+    return m_identifier;
+}
+
+void IScaObjectIdentifier::setIdintifier(const QString &value)
+{
+    m_identifier = value;
+}
+IScaObjectFile *IScaObjectIdentifier::file() const
+{
+    return m_file;
+}
+
+void IScaObjectIdentifier::setFile(IScaObjectFile *file)
+{
+    m_file = file;
+}
+
+

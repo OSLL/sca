@@ -12,8 +12,8 @@ SOURCES += \
     common/IScaObjectBinary.cpp \
     common/IScaObjectSymbol.cpp \
     common/IScaObjectLine.cpp \
-    common/IScaObjectIdintifier.cpp \
-    common/IScaObjectBlock.cpp
+    common/IScaObjectBlock.cpp \
+    common/IScaObjectIdentifier.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -26,8 +26,8 @@ HEADERS += \
     common/IScaObjectFile.h \
     common/IScaObjectSymbol.h \
     common/IScaObjectLine.h \
-    common/IScaObjectIdintifier.h \
-    common/IScaObjectBlock.h
+    common/IScaObjectBlock.h \
+    common/IScaObjectIdentifier.h
 
 FORMS += \
     mainwindow.ui

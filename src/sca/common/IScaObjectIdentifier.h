@@ -51,14 +51,25 @@
 #include "common/IScaObject.h"
 #include "common/IScaObjectFile.h"
 
-class IScaObjectIdintifier: public IScaObject
+class IScaObjectIdentifier: public IScaObject
 {
 public:
-  IScaObjectIdintifier();
+  IScaObjectIdentifier();
+  IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier);
 
-private:    
-    unsigned int m_offset;
-    QString idintifier;
+  unsigned int offset() const;
+  void setOffset(unsigned int offset);
+
+  QString getIdintifier() const;
+  void setIdintifier(const QString &value);
+
+  IScaObjectFile *file() const;
+  void setFile(IScaObjectFile *file);
+
+private:
+  unsigned int m_offset;
+  QString m_identifier;
+  IScaObjectFile *m_file;
 }; // class IScaObjectIdintifier
   
 

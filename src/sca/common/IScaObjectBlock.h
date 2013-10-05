@@ -53,11 +53,11 @@
 #include "common/IScaObject.h"
 #include "common/IScaObjectFile.h"
 
-class IScaObjectText: public IScaObject
+class IScaObjectBlock: public IScaObject
 {
 public:
-    IScaObjectText();
-    IScaObjectText(IScaObjectFile *file, IScaObjectType type = BINARYBLOCK,
+    IScaObjectBlock();
+    IScaObjectBlock(IScaObjectFile *file, IScaObjectType type = BINARYBLOCK,
                    unsigned int offset = 0, unsigned int length = 0);
 
     unsigned int getOffset() const;
