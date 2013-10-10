@@ -9,10 +9,9 @@
 #include <QDebug>
 #include <ui_mainwindow.h>
 
-#include "widgets/SourceBrowser.h"
+#include "SourceBrowser.h"
 #include "FileLoader.h"
-#include "widgets/ObjectTextViewer.h"
-#include "widgets/qhexedit.h"
+#include "ObjectTextViewer.h"
 
 class MainWindow : public QMainWindow
 {
@@ -25,8 +24,8 @@ public:
 signals:
     
 public slots:
-    void loadBinaryFile();
     void loadTextFile();
+    void loadBinaryFile();
 private slots:
 };
 

@@ -36,6 +36,13 @@ MainWindow::MainWindow(QWidget *parent) :
 void MainWindow::loadBinaryFile()
 {
     QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    if (fileInf.size() > 50*1024*1024)
+    {
+        QMessageBox::warning(this, "File is too large.",
+                             "This file is too large to open. (" + QString::number(fileInf.size()) +
+                             " bytes) \nConsider opening file not larger than 50 MB.", QMessageBox::Ok);
+        return;
+    }
     //Check if the file has already been opened
     //or it is not file at all
     if (m_ui->hexEditor->getCurrentPath() == fileInf.filePath()
