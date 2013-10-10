@@ -104,6 +104,19 @@ void FileLoader::loadToTextDoc(QTextDocument *doc)
     doc->setPlainText(m_file->readAll());
 }
 
+void FileLoader::loadToByteArray(QByteArray &arr)
+{
+    if (m_file == NULL)
+    {
+        return;
+    }
+    if (!m_file->isReadable())
+    {
+        return;
+    }
+    arr = m_file->readAll();
+}
+
 QString FileLoader::getPath()
 {
     if (!m_file)

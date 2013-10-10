@@ -26,9 +26,34 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadTextFile()));
     connect(m_ui->sourceBrowser, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(loadTextFile()));
+    connect(m_ui->sourceBrowser, SIGNAL(openBinaryFile()),
+            this, SLOT(loadBinaryFile()));
     //MenuBar connections
     connect(m_ui->actionOpenInTextViewer, SIGNAL(triggered()),
             this, SLOT(loadTextFile()));
+}
+
+void MainWindow::loadBinaryFile()
+{
+    QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    //Check if the file has already been opened
+    //or it is not file at all
+    if (m_ui->hexEditor->getCurrentPath() == fileInf.filePath()
+            || !fileInf.isFile())
+    {
+        return;
+    }
+
+    FileLoader *fLoader = new FileLoader();
+
+    fLoader->openFile(fileInf.filePath());
+
+    QByteArray arr;
+    fLoader->loadToByteArray(arr);
+    m_ui->hexEditor->setData(arr);
+    m_ui->textViewer->setCurrentPath(fileInf.filePath());
+
+    fLoader->deleteLater();
 }
 
 void MainWindow::loadTextFile()

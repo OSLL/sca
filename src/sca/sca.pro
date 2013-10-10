@@ -1,5 +1,7 @@
 QT += core gui declarative
 
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
 SOURCES += \
     main.cpp \
     FileLoader.cpp \
@@ -12,8 +14,12 @@ SOURCES += \
     common/IScaObjectIdentifier.cpp \
     common/Link.cpp \
     MainWindow.cpp \
-    ObjectTextViewer.cpp \
-    SourceBrowser.cpp
+    widgets/SourceBrowser.cpp \
+    widgets/ObjectTextViewer.cpp \
+    widgets/xbytearray.cpp \
+    widgets/qhexedit_p.cpp \
+    widgets/qhexedit.cpp \
+    widgets/commands.cpp
 
 HEADERS += \
     FileLoader.h \
@@ -27,8 +33,12 @@ HEADERS += \
     common/IScaObjectIdentifier.h \
     common/Link.h \
     MainWindow.h \
-    ObjectTextViewer.h \
-    SourceBrowser.h
+    widgets/SourceBrowser.h \
+    widgets/ObjectTextViewer.h \
+    widgets/xbytearray.h \
+    widgets/qhexedit_p.h \
+    widgets/qhexedit.h \
+    widgets/commands.h
 
 FORMS += \
     mainwindow.ui

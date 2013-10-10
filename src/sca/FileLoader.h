@@ -61,6 +61,7 @@ public:
     void closeFile();
     void openFile(const QString &path);
     void loadToTextDoc(QTextDocument *doc);
+    void loadToByteArray(QByteArray &arr);
     QString getPath();
     
 private:

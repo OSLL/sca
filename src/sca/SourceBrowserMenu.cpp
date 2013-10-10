@@ -49,7 +49,7 @@ SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
     QMenu(parent)
 {
     addAction(OPEN_IN_TEXT_VIEWER);
-    addAction(OPEN_IN_BINARY_VIEWER)->setEnabled(false);
+    addAction(OPEN_IN_BINARY_VIEWER);
 }
 
 SourceBrowserMenu::~SourceBrowserMenu()
