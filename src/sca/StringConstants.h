@@ -16,9 +16,11 @@
 *SourceBrowser.h
 * ---------------------------------------------------------------- */
 
-#define OPEN_IN_TEXT_VIEWER "Open in Text Viewer"
-#define OPEN_IN_BINARY_VIEWER "Open in Binary Viewer"
-#define ADD_TO_SCENE "Add to scene"
+#include <QString>
+
+const QString OPEN_IN_TEXT_VIEWER = "Open in Text Viewer";
+const QString OPEN_IN_BINARY_VIEWER = "Open in Binary Viewer";
+const QString ADD_TO_SCENE = "Add to scene";
 
 
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

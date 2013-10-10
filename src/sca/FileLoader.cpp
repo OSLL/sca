@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    
+ * Copyright 2013  LeoSko  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
