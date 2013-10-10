@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObject.h"
+#include "common/IScaObject.h"
 
 unsigned int IScaObject::s_lastIndex = 0;
 

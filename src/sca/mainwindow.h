@@ -9,9 +9,9 @@
 #include <QDebug>
 #include <ui_mainwindow.h>
 
-#include "sourcebrowser.h"
+#include "SourceBrowser.h"
 #include "FileLoader.h"
-#include "objecttextviewer.h"
+#include "ObjectTextViewer.h"
 
 class MainWindow : public QMainWindow
 {

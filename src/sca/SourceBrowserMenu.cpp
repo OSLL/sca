@@ -50,7 +50,6 @@ SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
 {
     addAction(OPEN_IN_TEXT_VIEWER);
     addAction(OPEN_IN_BINARY_VIEWER)->setEnabled(false);
-    addAction(ADD_TO_SCENE)->setEnabled(false);
 }
 
 SourceBrowserMenu::~SourceBrowserMenu()

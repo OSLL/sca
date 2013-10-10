@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "Link.h"
+#include "common/Link.h"
 
 Link::Link() :
     IScaObject()

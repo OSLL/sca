@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObjectBlock.h"
+#include "common/IScaObjectBlock.h"
 
 IScaObjectBlock::IScaObjectBlock():
     IScaObject()

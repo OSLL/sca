@@ -73,7 +73,6 @@ p, li { white-space: pre-wrap; }
      <string>File</string>
     </property>
     <addaction name="actionOpenInTextViewer"/>
-    <addaction name="actionAddToScene"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>

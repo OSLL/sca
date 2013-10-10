@@ -41,7 +41,7 @@
 
 
 
-#include "sourcebrowser.h"
+#include "SourceBrowser.h"
 #include <QTextDocument>
 #include <QFile>
 #include <QMenu>
@@ -55,8 +55,6 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
     m_menu = new SourceBrowserMenu(this);
     m_menu->connectActionByName(OPEN_IN_TEXT_VIEWER , this, SIGNAL(openFile()));
     m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
-    m_menu->connectActionByName(ADD_TO_SCENE, this, SIGNAL(addToScene()));
-
 }
 
 void SourceBrowser::setMenu(SourceBrowserMenu *_menu)

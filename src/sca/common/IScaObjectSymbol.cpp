@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObjectSymbol.h"
+#include "common/IScaObjectSymbol.h"
 
 
 IScaObjectSymbol::IScaObjectSymbol():

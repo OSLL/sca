@@ -1,10 +1,7 @@
-QT += core gui widgets declarative
+QT += core gui declarative
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
-    sourcebrowser.cpp \
-    objecttextviewer.cpp \
     FileLoader.cpp \
     SourceBrowserMenu.cpp \
     common/IScaObject.cpp \
@@ -13,12 +10,12 @@ SOURCES += \
     common/IScaObjectLine.cpp \
     common/IScaObjectBlock.cpp \
     common/IScaObjectIdentifier.cpp \
-    common/Link.cpp
+    common/Link.cpp \
+    MainWindow.cpp \
+    ObjectTextViewer.cpp \
+    SourceBrowser.cpp
 
 HEADERS += \
-    mainwindow.h \
-    sourcebrowser.h \
-    objecttextviewer.h \
     FileLoader.h \
     SourceBrowserMenu.h \
     StringConstants.h \
@@ -28,7 +25,10 @@ HEADERS += \
     common/IScaObjectLine.h \
     common/IScaObjectBlock.h \
     common/IScaObjectIdentifier.h \
-    common/Link.h
+    common/Link.h \
+    MainWindow.h \
+    ObjectTextViewer.h \
+    SourceBrowser.h
 
 FORMS += \
     mainwindow.ui

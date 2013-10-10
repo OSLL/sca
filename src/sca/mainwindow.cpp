@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
@@ -11,6 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->sourceBrowser->setModel(m_fileModel);
 
     m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
+    //Leave only "name"(zero) column in SourceBrowser
+    for (int i = 1; i < m_fileModel->columnCount(); i++)
+    {
+        m_ui->sourceBrowser->hideColumn(i);
+    }
 
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
@@ -24,8 +29,6 @@ MainWindow::MainWindow(QWidget *parent) :
     //MenuBar connections
     connect(m_ui->actionOpenInTextViewer, SIGNAL(triggered()),
             this, SLOT(loadTextFile()));
-    //connect(m_ui->actionAddToScene, SIGNAL(triggered()),
-    //        something, SLOT(something()));
 }
 
 void MainWindow::loadTextFile()

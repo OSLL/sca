@@ -40,7 +40,7 @@
  * ---------------------------------------------------------------- */
 
 
-#include "objecttextviewer.h"
+#include "ObjectTextViewer.h"
 
 ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
     QTextEdit(parent)

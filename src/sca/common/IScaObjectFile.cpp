@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObjectFile.h"
+#include "common/IScaObjectFile.h"
 #include <QFile>
 
 IScaObjectFile::IScaObjectFile():
