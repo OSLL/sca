@@ -1,3 +1,14 @@
+TEMPLATE = app
+TARGET = sca
+
+target.path = /opt/sca/
+
+INSTALLS += target
+
+
+OBJECTS_DIR = .obj
+MOC_DIR = .moc
+
 QT += core gui declarative
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

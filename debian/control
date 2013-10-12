@@ -1,0 +1,15 @@
+Source: sca
+Section: devel
+Priority: optional
+Maintainer: Mark Zaslavskiy <mark.zaslavskiy@gmail.com>
+Standards-Version: 3.9.3.0
+Build-Depends: debhelper (>= 7), g++, make, libqt4-dev, qt4-qmake
+
+Package: sca
+Architecture: amd64 i386
+Section: devel
+Priority: optional
+Depends: ${shlibs:Depends}, libqt4-core, libqt4-gui  
+Description: Source Code Analyzer
+ Tool for intellectual sources analyzing and graph representation 
+
