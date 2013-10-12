@@ -62,10 +62,11 @@ public:
 
     QAction *addNewMenuEntry(const QString &name, bool enabled = true, QObject *receiver = 0, const char *slot = 0);
     void connectActionByName(const QString &name, QObject *receiver, const char *slot);
-    QAction *getActionByName(const QString &name);
+    QAction *getActionByName(const QString &name, const QString &submenuName = "");
+    void connectActionByMenu(const QString &menu, const QString &actionName, QObject *receiver, const char *slot);
 
 private:
-
+    QMenu *m_openTextAs;
 }; // class SourceBrowserMenu
 
 

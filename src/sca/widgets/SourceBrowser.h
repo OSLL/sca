@@ -52,6 +52,7 @@ class SourceBrowser : public QTreeView
     Q_OBJECT
 public:
     explicit SourceBrowser(QWidget *parent = 0);
+    SourceBrowserMenu *getMenu() const;
     void setMenu(SourceBrowserMenu *_menu);
 private:
     SourceBrowserMenu *m_menu;

@@ -60,7 +60,7 @@ public:
 
     void closeFile();
     void openFile(const QString &path);
-    void loadToTextDoc(QTextDocument *doc);
+    void loadToTextDoc(QTextDocument *doc, const char* codec = "UTF-8");
     void loadToByteArray(QByteArray &arr);
     QString getPath();
     

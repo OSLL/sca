@@ -57,6 +57,11 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
     m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
 }
 
+SourceBrowserMenu *SourceBrowser::getMenu() const
+{
+    return m_menu;
+}
+
 void SourceBrowser::setMenu(SourceBrowserMenu *_menu)
 {
     m_menu->deleteLater();

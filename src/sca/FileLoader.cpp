@@ -92,7 +92,7 @@ void FileLoader::openFile(const QString &path)
     }
 }
 
-void FileLoader::loadToTextDoc(QTextDocument *doc)
+void FileLoader::loadToTextDoc(QTextDocument *doc, const char* codec)
 {
     if (m_file == NULL)
     {
@@ -102,7 +102,9 @@ void FileLoader::loadToTextDoc(QTextDocument *doc)
     {
         return;
     }
-    doc->setPlainText(m_file->readAll());
+    QTextStream fileStream(m_file);
+    fileStream.setCodec(codec);
+    doc->setPlainText(fileStream.readAll());
 }
 
 void FileLoader::loadToByteArray(QByteArray &arr)
@@ -115,6 +117,9 @@ void FileLoader::loadToByteArray(QByteArray &arr)
     {
         return;
     }
+
+
+
     arr = m_file->readAll();
 }
 
