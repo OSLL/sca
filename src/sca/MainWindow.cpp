@@ -1,4 +1,6 @@
 #include "MainWindow.h"
+#include "NumericalConstants.h"
+#include "StringConstants.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
@@ -31,16 +33,18 @@ MainWindow::MainWindow(QWidget *parent) :
     //MenuBar connections
     connect(m_ui->actionOpenInTextViewer, SIGNAL(triggered()),
             this, SLOT(loadTextFile()));
+    connect(m_ui->actionOpenInBinaryView, SIGNAL(triggered()),
+            this, SLOT(loadBinaryFile()));
 }
 
 void MainWindow::loadBinaryFile()
 {
     QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
-    if (fileInf.size() > 50*1024*1024)
+    if (fileInf.size() > MAX_BINARY_FILE_SIZE)
     {
-        QMessageBox::warning(this, "File is too large.",
-                             "This file is too large to open. (" + QString::number(fileInf.size()) +
-                             " bytes) \nConsider opening file not larger than 50 MB.", QMessageBox::Ok);
+        QMessageBox::warning(this, ERROR_TOO_LARGE_BINARY_FILE_TITLE,
+                             ERROR_TOO_LARGE_BINARY_FILE_MSG.arg(QString::number(fileInf.size())),
+                             QMessageBox::Ok);
         return;
     }
     //Check if the file has already been opened

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  LeoSko  leosko94@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -40,6 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "FileLoader.h"
+#include "StringConstants.h"
 
 FileLoader::FileLoader()
 {
@@ -85,8 +86,8 @@ void FileLoader::openFile(const QString &path)
     m_file = new QFile(path);
     if (!m_file->open(QFile::ReadOnly | QFile::Text))
     {
-        QMessageBox::warning(0, "Can\'t open file.",
-                             "Error opening " + path, QMessageBox::Ok);
+        QMessageBox::warning(0, ERROR_OPENING_FILE_TITLE,
+                             ERROR_OPENING_FILE_MSG.arg(path), QMessageBox::Ok);
         return;
     }
 }

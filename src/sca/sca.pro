@@ -38,7 +38,8 @@ HEADERS += \
     widgets/xbytearray.h \
     widgets/qhexedit_p.h \
     widgets/qhexedit.h \
-    widgets/commands.h
+    widgets/commands.h \
+    NumericalConstants.h
 
 FORMS += \
     mainwindow.ui

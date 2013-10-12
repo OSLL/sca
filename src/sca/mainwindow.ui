@@ -76,6 +76,7 @@ p, li { white-space: pre-wrap; }
      <string>File</string>
     </property>
     <addaction name="actionOpenInTextViewer"/>
+    <addaction name="actionOpenInBinaryView"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -88,6 +89,11 @@ p, li { white-space: pre-wrap; }
   <action name="actionAddToScene">
    <property name="text">
     <string>Add to scene</string>
+   </property>
+  </action>
+  <action name="actionOpenInBinaryView">
+   <property name="text">
+    <string>Open in Binary View</string>
    </property>
   </action>
  </widget>
