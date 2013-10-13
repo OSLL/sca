@@ -25,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //Connect clicking on file to opening it in textViewer
     connect(m_ui->sourceBrowser, SIGNAL(openFile()),
             this, SLOT(loadTextFile()));
+    connect(m_ui->sourceBrowser, SIGNAL(openFileAs(QString)),
+            this, SLOT(loadTextFile(QString)));
     connect(m_ui->sourceBrowser, SIGNAL(doubleClicked(QModelIndex)),
             this, SLOT(loadTextFile()));
     connect(m_ui->sourceBrowser, SIGNAL(openBinaryFile()),
@@ -34,18 +36,6 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadTextFile()));
     connect(m_ui->actionOpenInBinaryView, SIGNAL(triggered()),
             this, SLOT(loadBinaryFile()));
-
-    QSignalMapper* signalMapper = new QSignalMapper (this);
-    SourceBrowserMenu *sourceBrowserMenu = m_ui->sourceBrowser->getMenu();
-    sourceBrowserMenu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, UTF8, signalMapper, SLOT(map()));
-    sourceBrowserMenu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, CP866, signalMapper, SLOT(map()));
-    sourceBrowserMenu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, ISO885915, signalMapper, SLOT(map()));
-
-    signalMapper->setMapping(sourceBrowserMenu->getActionByName(UTF8, OPEN_IN_TEXT_VIEWER_AS), UTF8);
-    signalMapper->setMapping(sourceBrowserMenu->getActionByName(CP866, OPEN_IN_TEXT_VIEWER_AS), CP866);
-    signalMapper->setMapping(sourceBrowserMenu->getActionByName(ISO885915, OPEN_IN_TEXT_VIEWER_AS), ISO885915);
-
-    connect (signalMapper, SIGNAL(mapped(const QString &)), this, SLOT(loadTextFile(const QString &))) ;
 }
 
 void MainWindow::loadBinaryFile()

@@ -56,6 +56,8 @@ SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
     m_openTextAs->addAction(CP866);
     m_openTextAs->addAction(ISO885915);
 
+
+
 }
 
 SourceBrowserMenu::~SourceBrowserMenu()

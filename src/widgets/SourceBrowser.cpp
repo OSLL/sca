@@ -47,6 +47,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QFileSystemModel>
+#include <QSignalMapper>
 #include <QMessageBox>
 
 SourceBrowser::SourceBrowser(QWidget *parent) :
@@ -55,11 +56,17 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
     m_menu = new SourceBrowserMenu(this);
     m_menu->connectActionByName(OPEN_IN_TEXT_VIEWER , this, SIGNAL(openFile()));
     m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
-}
 
-SourceBrowserMenu *SourceBrowser::getMenu() const
-{
-    return m_menu;
+    QSignalMapper* signalMapper = new QSignalMapper (this);
+    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, UTF8, signalMapper, SLOT(map()));
+    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, CP866, signalMapper, SLOT(map()));
+    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, ISO885915, signalMapper, SLOT(map()));
+
+    signalMapper->setMapping(m_menu->getActionByName(UTF8, OPEN_IN_TEXT_VIEWER_AS), UTF8);
+    signalMapper->setMapping(m_menu->getActionByName(CP866, OPEN_IN_TEXT_VIEWER_AS), CP866);
+    signalMapper->setMapping(m_menu->getActionByName(ISO885915, OPEN_IN_TEXT_VIEWER_AS), ISO885915);
+
+    connect (signalMapper, SIGNAL(mapped(QString)), this, SIGNAL(openFileAs(QString))) ;
 }
 
 void SourceBrowser::setMenu(SourceBrowserMenu *_menu)
