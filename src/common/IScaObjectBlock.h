@@ -1,5 +1,6 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions

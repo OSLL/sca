@@ -41,6 +41,22 @@
 
 #include "DataCache.h"
 
+DataCache *DataCache::s_instance = NULL;
+
+DataCache::DataCache()
+{
+
+}
+
+
+DataCache *DataCache::instance()
+{
+    if(!s_instance)
+    {
+        s_instance = new DataCache;
+    }
+    return s_instance;
+}
 
 void DataCache::addDiretory(IScaObjectDirectory *object)
 {
@@ -52,3 +68,4 @@ IScaObjectDirectory *DataCache::getDirectoryByName(const QString &name)
 {
     return m_data[name];
 }
+

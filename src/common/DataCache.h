@@ -1,5 +1,6 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -53,12 +54,14 @@
 class DataCache
 {
 public:
-  DataCache()
-  {
-  }
+    void addDiretory(IScaObjectDirectory *object);
+    IScaObjectDirectory *getDirectoryByName(const QString &name);
+    DataCache *instance();
+
+protected:
+  static DataCache *s_instance;
+  DataCache();
   
-  void addDiretory(IScaObjectDirectory *object);
-  IScaObjectDirectory *getDirectoryByName(const QString &name);
 
 private:    
     QHash<QString,IScaObjectDirectory*> m_data;
