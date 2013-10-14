@@ -31,44 +31,44 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file IScaObjectFile.cpp
- * \brief IScaObjectFile implementation
+ * \file IScaObjectDirectory.cpp
+ * \brief IScaObjectDirectory implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObjectFile.h"
+#include "IScaObjectDirectory.h"
 
-IScaObjectFile::IScaObjectFile():
+IScaObjectDirectory::IScaObjectDirectory():
     IScaObject()
 {
-    m_type = FILE;
+    m_type = DIRECTORY;
 }
 
-IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo):
+IScaObjectDirectory::IScaObjectDirectory(const QFileInfo &fileInfo):
     IScaObject()
 {
     m_fileInfo = fileInfo;
-    m_type = FILE;
+    m_type = DIRECTORY;
 
-    if(m_fileInfo.isDir())
+    if(!m_fileInfo.isDir())
     {
     }
 }
 
-QFileInfo IScaObjectFile::getFile() const
+QFileInfo IScaObjectDirectory::getFile() const
 {
     return m_fileInfo;
 }
 
-void IScaObjectFile::setFile(const QString &filePath)
+void IScaObjectDirectory::setFile(const QString &filePath)
 {
     m_fileInfo.setFile(filePath);
 }
 
-void IScaObjectFile::setFile(const QFile &file)
+void IScaObjectDirectory::setFile(const QFile &file)
 {
     m_fileInfo.setFile(file);
 }

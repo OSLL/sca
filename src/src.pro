@@ -30,7 +30,9 @@ SOURCES += \
     widgets/xbytearray.cpp \
     widgets/qhexedit_p.cpp \
     widgets/qhexedit.cpp \
-    widgets/commands.cpp
+    widgets/commands.cpp \
+    common/IScaObjectDirectory.cpp \
+    common/DataCache.cpp
 
 HEADERS += \
     FileLoader.h \
@@ -50,7 +52,9 @@ HEADERS += \
     widgets/qhexedit_p.h \
     widgets/qhexedit.h \
     widgets/commands.h \
-    NumericalConstants.h
+    NumericalConstants.h \
+    common/IScaObjectDirectory.h \
+    common/DataCache.h
 
 FORMS += \
     mainwindow.ui

@@ -31,44 +31,24 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file IScaObjectFile.cpp
- * \brief IScaObjectFile implementation
+ * \file DataCache.cpp
+ * \brief DataCache implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObjectFile.h"
+#include "DataCache.h"
 
-IScaObjectFile::IScaObjectFile():
-    IScaObject()
+
+void DataCache::addDiretory(IScaObjectDirectory *object)
 {
-    m_type = FILE;
+    QString name = object->getFile().path();
+    m_data.insert(name, object);
 }
 
-IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo):
-    IScaObject()
+IScaObjectDirectory *DataCache::getDirectoryByName(const QString &name)
 {
-    m_fileInfo = fileInfo;
-    m_type = FILE;
-
-    if(m_fileInfo.isDir())
-    {
-    }
-}
-
-QFileInfo IScaObjectFile::getFile() const
-{
-    return m_fileInfo;
-}
-
-void IScaObjectFile::setFile(const QString &filePath)
-{
-    m_fileInfo.setFile(filePath);
-}
-
-void IScaObjectFile::setFile(const QFile &file)
-{
-    m_fileInfo.setFile(file);
+    return m_data[name];
 }

@@ -30,45 +30,40 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file IScaObjectFile.cpp
- * \brief IScaObjectFile implementation
+ * \file IScaObjectDirectory.h
+ * \brief Header of IScaObjectDirectory
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObjectFile.h"
 
-IScaObjectFile::IScaObjectFile():
-    IScaObject()
+#ifndef _IScaObjectDirectory_H_C93082E1_57F6_4DAA_AA3F_3476C8A234B4_INCLUDED_
+#define _IScaObjectDirectory_H_C93082E1_57F6_4DAA_AA3F_3476C8A234B4_INCLUDED_
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+#include "common/IScaObject.h"
+#include <QFileInfo>
+
+class IScaObjectDirectory: public IScaObject
 {
-    m_type = FILE;
-}
+public:
 
-IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo):
-    IScaObject()
-{
-    m_fileInfo = fileInfo;
-    m_type = FILE;
+    IScaObjectDirectory();
+    IScaObjectDirectory(const QFileInfo &fileInfo);
 
-    if(m_fileInfo.isDir())
-    {
-    }
-}
+    QFileInfo getFile() const;
+    void setFile(const QString &filePath);
+    void setFile(const QFile &file);
+private:
+    QFileInfo m_fileInfo;
 
-QFileInfo IScaObjectFile::getFile() const
-{
-    return m_fileInfo;
-}
+}; // class IScaObjectDirectory
 
-void IScaObjectFile::setFile(const QString &filePath)
-{
-    m_fileInfo.setFile(filePath);
-}
 
-void IScaObjectFile::setFile(const QFile &file)
-{
-    m_fileInfo.setFile(file);
-}
+#endif //_IScaObjectDirectory_H_C93082E1_57F6_4DAA_AA3F_3476C8A234B4_INCLUDED_

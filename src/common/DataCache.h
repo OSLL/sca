@@ -30,45 +30,39 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file IScaObjectFile.cpp
- * \brief IScaObjectFile implementation
+ * \file DataCache.h
+ * \brief Header of DataCache
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObjectFile.h"
 
-IScaObjectFile::IScaObjectFile():
-    IScaObject()
+#ifndef _DataCache_H_91C481D1_1032_4AB5_8BA6_F56BC0C10DB4_INCLUDED_
+#define _DataCache_H_91C481D1_1032_4AB5_8BA6_F56BC0C10DB4_INCLUDED_
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+#include <QHash>
+#include <common/IScaObjectDirectory.h>
+
+class DataCache
 {
-    m_type = FILE;
-}
+public:
+  DataCache()
+  {
+  }
+  
+  void addDiretory(IScaObjectDirectory *object);
+  IScaObjectDirectory *getDirectoryByName(const QString &name);
 
-IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo):
-    IScaObject()
-{
-    m_fileInfo = fileInfo;
-    m_type = FILE;
+private:    
+    QHash<QString,IScaObjectDirectory*> m_data;
+}; // class DataCache
+  
 
-    if(m_fileInfo.isDir())
-    {
-    }
-}
-
-QFileInfo IScaObjectFile::getFile() const
-{
-    return m_fileInfo;
-}
-
-void IScaObjectFile::setFile(const QString &filePath)
-{
-    m_fileInfo.setFile(filePath);
-}
-
-void IScaObjectFile::setFile(const QFile &file)
-{
-    m_fileInfo.setFile(file);
-}
+#endif //_DataCache_H_91C481D1_1032_4AB5_8BA6_F56BC0C10DB4_INCLUDED_
