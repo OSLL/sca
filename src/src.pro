@@ -32,7 +32,11 @@ SOURCES += \
     widgets/qhexedit.cpp \
     widgets/commands.cpp \
     common/IScaObjectDirectory.cpp \
-    common/DataCache.cpp
+    common/DataCache.cpp \
+    GraphView.cpp \
+    GraphScene.cpp \
+    ObjectVisual.cpp \
+    Node.cpp
 
 HEADERS += \
     FileLoader.h \
@@ -54,7 +58,11 @@ HEADERS += \
     widgets/commands.h \
     NumericalConstants.h \
     common/IScaObjectDirectory.h \
-    common/DataCache.h
+    common/DataCache.h \
+    GraphView.h \
+    GraphScene.h \
+    ObjectVisual.h \
+    Node.h
 
 FORMS += \
     mainwindow.ui
