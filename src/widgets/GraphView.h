@@ -48,12 +48,13 @@
  *
  */
 #include <QGraphicsView>
+#include "GraphScene.h"
 
 class GraphView : public QGraphicsView
 {
     Q_OBJECT
 public:
-    explicit GraphView(QWidget *parent = 0);
+    explicit GraphView(GraphScene *scene, QWidget *parent = 0);
 
 signals:
 

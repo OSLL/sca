@@ -12,6 +12,7 @@
 #include "widgets/SourceBrowser.h"
 #include "FileLoader.h"
 #include "widgets/ObjectTextViewer.h"
+#include "GraphScene.h"
 
 class MainWindow : public QMainWindow
 {

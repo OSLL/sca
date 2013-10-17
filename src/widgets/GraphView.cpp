@@ -41,7 +41,7 @@
 
 #include "GraphView.h"
 
-GraphView::GraphView(QWidget *parent) :
-    QGraphicsView(parent)
+GraphView::GraphView(GraphScene *scene, QWidget *parent) :
+    QGraphicsView(scene, parent)
 {
 }

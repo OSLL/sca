@@ -41,14 +41,15 @@
 
 #include "Node.h"
 
-Node::Node(IScaObject *object): ObjectVisual(object)
+Node::Node(const QPointF &coords, IScaObject *object): ObjectVisual(object)
 {
     m_type = NODE;
+
 
     setCacheMode(DeviceCoordinateCache);
     setZValue(1);
 
-    m_rect = QRectF(0, 0, DEFAULT_RECT_SIZE, DEFAULT_RECT_SIZE);
+    m_rect = QRectF(coords.x(), coords.y(), DEFAULT_RECT_SIZE, DEFAULT_RECT_SIZE);
 }
 
 QRectF Node::boundingRect() const

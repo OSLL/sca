@@ -41,13 +41,14 @@
 
 #include "GraphScene.h"
 
-GraphScene::GraphScene(QObject *parent) :
-    QGraphicsScene(parent)
+GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
+    QGraphicsScene(x, y, width, height, parent)
 {
 }
 
-QGraphicsItem *GraphScene::addNode(IScaObject *object)
+QGraphicsItem *GraphScene::addNode(const QPointF &coords, IScaObject *object)
 {
-    QGraphicsItem *node = new Node(object);
+    QGraphicsItem *node = new Node(coords, object);
+    addItem(node);
     return node;
 }

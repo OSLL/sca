@@ -59,9 +59,9 @@
 class Node : public ObjectVisual
 {
 public:
-    Node(IScaObject *object);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    Node(const QPointF &coords, IScaObject *object);
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
 
     QRectF getRect() const;

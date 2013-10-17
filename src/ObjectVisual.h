@@ -1,13 +1,14 @@
 #ifndef OBJECTVISUAL_H
 #define OBJECTVISUAL_H
 
-#include <QGraphicsItem>
 #include "common/IScaObject.h"
+#include <QGraphicsItem>
+
 
 class ObjectVisual : public QGraphicsItem
 {
 public:
-    ObjectVisual(IScaObject *object);
+    ObjectVisual(IScaObject *object, QGraphicsItem *parent=0);
 
     IScaObject *getObject() const;
     void setObject(IScaObject *object);

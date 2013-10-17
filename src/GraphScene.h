@@ -55,9 +55,9 @@ class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    explicit GraphScene(QObject *parent = 0);
+   explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
 
-   QGraphicsItem *addNode(IScaObject *object);
+    QGraphicsItem *addNode(const QPointF &coords, IScaObject *object = 0);
 signals:
 
 public slots:
