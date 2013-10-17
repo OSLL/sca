@@ -31,12 +31,13 @@ SOURCES += \
     widgets/qhexedit_p.cpp \
     widgets/qhexedit.cpp \
     widgets/commands.cpp \
+    widgets/GraphView.cpp \
     common/IScaObjectDirectory.cpp \
     common/DataCache.cpp \
-    GraphView.cpp \
     GraphScene.cpp \
     ObjectVisual.cpp \
     Node.cpp
+
 
 HEADERS += \
     FileLoader.h \
@@ -56,13 +57,14 @@ HEADERS += \
     widgets/qhexedit_p.h \
     widgets/qhexedit.h \
     widgets/commands.h \
+    widgets/GraphView.h \
     NumericalConstants.h \
     common/IScaObjectDirectory.h \
     common/DataCache.h \
-    GraphView.h \
     GraphScene.h \
     ObjectVisual.h \
     Node.h
+
 
 FORMS += \
     mainwindow.ui

@@ -30,46 +30,18 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file Node.h
- * \brief Header of Node
- * \todo add comment here
+ *
+ * \file GraphView.cpp
+ * \brief GraphView implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "GraphView.h"
 
-#ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
-#define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-#include "ObjectVisual.h"
-#include "NumericalConstants.h"
-
-#include <QPen>
-#include <QBrush>
-#include <QPainter>
-#include <QDebug>
-#include <QRectF>
-
-class Node : public ObjectVisual
+GraphView::GraphView(QWidget *parent) :
+    QGraphicsView(parent)
 {
-public:
-    Node(IScaObject *object);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-    QRectF boundingRect() const;
-
-    QRectF getRect() const;
-    void setRect(const QRectF &rect);
-
-private:
-    QRectF m_rect;
-    QGraphicsTextItem *m_title;
-
-}; // class Node
-#endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+}

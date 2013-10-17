@@ -7,12 +7,13 @@
 class ObjectVisual : public QGraphicsItem
 {
 public:
-    ObjectVisual(IScaObject *object = NULL);
+    ObjectVisual(IScaObject *object);
 
     IScaObject *getObject() const;
     void setObject(IScaObject *object);
 
     enum ObjectVisualType{
+        OBJECT,
         NODE,
         EDGE,
         COMMENT

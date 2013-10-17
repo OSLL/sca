@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file Node.h
- * \brief Header of Node
+ * \file GraphView.h
+ * \brief Header of GraphView
  * \todo add comment here
  *
  * File description
@@ -40,36 +40,27 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
-#define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+#ifndef _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
+#define _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-#include "ObjectVisual.h"
-#include "NumericalConstants.h"
+#include <QGraphicsView>
 
-#include <QPen>
-#include <QBrush>
-#include <QPainter>
-#include <QDebug>
-#include <QRectF>
-
-class Node : public ObjectVisual
+class GraphView : public QGraphicsView
 {
+    Q_OBJECT
 public:
-    Node(IScaObject *object);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    explicit GraphView(QWidget *parent = 0);
 
-    QRectF boundingRect() const;
+signals:
 
-    QRectF getRect() const;
-    void setRect(const QRectF &rect);
+public slots:
 
-private:
-    QRectF m_rect;
-    QGraphicsTextItem *m_title;
+}; // class GraphView
 
-}; // class Node
-#endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+
+#endif //_GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
+
