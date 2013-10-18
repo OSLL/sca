@@ -20,14 +20,21 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="SourceBrowser" name="sourceBrowser"/>
+         <widget class="SourceBrowser" name="sourceBrowser">
+          <property name="dragEnabled">
+           <bool>true</bool>
+          </property>
+          <property name="dragDropMode">
+           <enum>QAbstractItemView::DragOnly</enum>
+          </property>
+         </widget>
         </item>
         <item>
          <widget class="QTabWidget" name="ViewsTabs">
           <property name="currentIndex">
            <number>2</number>
           </property>
-          <widget class="QWidget" name="TextView">
+          <widget class="QWidget" name="TextViewTab">
            <attribute name="title">
             <string>Text</string>
            </attribute>
@@ -41,7 +48,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="BinaryView">
+          <widget class="QWidget" name="BinaryViewTab">
            <attribute name="title">
             <string>Binary</string>
            </attribute>
@@ -55,7 +62,7 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="GraphView">
+          <widget class="QWidget" name="GraphViewTab">
            <attribute name="title">
             <string>Graph</string>
            </attribute>
@@ -63,7 +70,14 @@
             <item>
              <layout class="QGridLayout" name="gridLayout_3">
               <item row="0" column="0">
-               <widget class="QGraphicsView" name="graphView"/>
+               <widget class="GraphView" name="graphViewer">
+                <property name="interactive">
+                 <bool>true</bool>
+                </property>
+                <property name="dragMode">
+                 <enum>QGraphicsView::NoDrag</enum>
+                </property>
+               </widget>
               </item>
              </layout>
             </item>
@@ -86,7 +100,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -131,6 +145,11 @@
    <class>SourceBrowser</class>
    <extends>QTreeView</extends>
    <header>widgets/SourceBrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>GraphView</class>
+   <extends>QGraphicsView</extends>
+   <header>widgets/GraphView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

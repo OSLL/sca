@@ -2,11 +2,22 @@
 #include "NumericalConstants.h"
 #include "StringConstants.h"
 
+#include <QMessageBox>
+#include <QPushButton>
+#include <QDebug>
+
+#include "widgets/SourceBrowser.h"
+#include "FileLoader.h"
+#include "widgets/ObjectTextViewer.h"
+#include "GraphScene.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
 {
     m_ui->setupUi(this);
 
+    scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
+    m_ui->graphViewer->setScene(scene);
     //Set up file model
     m_fileModel = new QFileSystemModel(this);
     m_fileModel->setRootPath("");
@@ -71,10 +82,18 @@ void MainWindow::loadBinaryFile()
 void MainWindow::loadTextFile(const QString &code)
 {
     QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    if (fileInf.size() > MAX_TEXT_FILE_SIZE)
+    {
+        QMessageBox::warning(this, ERROR_TOO_LARGE_TEXT_FILE_TITLE,
+                             ERROR_TOO_LARGE_TEXT_FILE_MSG.arg(QString::number(fileInf.size())),
+                             QMessageBox::Ok);
+        return;
+    }
     //Check if the file has already been opened
     //or it is not file at all
-    if (m_ui->textViewer->getCurrentPath() == fileInf.filePath()
-            || !fileInf.isFile())
+    if (!fileInf.isFile() || //path and encoding same
+            (m_ui->textViewer->getCurrentPath() == fileInf.filePath()
+            && code == m_ui->textViewer->getCurrentEncoding()))
     {
         return;
     }
@@ -85,6 +104,7 @@ void MainWindow::loadTextFile(const QString &code)
 
     fLoader->loadToTextDoc(m_ui->textViewer->document(), code.toStdString().c_str());
     m_ui->textViewer->setCurrentPath(fileInf.filePath());
+    m_ui->textViewer->setCurrentEncoding(code);
 
     fLoader->deleteLater();
 }

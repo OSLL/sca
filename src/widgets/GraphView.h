@@ -54,12 +54,26 @@ class GraphView : public QGraphicsView
 {
     Q_OBJECT
 public:
+    GraphView(QWidget *parent = 0);
     explicit GraphView(GraphScene *scene, QWidget *parent = 0);
 
+    GraphScene *scene() const;
 signals:
+
+private:
+    //This is used for drag-n-drop technology
+    Node *temp;
 
 public slots:
 
+protected:
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *event = 0, bool = false);
+    void dropEvent(QDropEvent * event);
 }; // class GraphView
 
 

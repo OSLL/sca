@@ -59,3 +59,13 @@ void ObjectTextViewer::setCurrentPath(const QString &value)
 {
     currentPath = value;
 }
+QString ObjectTextViewer::getCurrentEncoding() const
+{
+    return currentEncoding;
+}
+
+void ObjectTextViewer::setCurrentEncoding(const QString &value)
+{
+    currentEncoding = value;
+}
+

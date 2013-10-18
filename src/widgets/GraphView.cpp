@@ -40,8 +40,66 @@
  * ---------------------------------------------------------------- */
 
 #include "GraphView.h"
+#include <QDragEnterEvent>
+#include <QDebug>
+
+GraphView::GraphView(QWidget *parent) :
+    QGraphicsView(parent)
+{
+}
 
 GraphView::GraphView(GraphScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent)
 {
+}
+
+void GraphView::dragEnterEvent(QDragEnterEvent *event)
+{
+    //Turn off interaction for drag-n-drop processing, otherwise it will fail
+    setInteractive(false);
+    //Allow any drop for now
+    event->acceptProposedAction();
+    //Create temporary node to see where it will be placed
+    //Here you can also process different types of drops
+    temp = GraphView::scene()->addNode(
+                mapToScene(event->pos())-event->pos()
+                -QPointF(DEFAULT_RECT_SIZE/2, DEFAULT_RECT_SIZE/2));
+}
+
+void GraphView::dragMoveEvent(QDragMoveEvent *event)
+{
+    temp->setPos(event->pos());
+}
+
+void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    GraphView::dragLeaveEvent(event, false);
+}
+
+void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
+{
+    setInteractive(true);
+    if (!dropped)
+        GraphView::scene()->removeItem(temp);
+}
+
+void GraphView::dropEvent(QDropEvent *event)
+{
+
+    dragLeaveEvent(0, true);
+}
+
+GraphScene *GraphView::scene() const
+{
+    return dynamic_cast<GraphScene *>(QGraphicsView::scene());
+}
+
+void GraphView::mousePressEvent(QMouseEvent *event)
+{
+    QGraphicsView::mousePressEvent(event);
+}
+
+void GraphView::mouseMoveEvent(QMouseEvent *event)
+{
+    QGraphicsView::mouseMoveEvent(event);
 }

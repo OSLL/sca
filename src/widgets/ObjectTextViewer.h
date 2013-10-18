@@ -59,12 +59,16 @@ public:
     QString getCurrentPath() const;
     void setCurrentPath(const QString &value);
 
+    QString getCurrentEncoding() const;
+    void setCurrentEncoding(const QString &value);
+
 signals:
     
 public slots:
 
 private:
     QString currentPath;
+    QString currentEncoding;
 };
 
 #endif //_ObjectTextViewer_H_FD315731_667E_45A5_AA99_53E0B6BD49D1_INCLUDED_

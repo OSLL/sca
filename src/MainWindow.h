@@ -4,15 +4,8 @@
 
 #include <QMainWindow>
 #include <QFileSystemModel>
-#include <QMessageBox>
-#include <QPushButton>
-#include <QDebug>
 #include <ui_mainwindow.h>
-
-#include "widgets/SourceBrowser.h"
-#include "FileLoader.h"
-#include "widgets/ObjectTextViewer.h"
-#include "GraphScene.h"
+class GraphScene;
 
 class MainWindow : public QMainWindow
 {
@@ -20,6 +13,7 @@ class MainWindow : public QMainWindow
 private:
     Ui::MainWindow *m_ui;
     QFileSystemModel *m_fileModel;
+    GraphScene *scene;
 public:
     explicit MainWindow(QWidget *parent = 0);
 signals:

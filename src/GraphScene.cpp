@@ -46,9 +46,14 @@ GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * pa
 {
 }
 
-QGraphicsItem *GraphScene::addNode(const QPointF &coords, IScaObject *object)
+Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
 {
-    QGraphicsItem *node = new Node(coords, object);
+    Node *node = new Node(coords, object);
     addItem(node);
     return node;
+}
+
+QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
+{
+    return addNode(QPointF(x, y), object);
 }

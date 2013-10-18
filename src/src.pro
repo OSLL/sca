@@ -63,7 +63,7 @@ HEADERS += \
     common/DataCache.h \
     GraphScene.h \
     ObjectVisual.h \
-    Node.h \
+    Node.h
 
 FORMS += \
     mainwindow.ui
