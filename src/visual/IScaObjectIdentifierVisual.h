@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,45 +30,41 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file Node.cpp
- * \brief Node implementation
+ * \file IScaObjectIdentifierVisual.h
+ * \brief Header of IScaObjectIdentifierVisual
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+
+#ifndef _IScaObjectIdentifierVisual_H_6BF427E1_35E4_487C_8846_5F2FE556500C_INCLUDED_
+#define _IScaObjectIdentifierVisual_H_6BF427E1_35E4_487C_8846_5F2FE556500C_INCLUDED_
+
 #include "Node.h"
+#include "common/IScaObjectIdentifier.h"
 
-Node::Node(const QPointF &coords, IScaObject *object): ObjectVisual(object)
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class IScaObjectIdentifierVisual : public Node
 {
-    m_type = NODE;
+public:
+  explicit IScaObjectIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object);
 
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    setCacheMode(DeviceCoordinateCache);
-    setZValue(1);
+  ~IScaObjectIdentifierVisual();
+  
+private:    
+  IScaObjectIdentifierVisual(const IScaObjectIdentifierVisual& obj);
+  IScaObjectIdentifierVisual &operator=(const IScaObjectIdentifierVisual& obj);
 
-    m_rect = QRectF(coords.x(), coords.y(), DEFAULT_RECT_SIZE, DEFAULT_RECT_SIZE);
-}
+}; // class IScaObjectIdentifierVisual
+  
 
-QRectF Node::boundingRect() const
-{
-    return m_rect;
-}
+#endif //_IScaObjectIdentifierVisual_H_6BF427E1_35E4_487C_8846_5F2FE556500C_INCLUDED_
 
-
-QRectF Node::getRect() const
-{
-    return m_rect;
-}
-
-void Node::setRect(const QRectF &rect)
-{
-    m_rect = rect;
-}
-
-void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    painter->drawRect(m_rect);
-}

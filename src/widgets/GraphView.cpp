@@ -42,33 +42,60 @@
 #include "GraphView.h"
 #include <QDragEnterEvent>
 #include <QDebug>
+#include <QUrl>
+#include "common/IScaObjectFile.h"
 
 GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent)
 {
+    temp = NULL;
 }
 
 GraphView::GraphView(GraphScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent)
 {
+    temp = NULL;
 }
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
 {
     //Turn off interaction for drag-n-drop processing, otherwise it will fail
     setInteractive(false);
-    //Allow any drop for now
-    event->acceptProposedAction();
     //Create temporary node to see where it will be placed
     //Here you can also process different types of drops
-    temp = GraphView::scene()->addNode(
-                mapToScene(event->pos())-event->pos()
-                -QPointF(DEFAULT_RECT_SIZE/2, DEFAULT_RECT_SIZE/2));
+    if (event->mimeData()->hasUrls())
+    {
+        QString filePath = event->mimeData()->urls().at(0).path().remove(0, 1);
+        QFileInfo fileInfo(filePath);
+        if (fileInfo.isFile())
+        {
+            event->acceptProposedAction();
+            qDebug() << fileInfo.filePath();
+            QPoint evPos = pos(),
+                   centerDelta(DEFAULT_FILE_VISUAL_WIDTH / 2,
+                               DEFAULT_FILE_VISUAL_HEIGHT / 2);
+            IScaObjectFile *objFile = new IScaObjectFile(fileInfo);
+            temp = GraphView::scene()->addFileVisual(mapToScene(evPos) - evPos - centerDelta, objFile);
+            return;
+        }
+        if (fileInfo.isDir())
+        {
+            event->acceptProposedAction();
+            qDebug() << fileInfo.filePath();
+            QPoint evPos = pos(),
+                   centerDelta(DEFAULT_DIR_VISUAL_WIDTH / 2,
+                               DEFAULT_DIR_VISUAL_HEIGHT / 2);
+            IScaObjectDirectory *objDir = new IScaObjectDirectory(fileInfo);
+            temp = GraphView::scene()->addDirVisual(mapToScene(evPos) - evPos - centerDelta, objDir);
+            return;
+        }
+    }
 }
 
 void GraphView::dragMoveEvent(QDragMoveEvent *event)
 {
-    temp->setPos(event->pos());
+    if (temp != NULL)
+        temp->setPos(event->pos());
 }
 
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
@@ -80,7 +107,11 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
 {
     setInteractive(true);
     if (!dropped)
-        GraphView::scene()->removeItem(temp);
+    {
+        if (temp != NULL)
+            GraphView::scene()->removeItem(temp);
+        return;
+    }
 }
 
 void GraphView::dropEvent(QDropEvent *event)

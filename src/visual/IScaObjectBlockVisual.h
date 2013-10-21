@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,47 +30,41 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file IScaObjectBlockVisual.h
+ * \brief Header of IScaObjectBlockVisual
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+#ifndef _IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
+#define _IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
+
+#include "Node.h"
+#include "common/IScaObjectBlock.h"
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class IScaObjectBlockVisual : public Node
 {
-}
+public:
+  explicit IScaObjectBlockVisual(const QPointF &coords, IScaObjectBlock *object);
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
-{
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    addItem(node);
-    return node;
-}
+  ~IScaObjectBlockVisual();
+  
+private:    
+  IScaObjectBlockVisual(const IScaObjectBlockVisual& obj);
+  IScaObjectBlockVisual& operator=(const IScaObjectBlockVisual& obj);
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
-{
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
+}; // class IScaObjectBlockVisual
+  
 
-    addItem(node);
-    return node;
-}
+#endif //_IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
-{
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
-{
-    return addNode(QPointF(x, y), object);
-}

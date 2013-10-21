@@ -52,10 +52,6 @@ IScaObjectDirectory::IScaObjectDirectory(const QFileInfo &fileInfo):
 {
     m_fileInfo = fileInfo;
     m_type = DIRECTORY;
-
-    if(!m_fileInfo.isDir())
-    {
-    }
 }
 
 QFileInfo IScaObjectDirectory::getFile() const

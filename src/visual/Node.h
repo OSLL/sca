@@ -30,47 +30,46 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file Node.h
+ * \brief Header of Node
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+#ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+#define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+#include "ObjectVisual.h"
+#include "NumericalConstants.h"
+
+class Node : public ObjectVisual
 {
-}
+public:
+    Node(const QPointF &coords, IScaObject *object);
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
-{
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QRectF boundingRect() const;
 
-    addItem(node);
-    return node;
-}
+    QRectF getRect() const;
+    void setRect(const QRectF &rect);
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
-{
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
+    QGraphicsSimpleTextItem *getTitle() const;
+    void setTitle(QGraphicsSimpleTextItem *title);
 
-    addItem(node);
-    return node;
-}
+    void removeTitle();
+    void setTitle(const QString &title);
+    QPointF pos() const;
+protected:
+    QRectF m_rect;
+    QGraphicsSimpleTextItem *m_title;
 
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
-{
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
-{
-    return addNode(QPointF(x, y), object);
-}
+}; // class Node
+#endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_

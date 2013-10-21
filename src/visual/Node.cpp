@@ -31,46 +31,80 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file Node.cpp
+ * \brief Node implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
+#include "Node.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+#include <QPen>
+#include <QBrush>
+#include <QPainter>
+#include <QDebug>
+#include <QRectF>
+#include <QGraphicsScene>
+#include <QTextDocument>
+
+Node::Node(const QPointF &coords, IScaObject *object): ObjectVisual(object)
 {
+    m_type = NODE;
+    m_title = NULL;
+
+    setCacheMode(DeviceCoordinateCache);
+    setZValue(1);
 }
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
+QPointF Node::pos() const
 {
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
-
-    addItem(node);
-    return node;
+    return m_rect.center();
 }
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
+QRectF Node::getRect() const
 {
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
-
-    addItem(node);
-    return node;
+    return m_rect;
 }
 
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
+void Node::setRect(const QRectF &rect)
 {
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
+    m_rect = rect;
+}
+QGraphicsSimpleTextItem *Node::getTitle() const
+{
+    return m_title;
 }
 
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
+void Node::removeTitle()
 {
-    return addNode(QPointF(x, y), object);
+    if (m_title != NULL)
+    {
+        scene()->removeItem(m_title);
+    }
+}
+void Node::setTitle(const QString &title)
+{
+    removeTitle();
+    m_title = new QGraphicsSimpleTextItem(title, this);
+}
+
+void Node::setTitle(QGraphicsSimpleTextItem *title)
+{
+    removeTitle();
+    m_title = title;
+}
+
+void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    if (m_title != NULL)
+    {
+        m_title->setPos(pos() + QPointF(-m_title->boundingRect().width()/2, 20));
+    }
+}
+
+QRectF Node::boundingRect() const
+{
+    return m_rect;
 }

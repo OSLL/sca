@@ -1,7 +1,7 @@
 #include "ObjectVisual.h"
 
 ObjectVisual::ObjectVisual(IScaObject *object, QGraphicsItem *parent):
-    QGraphicsItem(parent)
+    QAbstractGraphicsShapeItem(parent)
 {    
     m_object = object;
 

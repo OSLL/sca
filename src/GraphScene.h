@@ -49,7 +49,9 @@
  */
 #include <QGraphicsScene>
 #include "common/IScaObject.h"
-#include "Node.h"
+#include "visual/IScaObjectFileVisual.h"
+#include "visual/IScaObjectDirectoryVisual.h"
+#include "visual/Node.h"
 
 class GraphScene : public QGraphicsScene
 {
@@ -57,6 +59,8 @@ class GraphScene : public QGraphicsScene
 public:
    explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
 
+    IScaObjectFileVisual *addFileVisual(const QPointF &coords, IScaObjectFile *object = 0);
+    IScaObjectDirectoryVisual *addDirVisual(const QPointF &coords, IScaObjectDirectory *object = 0);
     QGraphicsItem *addNode(const float x, const float y, IScaObject *object = 0);
     Node *addNode(const QPointF &coords, IScaObject *object = 0);
 signals:

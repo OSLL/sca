@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,46 +31,30 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file IScaObjectIdentifierVisual.cpp
+ * \brief IScaObjectIdentifierVisual implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
+#include "IScaObjectIdentifierVisual.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+
+
+IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object) :
+    Node(coords, object)
 {
+
 }
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
+void IScaObjectIdentifierVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
-
-    addItem(node);
-    return node;
+    Node::paint(painter, option, widget);
 }
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
+IScaObjectIdentifierVisual::~IScaObjectIdentifierVisual()
 {
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
 
-    addItem(node);
-    return node;
-}
-
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
-{
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
-{
-    return addNode(QPointF(x, y), object);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file Node.h
- * \brief Header of Node
+ * \file IScaObjectDirectoryVisual.h
+ * \brief Header of IScaObjectDirectoryVisual
  * \todo add comment here
  *
  * File description
@@ -40,36 +40,31 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
-#define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+#ifndef _IScaObjectDirectoryVisual_H_6523A4C7_F3E6_4099_9DDC_CF5C5F83A687_INCLUDED_
+#define _IScaObjectDirectoryVisual_H_6523A4C7_F3E6_4099_9DDC_CF5C5F83A687_INCLUDED_
+
+#include "Node.h"
+#include "common/IScaObjectDirectory.h"
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-#include "ObjectVisual.h"
-#include "NumericalConstants.h"
-
-#include <QPen>
-#include <QBrush>
-#include <QPainter>
-#include <QDebug>
-#include <QRectF>
-
-class Node : public ObjectVisual
+class IScaObjectDirectoryVisual : public Node
 {
 public:
-    Node(const QPointF &coords, IScaObject *object);
+  explicit IScaObjectDirectoryVisual(const QPointF &coords, IScaObjectDirectory *object);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QRectF boundingRect() const;
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    QRectF getRect() const;
-    void setRect(const QRectF &rect);
+  ~IScaObjectDirectoryVisual();
+  
+private:    
+  IScaObjectDirectoryVisual(const IScaObjectDirectoryVisual& obj);
+  IScaObjectDirectoryVisual &operator=(const IScaObjectDirectoryVisual& obj);
 
-private:
-    QRectF m_rect;
-    QGraphicsTextItem *m_title;
+}; // class IScaObjectDirectoryVisual
+  
 
-}; // class Node
-#endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+#endif //_IScaObjectDirectoryVisual_H_6523A4C7_F3E6_4099_9DDC_CF5C5F83A687_INCLUDED_
+

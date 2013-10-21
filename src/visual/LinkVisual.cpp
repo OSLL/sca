@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,46 +31,25 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file LinkVisual.cpp
+ * \brief LinkVisual implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
+#include "LinkVisual.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+
+
+LinkVisual::LinkVisual(Link *object) :
+    ObjectVisual(object)
 {
+    m_type = EDGE;
 }
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
+LinkVisual::~LinkVisual()
 {
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
 
-    addItem(node);
-    return node;
-}
-
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
-{
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
-{
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
-{
-    return addNode(QPointF(x, y), object);
 }

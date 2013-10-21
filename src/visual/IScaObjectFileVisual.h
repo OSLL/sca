@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,47 +30,41 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file IScaObjectFileVisual.h
+ * \brief Header of IScaObjectFileVisual
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+#ifndef _IScaObjectFileVisual_H_D6CF0404_8A5C_4B9A_ADDB_64D9CE870112_INCLUDED_
+#define _IScaObjectFileVisual_H_D6CF0404_8A5C_4B9A_ADDB_64D9CE870112_INCLUDED_
+
+#include "Node.h"
+#include "common/IScaObjectFile.h"
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class IScaObjectFileVisual : public Node
 {
-}
+public:
+  explicit IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object);
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
-{
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    addItem(node);
-    return node;
-}
+  ~IScaObjectFileVisual();
+  
+private:    
+  IScaObjectFileVisual(const IScaObjectFileVisual& obj);
+  IScaObjectFileVisual &operator=(const IScaObjectFileVisual& obj);
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
-{
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
+}; // class IScaObjectFileVisual
+  
 
-    addItem(node);
-    return node;
-}
+#endif //_IScaObjectFileVisual_H_D6CF0404_8A5C_4B9A_ADDB_64D9CE870112_INCLUDED_
 
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
-{
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
-{
-    return addNode(QPointF(x, y), object);
-}

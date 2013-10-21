@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,47 +30,39 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file LinkVisual.h
+ * \brief Header of LinkVisual
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+#ifndef _LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
+#define _LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
+
+#include "ObjectVisual.h"
+#include "common/Link.h"
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class LinkVisual : public ObjectVisual
 {
-}
+public:
+  explicit LinkVisual(Link* object);
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
-{
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
+  ~LinkVisual();
+  
+private:    
+  LinkVisual(const LinkVisual& obj);
+  LinkVisual &operator=(const LinkVisual& obj);
 
-    addItem(node);
-    return node;
-}
+}; // class LinkVisual
+  
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
-{
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
+#endif //_LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
 
-    addItem(node);
-    return node;
-}
-
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
-{
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
-{
-    return addNode(QPointF(x, y), object);
-}

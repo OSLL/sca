@@ -35,8 +35,15 @@ SOURCES += \
     common/IScaObjectDirectory.cpp \
     common/DataCache.cpp \
     GraphScene.cpp \
-    ObjectVisual.cpp \
-    Node.cpp
+    visual/LinkVisual.cpp \
+    visual/IScaObjectSymbolVisual.cpp \
+    visual/IScaObjectLineVisual.cpp \
+    visual/IScaObjectIdentifierVisual.cpp \
+    visual/IScaObjectFileVisual.cpp \
+    visual/IScaObjectDirectoryVisual.cpp \
+    visual/IScaObjectBlockVisual.cpp \
+    visual/Node.cpp \
+    visual/ObjectVisual.cpp
 
 
 HEADERS += \
@@ -62,8 +69,15 @@ HEADERS += \
     common/IScaObjectDirectory.h \
     common/DataCache.h \
     GraphScene.h \
-    ObjectVisual.h \
-    Node.h
+    visual/LinkVisual.h \
+    visual/IScaObjectSymbolVisual.h \
+    visual/IScaObjectLineVisual.h \
+    visual/IScaObjectIdentifierVisual.h \
+    visual/IScaObjectFileVisual.h \
+    visual/IScaObjectDirectoryVisual.h \
+    visual/IScaObjectBlockVisual.h \
+    visual/Node.h \
+    visual/ObjectVisual.h
 
 FORMS += \
     mainwindow.ui

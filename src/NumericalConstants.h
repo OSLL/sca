@@ -14,15 +14,29 @@
 /* ---------------------------------------------------------------- *
 *NumericalConstants.h
 * ---------------------------------------------------------------- */
+#include <QColor>
 
+//Alerts consts
 const long MAX_BINARY_FILE_SIZE = 50*1024*1024;
 const long MAX_TEXT_FILE_SIZE = 0.4*1024*1024;
+
+//QHexEdit consts
 const int HEXCHARS_IN_LINE = 47;
 const int GAP_ADR_HEX = 10;
 const int GAP_HEX_ASCII = 16;
 const int BYTES_PER_LINE = 16;
-const int DEFAULT_RECT_SIZE = 30;
+
+//Visual consts
 const int DEFAULT_SCENE_WIDTH = 2000;
 const int DEFAULT_SCENE_HEIGHT = 1000;
+
+const QColor DEFAULT_FILE_COLOR(30, 255, 255);
+const int DEFAULT_FILE_VISUAL_WIDTH = 20;
+const int DEFAULT_FILE_VISUAL_HEIGHT = 20;
+const QColor DEFAULT_DIR_COLOR(30, 100, 255);
+const int DEFAULT_DIR_VISUAL_WIDTH = 25;
+const int DEFAULT_DIR_VISUAL_HEIGHT = 25;
+
+
 
 #endif //_NumericalConstants_H_B55D9E18_0180_4F9B_B243_BC6FD77B58FD_INCLUDED_

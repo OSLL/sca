@@ -2,13 +2,14 @@
 #define OBJECTVISUAL_H
 
 #include "common/IScaObject.h"
-#include <QGraphicsItem>
+#include <QAbstractGraphicsShapeItem>
 
 
-class ObjectVisual : public QGraphicsItem
+class ObjectVisual : public QAbstractGraphicsShapeItem
 {
 public:
-    ObjectVisual(IScaObject *object, QGraphicsItem *parent=0);
+    ObjectVisual(IScaObject *object, QGraphicsItem *parent = 0);
+
 
     IScaObject *getObject() const;
     void setObject(IScaObject *object);
@@ -22,9 +23,7 @@ public:
 
 protected:
     ObjectVisualType m_type;
-private:
     IScaObject *m_object;
-
 };
 
 #endif // OBJECTVISUAL_H

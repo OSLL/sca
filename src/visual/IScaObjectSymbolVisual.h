@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,47 +30,40 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file GraphScene.cpp
- * \brief GraphScene implementation
+ * \file IScaObjectSymbolVisual.h
+ * \brief Header of IScaObjectSymbolVisual
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphScene.h"
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
-    QGraphicsScene(x, y, width, height, parent)
+#ifndef _IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
+#define _IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
+
+#include "Node.h"
+#include "common/IScaObjectSymbol.h"
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class IScaObjectSymbolVisual : public Node
 {
-}
+public:
+  explicit IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object);
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
-{
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+  ~IScaObjectSymbolVisual();
+  
+private:    
+  IScaObjectSymbolVisual(const IScaObjectSymbolVisual& obj);
+  IScaObjectSymbolVisual &operator=(const IScaObjectSymbolVisual& obj);
 
-    addItem(node);
-    return node;
-}
+}; // class IScaObjectSymbolVisual
+  
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
-{
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
+#endif //_IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
 
-    addItem(node);
-    return node;
-}
-
-Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
-{
-    Node *node = new Node(coords, object);
-
-    addItem(node);
-    return node;
-}
-
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
-{
-    return addNode(QPointF(x, y), object);
-}
