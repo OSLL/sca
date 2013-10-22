@@ -65,8 +65,13 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
     //Here you can also process different types of drops
     if (event->mimeData()->hasUrls())
     {
-        QString filePath = event->mimeData()->urls().at(0).path().remove(0, 1);
+        QString filePath = event->mimeData()->urls().at(0).path();
         QFileInfo fileInfo(filePath);
+        if (!fileInfo.exists()) //For different systems it needs to remove first symbol '/'
+        {                       //e.g. Windows: /D:/Dir1/Dir2/, but in UNIX: /home/dir1
+            filePath.remove(0, 1);
+            fileInfo.setFile(filePath);
+        }
         if (fileInfo.isFile())
         {
             event->acceptProposedAction();
