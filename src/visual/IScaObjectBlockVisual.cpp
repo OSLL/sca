@@ -41,14 +41,31 @@
 
 #include "IScaObjectBlockVisual.h"
 
+#include <QPen>
+#include <QBrush>
+#include <QPainter>
+#include <QDebug>
+#include <QRectF>
+#include <QGraphicsScene>
+#include <QFileInfo>
+
 IScaObjectBlockVisual::IScaObjectBlockVisual(const QPointF &coords, IScaObjectBlock *object) :
     Node(coords, object)
 {
-
+    m_rect = QRectF(coords.x(), coords.y(),
+                    DEFAULT_BLOCK_VISUAL_WIDTH,
+                    DEFAULT_BLOCK_VISUAL_HEIGHT);
+    QString str = object->getText();
+    if (str != NULL)
+        setTitle(str);
+    setBrush(QBrush(DEFAULT_BLOCK_COLOR));
 }
 
 void IScaObjectBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->setBrush(brush());
+    painter->setPen(pen());
+    painter->drawRect(m_rect);
     Node::paint(painter, option, widget);
 }
 

@@ -62,7 +62,7 @@ signals:
     void openFileAs(const QString &);
 public slots:
     void ShowContextMenu(const QPoint &pos);
-    
+protected:
 };
 
 #endif //_SourceBrowser_H_FFA4491B_B282_4A61_972A_1470A2944293_INCLUDED_

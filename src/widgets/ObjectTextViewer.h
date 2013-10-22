@@ -49,6 +49,7 @@
  */
 
 #include <QTextEdit>
+class QDrag;
 
 class ObjectTextViewer : public QTextEdit
 {
@@ -66,6 +67,8 @@ signals:
     
 public slots:
 
+protected:
+    QMimeData *createMimeDataFromSelection() const;
 private:
     QString currentPath;
     QString currentEncoding;

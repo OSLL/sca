@@ -35,7 +35,7 @@
  * \brief Header of IScaObjectText
  * \todo add comment here
  *
- * m_offset - number of symblos before text block
+ * m_offset - number of symbols before text block
  * m_length - length of text-block in symbols
  *
  * PROJ: OSLL/sca
@@ -58,21 +58,23 @@ class IScaObjectBlock: public IScaObject
 {
 public:
     IScaObjectBlock();
-    IScaObjectBlock(IScaObjectFile *file, IScaObjectType type = BINARYBLOCK,
+    IScaObjectBlock(IScaObjectFile *file,
                    unsigned int offset = 0, unsigned int length = 0);
 
     unsigned int getOffset() const;
     void setOffset(unsigned int offset);
 
-    IScaObjectFile *getFile() const;
-    void setFile(IScaObjectFile *file);
+    QFileInfo getFile() const;
+    void setFile(QFileInfo fileInfo);
 
     unsigned int getLength() const;
     void setLength(unsigned int length);
 
+    QString getText() const;
+
 private:
-    unsigned int m_length;
-    unsigned int m_offset;
+    quint64 m_length;
+    quint64 m_offset;
     IScaObjectFile *m_file;
 
 }; // class IScaObjectText

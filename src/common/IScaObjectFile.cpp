@@ -41,17 +41,15 @@
 
 #include "common/IScaObjectFile.h"
 
-IScaObjectFile::IScaObjectFile():
-    IScaObject()
+IScaObjectFile::IScaObjectFile() :
+    IScaObject(FILE)
 {
-    m_type = FILE;
 }
 
-IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo):
-    IScaObject()
+IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo) :
+    IScaObject(FILE),
+    m_fileInfo(fileInfo)
 {
-    m_fileInfo = fileInfo;
-    m_type = FILE;
 }
 
 QFileInfo IScaObjectFile::getFile() const

@@ -61,11 +61,11 @@ public:
   unsigned int getOffset() const;
   void setOffset(unsigned int offset);
 
-  QString getIdintifier() const;
-  void setIdintifier(const QString &value);
-
   IScaObjectFile *getFile() const;
   void setFile(IScaObjectFile *file);
+
+  QString getIdentifier() const;
+  void setIdentifier(const QString &identifier);
 
 private:
   unsigned int m_offset;

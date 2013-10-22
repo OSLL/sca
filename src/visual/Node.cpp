@@ -49,11 +49,10 @@
 #include <QGraphicsScene>
 #include <QTextDocument>
 
-Node::Node(const QPointF &coords, IScaObject *object): ObjectVisual(object)
+Node::Node(const QPointF &coords, IScaObject *object) :
+    ObjectVisual(object),
+    m_title(NULL)
 {
-    m_type = NODE;
-    m_title = NULL;
-
     setCacheMode(DeviceCoordinateCache);
     setZValue(1);
 }
@@ -84,6 +83,7 @@ void Node::removeTitle()
         scene()->removeItem(m_title);
     }
 }
+
 void Node::setTitle(const QString &title)
 {
     removeTitle();

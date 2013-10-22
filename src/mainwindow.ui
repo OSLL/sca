@@ -30,9 +30,24 @@
          </widget>
         </item>
         <item>
-         <widget class="QTabWidget" name="ViewsTabs">
+         <widget class="ViewsTabWidget" name="ViewsTabs">
+          <property name="acceptDrops">
+           <bool>true</bool>
+          </property>
+          <property name="tabPosition">
+           <enum>QTabWidget::North</enum>
+          </property>
+          <property name="tabShape">
+           <enum>QTabWidget::Rounded</enum>
+          </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
+          </property>
+          <property name="elideMode">
+           <enum>Qt::ElideNone</enum>
+          </property>
+          <property name="movable">
+           <bool>false</bool>
           </property>
           <widget class="QWidget" name="TextViewTab">
            <attribute name="title">
@@ -150,6 +165,12 @@
    <class>GraphView</class>
    <extends>QGraphicsView</extends>
    <header>widgets/GraphView.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ViewsTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>widgets/ViewsTabWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

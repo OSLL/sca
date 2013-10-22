@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphView.h
- * \brief Header of GraphView
+ * \file ViewsTabWidget.h
+ * \brief Header of ViewsTabWidget
  * \todo add comment here
  *
  * File description
@@ -40,41 +40,29 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
-#define _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
+#ifndef _ViewsTabWidget_H_9DFA686C_A6AD_483E_8688_9B5046FDA408_INCLUDED_
+#define _ViewsTabWidget_H_9DFA686C_A6AD_483E_8688_9B5046FDA408_INCLUDED_
+
+#include <QTabWidget>
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-#include <QGraphicsView>
-#include "GraphScene.h"
-
-class GraphView : public QGraphicsView
+class ViewsTabWidget : public QTabWidget
 {
     Q_OBJECT
 public:
-    GraphView(QWidget *parent = 0);
-    explicit GraphView(GraphScene *scene, QWidget *parent = 0);
+  ViewsTabWidget(QWidget *widget = 0);
 
-    GraphScene *scene() const;
-signals:
+  ~ViewsTabWidget();
+  
 private:
-    //This is used for drag-n-drop technology
-    Node *temp;
-
-public slots:
-
 protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event = 0, bool = false);
-    void dropEvent(QDropEvent * event);
-}; // class GraphView
+  void dragEnterEvent(QDragEnterEvent *);
+  void dragMoveEvent(QDragMoveEvent *);
+}; // class ViewsTabWidget
+  
 
-
-#endif //_GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
+#endif //_ViewsTabWidget_H_9DFA686C_A6AD_483E_8688_9B5046FDA408_INCLUDED_
 

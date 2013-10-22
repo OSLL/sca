@@ -38,15 +38,31 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadTextFile()));
     connect(m_ui->sourceBrowser, SIGNAL(openFileAs(QString)),
             this, SLOT(loadTextFile(QString)));
-    connect(m_ui->sourceBrowser, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(loadTextFile()));
     connect(m_ui->sourceBrowser, SIGNAL(openBinaryFile()),
             this, SLOT(loadBinaryFile()));
+    connect(m_ui->sourceBrowser, SIGNAL(doubleClicked(QModelIndex)),
+            this, SLOT(processFile()));
     //MenuBar connections
     connect(m_ui->actionOpenInTextViewer, SIGNAL(triggered()),
             this, SLOT(loadTextFile()));
     connect(m_ui->actionOpenInBinaryView, SIGNAL(triggered()),
             this, SLOT(loadBinaryFile()));
+}
+
+void MainWindow::processFile()
+{
+    switch(m_ui->ViewsTabs->currentIndex())
+    {
+    case 0: //Text view
+        loadTextFile();
+        break;
+    case 1: //Binary view
+        loadBinaryFile();
+        break;
+    case 2: //Scene
+        addToScene();
+        break;
+    }
 }
 
 void MainWindow::loadBinaryFile()
@@ -75,8 +91,26 @@ void MainWindow::loadBinaryFile()
     fLoader->loadToByteArray(arr);
     m_ui->hexEditor->setData(arr);
     m_ui->textViewer->setCurrentPath(fileInf.filePath());
-
+    m_ui->ViewsTabs->setCurrentIndex(1);
     fLoader->deleteLater();
+}
+
+void MainWindow::addToScene()
+{
+    QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+
+    if (fileInf.isFile())
+    {
+        QPointF pos = QPointF(m_ui->graphViewer->horizontalScrollBar()->value(),
+                              m_ui->graphViewer->verticalScrollBar()->value())
+                    + m_ui->graphViewer->rect().center()
+                    - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
+                              DEFAULT_FILE_VISUAL_HEIGHT / 2);
+        IScaObjectFile *objFile = new IScaObjectFile(fileInf);
+        scene->addFileVisual(pos, objFile);
+    }
+
+    m_ui->ViewsTabs->setCurrentIndex(2);
 }
 
 void MainWindow::loadTextFile(const QString &code)
@@ -106,6 +140,7 @@ void MainWindow::loadTextFile(const QString &code)
     m_ui->textViewer->setCurrentPath(fileInf.filePath());
     m_ui->textViewer->setCurrentEncoding(code);
 
+    m_ui->ViewsTabs->setCurrentIndex(0);
     fLoader->deleteLater();
 }
 

@@ -1,14 +1,10 @@
 #include "ObjectVisual.h"
 
 ObjectVisual::ObjectVisual(IScaObject *object, QGraphicsItem *parent):
-    QAbstractGraphicsShapeItem(parent)
-{    
-    m_object = object;
-
+    QAbstractGraphicsShapeItem(parent), m_object(object), m_type(OBJECT)
+{
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
-
-    m_type = OBJECT;
 }
 
 IScaObject *ObjectVisual::getObject() const

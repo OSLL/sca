@@ -43,17 +43,19 @@
 #include "common/IScaObjectFile.h"
 #include <QString>
 
-IScaObjectLine::IScaObjectLine(): IScaObject()
+IScaObjectLine::IScaObjectLine() :
+    IScaObject(LINE),
+    m_offset(0),
+    m_file(NULL)
 {
-    m_offset = 0;
-    m_file = NULL;
 }
 
-IScaObjectLine::IScaObjectLine(IScaObjectFile *file, unsigned int offset, QString line)
+IScaObjectLine::IScaObjectLine(IScaObjectFile *file, unsigned int offset, QString line) :
+    IScaObject(LINE),
+    m_file(file),
+    m_offset(offset),
+    m_line(line)
 {
-    m_file = file;
-    m_offset = offset;
-    m_line = line;
 }
 
 QString IScaObjectLine::getLine() const

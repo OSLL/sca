@@ -43,20 +43,19 @@
 
 
 IScaObjectSymbol::IScaObjectSymbol():
-    IScaObject()
+    IScaObject(SYMBOL),
+    m_symbol(0),
+    m_offset(0),
+    m_file(NULL)
 {
-    m_symbol = 0;
-    m_offset = 0;
-    m_file   = NULL;
 }
 
 IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset, qint8 symbol):
-    IScaObject()
+    IScaObject(SYMBOL),
+    m_file(file),
+    m_offset(offset),
+    m_symbol(symbol)
 {
-    m_file   = file;
-    m_offset = offset;
-    m_symbol = symbol;
-
 }
 qint8 IScaObjectSymbol::symbol() const
 {

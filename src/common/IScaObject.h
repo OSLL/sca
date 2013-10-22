@@ -53,7 +53,19 @@
 class IScaObject
 {
 public:
-  IScaObject();
+    enum IScaObjectType{
+        OBJECT,
+        DIRECTORY,
+        FILE,
+        IDENTIFIER,
+        LINE,
+        SYMBOL,
+        TEXTBLOCK,
+        BINARYBLOCK,
+        GROUP,
+        LINK
+    };
+  IScaObject(IScaObjectType type = OBJECT);
 
   int getType() const;
 
@@ -62,17 +74,6 @@ public:
   QString getAnnotation() const;
   void setAnnotation(const QString &annotation);
 
-  enum IScaObjectType{
-      OBJECT,
-      DIRECTORY,
-      FILE,
-      IDENTIFIER,
-      LINE,
-      SYMBOL,
-      TEXTBLOCK,
-      BINARYBLOCK,
-      GROUP
-  };
 
 private:
   unsigned int m_index;

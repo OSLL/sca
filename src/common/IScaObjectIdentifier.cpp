@@ -41,20 +41,20 @@
 
 #include "common/IScaObjectIdentifier.h"
 
-IScaObjectIdentifier::IScaObjectIdentifier()
+IScaObjectIdentifier::IScaObjectIdentifier() :
+    IScaObject(IDENTIFIER),
+    m_file(NULL),
+    m_offset(0),
+    m_identifier("")
 {
-    m_type     = IDENTIFIER;
-    m_file     = NULL;
-    m_offset   = 0;
-    m_identifier = "";
 }
 
-IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier)
+IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier) :
+    IScaObject(IDENTIFIER),
+    m_file(file),
+    m_offset(offset),
+    m_identifier(identifier)
 {
-    m_type       = IDENTIFIER;
-    m_file       = file;
-    m_offset     = offset;
-    m_identifier = identifier;
 }
 
 unsigned int IScaObjectIdentifier::getOffset() const
@@ -66,15 +66,7 @@ void IScaObjectIdentifier::setOffset(unsigned int offset)
 {
     m_offset = offset;
 }
-QString IScaObjectIdentifier::getIdintifier() const
-{
-    return m_identifier;
-}
 
-void IScaObjectIdentifier::setIdintifier(const QString &value)
-{
-    m_identifier = value;
-}
 IScaObjectFile *IScaObjectIdentifier::getFile() const
 {
     return m_file;
@@ -84,5 +76,15 @@ void IScaObjectIdentifier::setFile(IScaObjectFile *file)
 {
     m_file = file;
 }
+QString IScaObjectIdentifier::getIdentifier() const
+{
+    return m_identifier;
+}
+
+void IScaObjectIdentifier::setIdentifier(const QString &identifier)
+{
+    m_identifier = identifier;
+}
+
 
 

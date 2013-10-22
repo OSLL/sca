@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,51 +30,47 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphView.h
- * \brief Header of GraphView
- * \todo add comment here
+ *
+ * \file ViewsTabWidget.cpp
+ * \brief ViewsTabWidget implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "ViewsTabWidget.h"
 
-#ifndef _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
-#define _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
+#include <QDragEnterEvent>
+#include <QDebug>
+#include <QTabBar>
 
-/*!
- * Class description. May use HTML formatting
- *
- */
-#include <QGraphicsView>
-#include "GraphScene.h"
-
-class GraphView : public QGraphicsView
+ViewsTabWidget::ViewsTabWidget(QWidget *widget) :
+    QTabWidget(widget)
 {
-    Q_OBJECT
-public:
-    GraphView(QWidget *parent = 0);
-    explicit GraphView(GraphScene *scene, QWidget *parent = 0);
+}
 
-    GraphScene *scene() const;
-signals:
-private:
-    //This is used for drag-n-drop technology
-    Node *temp;
+ViewsTabWidget::~ViewsTabWidget()
+{
+}
 
-public slots:
+void ViewsTabWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->acceptProposedAction();
+    QTabWidget::dragEnterEvent(event);
+}
 
-protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event = 0, bool = false);
-    void dropEvent(QDropEvent * event);
-}; // class GraphView
-
-
-#endif //_GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
-
+void ViewsTabWidget::dragMoveEvent(QDragMoveEvent *event)
+{
+    QList<QTabBar *> tabbar;
+    foreach(QObject *obj, this->children())
+    {
+        QTabBar *wid = NULL;
+        wid = qobject_cast<QTabBar *>(obj);
+        if (wid != NULL)
+        {
+            tabbar.push_back(wid);
+        }
+    }
+    setCurrentIndex(tabbar.at(0)->tabAt(event->pos()));
+}

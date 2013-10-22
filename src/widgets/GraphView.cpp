@@ -44,17 +44,16 @@
 #include <QDebug>
 #include <QUrl>
 #include "common/IScaObjectFile.h"
+#include "common/IScaObjectBlock.h"
 
 GraphView::GraphView(QWidget *parent) :
-    QGraphicsView(parent)
+    QGraphicsView(parent), temp(NULL)
 {
-    temp = NULL;
 }
 
 GraphView::GraphView(GraphScene *scene, QWidget *parent) :
-    QGraphicsView(scene, parent)
+    QGraphicsView(scene, parent),temp(NULL)
 {
-    temp = NULL;
 }
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
@@ -72,7 +71,21 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             filePath.remove(0, 1);
             fileInfo.setFile(filePath);
         }
-        if (fileInfo.isFile())
+        if (event->mimeData()->hasText())   //IScaObjectBlock/Line/Symbol/Identifier
+        {
+            event->acceptProposedAction();
+            QPoint evPos = pos(),
+                   centerDelta(DEFAULT_BLOCK_VISUAL_WIDTH / 2,
+                               DEFAULT_BLOCK_VISUAL_HEIGHT / 2);
+
+            int offset = event->mimeData()->property("position").toInt(),
+                length = event->mimeData()->property("length").toInt();
+            IScaObjectFile *objFile = new IScaObjectFile(fileInfo);
+            IScaObjectBlock *objBlock = new IScaObjectBlock(objFile, offset, length);
+            temp = GraphView::scene()->addBlockVisual(mapToScene(evPos) - evPos - centerDelta, objBlock);
+            return;
+        }
+        if (fileInfo.isFile())  //IScaObjectFile
         {
             event->acceptProposedAction();
             qDebug() << fileInfo.filePath();
@@ -83,7 +96,7 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             temp = GraphView::scene()->addFileVisual(mapToScene(evPos) - evPos - centerDelta, objFile);
             return;
         }
-        if (fileInfo.isDir())
+        if (fileInfo.isDir())   //IScaObjectDirectory
         {
             event->acceptProposedAction();
             qDebug() << fileInfo.filePath();

@@ -43,7 +43,8 @@ SOURCES += \
     visual/IScaObjectDirectoryVisual.cpp \
     visual/IScaObjectBlockVisual.cpp \
     visual/Node.cpp \
-    visual/ObjectVisual.cpp
+    visual/ObjectVisual.cpp \
+    widgets/ViewsTabWidget.cpp
 
 
 HEADERS += \
@@ -77,7 +78,8 @@ HEADERS += \
     visual/IScaObjectDirectoryVisual.h \
     visual/IScaObjectBlockVisual.h \
     visual/Node.h \
-    visual/ObjectVisual.h
+    visual/ObjectVisual.h \
+    widgets/ViewsTabWidget.h
 
 FORMS += \
     mainwindow.ui

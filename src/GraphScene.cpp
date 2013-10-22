@@ -62,6 +62,14 @@ IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaO
     return node;
 }
 
+IScaObjectBlockVisual *GraphScene::addBlockVisual(const QPointF &coords, IScaObjectBlock *object)
+{
+    IScaObjectBlockVisual *node = new IScaObjectBlockVisual(coords, object);
+
+    addItem(node);
+    return node;
+}
+
 Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
 {
     Node *node = new Node(coords, object);

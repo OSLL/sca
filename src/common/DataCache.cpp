@@ -45,7 +45,6 @@ DataCache *DataCache::s_instance = NULL;
 
 DataCache::DataCache()
 {
-
 }
 
 

@@ -42,9 +42,9 @@
 #include "FileLoader.h"
 #include "StringConstants.h"
 
-FileLoader::FileLoader()
+FileLoader::FileLoader() :
+    m_file(0)
 {
-    m_file = 0;
 }
 
 FileLoader::~FileLoader()
@@ -117,9 +117,6 @@ void FileLoader::loadToByteArray(QByteArray &arr)
     {
         return;
     }
-
-
-
     arr = m_file->readAll();
 }
 

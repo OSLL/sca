@@ -41,15 +41,22 @@
 
 
 #include "ObjectTextViewer.h"
+#include <QDrag>
+#include <QMimeData>
+#include <QUrl>
+#include <QList>
+#include <QDebug>
+#include <QTextBlock>
+#include <QObjectUserData>
 
 ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
-    QTextEdit(parent)
+    QTextEdit(parent), currentPath("")
 {
     setReadOnly(true);
     QFontMetrics metrics(currentFont());
     setTabStopWidth(4 * metrics.width(' '));
-    currentPath = "";
 }
+
 QString ObjectTextViewer::getCurrentPath() const
 {
     return currentPath;
@@ -69,3 +76,17 @@ void ObjectTextViewer::setCurrentEncoding(const QString &value)
     currentEncoding = value;
 }
 
+QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
+{
+    QMimeData *mime = new QMimeData();
+    mime->setText(textCursor().selectedText());
+    QList<QUrl> urls;
+    urls.push_back(QUrl(QString("/") + getCurrentPath(), QUrl::TolerantMode));
+    mime->setUrls(urls);
+    mime->setProperty("position", textCursor().position());
+    mime->setProperty("length", textCursor().selectionEnd() - textCursor().selectionStart());
+
+    qDebug() << textCursor().position();
+    qDebug() << textCursor().selectionEnd() - textCursor().selectionStart();
+    return mime;
+}

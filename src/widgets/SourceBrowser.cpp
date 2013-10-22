@@ -49,6 +49,7 @@
 #include <QFileSystemModel>
 #include <QSignalMapper>
 #include <QMessageBox>
+#include <QMimeData>
 
 SourceBrowser::SourceBrowser(QWidget *parent) :
     QTreeView(parent)

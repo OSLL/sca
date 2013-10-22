@@ -42,9 +42,17 @@
 #include "common/Link.h"
 
 Link::Link() :
-    IScaObject()
+    IScaObject(LINK)
 {
 }
+
+Link::Link(IScaObject *objectFrom, IScaObject *objectTo) :
+    IScaObject(LINK),
+    m_objectFrom(objectFrom),
+    m_objectTo(objectTo)
+{
+}
+
 IScaObject *Link::getObjectTo() const
 {
     return m_objectTo;
@@ -63,11 +71,4 @@ IScaObject *Link::getObjectFrom() const
 void Link::setObjectFrom(IScaObject *objectFrom)
 {
     m_objectFrom = objectFrom;
-}
-
-
-Link::Link(IScaObject *objectFrom, IScaObject *objectTo) :
-    IScaObject(),
-    m_objectFrom(objectFrom), m_objectTo(objectTo)
-{
 }

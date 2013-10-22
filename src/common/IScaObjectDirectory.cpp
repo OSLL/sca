@@ -42,16 +42,14 @@
 #include "IScaObjectDirectory.h"
 
 IScaObjectDirectory::IScaObjectDirectory():
-    IScaObject()
+    IScaObject(DIRECTORY)
 {
-    m_type = DIRECTORY;
 }
 
 IScaObjectDirectory::IScaObjectDirectory(const QFileInfo &fileInfo):
-    IScaObject()
+    IScaObject(DIRECTORY),
+    m_fileInfo(fileInfo)
 {
-    m_fileInfo = fileInfo;
-    m_type = DIRECTORY;
 }
 
 QFileInfo IScaObjectDirectory::getFile() const

@@ -43,11 +43,11 @@
 
 unsigned int IScaObject::s_lastIndex = 0;
 
-IScaObject::IScaObject()
+IScaObject::IScaObject(IScaObjectType type) :
+    m_type(type),
+    m_index(s_lastIndex)
 {
-    m_type = OBJECT;
-    m_index = s_lastIndex;
-    s_lastIndex += 1;
+    s_lastIndex++;
 }
 
 int IScaObject::getType() const

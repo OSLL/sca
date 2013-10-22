@@ -63,9 +63,9 @@ public:
 
     QGraphicsSimpleTextItem *getTitle() const;
     void setTitle(QGraphicsSimpleTextItem *title);
+    void setTitle(const QString &title);
 
     void removeTitle();
-    void setTitle(const QString &title);
     QPointF pos() const;
 protected:
     QRectF m_rect;

@@ -46,7 +46,6 @@
 LinkVisual::LinkVisual(Link *object) :
     ObjectVisual(object)
 {
-    m_type = EDGE;
 }
 
 LinkVisual::~LinkVisual()
