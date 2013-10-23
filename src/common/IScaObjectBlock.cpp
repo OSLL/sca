@@ -44,17 +44,26 @@
 
 IScaObjectBlock::IScaObjectBlock() :
     IScaObject(TEXTBLOCK),
+    m_length(0),
     m_offset(0),
-    m_length(0)
+    m_text(QString()),
+    m_file(NULL)
 {
 }
 
-IScaObjectBlock::IScaObjectBlock(IScaObjectFile *file, unsigned int offset, unsigned int length) :
-    IScaObject(),
-    m_file(file),
+IScaObjectBlock::IScaObjectBlock(IScaObjectFile *file, unsigned int offset, unsigned int length, QString text) :
+    IScaObject(TEXTBLOCK),
+    m_length(length),
     m_offset(offset),
-    m_length(length)
+    m_text(text),
+    m_file(file)
 {
+}
+
+IScaObjectBlock::~IScaObjectBlock()
+{
+    if (m_file != NULL)
+        delete m_file;
 }
 
 unsigned int IScaObjectBlock::getOffset() const
@@ -89,20 +98,10 @@ void IScaObjectBlock::setLength(unsigned int length)
 
 QString IScaObjectBlock::getText() const
 {
-    QFile file(getFile().filePath());
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        return NULL;
-    }
-    if (!file.seek(getOffset()))
-    {
-        return NULL;
-    }
-    QByteArray arr = file.read(m_length);
-    QString res(arr);
-    if (res.isEmpty())
-    {
-        return NULL;
-    }
-    return res;
+    return m_text;
+}
+
+void IScaObjectBlock::setText(const QString &value)
+{
+    m_text = value;
 }

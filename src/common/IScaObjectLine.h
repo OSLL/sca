@@ -64,8 +64,8 @@ public:
     unsigned int getOffset() const;
     void setOffset(unsigned int offset);
 
-    IScaObjectFile *getFile() const;
-    void setFile(IScaObjectFile *file);
+    QFileInfo getFile() const;
+    void setFile(const QFileInfo &file);
 
 private:
     QString m_line;

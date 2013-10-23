@@ -44,7 +44,8 @@ SOURCES += \
     visual/IScaObjectBlockVisual.cpp \
     visual/Node.cpp \
     visual/ObjectVisual.cpp \
-    widgets/ViewsTabWidget.cpp
+    widgets/ViewsTabWidget.cpp \
+    ScaMIMEDataProcessor.cpp
 
 
 HEADERS += \
@@ -79,7 +80,8 @@ HEADERS += \
     visual/IScaObjectBlockVisual.h \
     visual/Node.h \
     visual/ObjectVisual.h \
-    widgets/ViewsTabWidget.h
+    widgets/ViewsTabWidget.h \
+    ScaMIMEDataProcessor.h
 
 FORMS += \
     mainwindow.ui

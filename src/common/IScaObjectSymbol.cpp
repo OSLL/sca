@@ -50,22 +50,14 @@ IScaObjectSymbol::IScaObjectSymbol():
 {
 }
 
-IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset, qint8 symbol):
+IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset, char symbol):
     IScaObject(SYMBOL),
-    m_file(file),
+    m_symbol(symbol),
     m_offset(offset),
-    m_symbol(symbol)
+    m_file(file)
 {
-}
-qint8 IScaObjectSymbol::symbol() const
-{
-    return m_symbol;
 }
 
-void IScaObjectSymbol::setSymbol(const qint8 &symbol)
-{
-    m_symbol = symbol;
-}
 unsigned int IScaObjectSymbol::offset() const
 {
     return m_offset;
@@ -84,6 +76,16 @@ void IScaObjectSymbol::setFile(IScaObjectFile *file)
 {
     m_file = file;
 }
+char IScaObjectSymbol::getSymbol() const
+{
+    return m_symbol;
+}
+
+void IScaObjectSymbol::setSymbol(char symbol)
+{
+    m_symbol = symbol;
+}
+
 
 
 

@@ -40,17 +40,23 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectIdentifierVisual.h"
-
-
+#include <QPainter>
 
 IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object) :
     Node(coords, object)
 {
-
+    m_rect = QRectF(coords.x(), coords.y(),
+                    DEFAULT_IDENTIFIER_VISUAL_WIDTH,
+                    DEFAULT_IDENTIFIER_VISUAL_HEIGHT);
+    setTitle(object->getIdentifier());
+    setBrush(QBrush(DEFAULT_IDENTIFIER_COLOR));
 }
 
 void IScaObjectIdentifierVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->setBrush(brush());
+    painter->setPen(pen());
+    painter->drawEllipse(m_rect);
     Node::paint(painter, option, widget);
 }
 

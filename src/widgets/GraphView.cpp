@@ -45,6 +45,11 @@
 #include <QUrl>
 #include "common/IScaObjectFile.h"
 #include "common/IScaObjectBlock.h"
+#include "common/IScaObjectDirectory.h"
+#include "common/IScaObjectSymbol.h"
+#include "common/IScaObjectLine.h"
+#include "common/IScaObjectIdentifier.h"
+#include "ScaMIMEDataProcessor.h"
 
 GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent), temp(NULL)
@@ -62,45 +67,66 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
     setInteractive(false);
     //Create temporary node to see where it will be placed
     //Here you can also process different types of drops
+    if (temp != NULL)
+        temp = NULL;
     if (event->mimeData()->hasUrls())
     {
-        QString filePath = event->mimeData()->urls().at(0).toLocalFile();
-        QFileInfo fileInfo(filePath);
-        if (event->mimeData()->hasText())   //IScaObjectBlock/Line/Symbol/Identifier
+        event->acceptProposedAction();
+        ScaMIMEDataProcessor processor(event->mimeData());
+        IScaObject *object = processor.makeObject();
+        qDebug() << object->getType();
+        switch (object->getType())
         {
-            event->acceptProposedAction();
-            QPoint evPos = pos(),
-                   centerDelta(DEFAULT_BLOCK_VISUAL_WIDTH / 2,
-                               DEFAULT_BLOCK_VISUAL_HEIGHT / 2);
+        case IScaObject::FILE:
+            {
+                QPoint evPos = pos(),
+                       centerDelta(DEFAULT_FILE_VISUAL_WIDTH / 2,
+                                   DEFAULT_FILE_VISUAL_HEIGHT / 2);
+                temp = GraphView::scene()->addFileVisual(
+                            mapToScene(evPos) - evPos - centerDelta,
+                            static_cast<IScaObjectFile *>(object));
+                return;
+            }
+        case IScaObject::DIRECTORY:
+            {
+                QPoint evPos = pos(),
+                       centerDelta(DEFAULT_DIR_VISUAL_WIDTH / 2,
+                                   DEFAULT_DIR_VISUAL_HEIGHT / 2);
+                temp = GraphView::scene()->addDirVisual(
+                            mapToScene(evPos) - evPos - centerDelta,
+                            static_cast<IScaObjectDirectory *>(object));
+                return;
+            }
+        case IScaObject::BINARYBLOCK:
+            {
 
-            int offset = event->mimeData()->property("position").toInt(),
-                length = event->mimeData()->property("length").toInt();
-            IScaObjectFile *objFile = new IScaObjectFile(fileInfo);
-            IScaObjectBlock *objBlock = new IScaObjectBlock(objFile, offset, length);
-            temp = GraphView::scene()->addBlockVisual(mapToScene(evPos) - evPos - centerDelta, objBlock);
-            return;
-        }
-        if (fileInfo.isFile())  //IScaObjectFile
-        {
-            event->acceptProposedAction();
-            qDebug() << fileInfo.filePath();
+                return;
+            }
+        case IScaObject::TEXTBLOCK:
+            {
+                QPoint evPos = pos(),
+                       centerDelta(DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,
+                                   DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT / 2);
+                temp = GraphView::scene()->addTextBlockVisual(
+                            mapToScene(evPos) - evPos - centerDelta,
+                            static_cast<IScaObjectBlock *>(object));
+                return;
+            }
+        case IScaObject::IDENTIFIER:
+            {
+
+                return;
+            }
+        case IScaObject::SYMBOL:
+            {
             QPoint evPos = pos(),
-                   centerDelta(DEFAULT_FILE_VISUAL_WIDTH / 2,
-                               DEFAULT_FILE_VISUAL_HEIGHT / 2);
-            IScaObjectFile *objFile = new IScaObjectFile(fileInfo);
-            temp = GraphView::scene()->addFileVisual(mapToScene(evPos) - evPos - centerDelta, objFile);
-            return;
-        }
-        if (fileInfo.isDir())   //IScaObjectDirectory
-        {
-            event->acceptProposedAction();
-            qDebug() << fileInfo.filePath();
-            QPoint evPos = pos(),
-                   centerDelta(DEFAULT_DIR_VISUAL_WIDTH / 2,
-                               DEFAULT_DIR_VISUAL_HEIGHT / 2);
-            IScaObjectDirectory *objDir = new IScaObjectDirectory(fileInfo);
-            temp = GraphView::scene()->addDirVisual(mapToScene(evPos) - evPos - centerDelta, objDir);
-            return;
+                       centerDelta(DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
+                                   DEFAULT_SYMBOL_VISUAL_HEIGHT / 2);
+                temp = GraphView::scene()->addSymbolVisual(
+                            mapToScene(evPos) - evPos - centerDelta,
+                            static_cast<IScaObjectSymbol *>(object));
+                return;
+            }
         }
     }
 }
@@ -118,6 +144,7 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
 
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
 {
+    Q_UNUSED(event)
     setInteractive(true);
     if (!dropped)
     {
@@ -129,7 +156,7 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
 
 void GraphView::dropEvent(QDropEvent *event)
 {
-
+    Q_UNUSED(event)
     dragLeaveEvent(0, true);
 }
 

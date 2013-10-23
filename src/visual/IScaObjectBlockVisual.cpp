@@ -40,21 +40,14 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectBlockVisual.h"
-
-#include <QPen>
-#include <QBrush>
 #include <QPainter>
-#include <QDebug>
-#include <QRectF>
-#include <QGraphicsScene>
-#include <QFileInfo>
 
 IScaObjectBlockVisual::IScaObjectBlockVisual(const QPointF &coords, IScaObjectBlock *object) :
     Node(coords, object)
 {
     m_rect = QRectF(coords.x(), coords.y(),
-                    DEFAULT_BLOCK_VISUAL_WIDTH,
-                    DEFAULT_BLOCK_VISUAL_HEIGHT);
+                    DEFAULT_TEXT_BLOCK_VISUAL_WIDTH,
+                    DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT);
     QString str = object->getText();
     if (str != NULL)
         setTitle(str);
@@ -65,7 +58,7 @@ void IScaObjectBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsI
 {
     painter->setBrush(brush());
     painter->setPen(pen());
-    painter->drawRect(m_rect);
+    painter->drawEllipse(m_rect);
     Node::paint(painter, option, widget);
 }
 

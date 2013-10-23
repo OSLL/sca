@@ -83,6 +83,7 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     QList<QUrl> urls;
     urls.push_back(QUrl(QString("/") + getCurrentPath(), QUrl::TolerantMode));
     mime->setUrls(urls);
+    mime->setText(textCursor().selectedText());
     mime->setProperty("position", textCursor().position());
     mime->setProperty("length", textCursor().selectionEnd() - textCursor().selectionStart());
 

@@ -53,6 +53,7 @@ Node::Node(const QPointF &coords, IScaObject *object) :
     ObjectVisual(object),
     m_title(NULL)
 {
+    setPos(coords);
     setCacheMode(DeviceCoordinateCache);
     setZValue(1);
 }
@@ -98,6 +99,9 @@ void Node::setTitle(QGraphicsSimpleTextItem *title)
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(painter)
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     if (m_title != NULL)
     {
         m_title->setPos(pos() + QPointF(-m_title->boundingRect().width()/2, 20));

@@ -40,15 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectDirectoryVisual.h"
-
-#include <QPen>
-#include <QBrush>
 #include <QPainter>
-#include <QDebug>
-#include <QRectF>
-#include <QString>
-#include <QGraphicsScene>
-#include <QFileInfo>
 
 IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(const QPointF &coords, IScaObjectDirectory *object) :
     Node(coords, object)

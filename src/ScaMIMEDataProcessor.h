@@ -30,37 +30,47 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file IScaObjectSymbolVisual.cpp
- * \brief IScaObjectSymbolVisual implementation
+ * \file ScaMIMEDataProcessor.h
+ * \brief Header of ScaMIMEDataProcessor
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObjectSymbolVisual.h"
-#include <QPainter>
 
-IScaObjectSymbolVisual::IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object) :
-    Node(coords, object)
+#ifndef _ScaMIMEDataProcessor_H_86D4F543_BF93_48CF_9046_4E6050001129_INCLUDED_
+#define _ScaMIMEDataProcessor_H_86D4F543_BF93_48CF_9046_4E6050001129_INCLUDED_
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+
+#include "common/IScaObject.h"
+#include <QFileInfo>
+class QMimeData;
+
+class ScaMIMEDataProcessor
 {
-    m_rect = QRectF(coords.x(), coords.y(),
-                    DEFAULT_SYMBOL_VISUAL_WIDTH,
-                    DEFAULT_SYMBOL_VISUAL_HEIGHT);
-    setTitle(QString(object->getSymbol()));
-    setBrush(QBrush(DEFAULT_SYMBOL_COLOR));
-}
+public:
+  ScaMIMEDataProcessor(const QMimeData *mime);
 
-void IScaObjectSymbolVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    painter->setBrush(brush());
-    painter->setPen(pen());
-    painter->drawEllipse(m_rect);
-    Node::paint(painter, option, widget);
-}
+  ~ScaMIMEDataProcessor();
+  
+  const QMimeData *getData() const;
+  void setData(const QMimeData *data);
 
-IScaObjectSymbolVisual::~IScaObjectSymbolVisual()
-{
+  IScaObject *makeObject();
 
-}
+private:
+  const QMimeData *m_data;
+  QString m_filePath;
+  QFileInfo m_fileInfo;
+
+}; // class ScaMIMEDataProcessor
+  
+
+#endif //_ScaMIMEDataProcessor_H_86D4F543_BF93_48CF_9046_4E6050001129_INCLUDED_
+

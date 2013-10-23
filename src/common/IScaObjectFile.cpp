@@ -52,6 +52,11 @@ IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo) :
 {
 }
 
+IScaObjectFile::~IScaObjectFile()
+{
+
+}
+
 QFileInfo IScaObjectFile::getFile() const
 {
     return m_fileInfo;

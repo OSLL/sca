@@ -40,14 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectFileVisual.h"
-
-#include <QPen>
-#include <QBrush>
 #include <QPainter>
-#include <QDebug>
-#include <QRectF>
-#include <QGraphicsScene>
-#include <QFileInfo>
 
 IScaObjectFileVisual::IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object) :
     Node(coords, object)

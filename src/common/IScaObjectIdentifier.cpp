@@ -43,17 +43,17 @@
 
 IScaObjectIdentifier::IScaObjectIdentifier() :
     IScaObject(IDENTIFIER),
-    m_file(NULL),
     m_offset(0),
-    m_identifier("")
+    m_identifier(QString()),
+    m_file(NULL)
 {
 }
 
 IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier) :
     IScaObject(IDENTIFIER),
-    m_file(file),
     m_offset(offset),
-    m_identifier(identifier)
+    m_identifier(identifier),
+    m_file(file)
 {
 }
 

@@ -57,6 +57,7 @@ class IScaObjectFile: public IScaObject
 public:
   IScaObjectFile();
   IScaObjectFile(const QFileInfo &fileInfo);
+  ~IScaObjectFile();
 
   QFileInfo getFile() const;
   void setFile(const QString &filePath);

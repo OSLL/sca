@@ -40,15 +40,23 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectLineVisual.h"
+#include <QPainter>
 
 IScaObjectLineVisual::IScaObjectLineVisual(const QPointF &coords, IScaObjectLine *object) :
     Node(coords, object)
 {
-
+    m_rect = QRectF(coords.x(), coords.y(),
+                    DEFAULT_LINE_VISUAL_WIDTH,
+                    DEFAULT_LINE_VISUAL_HEIGHT);
+    setTitle(object->getLine());
+    setBrush(QBrush(DEFAULT_LINE_COLOR));
 }
 
 void IScaObjectLineVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    painter->setBrush(brush());
+    painter->setPen(pen());
+    painter->drawRect(m_rect);
     Node::paint(painter, option, widget);
 }
 
