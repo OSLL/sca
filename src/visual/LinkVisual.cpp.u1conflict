@@ -39,96 +39,71 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "visual/LinkVisual.h"
-
-#include <QBrush>
-#include <QPen>
+#include "LinkVisual.h"
 #include <QPainter>
-#include <QDebug>
 
-LinkVisual::LinkVisual(Node *source, Node *dest) :
+
+LinkVisual::LinkVisual(Link *link) :
+    ObjectVisual(link)
+{    
+    m_type = EDGE;
+
+    QPolygon rectArrow(QRect(0, 0, DEFAULT_ARROW_VISUAL_HEIGHT, DEFAULT_ARROW_VISUAL_HEIGHT));
+    m_destArrow = new QGraphicsPolygonItem(rectArrow, this);
+    m_sourceArrow = NULL;
+}
+
+LinkVisual::LinkVisual(Node *source, Node *dest):
     ObjectVisual(new Link(source->getObject(), dest->getObject()))
-
 {
+    m_type = EDGE;
 
     m_source = source;
-    m_dest   = dest;
+    m_dest = dest;
+}
 
-    m_source->addLink(this);
-    m_dest->addLink(this);
+QRectF LinkVisual::boundingRect() const
+{
 
-    m_type = ObjectVisual::EDGE;
-
-    refreshGeometry();
-
-    setFlags(QGraphicsItem::ItemIsSelectable
-             | QGraphicsItem::ItemSendsGeometryChanges);
-    setAcceptedMouseButtons(0);
-    setPen(QPen(QBrush(Qt::black), 9, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 }
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     refreshGeometry();
-    painter->setPen(pen());
+
     painter->drawLine(m_line);
 }
 
-QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    return QGraphicsItem::itemChange(change, value);
-}
+//QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+//{
+//    refreshGeometry();
+//    return QGraphicsItem::itemChange(change, value);
+//}
 
 void LinkVisual::refreshGeometry()
 {
     prepareGeometryChange();
-    qreal sourceX = m_source->x() + m_source->boundingRect().center().x();
-    qreal sourceY = m_source->y() + m_source->boundingRect().center().y();
+    qreal   sourceCX = m_source->x() + m_source->boundingRect().center().x();
+    qreal   sourceCY = m_source->y() + m_source->boundingRect().center().x();
 
-    qreal destX = m_dest->x() + m_dest->boundingRect().center().x();
-    qreal destY = m_dest->y() + m_dest->boundingRect().center().y();
+    qreal   destCX = m_dest->x() + m_dest->boundingRect().center().x();
+    qreal   destCY = m_dest->y() + m_dest->boundingRect().center().y();
 
-    qreal posX = (sourceX + destX) / 2;
-    qreal posY = (sourceY + destY) / 2;
+    qreal   posX = (sourceCX + destCX) / 2;
+    qreal   posY = (sourceCY + destCY) / 2;
 
-    QPointF begin(sourceX - posX, sourceY - posY);
-    QPointF end(destX - posX, destY - posY);
+    QPointF begin(sourceCX - posX, sourceCY - posY);
+    QPointF end(destCX - posX, destCY - posY);
 
-    setX(posX);
-    setY(posY);
+    setX( posX );
+    setY( posY );
 
-    setLine(QLineF(begin, end));
-}
-
-QRectF LinkVisual::boundingRect() const
-{
-    qreal   extra = pen().width() / 2 + 1;
-
-    QPointF p1 = m_line.p1();
-    QPointF p2 = m_line.p2();
-
-    qreal left = p1.x();
-    qreal top  = p1.y();
-
-    qreal width  = p2.x() - left;
-    qreal height = p2.y() - top;
-
-    return  QRectF(left, top, width, height)
-            .normalized()
-            .adjusted(-extra, -extra, extra, extra);
-}
-
-QPainterPath LinkVisual::shape() const
-{
-    QPainterPath path;
-    QPainterPathStroker str;
-    path.moveTo(m_line.p1());
-    path.lineTo(m_line.p2());
-    return str.createStroke(path);
+    setLine( QLineF(begin, end) );
 }
 
 void LinkVisual::setLine(const QLineF &line)
 {
     m_line = line;
 }
+\
 

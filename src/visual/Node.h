@@ -47,8 +47,10 @@
  * Class description. May use HTML formatting
  *
  */
-#include "ObjectVisual.h"
+#include "visual/ObjectVisual.h"
 #include "NumericalConstants.h"
+
+class LinkVisual;
 
 class Node : public ObjectVisual
 {
@@ -57,6 +59,7 @@ public:
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
     QRectF getRect() const;
     void setRect(const QRectF &rect);
@@ -67,9 +70,12 @@ public:
 
     void removeTitle();
     QPointF pos() const;
+
+    void addLink(LinkVisual *link);
 protected:
     QRectF m_rect;
     QGraphicsSimpleTextItem *m_title;
 
+    QList<LinkVisual *> m_links;
 }; // class Node
 #endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_

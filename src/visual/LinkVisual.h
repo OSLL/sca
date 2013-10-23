@@ -44,7 +44,9 @@
 #define _LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
 
 #include "ObjectVisual.h"
+#include "visual/Node.h"
 #include "common/Link.h"
+
 
 /*!
  * Class description. May use HTML formatting
@@ -53,16 +55,22 @@
 class LinkVisual : public ObjectVisual
 {
 public:
-  explicit LinkVisual(Link* object);
+    LinkVisual(Node *source, Node *dest);
 
-  ~LinkVisual();
-  
-private:    
-  LinkVisual(const LinkVisual& obj);
-  LinkVisual &operator=(const LinkVisual& obj);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+    void refreshGeometry();
+    QRectF boundingRect() const;
+    QPainterPath shape() const;
+    void setLine(const QLineF &line);
 
+private:
+    Node *m_source;
+    Node *m_dest;
+
+    QLineF m_line;
 }; // class LinkVisual
-  
+
 
 #endif //_LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
 

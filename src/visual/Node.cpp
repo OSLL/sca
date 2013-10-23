@@ -39,8 +39,8 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "Node.h"
-
+#include "visual/Node.h"
+#include "visual/LinkVisual.h"
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
@@ -55,12 +55,18 @@ Node::Node(const QPointF &coords, IScaObject *object) :
 {
     setPos(coords);
     setCacheMode(DeviceCoordinateCache);
+    setFlag(ItemSendsGeometryChanges);
     setZValue(1);
 }
 
 QPointF Node::pos() const
 {
     return m_rect.center();
+}
+
+void Node::addLink(LinkVisual *link)
+{
+    m_links.append(link);
 }
 
 QRectF Node::getRect() const
@@ -111,4 +117,18 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 QRectF Node::boundingRect() const
 {
     return m_rect;
+}
+
+QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
+{
+    switch (change) {
+    case ItemPositionChange:
+        foreach (LinkVisual *link, m_links)
+            link->refreshGeometry();
+        break;
+    default:
+        break;
+    };
+
+    return QGraphicsItem::itemChange(change, value);
 }

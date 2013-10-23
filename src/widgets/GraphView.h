@@ -73,6 +73,7 @@ protected:
     void dragLeaveEvent(QDragLeaveEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event = 0, bool = false);
     void dropEvent(QDropEvent * event);
+    void keyPressEvent(QKeyEvent *event);
 }; // class GraphView
 
 

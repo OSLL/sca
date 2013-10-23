@@ -55,6 +55,7 @@
 #include "visual/IScaObjectSymbolVisual.h"
 #include "visual/IScaObjectLineVisual.h"
 #include "visual/Node.h"
+#include "visual/LinkVisual.h"
 
 class GraphScene : public QGraphicsScene
 {
@@ -69,6 +70,8 @@ public:
 
     QGraphicsItem *addNode(const float x, const float y, IScaObject *object = 0);
     Node *addNode(const QPointF &coords, IScaObject *object = 0);
+    LinkVisual *addLink(QGraphicsItem *source, QGraphicsItem *dest);
+
 signals:
 
 public slots:

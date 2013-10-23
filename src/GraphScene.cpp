@@ -86,6 +86,16 @@ Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
     return node;
 }
 
+LinkVisual *GraphScene::addLink(QGraphicsItem *source, QGraphicsItem *dest)
+{
+    Node *sourceNode = dynamic_cast<Node *>(source);
+    Node *destNode = dynamic_cast<Node *>(dest);
+
+    LinkVisual *link = new LinkVisual(sourceNode, destNode);
+
+    addItem(link);
+}
+
 QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
 {
     return addNode(QPointF(x, y), object);

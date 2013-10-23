@@ -74,7 +74,6 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
         event->acceptProposedAction();
         ScaMIMEDataProcessor processor(event->mimeData());
         IScaObject *object = processor.makeObject();
-        qDebug() << object->getType();
         switch (object->getType())
         {
         case IScaObject::FILE:
@@ -158,6 +157,18 @@ void GraphView::dropEvent(QDropEvent *event)
 {
     Q_UNUSED(event)
     dragLeaveEvent(0, true);
+}
+
+void GraphView::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_C)
+    {
+        QList<QGraphicsItem *> items = scene()->selectedItems();
+        if(items.size() == 2)
+        {
+            scene()->addLink(items.at(1), items.at(0));
+        }
+    }
 }
 
 GraphScene *GraphView::scene() const

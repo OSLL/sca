@@ -59,7 +59,7 @@ public:
 
   ~IScaObjectDirectoryVisual();
   
-private:    
+private:
   IScaObjectDirectoryVisual(const IScaObjectDirectoryVisual& obj);
   IScaObjectDirectoryVisual &operator=(const IScaObjectDirectoryVisual& obj);
 
