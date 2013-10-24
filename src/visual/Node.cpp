@@ -119,6 +119,16 @@ QRectF Node::boundingRect() const
     return m_rect;
 }
 
+QColor Node::getColor() const
+{
+    return brush().color();
+}
+
+void Node::setColor(const QColor &color)
+{
+    setBrush(color);
+}
+
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
@@ -126,6 +136,15 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
         foreach (LinkVisual *link, m_links)
             link->refreshGeometry();
         break;
+    case ItemSelectedHasChanged:
+        if (value == true) //It is selected now
+        {
+            setColor(m_selectionColor);
+        }
+        else
+        {
+            setColor(m_standartColor);
+        }
     default:
         break;
     };

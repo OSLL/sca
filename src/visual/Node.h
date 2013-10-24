@@ -72,10 +72,13 @@ public:
     QPointF pos() const;
 
     void addLink(LinkVisual *link);
+    QColor getColor() const;
+    void setColor(const QColor &color);
 protected:
     QRectF m_rect;
     QGraphicsSimpleTextItem *m_title;
-
+    QColor m_standartColor;
+    QColor m_selectionColor;
     QList<LinkVisual *> m_links;
 }; // class Node
 #endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_

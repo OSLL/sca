@@ -45,6 +45,11 @@
 IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(const QPointF &coords, IScaObjectDirectory *object) :
     Node(coords, object)
 {
+    m_standartColor = DEFAULT_DIR_COLOR;
+    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
+                              m_standartColor.green()* SELECTION_COLOR_DELTA,
+                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
+    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_DIR_VISUAL_WIDTH,
                     DEFAULT_DIR_VISUAL_HEIGHT);
@@ -52,7 +57,6 @@ IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(const QPointF &coords, ISca
         setTitle(object->getFile().absoluteFilePath().section('/', 0, 0));
     else
         setTitle(object->getFile().absoluteFilePath().section('/', -1));
-    setBrush(QBrush(DEFAULT_DIR_COLOR));
 }
 
 void IScaObjectDirectoryVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

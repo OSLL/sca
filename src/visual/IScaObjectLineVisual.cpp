@@ -45,11 +45,15 @@
 IScaObjectLineVisual::IScaObjectLineVisual(const QPointF &coords, IScaObjectLine *object) :
     Node(coords, object)
 {
+    m_standartColor = DEFAULT_LINE_COLOR;
+    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
+                              m_standartColor.green()* SELECTION_COLOR_DELTA,
+                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
+    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_LINE_VISUAL_WIDTH,
                     DEFAULT_LINE_VISUAL_HEIGHT);
     setTitle(object->getLine());
-    setBrush(QBrush(DEFAULT_LINE_COLOR));
 }
 
 void IScaObjectLineVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

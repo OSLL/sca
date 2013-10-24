@@ -45,11 +45,15 @@
 IScaObjectFileVisual::IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object) :
     Node(coords, object)
 {
+    m_standartColor = DEFAULT_FILE_COLOR;
+    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
+                              m_standartColor.green()* SELECTION_COLOR_DELTA,
+                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
+    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_FILE_VISUAL_WIDTH,
                     DEFAULT_FILE_VISUAL_HEIGHT);
     setTitle(object->getFile().fileName());
-    setBrush(QBrush(DEFAULT_FILE_COLOR));
 }
 
 void IScaObjectFileVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

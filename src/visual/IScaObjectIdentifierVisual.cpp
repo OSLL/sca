@@ -45,11 +45,15 @@
 IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object) :
     Node(coords, object)
 {
+    m_standartColor = DEFAULT_IDENTIFIER_COLOR;
+    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
+                              m_standartColor.green()* SELECTION_COLOR_DELTA,
+                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
+    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_IDENTIFIER_VISUAL_WIDTH,
                     DEFAULT_IDENTIFIER_VISUAL_HEIGHT);
     setTitle(object->getIdentifier());
-    setBrush(QBrush(DEFAULT_IDENTIFIER_COLOR));
 }
 
 void IScaObjectIdentifierVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
