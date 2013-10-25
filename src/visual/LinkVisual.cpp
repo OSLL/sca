@@ -47,22 +47,16 @@
 #include <QDebug>
 
 LinkVisual::LinkVisual(Node *source, Node *dest) :
-    ObjectVisual(new Link(source->getObject(), dest->getObject()))
-
+    ObjectVisual(new Link(source->getObject(), dest->getObject()), EDGE),
+    m_source(source),
+    m_dest(dest)
 {
-
-    m_source = source;
-    m_dest   = dest;
-
     m_source->addLink(this);
     m_dest->addLink(this);
 
-    m_type = ObjectVisual::EDGE;
-
     refreshGeometry();
 
-    setFlags(QGraphicsItem::ItemIsSelectable
-             | QGraphicsItem::ItemSendsGeometryChanges);
+    setFlags(QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(0);
     setPen(QPen(QBrush(Qt::black), 9, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 }
@@ -131,4 +125,3 @@ void LinkVisual::setLine(const QLineF &line)
 {
     m_line = line;
 }
-

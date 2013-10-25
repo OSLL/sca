@@ -42,7 +42,9 @@
 #include "common/Link.h"
 
 Link::Link() :
-    IScaObject(LINK)
+    IScaObject(LINK),
+    m_objectFrom(NULL),
+    m_objectTo(NULL)
 {
 }
 

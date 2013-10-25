@@ -70,8 +70,9 @@ public:
 
     QGraphicsItem *addNode(const float x, const float y, IScaObject *object = 0);
     Node *addNode(const QPointF &coords, IScaObject *object = 0);
-    LinkVisual *addLink(QGraphicsItem *source, QGraphicsItem *dest);
+    LinkVisual *addLinkVisual(Node *source, Node *dest);
 
+    QList<Node *> selectedNodes();
 signals:
 
 public slots:

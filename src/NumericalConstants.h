@@ -15,6 +15,7 @@
 *NumericalConstants.h
 * ---------------------------------------------------------------- */
 #include <QColor>
+#include <QPen>
 
 //Alerts consts
 const long MAX_BINARY_FILE_SIZE = 50*1024*1024;

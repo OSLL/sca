@@ -163,10 +163,10 @@ void GraphView::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_C)
     {
-        QList<QGraphicsItem *> items = scene()->selectedItems();
+        QList<Node *> items = scene()->selectedNodes();
         if(items.size() == 2)
         {
-            scene()->addLink(items.at(1), items.at(0));
+            scene()->addLinkVisual(items.at(1), items.at(0));
         }
     }
 }

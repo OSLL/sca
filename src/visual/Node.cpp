@@ -50,7 +50,7 @@
 #include <QTextDocument>
 
 Node::Node(const QPointF &coords, IScaObject *object) :
-    ObjectVisual(object),
+    ObjectVisual(object, NODE),
     m_title(NULL)
 {
     setPos(coords);

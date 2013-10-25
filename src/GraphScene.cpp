@@ -86,14 +86,27 @@ Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
     return node;
 }
 
-LinkVisual *GraphScene::addLink(QGraphicsItem *source, QGraphicsItem *dest)
+LinkVisual *GraphScene::addLinkVisual(Node *source, Node *dest)
 {
-    Node *sourceNode = dynamic_cast<Node *>(source);
-    Node *destNode = dynamic_cast<Node *>(dest);
-
-    LinkVisual *link = new LinkVisual(sourceNode, destNode);
+    LinkVisual *link = new LinkVisual(source, dest);
 
     addItem(link);
+    return link;
+}
+
+QList<Node *> GraphScene::selectedNodes()
+{
+    QList<Node *> nodes;
+    foreach(QGraphicsItem *item, selectedItems())
+    {
+        Node *node = NULL;
+        node = dynamic_cast<Node *>(item);
+        if (node != NULL)
+        {
+            nodes.push_back(node);
+        }
+    }
+    return nodes;
 }
 
 QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)

@@ -87,7 +87,7 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     mime->setProperty("position", textCursor().position());
     mime->setProperty("length", textCursor().selectionEnd() - textCursor().selectionStart());
 
-    qDebug() << textCursor().position();
-    qDebug() << textCursor().selectionEnd() - textCursor().selectionStart();
+    qDebug() << "Pos: " << textCursor().position();
+    qDebug() << "Lenght: " << textCursor().selectionEnd() - textCursor().selectionStart();
     return mime;
 }

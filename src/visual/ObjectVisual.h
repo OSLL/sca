@@ -8,18 +8,16 @@
 class ObjectVisual : public QAbstractGraphicsShapeItem
 {
 public:
-    ObjectVisual(IScaObject *object, QGraphicsItem *parent = 0);
-
-
-    IScaObject *getObject() const;
-    void setObject(IScaObject *object);
-
     enum ObjectVisualType{
         OBJECT,
         NODE,
         EDGE,
         COMMENT
     };
+    ObjectVisual(IScaObject *object, ObjectVisualType type = OBJECT, QGraphicsItem *parent = 0);
+
+    IScaObject *getObject() const;
+    void setObject(IScaObject *object);
 
 protected:
     ObjectVisualType m_type;
