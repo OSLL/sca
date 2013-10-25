@@ -76,18 +76,53 @@ void ObjectTextViewer::setCurrentEncoding(const QString &value)
     currentEncoding = value;
 }
 
+int ObjectTextViewer::currentLineNumber() const
+{
+    QTextCursor cursor = textCursor();
+    cursor.movePosition(QTextCursor::StartOfLine);
+
+    int lines = 1;
+    while(cursor.positionInBlock()>0) {
+        cursor.movePosition(QTextCursor::Up);
+        lines++;
+    }
+    QTextBlock block = cursor.block().previous();
+
+    while(block.isValid()) {
+        lines += block.lineCount();
+        block = block.previous();
+    }
+    return lines;
+}
+
+int ObjectTextViewer::symbolsInCurrentLine() const
+{
+    QTextCursor cursor = textCursor();
+    return cursor.block().length();
+}
+
 QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
 {
     QMimeData *mime = new QMimeData();
+    QTextCursor cursor = textCursor();
+
     mime->setText(textCursor().selectedText());
     QList<QUrl> urls;
-    urls.push_back(QUrl(QString("/") + getCurrentPath(), QUrl::TolerantMode));
+    urls.push_back(QUrl::fromLocalFile(getCurrentPath()));
     mime->setUrls(urls);
-    mime->setText(textCursor().selectedText());
-    mime->setProperty("position", textCursor().position());
-    mime->setProperty("length", textCursor().selectionEnd() - textCursor().selectionStart());
+    mime->setText(cursor.selectedText());
+    mime->setProperty("position", cursor.position());
+    mime->setProperty("length", cursor.selectionEnd() - cursor.selectionStart());
+    mime->setProperty("posInLine", cursor.positionInBlock());
 
-    qDebug() << "Pos: " << textCursor().position();
-    qDebug() << "Lenght: " << textCursor().selectionEnd() - textCursor().selectionStart();
+    int line = currentLineNumber();
+    mime->setProperty("line", line);
+    mime->setProperty("lineLength", symbolsInCurrentLine() - 1);
+
+    qDebug() << "Line: " << currentLineNumber();
+    qDebug() << "Symbols: " << symbolsInCurrentLine();
+    qDebug() << "Position in line: " << cursor.positionInBlock();
+    qDebug() << "Pos: " << cursor.position();
+    qDebug() << "Lenght: " << cursor.selectionEnd() - cursor.selectionStart();
     return mime;
 }

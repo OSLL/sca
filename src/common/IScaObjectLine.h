@@ -56,20 +56,20 @@ class IScaObjectLine: public IScaObject
 {
 public:
     IScaObjectLine();
-    IScaObjectLine(IScaObjectFile *file, unsigned int offset = 0, QString line = "");
+    IScaObjectLine(IScaObjectFile *file, quint64 lineNumber = 0, QString line = "");
 
     QString getLine() const;
     void setLine(const QString &line);
 
-    unsigned int getOffset() const;
-    void setOffset(unsigned int offset);
-
     QFileInfo getFile() const;
     void setFile(const QFileInfo &file);
 
+    quint64 lineNumber() const;
+    void setLineNumber(const quint64 &lineNumber);
+
 private:
     QString m_line;
-    unsigned int m_offset;
+    quint64 m_lineNumber;
     IScaObjectFile *m_file;
 }; // class IScaObjectLine
 

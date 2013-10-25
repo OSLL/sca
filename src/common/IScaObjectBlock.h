@@ -58,7 +58,7 @@ class IScaObjectBlock: public IScaObject
 {
 public:
     IScaObjectBlock();
-    IScaObjectBlock(IScaObjectFile *file, unsigned int offset, unsigned int length, QString text = QString());
+    IScaObjectBlock(IScaObjectFile *file, unsigned int offset, unsigned int length, QString text = QString(""));
     ~IScaObjectBlock();
 
     unsigned int getOffset() const;

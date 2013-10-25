@@ -51,6 +51,7 @@
 #include <QMimeData>
 #include <QFileInfo>
 #include <QUrl>
+#include <QDebug>
 
 ScaMIMEDataProcessor::ScaMIMEDataProcessor(const QMimeData *mime) :
     m_data(mime)
@@ -79,19 +80,32 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
     if (m_data->hasText())   //IScaObjectBlock/Line/Symbol/Identifier
     {
         int offset = m_data->property("position").toInt(),
-            length = m_data->property("length").toInt();
+            length = m_data->property("length").toInt(),
+            posInLine = m_data->property("posInLine").toInt(),
+            line = m_data->property("line").toInt(),
+            lineLength = m_data->property("lineLength").toInt();
+
         IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
-        if (m_data->text().length() == 1) //Symbol
+
+        //Symbol?
+        if (m_data->text().length() == 1)
         {
             char symbol = m_data->text().toAscii().at(0);
             IScaObjectSymbol *objSymbol = new IScaObjectSymbol(objFile, offset, symbol);
             return objSymbol;
         }
-        else
-        {   //Some block
-            IScaObjectBlock *objBlock = new IScaObjectBlock(objFile, offset, length, m_data->text());
-            return objBlock;
+
+        //Line?
+        if (lineLength == length
+            && (posInLine == 0 || posInLine == lineLength))
+        {
+            IScaObjectLine *objLine = new IScaObjectLine(objFile, line, m_data->text());
+            return objLine;
         }
+
+        //Just block then
+        IScaObjectBlock *objBlock = new IScaObjectBlock(objFile, offset, length, m_data->text());
+        return objBlock;
     }
     if (m_fileInfo.isFile())  //IScaObjectFile
     {

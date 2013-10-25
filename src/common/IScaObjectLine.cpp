@@ -45,16 +45,16 @@
 
 IScaObjectLine::IScaObjectLine() :
     IScaObject(LINE),
-    m_line(QString()),
-    m_offset(0),
+    m_line(QString("")),
+    m_lineNumber(0),
     m_file(NULL)
 {
 }
 
-IScaObjectLine::IScaObjectLine(IScaObjectFile *file, unsigned int offset, QString line) :
+IScaObjectLine::IScaObjectLine(IScaObjectFile *file, quint64 lineNumber, QString line) :
     IScaObject(LINE),
     m_line(line),
-    m_offset(offset),
+    m_lineNumber(lineNumber),
     m_file(file)
 {
 }
@@ -68,15 +68,7 @@ void IScaObjectLine::setLine(const QString &line)
 {
     m_line = line;
 }
-unsigned int IScaObjectLine::getOffset() const
-{
-    return m_offset;
-}
 
-void IScaObjectLine::setOffset(unsigned int offset)
-{
-    m_offset = offset;
-}
 QFileInfo IScaObjectLine::getFile() const
 {
     return m_file->getFile();
@@ -86,5 +78,16 @@ void IScaObjectLine::setFile(const QFileInfo &file)
 {
     m_file->setFile(file.filePath());
 }
+
+quint64 IScaObjectLine::lineNumber() const
+{
+    return m_lineNumber;
+}
+
+void IScaObjectLine::setLineNumber(const quint64 &lineNumber)
+{
+    m_lineNumber = lineNumber;
+}
+
 
 

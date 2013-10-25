@@ -62,6 +62,27 @@ IScaObjectSymbolVisual *GraphScene::addSymbolVisual(const QPointF &coords, IScaO
     return node;
 }
 
+IScaObjectLineVisual *GraphScene::addLineVisual(const QPointF &coords, IScaObjectLine *object)
+{
+    IScaObjectLineVisual *node = new IScaObjectLineVisual(coords, object);
+
+    addItem(node);
+    return node;
+}
+
+IScaObjectBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords, IScaObjectBlock *object)
+{
+
+}
+
+IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object)
+{
+    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(coords, object);
+
+    addItem(node);
+    return node;
+}
+
 IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
 {
     IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);

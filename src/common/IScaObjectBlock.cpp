@@ -46,7 +46,7 @@ IScaObjectBlock::IScaObjectBlock() :
     IScaObject(TEXTBLOCK),
     m_length(0),
     m_offset(0),
-    m_text(QString()),
+    m_text(QString("")),
     m_file(NULL)
 {
 }

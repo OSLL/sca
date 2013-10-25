@@ -98,7 +98,12 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             }
         case IScaObject::BINARYBLOCK:
             {
-
+                QPoint evPos = pos(),
+                       centerDelta(DEFAULT_BINARY_BLOCK_VISUAL_WIDTH / 2,
+                                   DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT / 2);
+                temp = GraphView::scene()->addBinaryBlockVisual(
+                            mapToScene(evPos) - evPos - centerDelta,
+                            static_cast<IScaObjectBlock *>(object));
                 return;
             }
         case IScaObject::TEXTBLOCK:
@@ -113,17 +118,32 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             }
         case IScaObject::IDENTIFIER:
             {
-
+                QPoint evPos = pos(),
+                       centerDelta(DEFAULT_IDENTIFIER_VISUAL_WIDTH / 2,
+                                   DEFAULT_IDENTIFIER_VISUAL_HEIGHT / 2);
+                temp = GraphView::scene()->addIdentifierVisual(
+                            mapToScene(evPos) - evPos - centerDelta,
+                            static_cast<IScaObjectIdentifier *>(object));
                 return;
             }
         case IScaObject::SYMBOL:
             {
-            QPoint evPos = pos(),
+                QPoint evPos = pos(),
                        centerDelta(DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
                                    DEFAULT_SYMBOL_VISUAL_HEIGHT / 2);
                 temp = GraphView::scene()->addSymbolVisual(
                             mapToScene(evPos) - evPos - centerDelta,
                             static_cast<IScaObjectSymbol *>(object));
+                return;
+            }
+        case IScaObject::LINE:
+            {
+                QPoint evPos = pos(),
+                       centerDelta(DEFAULT_LINE_VISUAL_WIDTH / 2,
+                                   DEFAULT_LINE_VISUAL_HEIGHT / 2);
+                temp = GraphView::scene()->addLineVisual(
+                            mapToScene(evPos) - evPos - centerDelta,
+                            static_cast<IScaObjectLine *>(object));
                 return;
             }
         }

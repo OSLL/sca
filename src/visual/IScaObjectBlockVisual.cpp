@@ -45,7 +45,7 @@
 IScaObjectBlockVisual::IScaObjectBlockVisual(const QPointF &coords, IScaObjectBlock *object) :
     Node(coords, object)
 {
-    m_standartColor = DEFAULT_BLOCK_COLOR;
+    m_standartColor = DEFAULT_TEXT_BLOCK_COLOR;
     m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
                               m_standartColor.green()* SELECTION_COLOR_DELTA,
                               m_standartColor.blue() * SELECTION_COLOR_DELTA);

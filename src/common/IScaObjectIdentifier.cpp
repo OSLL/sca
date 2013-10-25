@@ -44,7 +44,7 @@
 IScaObjectIdentifier::IScaObjectIdentifier() :
     IScaObject(IDENTIFIER),
     m_offset(0),
-    m_identifier(QString()),
+    m_identifier(QString("")),
     m_file(NULL)
 {
 }

@@ -63,6 +63,8 @@ public:
     QString getCurrentEncoding() const;
     void setCurrentEncoding(const QString &value);
 
+    int currentLineNumber() const;
+    int symbolsInCurrentLine() const;
 signals:
     
 public slots:
