@@ -30,41 +30,42 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file SourceBrowserMenu.h
- * \brief Header of SourceBrowserMenu
+ * \file ContextMenu.h
+ * \brief Header of ContextMenu
  * \todo add comment here
  *
- * Class of SourceBrowser's context menu
+ * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
 
-#ifndef _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
-#define _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
+#ifndef _ContextMenu_H_4CE24F6B_C887_4206_BACE_13B4453125AB_INCLUDED_
+#define _ContextMenu_H_4CE24F6B_C887_4206_BACE_13B4453125AB_INCLUDED_
+
+#include <QMenu>
 
 /*!
  * Class description. May use HTML formatting
  *
- * Class for storing actions for context menu in
- * SourceBrowser class
- *
  */
-
-#include "widgets/ContextMenu.h"
-#include "StringConstants.h"
-
-class SourceBrowserMenu : public ContextMenu
+class ContextMenu : public QMenu
 {
 public:
-    explicit SourceBrowserMenu(QWidget *parent = 0);
+  ContextMenu(QWidget *parent = 0);
+  ContextMenu(const QString &title, QWidget *parent = 0);
+  ~ContextMenu();
 
-    ~SourceBrowserMenu();
+  ContextMenu *addMenu(const QString &menu);
+  QAction *addNewMenuEntry(const QString &name, bool enabled = true, QObject *receiver = 0, const char *slot = 0);
+  void connectActionByName(const QString &name, QObject *receiver, const char *slot);
+  QAction *getActionByName(const QString &name, const QString &submenuName = "");
+  void connectActionByMenu(const QString &menu, const QString &actionName, QObject *receiver, const char *slot);
 
 private:
-    ContextMenu *m_openTextAs;
-}; // class SourceBrowserMenu
 
+}; // class ContextMenu
+  
 
-#endif //_SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
+#endif //_ContextMenu_H_4CE24F6B_C887_4206_BACE_13B4453125AB_INCLUDED_
 

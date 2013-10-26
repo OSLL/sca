@@ -41,84 +41,14 @@
 
 #include "GraphViewContextMenu.h"
 
-#include <QMessageBox>
-#include <QAction>
-#include <QDebug>
-
-GraphViewContextMenu::GraphViewContextMenu(QWidget *parent)
+GraphViewContextMenu::GraphViewContextMenu(QWidget *parent) :
+    ContextMenu(parent)
 {
-    addAction(TO_TEXT_BLOCK);
-    addAction(TO_IDENTIFIER);
-    addAction(TO_BINARY_BLOCK);
+    addNewMenuEntry(TO_TEXT_BLOCK);
+    addNewMenuEntry(TO_IDENTIFIER);
+    addNewMenuEntry(TO_BINARY_BLOCK);
 }
 
 GraphViewContextMenu::~GraphViewContextMenu()
 {
-    foreach(QAction *act, actions())
-    {
-        act->deleteLater();
-    }
-}
-
-QAction *GraphViewContextMenu::addNewMenuEntry(const QString &name, bool enabled, QObject *receiver, const char *slot)
-{
-    QAction *act = QMenu::addAction(name, receiver, slot);
-    act->setEnabled(enabled);
-    return act;
-}
-
-void GraphViewContextMenu::connectActionByName(const QString &name, QObject *receiver, const char *slot)
-{
-    if (name.isEmpty() || receiver == NULL || slot == NULL)
-    {
-        qDebug() << "Error in params in connectActionByName:"
-                 << "\nobject: " << this
-                 << "name: " << name
-                 << "\nreceiver: " << receiver
-                 << "\nslot: " << slot;
-        return;
-    }
-    QAction *action = getActionByName(name);
-    if (action == NULL)
-    {
-        qDebug() << "Can\'t find action for name: " << name
-                 << " while connecting to " << receiver << slot;
-        return;
-    }
-    connect(action, SIGNAL(triggered()), receiver, slot);
-}
-
-QAction *GraphViewContextMenu::getActionByName(const QString &name, const QString &submenuName)
-{
-    QList<QAction *> acts = actions();
-    foreach(QAction *action, acts)
-    {
-        if (action->text() == name)
-            return action;
-    }
-    return 0;
-}
-
-void GraphViewContextMenu::connectActionByMenu(const QString &menuName, const QString &actionName, QObject *receiver, const char *slot)
-{
-    if (menuName.isEmpty() || actionName.isEmpty() || receiver == NULL || slot == NULL)
-    {
-        qDebug() << "Error in params in connectActionByName:"
-                 << "\nobject: " << this
-                 << "\nmenu: " << menuName
-                 << "name: " << actionName
-                 << "\nreceiver: " << receiver
-                 << "\nslot: " << slot;
-        return;
-    }
-
-    QAction *menu = getActionByName(actionName, menuName);
-    if (menu == NULL)
-    {
-        qDebug() << "Can\'t find action for name: " << actionName
-                 << " in submenu: " << menuName
-                 << " while connecting to " << receiver << slot;
-        return;
-    }
-    connect(menu, SIGNAL(triggered()), receiver, slot);
 }

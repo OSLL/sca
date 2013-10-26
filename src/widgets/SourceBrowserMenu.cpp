@@ -41,106 +41,18 @@
 
 #include "SourceBrowserMenu.h"
 
-#include <QMessageBox>
-#include <QAction>
-#include <QDebug>
-
 SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
-    QMenu(parent)
+    ContextMenu(parent)
 {
-    addAction(OPEN_IN_TEXT_VIEWER);
+    addNewMenuEntry(OPEN_IN_TEXT_VIEWER);
     m_openTextAs = addMenu(OPEN_IN_TEXT_VIEWER_AS);
-    addAction(OPEN_IN_BINARY_VIEWER);
+    addNewMenuEntry(OPEN_IN_BINARY_VIEWER);
 
-    m_openTextAs->addAction(UTF8);
-    m_openTextAs->addAction(CP866);
-    m_openTextAs->addAction(ISO885915);
+    m_openTextAs->addNewMenuEntry(UTF8);
+    m_openTextAs->addNewMenuEntry(CP866);
+    m_openTextAs->addNewMenuEntry(ISO885915);
 }
 
 SourceBrowserMenu::~SourceBrowserMenu()
 {
-    foreach(QAction *act, actions())
-    {
-        act->deleteLater();
-    }
-}
-
-QAction *SourceBrowserMenu::addNewMenuEntry(const QString &name, bool enabled, QObject *receiver, const char *slot)
-{
-    QAction *act = QMenu::addAction(name, receiver, slot);
-    act->setEnabled(enabled);
-    return act;
-}
-
-
-void SourceBrowserMenu::connectActionByName(const QString &name, QObject *receiver, const char *slot)
-{
-    if (name.isEmpty() || receiver == NULL || slot == NULL)
-    {
-        qDebug() << "Error in params in connectActionByName:"
-                 << "\nobject: " << this
-                 << "name: " << name
-                 << "\nreceiver: " << receiver
-                 << "\nslot: " << slot;
-        return;
-    }
-    QAction *action = getActionByName(name);
-    if (action == NULL)
-    {
-        qDebug() << "Can\'t find action for name: " << name
-                 << " while connecting to " << receiver << slot;
-        return;
-    }
-    connect(action, SIGNAL(triggered()), receiver, slot);
-}
-
-QAction *SourceBrowserMenu::getActionByName(const QString &name, const QString &submenuName)
-{
-    QList<QAction *> acts;
-    if (submenuName == OPEN_IN_TEXT_VIEWER_AS)
-    {
-        QMenu *submenu =  m_openTextAs;
-        if(submenu == NULL)
-        {
-            return 0;
-        }
-
-        acts = submenu->actions();
-    }
-    else
-    {
-        acts = actions();
-    }
-
-    foreach(QAction *action, acts)
-    {
-        if (action->text() == name)
-            return action;
-    }
-    return 0;
-}
-
-void SourceBrowserMenu::connectActionByMenu(const QString &menuName, const QString &actionName, QObject *receiver, const char *slot)
-{
-
-    if (menuName.isEmpty() || actionName.isEmpty() || receiver == NULL || slot == NULL)
-    {
-        qDebug() << "Error in params in connectActionByName:"
-                 << "\nobject: " << this
-                 << "\nmenu: " << menuName
-                 << "name: " << actionName
-                 << "\nreceiver: " << receiver
-                 << "\nslot: " << slot;
-        return;
-    }
-
-    QAction *menu = getActionByName(actionName, menuName);
-    if (menu == NULL)
-    {
-        qDebug() << "Can\'t find action for name: " << actionName
-                 << " in submenu: " << menuName
-                 << " while connecting to " << receiver << slot;
-        return;
-    }
-    connect(menu, SIGNAL(triggered()), receiver, slot);
 }

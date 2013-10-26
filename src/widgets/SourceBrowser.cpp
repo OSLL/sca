@@ -56,7 +56,7 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
     m_menu->connectActionByName(OPEN_IN_TEXT_VIEWER , this, SIGNAL(openFile()));
     m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
 
-    QSignalMapper* signalMapper = new QSignalMapper (this);
+    QSignalMapper *signalMapper = new QSignalMapper (this);
     m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, UTF8, signalMapper, SLOT(map()));
     m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, CP866, signalMapper, SLOT(map()));
     m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, ISO885915, signalMapper, SLOT(map()));

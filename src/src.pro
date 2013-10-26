@@ -46,7 +46,8 @@ SOURCES += \
     widgets/ViewsTabWidget.cpp \
     ScaMIMEDataProcessor.cpp \
     widgets/GraphViewContextMenu.cpp \
-    widgets/SourceBrowserMenu.cpp
+    widgets/SourceBrowserMenu.cpp \
+    widgets/ContextMenu.cpp
 
 
 HEADERS += \
@@ -83,7 +84,8 @@ HEADERS += \
     widgets/ViewsTabWidget.h \
     ScaMIMEDataProcessor.h \
     widgets/GraphViewContextMenu.h \
-    widgets/SourceBrowserMenu.h
+    widgets/SourceBrowserMenu.h \
+    widgets/ContextMenu.h
 
 FORMS += \
     mainwindow.ui

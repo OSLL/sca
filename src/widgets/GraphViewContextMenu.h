@@ -50,18 +50,14 @@
  *
  */
 
-#include <QMenu>
+#include "widgets/ContextMenu.h"
 #include "StringConstants.h"
-class GraphViewContextMenu : public QMenu
+class GraphViewContextMenu : public ContextMenu
 {
 public:
     explicit GraphViewContextMenu(QWidget *parent = 0);
-    ~GraphViewContextMenu();
 
-    QAction *addNewMenuEntry(const QString &name, bool enabled = true, QObject *receiver = 0, const char *slot = 0);
-    void connectActionByName(const QString &name, QObject *receiver, const char *slot);
-    QAction *getActionByName(const QString &name, const QString &submenuName = "");
-    void connectActionByMenu(const QString &menuName, const QString &actionName, QObject *receiver, const char *slot);
+    ~GraphViewContextMenu();
 
 private:
 
