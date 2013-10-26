@@ -48,6 +48,7 @@
  *
  */
 #include <QGraphicsView>
+#include "widgets/GraphViewContextMenu.h"
 #include "GraphScene.h"
 
 class GraphView : public QGraphicsView
@@ -56,14 +57,18 @@ class GraphView : public QGraphicsView
 public:
     GraphView(QWidget *parent = 0);
     explicit GraphView(GraphScene *scene, QWidget *parent = 0);
-
     GraphScene *scene() const;
-signals:
+
+    GraphViewContextMenu *menu() const;
+    void setMenu(GraphViewContextMenu *menu);
+
 private:
     //This is used for drag-n-drop technology
-    Node *temp;
+    Node *m_temp;
+    GraphViewContextMenu *m_menu;
 
 public slots:
+    void ShowContextMenu(const QPoint &pos);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

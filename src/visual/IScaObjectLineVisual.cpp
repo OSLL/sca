@@ -43,13 +43,8 @@
 #include <QPainter>
 
 IScaObjectLineVisual::IScaObjectLineVisual(const QPointF &coords, IScaObjectLine *object) :
-    Node(coords, object)
+    Node(coords, object, DEFAULT_LINE_COLOR)
 {
-    m_standartColor = DEFAULT_LINE_COLOR;
-    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
-                              m_standartColor.green()* SELECTION_COLOR_DELTA,
-                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
-    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_LINE_VISUAL_WIDTH,
                     DEFAULT_LINE_VISUAL_HEIGHT);

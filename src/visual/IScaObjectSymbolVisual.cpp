@@ -43,13 +43,8 @@
 #include <QPainter>
 
 IScaObjectSymbolVisual::IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object) :
-    Node(coords, object)
+    Node(coords, object, DEFAULT_SYMBOL_COLOR)
 {
-    m_standartColor = DEFAULT_SYMBOL_COLOR;
-    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
-                              m_standartColor.green()* SELECTION_COLOR_DELTA,
-                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
-    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_SYMBOL_VISUAL_WIDTH,
                     DEFAULT_SYMBOL_VISUAL_HEIGHT);

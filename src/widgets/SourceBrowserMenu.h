@@ -30,38 +30,45 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectSymbolVisual.h
- * \brief Header of IScaObjectSymbolVisual
+ * \file SourceBrowserMenu.h
+ * \brief Header of SourceBrowserMenu
  * \todo add comment here
  *
- * File description
+ * Class of SourceBrowser's context menu
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#ifndef _IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
-#define _IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
 
-#include "Node.h"
-#include "common/IScaObjectSymbol.h"
+#ifndef _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
+#define _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
 
 /*!
  * Class description. May use HTML formatting
  *
+ * Class for storing actions for context menu in
+ * SourceBrowser class
+ *
  */
-class IScaObjectSymbolVisual : public Node
+
+#include <QMenu>
+#include "StringConstants.h"
+
+class SourceBrowserMenu : public QMenu
 {
 public:
-  explicit IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object);
+    explicit SourceBrowserMenu(QWidget *parent = 0);
+    ~SourceBrowserMenu();
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    QAction *addNewMenuEntry(const QString &name, bool enabled = true, QObject *receiver = 0, const char *slot = 0);
+    void connectActionByName(const QString &name, QObject *receiver, const char *slot);
+    QAction *getActionByName(const QString &name, const QString &submenuName = "");
+    void connectActionByMenu(const QString &menu, const QString &actionName, QObject *receiver, const char *slot);
 
-  ~IScaObjectSymbolVisual();
-  
 private:
+    QMenu *m_openTextAs;
+}; // class SourceBrowserMenu
 
-}; // class IScaObjectSymbolVisual
-  
 
-#endif //_IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
+#endif //_SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
 

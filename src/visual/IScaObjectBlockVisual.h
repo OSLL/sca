@@ -39,7 +39,6 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-
 #ifndef _IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 #define _IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 
@@ -59,9 +58,7 @@ public:
 
   ~IScaObjectBlockVisual();
   
-private:    
-  IScaObjectBlockVisual(const IScaObjectBlockVisual& obj);
-  IScaObjectBlockVisual& operator=(const IScaObjectBlockVisual& obj);
+private:
 
 }; // class IScaObjectBlockVisual
   

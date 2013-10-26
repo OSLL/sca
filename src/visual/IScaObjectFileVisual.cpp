@@ -43,13 +43,8 @@
 #include <QPainter>
 
 IScaObjectFileVisual::IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object) :
-    Node(coords, object)
+    Node(coords, object, DEFAULT_FILE_COLOR)
 {
-    m_standartColor = DEFAULT_FILE_COLOR;
-    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
-                              m_standartColor.green()* SELECTION_COLOR_DELTA,
-                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
-    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_FILE_VISUAL_WIDTH,
                     DEFAULT_FILE_VISUAL_HEIGHT);

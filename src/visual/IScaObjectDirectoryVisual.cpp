@@ -43,13 +43,8 @@
 #include <QPainter>
 
 IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(const QPointF &coords, IScaObjectDirectory *object) :
-    Node(coords, object)
+    Node(coords, object, DEFAULT_DIR_COLOR)
 {
-    m_standartColor = DEFAULT_DIR_COLOR;
-    m_selectionColor = QColor(m_standartColor.red()  * SELECTION_COLOR_DELTA,
-                              m_standartColor.green()* SELECTION_COLOR_DELTA,
-                              m_standartColor.blue() * SELECTION_COLOR_DELTA);
-    setColor(m_standartColor);
     m_rect = QRectF(coords.x(), coords.y(),
                     DEFAULT_DIR_VISUAL_WIDTH,
                     DEFAULT_DIR_VISUAL_HEIGHT);

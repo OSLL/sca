@@ -39,8 +39,6 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-
-
 #include "SourceBrowser.h"
 #include <QTextDocument>
 #include <QFile>
@@ -92,8 +90,9 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
     }
 
     //Show menu and process input
-    QAction *action = m_menu->exec(globalPos);
-    if (!action)
+    QAction *action = NULL;
+    action = m_menu->exec(globalPos);
+    if (action == NULL)
     {
         return;
     }

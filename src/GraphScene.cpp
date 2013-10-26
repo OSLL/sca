@@ -72,7 +72,10 @@ IScaObjectLineVisual *GraphScene::addLineVisual(const QPointF &coords, IScaObjec
 
 IScaObjectBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords, IScaObjectBlock *object)
 {
+    IScaObjectBlockVisual *node = new IScaObjectBlockVisual(coords, object);
 
+    addItem(node);
+    return node;
 }
 
 IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object)
@@ -81,6 +84,21 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(const QPointF &coord
 
     addItem(node);
     return node;
+}
+
+IScaObjectBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
+{
+
+}
+
+IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
+{
+
+}
+
+IScaObjectBlockVisual *GraphScene::addBinaryBlockFromNode(Node *node)
+{
+
 }
 
 IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
@@ -101,7 +119,7 @@ IScaObjectBlockVisual *GraphScene::addTextBlockVisual(const QPointF &coords, ISc
 
 Node *GraphScene::addNode(const QPointF &coords, IScaObject *object)
 {
-    Node *node = new Node(coords, object);
+    Node *node = new Node(coords, object, DEFAULT_NODE_COLOR);
 
     addItem(node);
     return node;

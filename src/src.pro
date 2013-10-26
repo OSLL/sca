@@ -16,7 +16,6 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 SOURCES += \
     main.cpp \
     FileLoader.cpp \
-    SourceBrowserMenu.cpp \
     common/IScaObject.cpp \
     common/IScaObjectFile.cpp \
     common/IScaObjectSymbol.cpp \
@@ -45,12 +44,13 @@ SOURCES += \
     visual/Node.cpp \
     visual/ObjectVisual.cpp \
     widgets/ViewsTabWidget.cpp \
-    ScaMIMEDataProcessor.cpp
+    ScaMIMEDataProcessor.cpp \
+    widgets/GraphViewContextMenu.cpp \
+    widgets/SourceBrowserMenu.cpp
 
 
 HEADERS += \
     FileLoader.h \
-    SourceBrowserMenu.h \
     StringConstants.h \
     common/IScaObject.h \
     common/IScaObjectFile.h \
@@ -81,7 +81,9 @@ HEADERS += \
     visual/Node.h \
     visual/ObjectVisual.h \
     widgets/ViewsTabWidget.h \
-    ScaMIMEDataProcessor.h
+    ScaMIMEDataProcessor.h \
+    widgets/GraphViewContextMenu.h \
+    widgets/SourceBrowserMenu.h
 
 FORMS += \
     mainwindow.ui

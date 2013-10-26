@@ -57,9 +57,7 @@ class IScaObjectSymbol: public IScaObject
 public:
     IScaObjectSymbol();
     IScaObjectSymbol(IScaObjectFile *file, unsigned int offset = 0, char symbol = 0);
-
-    unsigned int offset() const;
-    void setOffset(unsigned int offset);
+    ~IScaObjectSymbol();
 
     IScaObjectFile *file() const;
     void setFile(IScaObjectFile *file);
@@ -67,9 +65,12 @@ public:
     char getSymbol() const;
     void setSymbol(char symbol);
 
+    quint64 getOffset() const;
+    void setOffset(const quint64 &offset);
+
 private:
     char m_symbol;
-    unsigned int m_offset;
+    quint64 m_offset;
     IScaObjectFile *m_file;
 
 }; // class IScaObjectSymbol

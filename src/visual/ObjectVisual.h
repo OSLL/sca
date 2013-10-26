@@ -4,7 +4,6 @@
 #include "common/IScaObject.h"
 #include <QAbstractGraphicsShapeItem>
 
-
 class ObjectVisual : public QAbstractGraphicsShapeItem
 {
 public:
@@ -15,6 +14,7 @@ public:
         COMMENT
     };
     ObjectVisual(IScaObject *object, ObjectVisualType type = OBJECT, QGraphicsItem *parent = 0);
+    ~ObjectVisual();
 
     IScaObject *getObject() const;
     void setObject(IScaObject *object);

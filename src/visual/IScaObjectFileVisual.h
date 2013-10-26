@@ -39,7 +39,6 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-
 #ifndef _IScaObjectFileVisual_H_D6CF0404_8A5C_4B9A_ADDB_64D9CE870112_INCLUDED_
 #define _IScaObjectFileVisual_H_D6CF0404_8A5C_4B9A_ADDB_64D9CE870112_INCLUDED_
 
@@ -59,9 +58,7 @@ public:
 
   ~IScaObjectFileVisual();
   
-private:    
-  IScaObjectFileVisual(const IScaObjectFileVisual& obj);
-  IScaObjectFileVisual &operator=(const IScaObjectFileVisual& obj);
+private:
 
 }; // class IScaObjectFileVisual
   

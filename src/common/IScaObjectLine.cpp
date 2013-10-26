@@ -59,6 +59,12 @@ IScaObjectLine::IScaObjectLine(IScaObjectFile *file, quint64 lineNumber, QString
 {
 }
 
+IScaObjectLine::~IScaObjectLine()
+{
+    if (m_file != NULL)
+        delete m_file;
+}
+
 QString IScaObjectLine::getLine() const
 {
     return m_line;

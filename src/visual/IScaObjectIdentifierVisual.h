@@ -39,7 +39,6 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-
 #ifndef _IScaObjectIdentifierVisual_H_6BF427E1_35E4_487C_8846_5F2FE556500C_INCLUDED_
 #define _IScaObjectIdentifierVisual_H_6BF427E1_35E4_487C_8846_5F2FE556500C_INCLUDED_
 
@@ -59,9 +58,7 @@ public:
 
   ~IScaObjectIdentifierVisual();
   
-private:    
-  IScaObjectIdentifierVisual(const IScaObjectIdentifierVisual& obj);
-  IScaObjectIdentifierVisual &operator=(const IScaObjectIdentifierVisual& obj);
+private:
 
 }; // class IScaObjectIdentifierVisual
   

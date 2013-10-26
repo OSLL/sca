@@ -57,14 +57,11 @@ IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, unsigned int of
 {
 }
 
-unsigned int IScaObjectIdentifier::getOffset() const
+IScaObjectIdentifier::~IScaObjectIdentifier()
 {
-    return m_offset;
-}
+    if (m_file != NULL)
+        delete m_file;
 
-void IScaObjectIdentifier::setOffset(unsigned int offset)
-{
-    m_offset = offset;
 }
 
 IScaObjectFile *IScaObjectIdentifier::getFile() const
@@ -76,6 +73,7 @@ void IScaObjectIdentifier::setFile(IScaObjectFile *file)
 {
     m_file = file;
 }
+
 QString IScaObjectIdentifier::getIdentifier() const
 {
     return m_identifier;
@@ -85,6 +83,12 @@ void IScaObjectIdentifier::setIdentifier(const QString &identifier)
 {
     m_identifier = identifier;
 }
+quint64 IScaObjectIdentifier::offset() const
+{
+    return m_offset;
+}
 
-
-
+void IScaObjectIdentifier::setOffset(const quint64 &offset)
+{
+    m_offset = offset;
+}

@@ -30,45 +30,43 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file SourceBrowserMenu.h
- * \brief Header of SourceBrowserMenu
+ * \file GraphViewContextMenu.h
+ * \brief Header of GraphViewContextMenu
  * \todo add comment here
  *
- * File description
+ * Class of GraphView's context menu
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
 
-#ifndef _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
-#define _SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
+#ifndef _GraphViewContextMenu_H_0A11A7DC_9AB1_49AA_9CF1_92E1139411AB_INCLUDED_
+#define _GraphViewContextMenu_H_0A11A7DC_9AB1_49AA_9CF1_92E1139411AB_INCLUDED_
 
 /*!
  * Class description. May use HTML formatting
  *
- * Class for storing actions for context menu in
- * SourceBrowser class
+ * Class for context menu in GraphView including
  *
  */
 
 #include <QMenu>
 #include "StringConstants.h"
-
-class SourceBrowserMenu : public QMenu
+class GraphViewContextMenu : public QMenu
 {
 public:
-    explicit SourceBrowserMenu(QWidget *parent = 0);
-    ~SourceBrowserMenu();
+    explicit GraphViewContextMenu(QWidget *parent = 0);
+    ~GraphViewContextMenu();
 
     QAction *addNewMenuEntry(const QString &name, bool enabled = true, QObject *receiver = 0, const char *slot = 0);
     void connectActionByName(const QString &name, QObject *receiver, const char *slot);
     QAction *getActionByName(const QString &name, const QString &submenuName = "");
-    void connectActionByMenu(const QString &menu, const QString &actionName, QObject *receiver, const char *slot);
+    void connectActionByMenu(const QString &menuName, const QString &actionName, QObject *receiver, const char *slot);
 
 private:
-    QMenu *m_openTextAs;
-}; // class SourceBrowserMenu
 
+}; // class GraphViewContextMenu
+  
 
-#endif //_SourceBrowserMenu_H_D7F176A0_5C10_4475_8099_F81969769D30_INCLUDED_
+#endif //_GraphViewContextMenu_H_0A11A7DC_9AB1_49AA_9CF1_92E1139411AB_INCLUDED_
 

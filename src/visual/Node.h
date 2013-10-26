@@ -39,23 +39,24 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-
 #ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
 #define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+
+#include "visual/ObjectVisual.h"
+#include "NumericalConstants.h"
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-#include "visual/ObjectVisual.h"
-#include "NumericalConstants.h"
 
 class LinkVisual;
 
 class Node : public ObjectVisual
 {
 public:
-    Node(const QPointF &coords, IScaObject *object);
+    Node(const QPointF &coords, IScaObject *object, QColor standardColor);
+    ~Node();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QRectF boundingRect() const;
@@ -74,10 +75,11 @@ public:
     void addLink(LinkVisual *link);
     QColor getColor() const;
     void setColor(const QColor &color);
+
 protected:
     QRectF m_rect;
     QGraphicsSimpleTextItem *m_title;
-    QColor m_standartColor;
+    QColor m_standardColor;
     QColor m_selectionColor;
     QList<LinkVisual *> m_links;
 }; // class Node

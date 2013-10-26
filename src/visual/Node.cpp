@@ -49,19 +49,29 @@
 #include <QGraphicsScene>
 #include <QTextDocument>
 
-Node::Node(const QPointF &coords, IScaObject *object) :
+Node::Node(const QPointF &coords, IScaObject *object, QColor standardColor) :
     ObjectVisual(object, NODE),
-    m_title(NULL)
+    m_title(NULL),
+    m_standardColor(standardColor),
+    m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,
+                            m_standardColor.green()* SELECTION_COLOR_DELTA,
+                            m_standardColor.blue() * SELECTION_COLOR_DELTA))
 {
+    setColor(m_standardColor);
     setPos(coords);
     setCacheMode(DeviceCoordinateCache);
     setFlag(ItemSendsGeometryChanges);
     setZValue(1);
 }
 
+Node::~Node()
+{
+    removeTitle();
+}
+
 QPointF Node::pos() const
 {
-    return m_rect.center();
+    return QGraphicsItem::pos();
 }
 
 void Node::addLink(LinkVisual *link)
@@ -101,6 +111,7 @@ void Node::setTitle(QGraphicsSimpleTextItem *title)
 {
     removeTitle();
     m_title = title;
+    m_title->setParentItem(this);
 }
 
 void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -110,7 +121,9 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(widget)
     if (m_title != NULL)
     {
-        m_title->setPos(pos() + QPointF(-m_title->boundingRect().width()/2, 20));
+        m_title->setPos(
+                    QPointF(-m_title->boundingRect().width()/2, 20)
+                    + QPointF(boundingRect().center()));
     }
 }
 
@@ -143,7 +156,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
         }
         else
         {
-            setColor(m_standartColor);
+            setColor(m_standardColor);
         }
     default:
         break;

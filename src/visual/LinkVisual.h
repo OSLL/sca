@@ -39,14 +39,12 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-
 #ifndef _LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
 #define _LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
 
 #include "ObjectVisual.h"
 #include "visual/Node.h"
 #include "common/Link.h"
-
 
 /*!
  * Class description. May use HTML formatting

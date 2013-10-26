@@ -39,7 +39,6 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-
 #ifndef _IScaObjectDirectoryVisual_H_6523A4C7_F3E6_4099_9DDC_CF5C5F83A687_INCLUDED_
 #define _IScaObjectDirectoryVisual_H_6523A4C7_F3E6_4099_9DDC_CF5C5F83A687_INCLUDED_
 
@@ -60,8 +59,6 @@ public:
   ~IScaObjectDirectoryVisual();
   
 private:
-  IScaObjectDirectoryVisual(const IScaObjectDirectoryVisual& obj);
-  IScaObjectDirectoryVisual &operator=(const IScaObjectDirectoryVisual& obj);
 
 }; // class IScaObjectDirectoryVisual
   

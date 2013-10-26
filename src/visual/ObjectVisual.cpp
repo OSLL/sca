@@ -9,6 +9,12 @@ ObjectVisual::ObjectVisual(IScaObject *object, ObjectVisualType type, QGraphicsI
     setFlag(QGraphicsItem::ItemIsSelectable);
 }
 
+ObjectVisual::~ObjectVisual()
+{
+    if (m_object != NULL)
+        delete m_object;
+}
+
 IScaObject *ObjectVisual::getObject() const
 {
     return m_object;

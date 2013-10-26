@@ -31,46 +31,43 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file SourceBrowserMenu.cpp
- * \brief SourceBrowserMenu implementation
+ * \file GraphViewContextMenu.cpp
+ * \brief GraphViewContextMenu implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "SourceBrowserMenu.h"
+#include "GraphViewContextMenu.h"
 
 #include <QMessageBox>
 #include <QAction>
 #include <QDebug>
 
-SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
-    QMenu(parent)
+GraphViewContextMenu::GraphViewContextMenu(QWidget *parent)
 {
-    addAction(OPEN_IN_TEXT_VIEWER);
-    m_openTextAs = addMenu(OPEN_IN_TEXT_VIEWER_AS);
-    addAction(OPEN_IN_BINARY_VIEWER);
-
-    m_openTextAs->addAction(UTF8);
-    m_openTextAs->addAction(CP866);
-    m_openTextAs->addAction(ISO885915);
+    addAction(TO_TEXT_BLOCK);
+    addAction(TO_IDENTIFIER);
+    addAction(TO_BINARY_BLOCK);
 }
 
-SourceBrowserMenu::~SourceBrowserMenu()
+GraphViewContextMenu::~GraphViewContextMenu()
 {
-
+    foreach(QAction *act, actions())
+    {
+        act->deleteLater();
+    }
 }
 
-QAction *SourceBrowserMenu::addNewMenuEntry(const QString &name, bool enabled, QObject *receiver, const char *slot)
+QAction *GraphViewContextMenu::addNewMenuEntry(const QString &name, bool enabled, QObject *receiver, const char *slot)
 {
     QAction *act = QMenu::addAction(name, receiver, slot);
     act->setEnabled(enabled);
     return act;
 }
 
-
-void SourceBrowserMenu::connectActionByName(const QString &name, QObject *receiver, const char *slot)
+void GraphViewContextMenu::connectActionByName(const QString &name, QObject *receiver, const char *slot)
 {
     if (name.isEmpty() || receiver == NULL || slot == NULL)
     {
@@ -91,24 +88,9 @@ void SourceBrowserMenu::connectActionByName(const QString &name, QObject *receiv
     connect(action, SIGNAL(triggered()), receiver, slot);
 }
 
-QAction *SourceBrowserMenu::getActionByName(const QString &name, const QString &submenuName)
+QAction *GraphViewContextMenu::getActionByName(const QString &name, const QString &submenuName)
 {
-    QList<QAction *> acts;
-    if (submenuName == OPEN_IN_TEXT_VIEWER_AS)
-    {
-        QMenu *submenu =  m_openTextAs;
-        if(submenu == NULL)
-        {
-            return 0;
-        }
-
-        acts = submenu->actions();
-    }
-    else
-    {
-        acts = actions();
-    }
-
+    QList<QAction *> acts = actions();
     foreach(QAction *action, acts)
     {
         if (action->text() == name)
@@ -117,9 +99,8 @@ QAction *SourceBrowserMenu::getActionByName(const QString &name, const QString &
     return 0;
 }
 
-void SourceBrowserMenu::connectActionByMenu(const QString &menuName, const QString &actionName, QObject *receiver, const char *slot)
+void GraphViewContextMenu::connectActionByMenu(const QString &menuName, const QString &actionName, QObject *receiver, const char *slot)
 {
-
     if (menuName.isEmpty() || actionName.isEmpty() || receiver == NULL || slot == NULL)
     {
         qDebug() << "Error in params in connectActionByName:"

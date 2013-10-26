@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));
+    connect(m_ui->graphViewer, SIGNAL(customContextMenuRequested(QPoint)),
+            m_ui->graphViewer, SLOT(ShowContextMenu(QPoint)));
     //Connect clicking on file to opening it in textViewer
     connect(m_ui->sourceBrowser, SIGNAL(openFile()),
             this, SLOT(loadTextFile()));
@@ -101,15 +103,15 @@ void MainWindow::addToScene()
 
     if (fileInf.isFile())
     {
-        QPointF pos = QPointF(m_ui->graphViewer->horizontalScrollBar()->value(),
-                              m_ui->graphViewer->verticalScrollBar()->value())
+        int sceneX = m_ui->graphViewer->horizontalScrollBar()->value(),
+            sceneY = m_ui->graphViewer->verticalScrollBar()->value();
+        QPointF pos = QPointF(sceneX, sceneY)
                     + m_ui->graphViewer->rect().center()
                     - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
                               DEFAULT_FILE_VISUAL_HEIGHT / 2);
         IScaObjectFile *objFile = new IScaObjectFile(fileInf);
         scene->addFileVisual(pos, objFile);
     }
-
     m_ui->ViewsTabs->setCurrentIndex(2);
 }
 
