@@ -54,6 +54,7 @@ class LinkVisual : public ObjectVisual
 {
 public:
     LinkVisual(Node *source, Node *dest);
+    ~LinkVisual();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
@@ -62,6 +63,9 @@ public:
     QPainterPath shape() const;
     void setLine(const QLineF &line);
 
+    void disconnectFrom(Node *node);
+
+    friend QDebug operator<< (QDebug d, LinkVisual &edge);
 private:
     Node *m_source;
     Node *m_dest;

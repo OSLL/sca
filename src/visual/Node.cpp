@@ -66,6 +66,11 @@ Node::Node(const QPointF &coords, IScaObject *object, QColor standardColor) :
 
 Node::~Node()
 {
+    qDebug() << "Removing " << *this;
+    foreach(LinkVisual *link, m_links)
+    {
+        delete link;
+    }
     removeTitle();
 }
 
@@ -77,6 +82,16 @@ QPointF Node::pos() const
 void Node::addLink(LinkVisual *link)
 {
     m_links.append(link);
+}
+
+QList<LinkVisual *> Node::getLinks()
+{
+    return m_links;
+}
+
+void Node::disconnectLink(LinkVisual *link)
+{
+    m_links.takeAt(m_links.indexOf(link));
 }
 
 QRectF Node::getRect() const
@@ -97,7 +112,9 @@ void Node::removeTitle()
 {
     if (m_title != NULL)
     {
-        scene()->removeItem(m_title);
+        qDebug() << "Removing title";
+        delete m_title;
+        qDebug() << "Removed title";
     }
 }
 
@@ -163,4 +180,13 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
     };
 
     return QGraphicsItem::itemChange(change, value);
+}
+
+QDebug operator<<(QDebug d, Node &node)
+{
+    d << "Node: "
+      << "type: " << node.m_type
+      << ", name: " << node.getTitle()->text()
+      << ", links: " << node.m_links.size();
+    return d;
 }

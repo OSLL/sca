@@ -224,13 +224,23 @@ void GraphView::ShowContextMenu(const QPoint &pos)
 
 void GraphView::keyPressEvent(QKeyEvent *event)
 {
-    if(event->key() == Qt::Key_C)
+    switch(event->key())
     {
-        QList<Node *> items = scene()->selectedNodes();
-        if(items.size() == 2)
+    case Qt::Key_C:
         {
-            scene()->addLinkVisual(items.at(1), items.at(0));
+            QList<Node *> items = scene()->selectedNodes();
+            if(items.size() == 2)
+            {
+                scene()->addLinkVisual(items.at(1), items.at(0));
+            }
         }
+        break;
+    case Qt::Key_Delete:
+        {
+            scene()->removeLinks(scene()->selectedLinks());
+            scene()->removeNodes(scene()->selectedNodes());
+        }
+        break;
     }
 }
 

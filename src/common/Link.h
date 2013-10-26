@@ -54,7 +54,6 @@ class Link: public IScaObject
 public:
   Link();
   Link(IScaObject *objectFrom, IScaObject *objectTo);
-
   ~Link();
   
   IScaObject *getObjectFrom() const;
@@ -64,8 +63,6 @@ public:
   void setObjectTo(IScaObject *objectTo);
 
 private:
-  Link(const Link& obj);
-  Link& operator=(const Link& obj);
 
   IScaObject *m_objectFrom;
   IScaObject *m_objectTo;

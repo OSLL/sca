@@ -13,9 +13,10 @@ class MainWindow : public QMainWindow
 private:
     Ui::MainWindow *m_ui;
     QFileSystemModel *m_fileModel;
-    GraphScene *scene;
+    GraphScene *m_scene;
 public:
     explicit MainWindow(QWidget *parent = 0);
+    ~MainWindow();
 signals:
     
 public slots:

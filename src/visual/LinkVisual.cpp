@@ -45,6 +45,7 @@
 #include <QPen>
 #include <QPainter>
 #include <QDebug>
+#include <QGraphicsScene>
 
 LinkVisual::LinkVisual(Node *source, Node *dest) :
     ObjectVisual(new Link(source->getObject(), dest->getObject()), EDGE),
@@ -56,9 +57,17 @@ LinkVisual::LinkVisual(Node *source, Node *dest) :
 
     refreshGeometry();
 
-    setFlags(QGraphicsItem::ItemSendsGeometryChanges);
+    setFlags(QGraphicsItem::ItemIsSelectable
+             | QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(0);
     setPen(QPen(QBrush(Qt::black), 9, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+}
+
+LinkVisual::~LinkVisual()
+{
+    qDebug() << "Removing " << *this;
+    m_source->disconnectLink(this);
+    m_dest->disconnectLink(this);
 }
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -75,6 +84,8 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
 
 void LinkVisual::refreshGeometry()
 {
+    if (m_source == NULL || m_dest == NULL)
+        return;
     prepareGeometryChange();
     qreal sourceX = m_source->x() + m_source->boundingRect().center().x();
     qreal sourceY = m_source->y() + m_source->boundingRect().center().y();
@@ -124,4 +135,35 @@ QPainterPath LinkVisual::shape() const
 void LinkVisual::setLine(const QLineF &line)
 {
     m_line = line;
+}
+
+void LinkVisual::disconnectFrom(Node *node)
+{
+    qDebug() << "Disconnecting " << *this << " from " << *node;
+    if (m_source == node)
+    {
+        Link *link = static_cast<Link *>(getObject());
+        if (link == NULL)
+            return;
+        link->setObjectFrom(NULL);
+        m_source = NULL;
+    }
+    if (m_dest == node)
+    {
+        Link *link = static_cast<Link *>(getObject());
+        if (link == NULL)
+            return;
+        link->setObjectTo(NULL);
+        m_dest = NULL;
+    }
+    qDebug() << "Disconnected successfully.";
+}
+
+QDebug operator<<(QDebug d, LinkVisual &edge)
+{
+    d << "LinkVisual: from "
+      << edge.m_source->getTitle()->text()
+      << " to "
+      << edge.m_dest->getTitle()->text();
+    return d;
 }

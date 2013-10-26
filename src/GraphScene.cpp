@@ -40,10 +40,36 @@
  * ---------------------------------------------------------------- */
 
 #include "GraphScene.h"
+#include <QDebug>
 
 GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
     QGraphicsScene(x, y, width, height, parent)
 {
+}
+
+GraphScene::~GraphScene()
+{
+    QList<QGraphicsItem *> items;
+    QList<Node *> nodes;
+    QList<LinkVisual *> links;
+    items = this->items();
+    foreach(QGraphicsItem *item, items)
+    {
+        LinkVisual *link = NULL;
+        Node *node = NULL;
+        node = dynamic_cast<Node *>(item);
+        if (node != NULL)
+        {
+            nodes.push_back(node);
+        }
+        link = dynamic_cast<LinkVisual *>(item);
+        if (link != NULL)
+        {
+            links.push_back(link);
+        }
+    }
+    removeLinks(links);
+    removeNodes(nodes);
 }
 
 IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
@@ -133,6 +159,24 @@ LinkVisual *GraphScene::addLinkVisual(Node *source, Node *dest)
     return link;
 }
 
+void GraphScene::removeNodes(QList<Node *> nodes)
+{
+    qDebug() << "Removing " << nodes.size() << " nodes";
+    foreach(Node *node, nodes)
+    {
+        delete node;
+    }
+}
+
+void GraphScene::removeLinks(QList<LinkVisual *> links)
+{
+    qDebug() << "Removing " << links.size() << " links";
+    foreach(LinkVisual *link, links)
+    {
+        delete link;
+    }
+}
+
 QList<Node *> GraphScene::selectedNodes()
 {
     QList<Node *> nodes;
@@ -146,6 +190,21 @@ QList<Node *> GraphScene::selectedNodes()
         }
     }
     return nodes;
+}
+
+QList<LinkVisual *> GraphScene::selectedLinks()
+{
+    QList<LinkVisual *> links;
+    foreach(QGraphicsItem *item, selectedItems())
+    {
+        LinkVisual *link = NULL;
+        link = dynamic_cast<LinkVisual *>(item);
+        if (link != NULL)
+        {
+            links.push_back(link);
+        }
+    }
+    return links;
 }
 
 QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)

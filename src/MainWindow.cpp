@@ -16,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
-    scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
-    m_ui->graphViewer->setScene(scene);
+    m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
+    m_ui->graphViewer->setScene(m_scene);
     //Set up file model
     m_fileModel = new QFileSystemModel(this);
     m_fileModel->setRootPath("");
@@ -49,6 +49,16 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadTextFile()));
     connect(m_ui->actionOpenInBinaryView, SIGNAL(triggered()),
             this, SLOT(loadBinaryFile()));
+}
+
+MainWindow::~MainWindow()
+{
+    if (m_scene != NULL)
+        delete m_scene;
+    if (m_fileModel != NULL)
+        delete m_fileModel;
+    if (m_ui != NULL)
+        delete m_ui;
 }
 
 void MainWindow::processFile()
@@ -110,7 +120,7 @@ void MainWindow::addToScene()
                     - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
                               DEFAULT_FILE_VISUAL_HEIGHT / 2);
         IScaObjectFile *objFile = new IScaObjectFile(fileInf);
-        scene->addFileVisual(pos, objFile);
+        m_scene->addFileVisual(pos, objFile);
     }
     m_ui->ViewsTabs->setCurrentIndex(2);
 }

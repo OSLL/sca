@@ -73,9 +73,13 @@ public:
     QPointF pos() const;
 
     void addLink(LinkVisual *link);
+    QList<LinkVisual *> getLinks();
+    void disconnectLink(LinkVisual *link);
+
     QColor getColor() const;
     void setColor(const QColor &color);
 
+    friend QDebug operator<<(QDebug d, Node &node);
 protected:
     QRectF m_rect;
     QGraphicsSimpleTextItem *m_title;

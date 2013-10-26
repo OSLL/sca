@@ -62,7 +62,8 @@ class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-   explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
+    explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
+    ~GraphScene();
 
     IScaObjectFileVisual *addFileVisual(const QPointF &coords, IScaObjectFile *object = 0);
     IScaObjectDirectoryVisual *addDirVisual(const QPointF &coords, IScaObjectDirectory *object = 0);
@@ -81,7 +82,10 @@ public:
     Node *addNode(const QPointF &coords, IScaObject *object = 0);
     LinkVisual *addLinkVisual(Node *source, Node *dest);
 
+    void removeNodes(QList<Node *> nodes);
+    void removeLinks(QList<LinkVisual *> links);
     QList<Node *> selectedNodes();
+    QList<LinkVisual *> selectedLinks();
 signals:
 
 public slots:
