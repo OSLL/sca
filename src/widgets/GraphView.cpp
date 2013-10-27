@@ -56,6 +56,7 @@ GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent),
     m_temp(NULL)
 {
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_menu = new GraphViewContextMenu(this);
 }
 
@@ -63,6 +64,7 @@ GraphView::GraphView(GraphScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent),
     m_temp(NULL)
 {
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_menu = new GraphViewContextMenu(this);
 }
 
@@ -174,6 +176,11 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Move menu
     QPoint globalPos = viewport()->mapToGlobal(pos);
 
+
+    QList<Node *> items = scene()->selectedNodes();
+    QAction *conAct = m_menu->getActionByName(CONNECT_NODES);
+    conAct->setEnabled(items.size() == 2);
+
     //Show menu
     QAction *action = NULL;
     action = m_menu->exec(globalPos);
@@ -183,6 +190,10 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
 
     //Process chosen action
+    if (action == conAct)
+    {
+       scene()->addLinkVisual(items.at(1), items.at(0));
+    }
     if (action == m_menu->getActionByName(TO_TEXT_BLOCK))
     {
         m_temp = GraphView::scene()->addTextBlockFromNode(m_temp);

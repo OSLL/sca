@@ -44,6 +44,8 @@
 GraphViewContextMenu::GraphViewContextMenu(QWidget *parent) :
     ContextMenu(parent)
 {
+    addNewMenuEntry(CONNECT_NODES, false);
+    addSeparator();
     addNewMenuEntry(TO_TEXT_BLOCK);
     addNewMenuEntry(TO_IDENTIFIER);
     //addNewMenuEntry(TO_BINARY_BLOCK);
