@@ -55,7 +55,7 @@ class LinkVisual;
 class Node : public ObjectVisual
 {
 public:
-    Node(const QPointF &coords, IScaObject *object, QColor standardColor);
+    Node(const QPointF &coords, IScaObject *object, QColor standardColor = DEFAULT_NODE_COLOR);
     ~Node();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -70,7 +70,6 @@ public:
     void setTitle(const QString &title);
 
     void removeTitle();
-    QPointF pos() const;
 
     void addLink(LinkVisual *link);
     QList<LinkVisual *> getLinks();

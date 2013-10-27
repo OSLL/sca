@@ -47,7 +47,8 @@ SOURCES += \
     ScaMIMEDataProcessor.cpp \
     widgets/GraphViewContextMenu.cpp \
     widgets/SourceBrowserMenu.cpp \
-    widgets/ContextMenu.cpp
+    widgets/ContextMenu.cpp \
+    common/ScaObjectConverter.cpp
 
 
 HEADERS += \
@@ -85,7 +86,8 @@ HEADERS += \
     ScaMIMEDataProcessor.h \
     widgets/GraphViewContextMenu.h \
     widgets/SourceBrowserMenu.h \
-    widgets/ContextMenu.h
+    widgets/ContextMenu.h \
+    common/ScaObjectConverter.h
 
 FORMS += \
     mainwindow.ui

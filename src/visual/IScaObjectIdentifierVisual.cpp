@@ -45,7 +45,8 @@
 IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object) :
     Node(coords, object, DEFAULT_IDENTIFIER_COLOR)
 {
-    m_rect = QRectF(coords.x(), coords.y(),
+    m_rect = QRectF(-DEFAULT_IDENTIFIER_VISUAL_WIDTH / 2,
+                    -DEFAULT_IDENTIFIER_VISUAL_HEIGHT / 2,
                     DEFAULT_IDENTIFIER_VISUAL_WIDTH,
                     DEFAULT_IDENTIFIER_VISUAL_HEIGHT);
     setTitle(object->getIdentifier());

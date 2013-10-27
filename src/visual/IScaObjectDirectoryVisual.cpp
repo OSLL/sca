@@ -45,7 +45,8 @@
 IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(const QPointF &coords, IScaObjectDirectory *object) :
     Node(coords, object, DEFAULT_DIR_COLOR)
 {
-    m_rect = QRectF(coords.x(), coords.y(),
+    m_rect = QRectF(-DEFAULT_DIR_VISUAL_WIDTH / 2,
+                    -DEFAULT_DIR_VISUAL_HEIGHT / 2,
                     DEFAULT_DIR_VISUAL_WIDTH,
                     DEFAULT_DIR_VISUAL_HEIGHT);
     if (object->getFile().isRoot())

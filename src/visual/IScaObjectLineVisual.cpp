@@ -45,7 +45,8 @@
 IScaObjectLineVisual::IScaObjectLineVisual(const QPointF &coords, IScaObjectLine *object) :
     Node(coords, object, DEFAULT_LINE_COLOR)
 {
-    m_rect = QRectF(coords.x(), coords.y(),
+    m_rect = QRectF(-DEFAULT_LINE_VISUAL_WIDTH / 2,
+                    -DEFAULT_LINE_VISUAL_HEIGHT / 2,
                     DEFAULT_LINE_VISUAL_WIDTH,
                     DEFAULT_LINE_VISUAL_HEIGHT);
     setTitle(object->getLine());

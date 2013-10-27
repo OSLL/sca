@@ -64,6 +64,7 @@ public:
     void setLine(const QLineF &line);
 
     void disconnectFrom(Node *node);
+    void changeNode(Node *oldNode, Node *newNode);
 
     friend QDebug operator<< (QDebug d, LinkVisual &edge);
 private:

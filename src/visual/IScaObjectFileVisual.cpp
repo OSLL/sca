@@ -45,7 +45,8 @@
 IScaObjectFileVisual::IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object) :
     Node(coords, object, DEFAULT_FILE_COLOR)
 {
-    m_rect = QRectF(coords.x(), coords.y(),
+    m_rect = QRectF(-DEFAULT_FILE_VISUAL_WIDTH / 2,
+                    -DEFAULT_FILE_VISUAL_HEIGHT / 2,
                     DEFAULT_FILE_VISUAL_WIDTH,
                     DEFAULT_FILE_VISUAL_HEIGHT);
     setTitle(object->getFile().fileName());

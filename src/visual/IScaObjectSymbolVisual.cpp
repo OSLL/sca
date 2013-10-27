@@ -45,7 +45,8 @@
 IScaObjectSymbolVisual::IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object) :
     Node(coords, object, DEFAULT_SYMBOL_COLOR)
 {
-    m_rect = QRectF(coords.x(), coords.y(),
+    m_rect = QRectF(-DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
+                    -DEFAULT_SYMBOL_VISUAL_HEIGHT / 2,
                     DEFAULT_SYMBOL_VISUAL_WIDTH,
                     DEFAULT_SYMBOL_VISUAL_HEIGHT);
     setTitle(QString(object->getSymbol()));

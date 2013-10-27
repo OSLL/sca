@@ -45,7 +45,8 @@
 IScaObjectBlockVisual::IScaObjectBlockVisual(const QPointF &coords, IScaObjectBlock *object) :
     Node(coords, object, DEFAULT_TEXT_BLOCK_COLOR)
 {
-    m_rect = QRectF(coords.x(), coords.y(),
+    m_rect = QRectF(-DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,
+                    -DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT / 2,
                     DEFAULT_TEXT_BLOCK_VISUAL_WIDTH,
                     DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT);
     QString str = object->getText();

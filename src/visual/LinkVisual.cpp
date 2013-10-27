@@ -159,6 +159,21 @@ void LinkVisual::disconnectFrom(Node *node)
     qDebug() << "Disconnected successfully.";
 }
 
+void LinkVisual::changeNode(Node *oldNode, Node *newNode)
+{
+    Link *obj = static_cast<Link *>(getObject());
+    if (m_source == oldNode)
+    {
+        m_source = newNode;
+        obj->setObjectFrom(newNode->getObject());
+    }
+    if (m_dest == oldNode)
+    {
+        m_dest = newNode;
+        obj->setObjectTo(newNode->getObject());
+    }
+}
+
 QDebug operator<<(QDebug d, LinkVisual &edge)
 {
     d << "LinkVisual: from "

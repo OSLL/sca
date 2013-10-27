@@ -69,7 +69,8 @@ ContextMenu *ContextMenu::addMenu(const QString &menu)
     return static_cast<ContextMenu *>(QMenu::addMenu(menu));
 }
 
-QAction *ContextMenu::addNewMenuEntry(const QString &name, bool enabled, QObject *receiver, const char *slot)
+QAction *ContextMenu::addNewMenuEntry(const QString &name, bool enabled,
+                                      QObject *receiver, const char *slot)
 {
     QAction *act;
     if (receiver != NULL && slot != NULL)
@@ -85,7 +86,8 @@ QAction *ContextMenu::addNewMenuEntry(const QString &name, bool enabled, QObject
     return act;
 }
 
-void ContextMenu::connectActionByName(const QString &name, QObject *receiver, const char *slot)
+void ContextMenu::connectActionByName(const QString &name,
+                                      QObject *receiver, const char *slot)
 {
     if (name.isEmpty() || receiver == NULL || slot == NULL)
     {
@@ -117,9 +119,12 @@ QAction *ContextMenu::getActionByName(const QString &name, const QString &submen
     return 0;
 }
 
-void ContextMenu::connectActionByMenu(const QString &menuName, const QString &actionName, QObject *receiver, const char *slot)
+void ContextMenu::connectActionByMenu(const QString &menuName,
+                                      const QString &actionName,
+                                      QObject *receiver, const char *slot)
 {
-    if (menuName.isEmpty() || actionName.isEmpty() || receiver == NULL || slot == NULL)
+    if (menuName.isEmpty() || actionName.isEmpty()
+            || receiver == NULL || slot == NULL)
     {
         qDebug() << "Error in params in connectActionByName:"
                  << "\nobject: " << this

@@ -74,11 +74,6 @@ Node::~Node()
     removeTitle();
 }
 
-QPointF Node::pos() const
-{
-    return QGraphicsItem::pos();
-}
-
 void Node::addLink(LinkVisual *link)
 {
     m_links.append(link);
@@ -103,6 +98,7 @@ void Node::setRect(const QRectF &rect)
 {
     m_rect = rect;
 }
+
 QGraphicsSimpleTextItem *Node::getTitle() const
 {
     return m_title;
@@ -136,6 +132,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(painter)
     Q_UNUSED(option)
     Q_UNUSED(widget)
+    qDebug() << m_rect;
     if (m_title != NULL)
     {
         m_title->setPos(

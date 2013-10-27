@@ -30,25 +30,42 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file GraphViewContextMenu.cpp
- * \brief GraphViewContextMenu implementation
+ * \file ScaObjectConverter.h
+ * \brief Header of ScaObjectConverter
+ * \todo add comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "GraphViewContextMenu.h"
 
-GraphViewContextMenu::GraphViewContextMenu(QWidget *parent) :
-    ContextMenu(parent)
-{
-    addNewMenuEntry(TO_TEXT_BLOCK);
-    addNewMenuEntry(TO_IDENTIFIER);
-    //addNewMenuEntry(TO_BINARY_BLOCK);
-}
+#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
+#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
 
-GraphViewContextMenu::~GraphViewContextMenu()
+class IScaObjectBlockVisual;
+class IScaObjectIdentifierVisual;
+class IScaObjectFileVisual;
+class IScaObjectVisual;
+
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class ScaObjectConverter
 {
-}
+public:
+  ScaObjectConverter();
+
+  ~ScaObjectConverter();
+
+
+  IScaObjectBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
+  IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectBlockVisual *obj, bool autoDel = false);
+private:
+
+}; // class ScaObjectConverter
+  
+
+#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
+

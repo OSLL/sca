@@ -64,14 +64,14 @@ IScaObjectIdentifier::~IScaObjectIdentifier()
 
 }
 
-IScaObjectFile *IScaObjectIdentifier::getFile() const
+QFileInfo IScaObjectIdentifier::getFile() const
 {
-    return m_file;
+    return m_file->getFile();
 }
 
-void IScaObjectIdentifier::setFile(IScaObjectFile *file)
+void IScaObjectIdentifier::setFile(const QFileInfo &file)
 {
-    m_file = file;
+    m_file->setFile(file.filePath());
 }
 
 QString IScaObjectIdentifier::getIdentifier() const
@@ -83,7 +83,7 @@ void IScaObjectIdentifier::setIdentifier(const QString &identifier)
 {
     m_identifier = identifier;
 }
-quint64 IScaObjectIdentifier::offset() const
+quint64 IScaObjectIdentifier::getOffset() const
 {
     return m_offset;
 }

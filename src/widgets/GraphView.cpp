@@ -79,75 +79,55 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
         event->acceptProposedAction();
         ScaMIMEDataProcessor processor(event->mimeData());
         IScaObject *object = processor.makeObject();
+        QPoint evPos = event->pos();
         switch (object->getType())
         {
         case IScaObject::FILE:
             {
-                QPoint evPos = pos(),
-                       centerDelta(DEFAULT_FILE_VISUAL_WIDTH / 2,
-                                   DEFAULT_FILE_VISUAL_HEIGHT / 2);
                 m_temp = GraphView::scene()->addFileVisual(
-                            mapToScene(evPos) - evPos - centerDelta,
+                            mapToScene(evPos) - evPos,
                             static_cast<IScaObjectFile *>(object));
                 return;
             }
         case IScaObject::DIRECTORY:
             {
-                QPoint evPos = pos(),
-                       centerDelta(DEFAULT_DIR_VISUAL_WIDTH / 2,
-                                   DEFAULT_DIR_VISUAL_HEIGHT / 2);
                 m_temp = GraphView::scene()->addDirVisual(
-                            mapToScene(evPos) - evPos - centerDelta,
+                            mapToScene(evPos) - evPos,
                             static_cast<IScaObjectDirectory *>(object));
                 return;
             }
         case IScaObject::BINARYBLOCK:
             {
-                QPoint evPos = pos(),
-                       centerDelta(DEFAULT_BINARY_BLOCK_VISUAL_WIDTH / 2,
-                                   DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT / 2);
                 m_temp = GraphView::scene()->addBinaryBlockVisual(
-                            mapToScene(evPos) - evPos - centerDelta,
+                            mapToScene(evPos) - evPos,
                             static_cast<IScaObjectBlock *>(object));
                 return;
             }
         case IScaObject::TEXTBLOCK:
             {
-                QPoint evPos = pos(),
-                       centerDelta(DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,
-                                   DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT / 2);
                 m_temp = GraphView::scene()->addTextBlockVisual(
-                            mapToScene(evPos) - evPos - centerDelta,
+                            mapToScene(evPos) - evPos,
                             static_cast<IScaObjectBlock *>(object));
                 return;
             }
         case IScaObject::IDENTIFIER:
             {
-                QPoint evPos = pos(),
-                       centerDelta(DEFAULT_IDENTIFIER_VISUAL_WIDTH / 2,
-                                   DEFAULT_IDENTIFIER_VISUAL_HEIGHT / 2);
                 m_temp = GraphView::scene()->addIdentifierVisual(
-                            mapToScene(evPos) - evPos - centerDelta,
+                            mapToScene(evPos) - evPos,
                             static_cast<IScaObjectIdentifier *>(object));
                 return;
             }
         case IScaObject::SYMBOL:
             {
-                QPoint evPos = pos(),
-                       centerDelta(DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
-                                   DEFAULT_SYMBOL_VISUAL_HEIGHT / 2);
                 m_temp = GraphView::scene()->addSymbolVisual(
-                            mapToScene(evPos) - evPos - centerDelta,
+                            mapToScene(evPos) - evPos,
                             static_cast<IScaObjectSymbol *>(object));
                 return;
             }
         case IScaObject::LINE:
             {
-                QPoint evPos = pos(),
-                       centerDelta(DEFAULT_LINE_VISUAL_WIDTH / 2,
-                                   DEFAULT_LINE_VISUAL_HEIGHT / 2);
                 m_temp = GraphView::scene()->addLineVisual(
-                            mapToScene(evPos) - evPos - centerDelta,
+                            mapToScene(evPos) - evPos,
                             static_cast<IScaObjectLine *>(object));
                 return;
             }
@@ -158,7 +138,7 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
 void GraphView::dragMoveEvent(QDragMoveEvent *event)
 {
     if (m_temp != NULL)
-        m_temp->setPos(event->pos());
+        m_temp->setPos(mapToScene(event->pos()));
 }
 
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
@@ -178,9 +158,7 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
     }
     if (m_temp->getObject()->getType() == IScaObject::TEXTBLOCK)
     {
-        qDebug() << "TEXT";
-        QPoint pos = m_temp->pos().toPoint();
-        qDebug() << pos;
+        QPoint pos = mapFromScene(m_temp->pos());
         ShowContextMenu(pos);
     }
 }
@@ -283,6 +261,7 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         node = dynamic_cast<Node *>(item);
         if (node != NULL)
         {
+            m_temp = node;
             ShowContextMenu(event->pos());
             return;
         }

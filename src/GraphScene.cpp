@@ -40,9 +40,11 @@
  * ---------------------------------------------------------------- */
 
 #include "GraphScene.h"
+#include "common/ScaObjectConverter.h"
 #include <QDebug>
 
-GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height, QObject * parent) :
+GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height,
+                       QObject *parent) :
     QGraphicsScene(x, y, width, height, parent)
 {
 }
@@ -72,7 +74,8 @@ GraphScene::~GraphScene()
     removeNodes(nodes);
 }
 
-IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjectFile *object)
+IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords,
+                                                IScaObjectFile *object)
 {
     IScaObjectFileVisual *node = new IScaObjectFileVisual(coords, object);
 
@@ -80,7 +83,8 @@ IScaObjectFileVisual *GraphScene::addFileVisual(const QPointF &coords, IScaObjec
     return node;
 }
 
-IScaObjectSymbolVisual *GraphScene::addSymbolVisual(const QPointF &coords, IScaObjectSymbol *object)
+IScaObjectSymbolVisual *GraphScene::addSymbolVisual(const QPointF &coords,
+                                                    IScaObjectSymbol *object)
 {
     IScaObjectSymbolVisual *node = new IScaObjectSymbolVisual(coords, object);
 
@@ -88,7 +92,8 @@ IScaObjectSymbolVisual *GraphScene::addSymbolVisual(const QPointF &coords, IScaO
     return node;
 }
 
-IScaObjectLineVisual *GraphScene::addLineVisual(const QPointF &coords, IScaObjectLine *object)
+IScaObjectLineVisual *GraphScene::addLineVisual(
+        const QPointF &coords, IScaObjectLine *object)
 {
     IScaObjectLineVisual *node = new IScaObjectLineVisual(coords, object);
 
@@ -96,7 +101,8 @@ IScaObjectLineVisual *GraphScene::addLineVisual(const QPointF &coords, IScaObjec
     return node;
 }
 
-IScaObjectBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords, IScaObjectBlock *object)
+IScaObjectBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords,
+                                                        IScaObjectBlock *object)
 {
     IScaObjectBlockVisual *node = new IScaObjectBlockVisual(coords, object);
 
@@ -104,9 +110,12 @@ IScaObjectBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords, I
     return node;
 }
 
-IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object)
+IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(
+        const QPointF &coords,
+        IScaObjectIdentifier *object)
 {
-    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(coords, object);
+    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(coords,
+                                                                      object);
 
     addItem(node);
     return node;
@@ -114,20 +123,79 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(const QPointF &coord
 
 IScaObjectBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
 {
-
+    ScaObjectConverter conv;
+    switch(node->getObject()->getType())
+    {
+    case IScaObject::IDENTIFIER:
+        {
+        qDebug() << "Converting id to text";
+            removeItem(node);
+            IScaObjectBlockVisual *new_obj =
+                    conv.getTextBlockFromIdentifier(
+                        static_cast<IScaObjectIdentifierVisual *>(node), true);
+            addItem(new_obj);
+            return new_obj;
+        }
+    case IScaObject::BINARYBLOCK:
+        {
+        qDebug() << "Converting binary to text";
+            //Waiting for dividing block into 2 classes
+            return NULL;
+        }
+    }
+    qDebug() << "No conversion";
+    return static_cast<IScaObjectBlockVisual *>(node);
 }
 
 IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
 {
-
+    ScaObjectConverter conv;
+    switch(node->getObject()->getType())
+    {
+    case IScaObject::TEXTBLOCK:
+        {
+        qDebug() << "Converting text to id";
+            removeItem(node);
+            IScaObjectIdentifierVisual *new_obj =
+                    conv.getIdentifierFromBlock(
+                        static_cast<IScaObjectBlockVisual *>(node), true);
+            addItem(new_obj);
+            return new_obj;
+        }
+    case IScaObject::BINARYBLOCK:
+        {
+        qDebug() << "Converting binary to id";
+            //Waiting for dividing block into 2 classes
+            return NULL;
+        }
+    }
+    qDebug() << "No conversion";
+    return static_cast<IScaObjectIdentifierVisual *>(node);
 }
 
 IScaObjectBlockVisual *GraphScene::addBinaryBlockFromNode(Node *node)
 {
-
+    ScaObjectConverter conv;
+    switch(node->getObject()->getType())
+    {
+    case IScaObject::IDENTIFIER:
+        {
+        qDebug() << "Converting id to binary";
+            return NULL;
+        }
+    case IScaObject::TEXTBLOCK:
+        {
+        qDebug() << "Converting text to binary";
+            //Waiting for dividing block into 2 classes
+            return NULL;
+        }
+    }
+    qDebug() << "No conversion";
+    return static_cast<IScaObjectBlockVisual *>(node);
 }
 
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaObjectDirectory *object)
+IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords,
+                                                    IScaObjectDirectory *object)
 {
     IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(coords, object);
 
@@ -135,7 +203,8 @@ IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords, IScaO
     return node;
 }
 
-IScaObjectBlockVisual *GraphScene::addTextBlockVisual(const QPointF &coords, IScaObjectBlock *object)
+IScaObjectBlockVisual *GraphScene::addTextBlockVisual(const QPointF &coords,
+                                                      IScaObjectBlock *object)
 {
     IScaObjectBlockVisual *node = new IScaObjectBlockVisual(coords, object);
 
@@ -207,7 +276,8 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
-QGraphicsItem *GraphScene::addNode(const float x, const float y, IScaObject *object)
+QGraphicsItem *GraphScene::addNode(const float x, const float y,
+                                   IScaObject *object)
 {
     return addNode(QPointF(x, y), object);
 }

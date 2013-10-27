@@ -103,7 +103,6 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
             return objLine;
         }
 
-        //Just block then
         IScaObjectBlock *objBlock = new IScaObjectBlock(objFile, offset, length, m_data->text());
         return objBlock;
     }

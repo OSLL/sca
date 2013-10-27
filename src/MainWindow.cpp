@@ -79,11 +79,13 @@ void MainWindow::processFile()
 
 void MainWindow::loadBinaryFile()
 {
-    QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
+    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
     if (fileInf.size() > MAX_BINARY_FILE_SIZE)
     {
         QMessageBox::warning(this, ERROR_TOO_LARGE_BINARY_FILE_TITLE,
-                             ERROR_TOO_LARGE_BINARY_FILE_MSG.arg(QString::number(fileInf.size())),
+                             ERROR_TOO_LARGE_BINARY_FILE_MSG.arg(
+                                 QString::number(fileInf.size())),
                              QMessageBox::Ok);
         return;
     }
@@ -109,7 +111,8 @@ void MainWindow::loadBinaryFile()
 
 void MainWindow::addToScene()
 {
-    QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
+    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
 
     if (fileInf.isFile())
     {
@@ -127,7 +130,8 @@ void MainWindow::addToScene()
 
 void MainWindow::loadTextFile(const QString &code)
 {
-    QFileInfo fileInf = m_fileModel->fileInfo(m_ui->sourceBrowser->currentIndex());
+    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
+    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
     if (fileInf.size() > MAX_TEXT_FILE_SIZE)
     {
         QMessageBox::warning(this, ERROR_TOO_LARGE_TEXT_FILE_TITLE,
