@@ -74,6 +74,8 @@ IScaObjectBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObject
     foreach(LinkVisual *link, obj->getLinks())
     {
         link->changeNode(obj, new_obj);
+        new_obj->addLink(link);
+        obj->disconnectLink(link);
     }
     if (autoDel)
         delete obj;
@@ -91,6 +93,8 @@ IScaObjectIdentifierVisual *ScaObjectConverter::getIdentifierFromBlock(IScaObjec
     foreach(LinkVisual *link, obj->getLinks())
     {
         link->changeNode(obj, new_obj);
+        new_obj->addLink(link);
+        obj->disconnectLink(link);
     }
     if (autoDel)
         delete obj;
