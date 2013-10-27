@@ -42,6 +42,7 @@ const QString ERROR_OPENING_FILE_MSG = "Error opening %1";
 //[End error messages]
 
 //[GraphView context menu strings]
+const QString CONNECT_NODES = "Connect nodes";
 const QString TO_TEXT_BLOCK = "Set as text block";
 const QString TO_IDENTIFIER = "Set as identifier";
 const QString TO_BINARY_BLOCK = "Set as binary block";
