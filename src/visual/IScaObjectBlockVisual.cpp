@@ -51,7 +51,13 @@ IScaObjectBlockVisual::IScaObjectBlockVisual(const QPointF &coords, IScaObjectBl
                     DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT);
     QString str = object->getText();
     if (str != NULL)
+    {
+        if(str.size() > 15)
+        {
+            str = str.mid(0, 15) + "...";
+        }
         setTitle(str);
+    }
 }
 
 void IScaObjectBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

@@ -49,7 +49,15 @@ IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(const QPointF &coords, IS
                     -DEFAULT_IDENTIFIER_VISUAL_HEIGHT / 2,
                     DEFAULT_IDENTIFIER_VISUAL_WIDTH,
                     DEFAULT_IDENTIFIER_VISUAL_HEIGHT);
-    setTitle(object->getIdentifier());
+    QString str = object->getIdentifier();
+    if (str != NULL)
+    {
+        if(str.size() > 15)
+        {
+            str = str.mid(0, 15) + "...";
+        }
+        setTitle(str);
+    }
 }
 
 void IScaObjectIdentifierVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
