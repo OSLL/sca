@@ -803,9 +803,9 @@ void QHexEditPrivate::keyPressEvent(QKeyEvent *event)
     int posBa = (_cursorY / _charHeight) * BYTES_PER_LINE + posX / 2;
 
 
-/*****************************************************************************/
-/* Cursor movements */
-/*****************************************************************************/
+    /*****************************************************************************/
+    /* Cursor movements */
+    /*****************************************************************************/
 
     if (event->matches(QKeySequence::MoveToNextChar))
     {
@@ -859,9 +859,9 @@ void QHexEditPrivate::keyPressEvent(QKeyEvent *event)
         resetSelection(_cursorPosition);
     }
 
-/*****************************************************************************/
-/* Select commands */
-/*****************************************************************************/
+    /*****************************************************************************/
+    /* Select commands */
+    /*****************************************************************************/
     if (event->matches(QKeySequence::SelectAll))
     {
         resetSelection(0);
@@ -929,12 +929,12 @@ void QHexEditPrivate::keyPressEvent(QKeyEvent *event)
         setSelection(pos);
     }
 
-/*****************************************************************************/
-/* Edit Commands */
-/*****************************************************************************/
-if (!_readOnly)
-{
-    /* Hex input */
+    /*****************************************************************************/
+    /* Edit Commands */
+    /*****************************************************************************/
+    if (!_readOnly)
+    {
+        /* Hex input */
         int key = int(event->text()[0].toAscii());
         if ((key>='0' && key<='9') || (key>='a' && key <= 'f'))
         {
@@ -1017,26 +1017,26 @@ if (!_readOnly)
 
         /* Backspace */
         if ((event->key() == Qt::Key_Backspace) && (event->modifiers() == Qt::NoModifier))
+        {
+            if (getSelectionBegin() != getSelectionEnd())
             {
-                if (getSelectionBegin() != getSelectionEnd())
+                posBa = getSelectionBegin();
+                remove(posBa, getSelectionEnd() - posBa);
+                setCursorPos(2*posBa);
+                resetSelection(2*posBa);
+            }
+            else
+            {
+                if (posBa > 0)
                 {
-                    posBa = getSelectionBegin();
-                    remove(posBa, getSelectionEnd() - posBa);
-                    setCursorPos(2*posBa);
-                    resetSelection(2*posBa);
-                }
-                else
-                {
-                    if (posBa > 0)
-                    {
-                        if (_overwriteMode)
-                            replace(posBa - 1, char(0));
-                        else
-                            remove(posBa - 1, 1);
-                        setCursorPos(_cursorPosition - 2);
-                    }
+                    if (_overwriteMode)
+                        replace(posBa - 1, char(0));
+                    else
+                        remove(posBa - 1, 1);
+                    setCursorPos(_cursorPosition - 2);
                 }
             }
+        }
 
         /* undo */
         if (event->matches(QKeySequence::Undo))
@@ -1127,7 +1127,7 @@ void QHexEditPrivate::paintEvent(QPaintEvent *event)
         for (int lineIdx = firstLineIdx, yPos = yPosStart; lineIdx < lastLineIdx; lineIdx += BYTES_PER_LINE, yPos +=_charHeight)
         {
             QString address = QString("%1")
-                              .arg(lineIdx + _xData.addressOffset(), _xData.realAddressNumbers(), 16, QChar('0'));
+                    .arg(lineIdx + _xData.addressOffset(), _xData.realAddressNumbers(), 16, QChar('0'));
             painter.drawText(_xPosAdr, yPos, address);
         }
     }
@@ -1199,6 +1199,23 @@ void QHexEditPrivate::paintEvent(QPaintEvent *event)
             int xPosAscii = _xPosAscii;
             for (int colIdx = 0; ((lineIdx + colIdx) < _xData.size() and (colIdx < BYTES_PER_LINE)); colIdx++)
             {
+                int posBa = lineIdx + colIdx;
+                if ((getSelectionBegin() <= posBa) && (getSelectionEnd() > posBa))
+                {
+                    painter.setBackground(selected);
+                    painter.setBackgroundMode(Qt::OpaqueMode);
+                    painter.setPen(colSelected);
+                }
+                else
+                {
+
+                    painter.setBackground(highLighted);
+
+                    painter.setPen(colStandard);
+                    painter.setBackgroundMode(Qt::TransparentMode);
+
+                }
+
                 painter.drawText(xPosAscii, yPos, _xData.asciiChar(lineIdx + colIdx));
                 xPosAscii += _charWidth;
             }
