@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file ScaObjectConverter.h
- * \brief Header of ScaObjectConverter
+ * \file IScaObjectTextBlockVisual.h
+ * \brief Header of IScaObjectTextBlockVisual
  * \todo add comment here
  *
  * File description
@@ -39,33 +39,29 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#ifndef _IScaObjectTextBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
+#define _IScaObjectTextBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 
-#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
-class IScaObjectTextBlockVisual;
-class IScaObjectIdentifierVisual;
-class IScaObjectFileVisual;
-class IScaObjectVisual;
+#include "Node.h"
+#include "common/IScaObjectTextBlock.h"
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-class ScaObjectConverter
+class IScaObjectTextBlockVisual : public Node
 {
 public:
-  ScaObjectConverter();
+  explicit IScaObjectTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object);
 
-  ~ScaObjectConverter();
+  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-
-  IScaObjectTextBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
-  IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
+  ~IScaObjectTextBlockVisual();
+  
 private:
 
-}; // class ScaObjectConverter
+}; // class IScaObjectTextBlockVisual
   
 
-#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
+#endif //_IScaObjectTextBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 

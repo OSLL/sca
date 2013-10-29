@@ -41,7 +41,7 @@
 
 #include "ScaMIMEDataProcessor.h"
 #include "NumericalConstants.h"
-#include "common/IScaObjectBlock.h"
+#include "common/IScaObjectTextBlock.h"
 #include "common/IScaObjectDirectory.h"
 #include "common/IScaObjectFile.h"
 #include "common/IScaObjectIdentifier.h"
@@ -77,7 +77,7 @@ void ScaMIMEDataProcessor::setData(const QMimeData *data)
 
 IScaObject *ScaMIMEDataProcessor::makeObject()
 {
-    if (m_data->hasText())   //IScaObjectBlock/Line/Symbol/Identifier
+    if (m_data->hasText())   //IScaObjectTextBlock/Line/Symbol/Identifier
     {
         int offset = m_data->property("position").toInt(),
             length = m_data->property("length").toInt(),
@@ -103,7 +103,7 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
             return objLine;
         }
 
-        IScaObjectBlock *objBlock = new IScaObjectBlock(objFile, offset, length, m_data->text());
+        IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, length, m_data->text());
         return objBlock;
     }
     if (m_fileInfo.isFile())  //IScaObjectFile

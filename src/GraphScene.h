@@ -51,7 +51,7 @@
 #include "common/IScaObject.h"
 #include "visual/IScaObjectFileVisual.h"
 #include "visual/IScaObjectDirectoryVisual.h"
-#include "visual/IScaObjectBlockVisual.h"
+#include "visual/IScaObjectTextBlockVisual.h"
 #include "visual/IScaObjectSymbolVisual.h"
 #include "visual/IScaObjectLineVisual.h"
 #include "visual/IScaObjectIdentifierVisual.h"
@@ -67,15 +67,15 @@ public:
 
     IScaObjectFileVisual *addFileVisual(const QPointF &coords, IScaObjectFile *object = 0);
     IScaObjectDirectoryVisual *addDirVisual(const QPointF &coords, IScaObjectDirectory *object = 0);
-    IScaObjectBlockVisual *addTextBlockVisual(const QPointF &coords, IScaObjectBlock *object = 0);
+    IScaObjectTextBlockVisual *addTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object = 0);
     IScaObjectSymbolVisual *addSymbolVisual(const QPointF &coords, IScaObjectSymbol *object = 0);
     IScaObjectLineVisual *addLineVisual(const QPointF &coords, IScaObjectLine *object = 0);
-    IScaObjectBlockVisual *addBinaryBlockVisual(const QPointF &coords, IScaObjectBlock *object = 0);
+    IScaObjectTextBlockVisual *addBinaryBlockVisual(const QPointF &coords, IScaObjectTextBlock *object = 0);
     IScaObjectIdentifierVisual *addIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object = 0);
 
-    IScaObjectBlockVisual *addTextBlockFromNode(Node *node);
+    IScaObjectTextBlockVisual *addTextBlockFromNode(Node *node);
     IScaObjectIdentifierVisual *addIdentifierFromNode(Node *node);
-    IScaObjectBlockVisual *addBinaryBlockFromNode(Node *node);
+    IScaObjectTextBlockVisual *addBinaryBlockFromNode(Node *node);
 
 
     QGraphicsItem *addNode(const float x, const float y, IScaObject *object = 0);

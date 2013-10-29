@@ -20,7 +20,6 @@ SOURCES += \
     common/IScaObjectFile.cpp \
     common/IScaObjectSymbol.cpp \
     common/IScaObjectLine.cpp \
-    common/IScaObjectBlock.cpp \
     common/IScaObjectIdentifier.cpp \
     common/Link.cpp \
     MainWindow.cpp \
@@ -40,7 +39,7 @@ SOURCES += \
     visual/IScaObjectIdentifierVisual.cpp \
     visual/IScaObjectFileVisual.cpp \
     visual/IScaObjectDirectoryVisual.cpp \
-    visual/IScaObjectBlockVisual.cpp \
+    visual/IScaObjectTextBlockVisual.cpp \
     visual/Node.cpp \
     visual/ObjectVisual.cpp \
     widgets/ViewsTabWidget.cpp \
@@ -48,7 +47,9 @@ SOURCES += \
     widgets/GraphViewContextMenu.cpp \
     widgets/SourceBrowserMenu.cpp \
     widgets/ContextMenu.cpp \
-    common/ScaObjectConverter.cpp
+    common/ScaObjectConverter.cpp \
+    common/IScaObjectBinaryBlock.cpp \
+    common/IScaObjecTextBlock.cpp
 
 
 HEADERS += \
@@ -58,7 +59,6 @@ HEADERS += \
     common/IScaObjectFile.h \
     common/IScaObjectSymbol.h \
     common/IScaObjectLine.h \
-    common/IScaObjectBlock.h \
     common/IScaObjectIdentifier.h \
     common/Link.h \
     MainWindow.h \
@@ -79,7 +79,7 @@ HEADERS += \
     visual/IScaObjectIdentifierVisual.h \
     visual/IScaObjectFileVisual.h \
     visual/IScaObjectDirectoryVisual.h \
-    visual/IScaObjectBlockVisual.h \
+    visual/IScaObjectTextBlockVisual.h \
     visual/Node.h \
     visual/ObjectVisual.h \
     widgets/ViewsTabWidget.h \
@@ -87,7 +87,9 @@ HEADERS += \
     widgets/GraphViewContextMenu.h \
     widgets/SourceBrowserMenu.h \
     widgets/ContextMenu.h \
-    common/ScaObjectConverter.h
+    common/ScaObjectConverter.h \
+    common/IScaObjectTextBlock.h \
+    common/IScaObjectBinaryBlock.h
 
 FORMS += \
     mainwindow.ui

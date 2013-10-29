@@ -30,42 +30,45 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file ScaObjectConverter.h
- * \brief Header of ScaObjectConverter
- * \todo add comment here
+ *
+ * \file IScaObjectTextBlockVisual.cpp
+ * \brief IScaObjectTextBlockVisual implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "IScaObjectTextBlockVisual.h"
+#include <QPainter>
 
-#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
-class IScaObjectTextBlockVisual;
-class IScaObjectIdentifierVisual;
-class IScaObjectFileVisual;
-class IScaObjectVisual;
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-class ScaObjectConverter
+IScaObjectTextBlockVisual::IScaObjectTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object) :
+    Node(coords, object, DEFAULT_TEXT_BLOCK_COLOR)
 {
-public:
-  ScaObjectConverter();
+    m_rect = QRectF(-DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,
+                    -DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT / 2,
+                    DEFAULT_TEXT_BLOCK_VISUAL_WIDTH,
+                    DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT);
+    QString str = object->getText();
+    if (str != NULL)
+    {
+        if(str.size() > 15)
+        {
+            str = str.mid(0, 15) + "...";
+        }
+        setTitle(str);
+    }
+}
 
-  ~ScaObjectConverter();
+void IScaObjectTextBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setBrush(brush());
+    painter->setPen(pen());
+    painter->drawEllipse(m_rect);
+    Node::paint(painter, option, widget);
+}
 
+IScaObjectTextBlockVisual::~IScaObjectTextBlockVisual()
+{
 
-  IScaObjectTextBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
-  IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
-private:
-
-}; // class ScaObjectConverter
-  
-
-#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
+}

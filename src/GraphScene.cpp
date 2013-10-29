@@ -101,10 +101,10 @@ IScaObjectLineVisual *GraphScene::addLineVisual(
     return node;
 }
 
-IScaObjectBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords,
-                                                        IScaObjectBlock *object)
+IScaObjectTextBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords,
+                                                        IScaObjectTextBlock *object)
 {
-    IScaObjectBlockVisual *node = new IScaObjectBlockVisual(coords, object);
+    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(coords, object);
 
     addItem(node);
     return node;
@@ -121,7 +121,7 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(
     return node;
 }
 
-IScaObjectBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
+IScaObjectTextBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
 {
     ScaObjectConverter conv;
     switch(node->getObject()->getType())
@@ -130,7 +130,7 @@ IScaObjectBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
         {
         qDebug() << "Converting id to text";
             removeItem(node);
-            IScaObjectBlockVisual *new_obj =
+            IScaObjectTextBlockVisual *new_obj =
                     conv.getTextBlockFromIdentifier(
                         static_cast<IScaObjectIdentifierVisual *>(node), true);
             addItem(new_obj);
@@ -144,7 +144,7 @@ IScaObjectBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
         }
     }
     qDebug() << "No conversion";
-    return static_cast<IScaObjectBlockVisual *>(node);
+    return static_cast<IScaObjectTextBlockVisual *>(node);
 }
 
 IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
@@ -158,7 +158,7 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
             removeItem(node);
             IScaObjectIdentifierVisual *new_obj =
                     conv.getIdentifierFromBlock(
-                        static_cast<IScaObjectBlockVisual *>(node), true);
+                        static_cast<IScaObjectTextBlockVisual *>(node), true);
             addItem(new_obj);
             return new_obj;
         }
@@ -173,7 +173,7 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
     return static_cast<IScaObjectIdentifierVisual *>(node);
 }
 
-IScaObjectBlockVisual *GraphScene::addBinaryBlockFromNode(Node *node)
+IScaObjectTextBlockVisual *GraphScene::addBinaryBlockFromNode(Node *node)
 {
     ScaObjectConverter conv;
     switch(node->getObject()->getType())
@@ -191,7 +191,7 @@ IScaObjectBlockVisual *GraphScene::addBinaryBlockFromNode(Node *node)
         }
     }
     qDebug() << "No conversion";
-    return static_cast<IScaObjectBlockVisual *>(node);
+    return static_cast<IScaObjectTextBlockVisual *>(node);
 }
 
 IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords,
@@ -203,10 +203,10 @@ IScaObjectDirectoryVisual *GraphScene::addDirVisual(const QPointF &coords,
     return node;
 }
 
-IScaObjectBlockVisual *GraphScene::addTextBlockVisual(const QPointF &coords,
-                                                      IScaObjectBlock *object)
+IScaObjectTextBlockVisual *GraphScene::addTextBlockVisual(const QPointF &coords,
+                                                      IScaObjectTextBlock *object)
 {
-    IScaObjectBlockVisual *node = new IScaObjectBlockVisual(coords, object);
+    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(coords, object);
 
     addItem(node);
     return node;

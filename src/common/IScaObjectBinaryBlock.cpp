@@ -1,6 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
-
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,55 +30,81 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectText.h
- * \brief Header of IScaObjectText
- * \todo add comment here
  *
- * m_offset - number of symbols before text block
- * m_length - length of text-block in symbols
+ * \file IScaObjectBinaryBlock.cpp
+ * \brief IScaObjectBinaryBlock implementation
+ *
+ * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "IScaObjectBinaryBlock.h"
+#include "common/IScaObjectBinaryBlock.h"
+#include <QDebug>
 
-#ifndef _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
-#define _IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-#include <QString>
-#include "common/IScaObject.h"
-#include "common/IScaObjectFile.h"
-
-class IScaObjectBlock: public IScaObject
+IScaObjectBinaryBlock::IScaObjectBinaryBlock() :
+    IScaObject(TEXTBLOCK),
+    m_length(0),
+    m_offset(0),
+    m_block(QByteArray()),
+    m_file(NULL)
 {
-public:
-    IScaObjectBlock();
-    IScaObjectBlock(IScaObjectFile *file, unsigned int offset, unsigned int length, QString text = QString(""));
-    ~IScaObjectBlock();
+}
 
-    unsigned int getOffset() const;
-    void setOffset(unsigned int offset);
+IScaObjectBinaryBlock::IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int offset,
+                                             unsigned int length, QByteArray block) :
+    IScaObject(BINARYBLOCK),
+    m_length(length),
+    m_offset(offset),
+    m_block(block),
+    m_file(file)
+{
+}
 
-    QFileInfo getFile() const;
-    void setFile(QFileInfo fileInfo);
+IScaObjectBinaryBlock::~IScaObjectBinaryBlock()
+{
+    if (m_file != NULL)
+        delete m_file;
+}
 
-    unsigned int getLength() const;
-    void setLength(unsigned int length);
+unsigned int IScaObjectBinaryBlock::getOffset() const
+{
+    return m_offset;
+}
 
-    QString getText() const;
-    void setText(const QString &value);
+void IScaObjectBinaryBlock::setOffset(unsigned int offset)
+{
+    m_offset = offset;
+}
 
-private:
-    quint64 m_length;
-    quint64 m_offset;
-    QString m_text;
-    IScaObjectFile *m_file;
+QFileInfo IScaObjectBinaryBlock::getFile() const
+{
+    return m_file->getFile();
+}
 
-}; // class IScaObjectText
-  
+void IScaObjectBinaryBlock::setFile(QFileInfo fileInfo)
+{
+    m_file->setFile(fileInfo.filePath());
+}
 
-#endif //_IScaObjectText_H_CF22847C_B31D_488E_9444_08DB68BF4607_INCLUDED_
+unsigned int IScaObjectBinaryBlock::getLength() const
+{
+    return m_length;
+}
+
+void IScaObjectBinaryBlock::setLength(unsigned int length)
+{
+    m_length = length;
+}
+
+
+QByteArray IScaObjectBinaryBlock::block() const
+{
+    return m_block;
+}
+
+void IScaObjectBinaryBlock::setBlock(const QByteArray &block)
+{
+    m_block = block;
+}

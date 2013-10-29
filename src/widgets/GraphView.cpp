@@ -45,7 +45,7 @@
 #include <QUrl>
 #include "widgets/GraphViewContextMenu.h"
 #include "common/IScaObjectFile.h"
-#include "common/IScaObjectBlock.h"
+#include "common/IScaObjectTextBlock.h"
 #include "common/IScaObjectDirectory.h"
 #include "common/IScaObjectSymbol.h"
 #include "common/IScaObjectLine.h"
@@ -102,14 +102,14 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             {
                 m_temp = GraphView::scene()->addBinaryBlockVisual(
                             mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectBlock *>(object));
+                            static_cast<IScaObjectTextBlock *>(object));
                 return;
             }
         case IScaObject::TEXTBLOCK:
             {
                 m_temp = GraphView::scene()->addTextBlockVisual(
                             mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectBlock *>(object));
+                            static_cast<IScaObjectTextBlock *>(object));
                 return;
             }
         case IScaObject::IDENTIFIER:

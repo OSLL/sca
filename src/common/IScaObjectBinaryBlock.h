@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file ScaObjectConverter.h
- * \brief Header of ScaObjectConverter
+ * \file IScaObjectBinaryBlock.h
+ * \brief Header of IScaObjectBinaryBlock
  * \todo add comment here
  *
  * File description
@@ -40,32 +40,44 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
-class IScaObjectTextBlockVisual;
-class IScaObjectIdentifierVisual;
-class IScaObjectFileVisual;
-class IScaObjectVisual;
+#ifndef _IScaObjectBinaryBlock_H_F754FD25_47B9_464B_9178_653BB17B069C_INCLUDED_
+#define _IScaObjectBinaryBlock_H_F754FD25_47B9_464B_9178_653BB17B069C_INCLUDED_
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-class ScaObjectConverter
+#include <QString>
+#include "common/IScaObject.h"
+#include "common/IScaObjectFile.h"
+
+class IScaObjectBinaryBlock: public IScaObject
 {
 public:
-  ScaObjectConverter();
+    IScaObjectBinaryBlock();
+    IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int offset,
+                          unsigned int length, QByteArray block = QByteArray());
+    ~IScaObjectBinaryBlock();
 
-  ~ScaObjectConverter();
+    unsigned int getOffset() const;
+    void setOffset(unsigned int offset);
 
+    QFileInfo getFile() const;
+    void setFile(QFileInfo fileInfo);
 
-  IScaObjectTextBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
-  IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
+    unsigned int getLength() const;
+    void setLength(unsigned int length);
+
+    QByteArray block() const;
+    void setBlock(const QByteArray &block);
+
 private:
+    quint64 m_length;
+    quint64 m_offset;
+    QByteArray m_block;
+    IScaObjectFile *m_file;
 
-}; // class ScaObjectConverter
+}; // class IScaObjectBinaryBlock
   
 
-#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
+#endif //_IScaObjectBinaryBlock_H_F754FD25_47B9_464B_9178_653BB17B069C_INCLUDED_

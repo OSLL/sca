@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,42 +30,78 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file ScaObjectConverter.h
- * \brief Header of ScaObjectConverter
- * \todo add comment here
+ *
+ * \file IScaObjectTextBlock.cpp
+ * \brief IScaObjectTextBlock implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "common/IScaObjectTextBlock.h"
+#include <QDebug>
 
-#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
-class IScaObjectTextBlockVisual;
-class IScaObjectIdentifierVisual;
-class IScaObjectFileVisual;
-class IScaObjectVisual;
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-class ScaObjectConverter
+IScaObjectTextBlock::IScaObjectTextBlock() :
+    IScaObject(TEXTBLOCK),
+    m_length(0),
+    m_offset(0),
+    m_text(QString("")),
+    m_file(NULL)
 {
-public:
-  ScaObjectConverter();
+}
 
-  ~ScaObjectConverter();
+IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file, unsigned int offset, unsigned int length, QString text) :
+    IScaObject(TEXTBLOCK),
+    m_length(length),
+    m_offset(offset),
+    m_text(text),
+    m_file(file)
+{
+}
 
+IScaObjectTextBlock::~IScaObjectTextBlock()
+{
+    if (m_file != NULL)
+        delete m_file;
+}
 
-  IScaObjectTextBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
-  IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
-private:
+unsigned int IScaObjectTextBlock::getOffset() const
+{
+    return m_offset;
+}
 
-}; // class ScaObjectConverter
-  
+void IScaObjectTextBlock::setOffset(unsigned int offset)
+{
+    m_offset = offset;
+}
 
-#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
+QFileInfo IScaObjectTextBlock::getFile() const
+{
+    return m_file->getFile();
+}
 
+void IScaObjectTextBlock::setFile(QFileInfo fileInfo)
+{
+    m_file->setFile(fileInfo.filePath());
+}
+
+unsigned int IScaObjectTextBlock::getLength() const
+{
+    return m_length;
+}
+
+void IScaObjectTextBlock::setLength(unsigned int length)
+{
+    m_length = length;
+}
+
+QString IScaObjectTextBlock::getText() const
+{
+    return m_text;
+}
+
+void IScaObjectTextBlock::setText(const QString &value)
+{
+    m_text = value;
+}

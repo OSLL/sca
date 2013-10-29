@@ -42,14 +42,14 @@
 #include "ScaObjectConverter.h"
 #include "visual/IScaObjectFileVisual.h"
 #include "visual/IScaObjectDirectoryVisual.h"
-#include "visual/IScaObjectBlockVisual.h"
+#include "visual/IScaObjectTextBlockVisual.h"
 #include "visual/IScaObjectSymbolVisual.h"
 #include "visual/IScaObjectLineVisual.h"
 #include "visual/IScaObjectIdentifierVisual.h"
 #include "visual/Node.h"
 #include "visual/LinkVisual.h"
 #include "common/IScaObjectFile.h"
-#include "common/IScaObjectBlock.h"
+#include "common/IScaObjectTextBlock.h"
 #include "common/IScaObjectDirectory.h"
 #include "common/IScaObjectSymbol.h"
 #include "common/IScaObjectLine.h"
@@ -63,14 +63,14 @@ ScaObjectConverter::~ScaObjectConverter()
 {
 }
 
-IScaObjectBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
+IScaObjectTextBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
 {
     IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
     IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
-    IScaObjectBlock *objBlock = new IScaObjectBlock(objFile, objId->getOffset(),
+    IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
                                                     objId->getIdentifier().length(),
                                                     objId->getIdentifier());
-    IScaObjectBlockVisual *new_obj = new IScaObjectBlockVisual(obj->pos(), objBlock);
+    IScaObjectTextBlockVisual *new_obj = new IScaObjectTextBlockVisual(obj->pos(), objBlock);
     foreach(LinkVisual *link, obj->getLinks())
     {
         link->changeNode(obj, new_obj);
@@ -82,9 +82,9 @@ IScaObjectBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObject
     return new_obj;
 }
 
-IScaObjectIdentifierVisual *ScaObjectConverter::getIdentifierFromBlock(IScaObjectBlockVisual *obj, bool autoDel)
+IScaObjectIdentifierVisual *ScaObjectConverter::getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
 {
-    IScaObjectBlock *objBlock = static_cast<IScaObjectBlock *>(obj->getObject());
+    IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
     IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
     IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
                                                            objBlock->getText());
