@@ -72,7 +72,9 @@ LinkVisual::~LinkVisual()
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    refreshGeometry();
+    if(qFuzzyCompare(m_line.length(), qreal(0.0)))
+        return;
+
     painter->setPen(pen());
     painter->drawLine(m_line);
 }
