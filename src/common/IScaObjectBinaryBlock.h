@@ -56,7 +56,7 @@ class IScaObjectBinaryBlock: public IScaObject
 public:
     IScaObjectBinaryBlock();
     IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int offset,
-                          unsigned int length, QByteArray block = QByteArray());
+                          unsigned int length, QByteArray data = QByteArray());
     ~IScaObjectBinaryBlock();
 
     unsigned int getOffset() const;
@@ -68,13 +68,13 @@ public:
     unsigned int getLength() const;
     void setLength(unsigned int length);
 
-    QByteArray block() const;
-    void setBlock(const QByteArray &block);
+    QByteArray getData() const;
+    void setData(const QByteArray &block);
 
 private:
     quint64 m_length;
     quint64 m_offset;
-    QByteArray m_block;
+    QByteArray m_data;
     IScaObjectFile *m_file;
 
 }; // class IScaObjectBinaryBlock

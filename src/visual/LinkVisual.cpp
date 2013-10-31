@@ -72,6 +72,8 @@ LinkVisual::~LinkVisual()
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_UNUSED(option)
+    Q_UNUSED(widget)
     if(qFuzzyCompare(m_line.length(), qreal(0.0)))
         return;
 

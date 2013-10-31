@@ -528,6 +528,8 @@ public:
     void setData(QByteArray const &data);
     QByteArray data();
 
+    QByteArray getSelectedData();
+
     void setHighlightingColor(QColor const &color);
     QColor highlightingColor();
 
@@ -563,6 +565,10 @@ public:
     QString toRedableString();
     QString selectionToReadableString();
 
+
+    QString getCurrentPath() const;
+    void setCurrentPath(const QString &currentPath);
+
 signals:
     void currentAddressChanged(int address);
     void currentSizeChanged(int size);
@@ -573,8 +579,12 @@ protected:
     void keyPressEvent(QKeyEvent * event);
     void mouseMoveEvent(QMouseEvent * event);
     void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
     void paintEvent(QPaintEvent *event);
+
+    QMimeData *createMimeDataFromSelection();
+
 
     int cursorPos(QPoint pos);          // calc cursorpos from graphics position. DOES NOT STORE POSITION
 
@@ -583,7 +593,6 @@ protected:
     void setSelection(int pos);         // set min (if below init) or max (if greater init)
     int getSelectionBegin();
     int getSelectionEnd();
-
 
 private slots:
     void updateCursor();
@@ -609,6 +618,8 @@ private:
     bool _overwriteMode;
     bool _readOnly;                         // true: the user can only look and navigate
 
+    bool _draggingOut;
+
     int _charWidth, _charHeight;            // char dimensions (dpendend on font)
     int _cursorX, _cursorY;                 // graphics position of the cursor
     int _cursorPosition;                    // character positioin in stream (on byte ends in to steps)
@@ -619,6 +630,8 @@ private:
     int _selectionInit;                     // That's, where we pressed the mouse button
 
     int _size;
+
+    QString _currentPath;
 };
 
 /** \endcond docNever */

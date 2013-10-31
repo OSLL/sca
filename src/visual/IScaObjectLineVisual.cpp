@@ -49,7 +49,9 @@ IScaObjectLineVisual::IScaObjectLineVisual(const QPointF &coords, IScaObjectLine
                     -DEFAULT_LINE_VISUAL_HEIGHT / 2,
                     DEFAULT_LINE_VISUAL_WIDTH,
                     DEFAULT_LINE_VISUAL_HEIGHT);
-    setTitle(object->getLine());
+
+    QString title = object->getLine().mid(0, MAX_TITLE_LENGTH);
+    setTitle(title);
 }
 
 void IScaObjectLineVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

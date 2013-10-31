@@ -2,6 +2,7 @@
 #define QHEXEDIT_H
 
 #include <QtGui>
+#include <QMimeData>
 #include "qhexedit_p.h"
 
 /*LICENCE

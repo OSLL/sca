@@ -52,9 +52,9 @@ IScaObjectTextBlockVisual::IScaObjectTextBlockVisual(const QPointF &coords, ISca
     QString str = object->getText();
     if (str != NULL)
     {
-        if(str.size() > 15)
+        if(str.size() > MAX_TITLE_LENGTH)
         {
-            str = str.mid(0, 15) + "...";
+            str = str.mid(0, MAX_TITLE_LENGTH) + "...";
         }
         setTitle(str);
     }

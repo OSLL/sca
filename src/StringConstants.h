@@ -58,4 +58,8 @@ const QString ISO885915 = "ISO-8859-15";
 const QString DEFAULT_ENCODING = UTF8;
 //[End preferences]
 
+//[MIMEData]
+const QString BINARY_DATA = "Binary Data";
+//[End MIMEData]
+
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

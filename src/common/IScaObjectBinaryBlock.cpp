@@ -47,17 +47,17 @@ IScaObjectBinaryBlock::IScaObjectBinaryBlock() :
     IScaObject(TEXTBLOCK),
     m_length(0),
     m_offset(0),
-    m_block(QByteArray()),
+    m_data(QByteArray()),
     m_file(NULL)
 {
 }
 
 IScaObjectBinaryBlock::IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int offset,
-                                             unsigned int length, QByteArray block) :
+                                             unsigned int length, QByteArray data) :
     IScaObject(BINARYBLOCK),
     m_length(length),
     m_offset(offset),
-    m_block(block),
+    m_data(data),
     m_file(file)
 {
 }
@@ -99,12 +99,12 @@ void IScaObjectBinaryBlock::setLength(unsigned int length)
 }
 
 
-QByteArray IScaObjectBinaryBlock::block() const
+QByteArray IScaObjectBinaryBlock::getData() const
 {
-    return m_block;
+    return m_data;
 }
 
-void IScaObjectBinaryBlock::setBlock(const QByteArray &block)
+void IScaObjectBinaryBlock::setData(const QByteArray &block)
 {
-    m_block = block;
+    m_data = block;
 }

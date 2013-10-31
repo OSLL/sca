@@ -101,10 +101,10 @@ IScaObjectLineVisual *GraphScene::addLineVisual(
     return node;
 }
 
-IScaObjectTextBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords,
-                                                        IScaObjectTextBlock *object)
+IScaObjectBinaryBlockVisual *GraphScene::addBinaryBlockVisual(const QPointF &coords,
+                                                        IScaObjectBinaryBlock *object)
 {
-    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(coords, object);
+    IScaObjectBinaryBlockVisual *node = new IScaObjectBinaryBlockVisual(coords, object);
 
     addItem(node);
     return node;

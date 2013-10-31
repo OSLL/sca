@@ -49,7 +49,8 @@ SOURCES += \
     widgets/ContextMenu.cpp \
     common/ScaObjectConverter.cpp \
     common/IScaObjectBinaryBlock.cpp \
-    common/IScaObjecTextBlock.cpp
+    common/IScaObjecTextBlock.cpp \
+    visual/IScaObjectBinaryBlockVisual.cpp
 
 
 HEADERS += \
@@ -89,7 +90,8 @@ HEADERS += \
     widgets/ContextMenu.h \
     common/ScaObjectConverter.h \
     common/IScaObjectTextBlock.h \
-    common/IScaObjectBinaryBlock.h
+    common/IScaObjectBinaryBlock.h \
+    visual/IScaObjectBinaryBlockVisual.h
 
 FORMS += \
     mainwindow.ui

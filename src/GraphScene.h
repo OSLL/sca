@@ -52,6 +52,7 @@
 #include "visual/IScaObjectFileVisual.h"
 #include "visual/IScaObjectDirectoryVisual.h"
 #include "visual/IScaObjectTextBlockVisual.h"
+#include "visual/IScaObjectBinaryBlockVisual.h"
 #include "visual/IScaObjectSymbolVisual.h"
 #include "visual/IScaObjectLineVisual.h"
 #include "visual/IScaObjectIdentifierVisual.h"
@@ -70,7 +71,7 @@ public:
     IScaObjectTextBlockVisual *addTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object = 0);
     IScaObjectSymbolVisual *addSymbolVisual(const QPointF &coords, IScaObjectSymbol *object = 0);
     IScaObjectLineVisual *addLineVisual(const QPointF &coords, IScaObjectLine *object = 0);
-    IScaObjectTextBlockVisual *addBinaryBlockVisual(const QPointF &coords, IScaObjectTextBlock *object = 0);
+    IScaObjectBinaryBlockVisual *addBinaryBlockVisual(const QPointF &coords, IScaObjectBinaryBlock *object = 0);
     IScaObjectIdentifierVisual *addIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object = 0);
 
     IScaObjectTextBlockVisual *addTextBlockFromNode(Node *node);

@@ -1,6 +1,7 @@
 #include <QtGui>
 
 #include "qhexedit.h"
+#include "StringConstants.h"
 /*LICENCE
  *GNU LESSER GENERAL PUBLIC LICENSE
      Version 2.1, February 1999
@@ -558,6 +559,7 @@ QString QHexEdit::selectionToReadableString()
     return qHexEdit_p->selectionToReadableString();
 }
 
+
 void QHexEdit::setAddressArea(bool addressArea)
 {
     qHexEdit_p->setAddressArea(addressArea);
@@ -684,7 +686,10 @@ QString QHexEdit::getCurrentPath() const
 void QHexEdit::setCurrentPath(const QString &value)
 {
     currentPath = value;
+    qHexEdit_p->setCurrentPath(value);
 }
+
+
 
 const QFont & QHexEdit::font() const
 {

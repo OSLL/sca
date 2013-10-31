@@ -46,6 +46,7 @@
 #include "widgets/GraphViewContextMenu.h"
 #include "common/IScaObjectFile.h"
 #include "common/IScaObjectTextBlock.h"
+#include "common/IScaObjectBinaryBlock.h"
 #include "common/IScaObjectDirectory.h"
 #include "common/IScaObjectSymbol.h"
 #include "common/IScaObjectLine.h"
@@ -70,6 +71,8 @@ GraphView::GraphView(GraphScene *scene, QWidget *parent) :
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
 {
+
+
     //Turn off interaction for drag-n-drop processing, otherwise it will fail
     setInteractive(false);
     //Create temporary node to see where it will be placed
@@ -102,7 +105,7 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             {
                 m_temp = GraphView::scene()->addBinaryBlockVisual(
                             mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectTextBlock *>(object));
+                            static_cast<IScaObjectBinaryBlock *>(object));
                 return;
             }
         case IScaObject::TEXTBLOCK:

@@ -52,7 +52,7 @@ IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(const QPointF &coords, IS
     QString str = object->getIdentifier();
     if (str != NULL)
     {
-        if(str.size() > 15)
+        if(str.size() > MAX_TITLE_LENGTH)
         {
             str = str.mid(0, 15) + "...";
         }

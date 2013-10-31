@@ -3,6 +3,8 @@
 #include "qhexedit_p.h"
 #include "commands.h"
 #include "NumericalConstants.h"
+#include "StringConstants.h"
+#include <QDrag>
 /*LICENCE
  *GNU LESSER GENERAL PUBLIC LICENSE
      Version 2.1, February 1999
@@ -557,6 +559,11 @@ QByteArray QHexEditPrivate::data()
     return _xData.data();
 }
 
+QByteArray QHexEditPrivate::getSelectedData()
+{
+    return _xData.data().mid(getSelectionBegin(), getSelectionEnd() - getSelectionBegin());
+}
+
 void QHexEditPrivate::setAddressAreaColor(const QColor &color)
 {
     _addressAreaColor = color;
@@ -928,6 +935,10 @@ void QHexEditPrivate::keyPressEvent(QKeyEvent *event)
         setCursorPos(pos);
         setSelection(pos);
     }
+    if(event->key() == Qt::Key_S)
+    {
+
+    }
 
     /*****************************************************************************/
     /* Edit Commands */
@@ -1082,8 +1093,21 @@ void QHexEditPrivate::mouseMoveEvent(QMouseEvent * event)
     _blink = false;
     update();
     int actPos = cursorPos(event->pos());
-    setCursorPos(actPos);
-    setSelection(actPos);
+
+    if(_draggingOut)
+    {
+        QDrag *drag = new QDrag(this);
+        QMimeData *mimeData = createMimeDataFromSelection();
+        drag->setMimeData(mimeData);
+
+        Qt::DropAction dropAction = drag->exec(Qt::CopyAction | Qt::MoveAction);
+    }
+    else
+    {
+        setCursorPos(actPos);
+        setSelection(actPos);
+    }
+
 }
 
 void QHexEditPrivate::mousePressEvent(QMouseEvent * event)
@@ -1091,8 +1115,21 @@ void QHexEditPrivate::mousePressEvent(QMouseEvent * event)
     _blink = false;
     update();
     int cPos = cursorPos(event->pos());
-    resetSelection(cPos);
-    setCursorPos(cPos);
+    if(cPos/2 > getSelectionBegin() && cPos/2 < getSelectionEnd())
+    {
+        _draggingOut = true;
+    }
+    else
+    {
+        resetSelection(cPos);
+        setCursorPos(cPos);
+    }
+}
+
+void QHexEditPrivate::mouseReleaseEvent(QMouseEvent *event)
+{
+    Q_UNUSED(event);
+    _draggingOut = false;
 }
 
 void QHexEditPrivate::paintEvent(QPaintEvent *event)
@@ -1238,6 +1275,25 @@ void QHexEditPrivate::paintEvent(QPaintEvent *event)
     }
 }
 
+QMimeData *QHexEditPrivate::createMimeDataFromSelection()
+{
+    QMimeData *mime = new QMimeData();
+
+    QByteArray data = _xData.data().mid(getSelectionBegin(), getSelectionEnd() - getSelectionBegin());
+    qDebug() << getSelectionBegin() << getSelectionEnd();
+    qDebug() << "Data" << QString(data);
+    mime->setData(BINARY_DATA, data);
+
+    QList<QUrl> urls;
+    urls.push_back(QUrl::fromLocalFile(getCurrentPath()));
+    mime->setUrls(urls);
+
+    mime->setProperty("position", getSelectionBegin());
+    mime->setProperty("length", getSelectionEnd() - getSelectionBegin());
+
+    return mime;
+}
+
 void QHexEditPrivate::setCursorPos(int position)
 {
     // delete cursor
@@ -1372,3 +1428,13 @@ void QHexEditPrivate::ensureVisible()
     // x-margin is 3 pixels, y-margin is half of charHeight
     _scrollArea->ensureVisible(_cursorX, _cursorY + _charHeight/2, 3, _charHeight/2 + 2);
 }
+QString QHexEditPrivate::getCurrentPath() const
+{
+    return _currentPath;
+}
+
+void QHexEditPrivate::setCurrentPath(const QString &currentPath)
+{
+    _currentPath = currentPath;
+}
+

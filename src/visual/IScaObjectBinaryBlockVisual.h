@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObjectBlockVisual.h
- * \brief Header of IScaObjectBlockVisual
+ * \file IScaObjectBinaryBlockVisual.h
+ * \brief Header of IScaObjectBinaryBlockVisual
  * \todo add comment here
  *
  * File description
@@ -39,29 +39,26 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#ifndef _IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
-#define _IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 
-#include "Node.h"
-#include "common/IScaObjectBlock.h"
-
+#ifndef _IScaObjectBinaryBlockVisual_H_DF0A8168_00F0_4FC9_A4E4_CE9272C45764_INCLUDED_
+#define _IScaObjectBinaryBlockVisual_H_DF0A8168_00F0_4FC9_A4E4_CE9272C45764_INCLUDED_
+#include "visual/Node.h"
+#include "common/IScaObjectBinaryBlock.h"
 /*!
  * Class description. May use HTML formatting
  *
  */
-class IScaObjectBlockVisual : public Node
+class IScaObjectBinaryBlockVisual: public Node
 {
 public:
-  explicit IScaObjectBlockVisual(const QPointF &coords, IScaObjectBlock *object);
+    explicit IScaObjectBinaryBlockVisual(const QPointF &coords, IScaObjectBinaryBlock *object);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  ~IScaObjectBlockVisual();
+    ~IScaObjectBinaryBlockVisual();
+private:    
+
+}; // class IScaObjectBinaryBlockVisual
   
-private:
 
-}; // class IScaObjectBlockVisual
-  
-
-#endif //_IScaObjectBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
-
+#endif //_IScaObjectBinaryBlockVisual_H_DF0A8168_00F0_4FC9_A4E4_CE9272C45764_INCLUDED_

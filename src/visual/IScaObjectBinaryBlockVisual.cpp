@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,36 +31,44 @@
 
 /*! ---------------------------------------------------------------
  *
- * \file IScaObjectBlockVisual.cpp
- * \brief IScaObjectBlockVisual implementation
+ * \file IScaObjectBinaryBlockVisual.cpp
+ * \brief IScaObjectBinaryBlockVisual implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "IScaObjectBlockVisual.h"
+#include "IScaObjectBinaryBlockVisual.h"
+#include "NumericalConstants.h"
 #include <QPainter>
+#include <QDebug>
 
-IScaObjectBlockVisual::IScaObjectBlockVisual(const QPointF &coords, IScaObjectBlock *object) :
-    Node(coords, object, DEFAULT_TEXT_BLOCK_COLOR)
+IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(const QPointF &coords, IScaObjectBinaryBlock *object) :
+    Node(coords, object, DEFAULT_BINARY_BLOCK_COLOR)
 {
-    m_rect = QRectF(-DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,
-                    -DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT / 2,
-                    DEFAULT_TEXT_BLOCK_VISUAL_WIDTH,
-                    DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT);
-    QString str = object->getText();
-    if (str != NULL)
+    m_rect = QRectF(-DEFAULT_BINARY_BLOCK_VISUAL_WIDTH / 2,
+                    -DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT / 2,
+                    DEFAULT_BINARY_BLOCK_VISUAL_WIDTH,
+                    DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT);
+    QByteArray data = object->getData();
+    QString str;
+    for (int i = 0; i < data.length(); i++)
     {
-        if(str.size() > 15)
+        str += data.mid(i, 1).toHex() + " ";
+        if (str.length() >= MAX_TITLE_LENGTH-1)
         {
-            str = str.mid(0, 15) + "...";
+                str += "...";
+                break;
         }
-        setTitle(str);
+
     }
+    qDebug() << str;
+
+    setTitle(str);
 }
 
-void IScaObjectBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void IScaObjectBinaryBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->setBrush(brush());
     painter->setPen(pen());
@@ -68,7 +76,7 @@ void IScaObjectBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsI
     Node::paint(painter, option, widget);
 }
 
-IScaObjectBlockVisual::~IScaObjectBlockVisual()
+IScaObjectBinaryBlockVisual::~IScaObjectBinaryBlockVisual()
 {
 
 }

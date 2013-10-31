@@ -41,7 +41,9 @@
 
 #include "ScaMIMEDataProcessor.h"
 #include "NumericalConstants.h"
+#include "StringConstants.h"
 #include "common/IScaObjectTextBlock.h"
+#include "common/IScaObjectBinaryBlock.h"
 #include "common/IScaObjectDirectory.h"
 #include "common/IScaObjectFile.h"
 #include "common/IScaObjectIdentifier.h"
@@ -77,16 +79,35 @@ void ScaMIMEDataProcessor::setData(const QMimeData *data)
 
 IScaObject *ScaMIMEDataProcessor::makeObject()
 {
+    int offset     = m_data->property("position").toInt();
+    int length     = m_data->property("length").toInt();
+    int posInLine  = m_data->property("posInLine").toInt();
+    int line       = m_data->property("line").toInt();
+    int lineLength = m_data->property("lineLength").toInt();
+
+    if (m_fileInfo.isDir())   //IScaObjectDirectory
+    {
+        IScaObjectDirectory *objDir = new IScaObjectDirectory(m_fileInfo);
+        return objDir;
+    }
+
+    IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
+
+    if (m_fileInfo.isFile())  //IScaObjectFile
+    {
+        return objFile;
+    }
+
+    qDebug() << m_data->data(BINARY_DATA).mid(0, 1);
+    if(m_data->data(BINARY_DATA) != QByteArray())
+    {
+        QByteArray byteArray = m_data->data(BINARY_DATA);
+        IScaObjectBinaryBlock *objBinary = new IScaObjectBinaryBlock(objFile, offset, length, byteArray);
+        return objBinary;
+    }
+
     if (m_data->hasText())   //IScaObjectTextBlock/Line/Symbol/Identifier
     {
-        int offset = m_data->property("position").toInt(),
-            length = m_data->property("length").toInt(),
-            posInLine = m_data->property("posInLine").toInt(),
-            line = m_data->property("line").toInt(),
-            lineLength = m_data->property("lineLength").toInt();
-
-        IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
-
         //Symbol?
         if (m_data->text().length() == 1)
         {
@@ -97,7 +118,7 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
 
         //Line?
         if (lineLength == length
-            && (posInLine == 0 || posInLine == lineLength))
+                && (posInLine == 0 || posInLine == lineLength))
         {
             IScaObjectLine *objLine = new IScaObjectLine(objFile, line, m_data->text());
             return objLine;
@@ -106,15 +127,6 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
         IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, length, m_data->text());
         return objBlock;
     }
-    if (m_fileInfo.isFile())  //IScaObjectFile
-    {
-        IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
-        return objFile;
-    }
-    if (m_fileInfo.isDir())   //IScaObjectDirectory
-    {
-        IScaObjectDirectory *objDir = new IScaObjectDirectory(m_fileInfo);
-        return objDir;
-    }
+
     return new IScaObject();
 }
