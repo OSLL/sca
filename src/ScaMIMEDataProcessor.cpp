@@ -85,18 +85,7 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
     int line       = m_data->property("line").toInt();
     int lineLength = m_data->property("lineLength").toInt();
 
-    if (m_fileInfo.isDir())   //IScaObjectDirectory
-    {
-        IScaObjectDirectory *objDir = new IScaObjectDirectory(m_fileInfo);
-        return objDir;
-    }
-
     IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
-
-    if (m_fileInfo.isFile())  //IScaObjectFile
-    {
-        return objFile;
-    }
 
     qDebug() << m_data->data(BINARY_DATA).mid(0, 1);
     if(m_data->data(BINARY_DATA) != QByteArray())
@@ -126,6 +115,17 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
 
         IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, length, m_data->text());
         return objBlock;
+    }
+
+    if (m_fileInfo.isFile())  //IScaObjectFile
+    {
+        return objFile;
+    }
+    if (m_fileInfo.isDir())   //IScaObjectDirectory
+    {
+        delete(objFile);
+        IScaObjectDirectory *objDir = new IScaObjectDirectory(m_fileInfo);
+        return objDir;
     }
 
     return new IScaObject();

@@ -63,7 +63,6 @@ IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(const QPointF &coords, 
         }
 
     }
-    qDebug() << str;
 
     setTitle(str);
 }

@@ -1115,7 +1115,8 @@ void QHexEditPrivate::mousePressEvent(QMouseEvent * event)
     _blink = false;
     update();
     int cPos = cursorPos(event->pos());
-    if(cPos/2 > getSelectionBegin() && cPos/2 < getSelectionEnd())
+    if(cPos/2 > getSelectionBegin() && cPos/2 < getSelectionEnd()
+            && (getSelectionBegin() != getSelectionEnd()))
     {
         _draggingOut = true;
     }
@@ -1280,8 +1281,6 @@ QMimeData *QHexEditPrivate::createMimeDataFromSelection()
     QMimeData *mime = new QMimeData();
 
     QByteArray data = _xData.data().mid(getSelectionBegin(), getSelectionEnd() - getSelectionBegin());
-    qDebug() << getSelectionBegin() << getSelectionEnd();
-    qDebug() << "Data" << QString(data);
     mime->setData(BINARY_DATA, data);
 
     QList<QUrl> urls;
