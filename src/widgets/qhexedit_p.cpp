@@ -1100,7 +1100,7 @@ void QHexEditPrivate::mouseMoveEvent(QMouseEvent * event)
         QMimeData *mimeData = createMimeDataFromSelection();
         drag->setMimeData(mimeData);
 
-        Qt::DropAction dropAction = drag->exec(Qt::CopyAction | Qt::MoveAction);
+        //kkv? Qt::DropAction dropAction = drag->exec(Qt::CopyAction | Qt::MoveAction);
     }
     else
     {
