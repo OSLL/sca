@@ -53,7 +53,7 @@
 class LinkVisual : public ObjectVisual
 {
 public:
-    LinkVisual(Node *source, Node *dest);
+    LinkVisual(Node *source, Node *dest, bool sourceArrow = false, bool destinArrow = false);
     ~LinkVisual();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -67,11 +67,19 @@ public:
     void changeNode(Node *oldNode, Node *newNode);
 
     friend QDebug operator<< (QDebug d, LinkVisual &edge);
+
+    void setSourceArrow(QGraphicsPolygonItem *arrow);
+    void setDestinArrow(QGraphicsPolygonItem *arrow);
+    void setDefaultArrows(bool sourceArrow, bool destinArrow);
+
 private:
     Node *m_source;
     Node *m_dest;
 
     QLineF m_line;
+
+    QGraphicsPolygonItem *m_sourceArrow;
+    QGraphicsPolygonItem *m_destinArrow;
 }; // class LinkVisual
 
 

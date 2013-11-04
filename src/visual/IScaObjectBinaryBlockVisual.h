@@ -59,6 +59,6 @@ public:
 private:    
 
 }; // class IScaObjectBinaryBlockVisual
-  
+
 
 #endif //_IScaObjectBinaryBlockVisual_H_DF0A8168_00F0_4FC9_A4E4_CE9272C45764_INCLUDED_

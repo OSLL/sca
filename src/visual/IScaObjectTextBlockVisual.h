@@ -52,16 +52,16 @@
 class IScaObjectTextBlockVisual : public Node
 {
 public:
-  explicit IScaObjectTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object);
+    explicit IScaObjectTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  ~IScaObjectTextBlockVisual();
-  
+    ~IScaObjectTextBlockVisual();
+
 private:
 
 }; // class IScaObjectTextBlockVisual
-  
+
 
 #endif //_IScaObjectTextBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 

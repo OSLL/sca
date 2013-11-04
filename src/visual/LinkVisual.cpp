@@ -46,11 +46,14 @@
 #include <QPainter>
 #include <QDebug>
 #include <QGraphicsScene>
+#include <qmath.h>
 
-LinkVisual::LinkVisual(Node *source, Node *dest) :
+LinkVisual::LinkVisual(Node *source, Node *dest, bool sourceArrow, bool destinArrow) :
     ObjectVisual(new Link(source->getObject(), dest->getObject()), EDGE),
     m_source(source),
-    m_dest(dest)
+    m_dest(dest),
+    m_sourceArrow(NULL),
+    m_destinArrow(NULL)
 {
     m_source->addLink(this);
     m_dest->addLink(this);
@@ -60,7 +63,10 @@ LinkVisual::LinkVisual(Node *source, Node *dest) :
     setFlags(QGraphicsItem::ItemIsSelectable
              | QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(0);
-    setPen(QPen(QBrush(Qt::black), 9, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    setZValue(-1);
+    setPen(DEFAULT_PEN);
+
+    setDefaultArrows(sourceArrow, destinArrow);
 }
 
 LinkVisual::~LinkVisual()
@@ -68,6 +74,7 @@ LinkVisual::~LinkVisual()
     qDebug() << "Removing " << *this;
     m_source->disconnectLink(this);
     m_dest->disconnectLink(this);
+
 }
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -90,23 +97,52 @@ void LinkVisual::refreshGeometry()
 {
     if (m_source == NULL || m_dest == NULL)
         return;
+
     prepareGeometryChange();
-    qreal sourceX = m_source->x() + m_source->boundingRect().center().x();
-    qreal sourceY = m_source->y() + m_source->boundingRect().center().y();
 
-    qreal destX = m_dest->x() + m_dest->boundingRect().center().x();
-    qreal destY = m_dest->y() + m_dest->boundingRect().center().y();
+    QPointF source = m_source->pos() + m_source->boundingRect().center();
 
-    qreal posX = (sourceX + destX) / 2;
-    qreal posY = (sourceY + destY) / 2;
+    QPointF dest = m_dest->pos() + m_dest->boundingRect().center();
 
-    QPointF begin(sourceX - posX, sourceY - posY);
-    QPointF end(destX - posX, destY - posY);
+    QPointF pos = (source + dest) / 2;
 
-    setX(posX);
-    setY(posY);
+    QPointF begin(source - pos);
+    QPointF end(dest - pos);
 
-    setLine(QLineF(begin, end));
+    setPos(pos);
+
+    QLineF line(begin, end);
+
+    qreal sourceRadius = qSqrt(qPow(m_source->boundingRect().width(),2)
+                               + qPow(m_source->boundingRect().height(),2)) / 2 + 1;
+    qreal destinRadius = qSqrt(qPow(m_dest->boundingRect().width(),2)
+                               + qPow(m_dest->boundingRect().height(),2)) / 2 + 1;
+
+    QPointF sourceOffset((line.dx() * sourceRadius) / line.length(),
+                         (line.dy() * sourceRadius) / line.length());
+    QPointF destinOffset((line.dx() * destinRadius) / line.length(),
+                         (line.dy() * destinRadius) / line.length());
+
+    begin = line.p1() + sourceOffset;
+    end = line.p2() - destinOffset;
+
+    qreal angle = -line.angle();
+
+    if(m_sourceArrow != NULL)
+    {
+        m_sourceArrow->setPos(begin);
+        m_sourceArrow->setRotation(angle + 90);
+    }
+
+    if(m_destinArrow != NULL)
+    {
+        m_destinArrow->setPos(end);
+        m_destinArrow->setRotation(angle - 90);
+    }
+
+
+    line = QLineF(begin, end);
+    setLine(line);
 }
 
 QRectF LinkVisual::boundingRect() const
@@ -140,6 +176,8 @@ void LinkVisual::setLine(const QLineF &line)
 {
     m_line = line;
 }
+
+
 
 void LinkVisual::disconnectFrom(Node *node)
 {
@@ -177,6 +215,8 @@ void LinkVisual::changeNode(Node *oldNode, Node *newNode)
         m_dest = newNode;
         obj->setObjectTo(newNode->getObject());
     }
+
+    refreshGeometry();
 }
 
 QDebug operator<<(QDebug d, LinkVisual &edge)
@@ -186,4 +226,40 @@ QDebug operator<<(QDebug d, LinkVisual &edge)
       << " to "
       << edge.m_dest->getTitle()->text();
     return d;
+}
+
+void LinkVisual::setSourceArrow(QGraphicsPolygonItem *arrow)
+{
+    delete(m_sourceArrow);
+    m_sourceArrow = arrow;
+    m_sourceArrow->setParentItem(this);
+}
+
+void LinkVisual::setDestinArrow(QGraphicsPolygonItem *arrow)
+{
+    delete(m_destinArrow);
+    m_destinArrow = arrow;
+    m_destinArrow->setParentItem(this);
+}
+
+void LinkVisual::setDefaultArrows(bool sourceArrow, bool destinArrow)
+{
+    QVector<QPoint> points;
+    points.append(QPoint(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
+    points.append(QPoint(0, DEFAULT_ARROW_HEIGHT/2));
+    points.append(QPoint(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
+
+    if(sourceArrow && (m_sourceArrow == NULL))
+    {
+        m_sourceArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_sourceArrow->setPen(DEFAULT_PEN);
+
+    }
+    if(destinArrow && (m_destinArrow == NULL))
+    {
+        m_destinArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_destinArrow->setPen(DEFAULT_PEN);
+    }
+
+    refreshGeometry();
 }

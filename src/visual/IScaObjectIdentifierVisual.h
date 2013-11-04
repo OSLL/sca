@@ -52,16 +52,16 @@
 class IScaObjectIdentifierVisual : public Node
 {
 public:
-  explicit IScaObjectIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object);
+    explicit IScaObjectIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  ~IScaObjectIdentifierVisual();
-  
+    ~IScaObjectIdentifierVisual();
+
 private:
 
 }; // class IScaObjectIdentifierVisual
-  
+
 
 #endif //_IScaObjectIdentifierVisual_H_6BF427E1_35E4_487C_8846_5F2FE556500C_INCLUDED_
 

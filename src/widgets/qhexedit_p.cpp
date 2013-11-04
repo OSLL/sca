@@ -1099,8 +1099,7 @@ void QHexEditPrivate::mouseMoveEvent(QMouseEvent * event)
         QDrag *drag = new QDrag(this);
         QMimeData *mimeData = createMimeDataFromSelection();
         drag->setMimeData(mimeData);
-
-        //kkv? Qt::DropAction dropAction = drag->exec(Qt::CopyAction | Qt::MoveAction);
+        drag->exec(Qt::CopyAction);
     }
     else
     {

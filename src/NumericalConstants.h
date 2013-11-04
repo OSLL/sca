@@ -17,6 +17,8 @@
 #include <QColor>
 #include <QPen>
 
+const qreal PI = 3.1415926;
+
 //Alerts consts
 const long MAX_BINARY_FILE_SIZE = 50*1024*1024;
 const long MAX_TEXT_FILE_SIZE = 0.4*1024*1024;
@@ -65,7 +67,14 @@ const QColor DEFAULT_SYMBOL_COLOR(10, 200, 50);
 const int DEFAULT_SYMBOL_VISUAL_WIDTH = 10;
 const int DEFAULT_SYMBOL_VISUAL_HEIGHT = 15;
 
-
 const int MAX_TITLE_LENGTH = 15;
+
+const int DEFAULT_ARROW_WIDTH  = 15;
+const int DEFAULT_ARROW_HEIGHT = 15;
+
+const QPen DEFAULT_PEN(QBrush(Qt::black), 5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+const QColor DEFAULT_COLOR(0, 0, 0);
+
+const qreal DEFAULT_OFFSET = 10;
 
 #endif //_NumericalConstants_H_B55D9E18_0180_4F9B_B243_BC6FD77B58FD_INCLUDED_

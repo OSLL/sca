@@ -52,16 +52,16 @@
 class IScaObjectSymbolVisual : public Node
 {
 public:
-  explicit IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object);
+    explicit IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  ~IScaObjectSymbolVisual();
-  
+    ~IScaObjectSymbolVisual();
+
 private:
 
 }; // class IScaObjectSymbolVisual
-  
+
 
 #endif //_IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
 

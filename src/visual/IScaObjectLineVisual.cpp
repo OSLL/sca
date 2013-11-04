@@ -64,5 +64,4 @@ void IScaObjectLineVisual::paint(QPainter *painter, const QStyleOptionGraphicsIt
 
 IScaObjectLineVisual::~IScaObjectLineVisual()
 {
-
 }

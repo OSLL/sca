@@ -52,16 +52,15 @@
 class IScaObjectLineVisual : public Node
 {
 public:
-  explicit IScaObjectLineVisual(const QPointF &coords, IScaObjectLine *object);
+    explicit IScaObjectLineVisual(const QPointF &coords, IScaObjectLine *object);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  ~IScaObjectLineVisual();
+    ~IScaObjectLineVisual();
 
 private:
-
 }; // class IScaObjectLineVisual
-  
+
 
 #endif //_IScaObjectLineVisual_H_C7C3EBBC_5DB2_400A_B8D0_DFA33AC3A0A7_INCLUDED_
 

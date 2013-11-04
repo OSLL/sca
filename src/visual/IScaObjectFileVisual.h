@@ -52,16 +52,16 @@
 class IScaObjectFileVisual : public Node
 {
 public:
-  explicit IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object);
+    explicit IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  ~IScaObjectFileVisual();
-  
+    ~IScaObjectFileVisual();
+
 private:
 
 }; // class IScaObjectFileVisual
-  
+
 
 #endif //_IScaObjectFileVisual_H_D6CF0404_8A5C_4B9A_ADDB_64D9CE870112_INCLUDED_
 

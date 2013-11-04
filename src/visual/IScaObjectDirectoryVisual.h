@@ -52,16 +52,16 @@
 class IScaObjectDirectoryVisual : public Node
 {
 public:
-  explicit IScaObjectDirectoryVisual(const QPointF &coords, IScaObjectDirectory *object);
+    explicit IScaObjectDirectoryVisual(const QPointF &coords, IScaObjectDirectory *object);
 
-  void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-  ~IScaObjectDirectoryVisual();
-  
+    ~IScaObjectDirectoryVisual();
+
 private:
 
 }; // class IScaObjectDirectoryVisual
-  
+
 
 #endif //_IScaObjectDirectoryVisual_H_6523A4C7_F3E6_4099_9DDC_CF5C5F83A687_INCLUDED_
 
