@@ -56,6 +56,7 @@ const QString ISO885915 = "ISO-8859-15";
 
 //[Preferences]
 const QString DEFAULT_ENCODING = UTF8;
+const QString MAINWINDOW_TITLE = "Source Code Analyzer";
 //[End preferences]
 
 //[MIMEData]
