@@ -24,6 +24,7 @@ public slots:
     void loadTextFile(const QString &code = UTF8);
     void loadBinaryFile();
     void addToScene();
+    void openAbout();
 private slots:
 };
 

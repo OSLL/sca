@@ -5,6 +5,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QDebug>
+#include <QPixmap>
 
 #include "widgets/SourceBrowser.h"
 #include "FileLoader.h"
@@ -49,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadTextFile()));
     connect(m_ui->actionOpenInBinaryView, SIGNAL(triggered()),
             this, SLOT(loadBinaryFile()));
+    connect(m_ui->actionAbout, SIGNAL(triggered()),
+            this, SLOT(openAbout()));
 }
 
 MainWindow::~MainWindow()
@@ -126,6 +129,14 @@ void MainWindow::addToScene()
         m_scene->addFileVisual(pos, objFile);
     }
     m_ui->ViewsTabs->setCurrentIndex(2);
+}
+
+void MainWindow::openAbout()
+{
+    QMessageBox about(QMessageBox::NoIcon, ABOUT_TITLE, ABOUT_TEXT,
+                      QMessageBox::Ok, 0);
+    about.setIconPixmap(QPixmap(":logo/icons/logo.png").scaled(64, 64));
+    about.exec();
 }
 
 void MainWindow::loadTextFile(const QString &code)

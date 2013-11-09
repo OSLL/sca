@@ -56,11 +56,27 @@ const QString ISO885915 = "ISO-8859-15";
 
 //[Preferences]
 const QString DEFAULT_ENCODING = UTF8;
-const QString MAINWINDOW_TITLE = "Source Code Analyzer";
+const QString APPLICATION_VERSION = "0.1";
+const QString APPLICATION_AUTORS = QString("Kirill Krinkin\n") +
+                                   QString("Mark Zaslavskiy\n") +
+                                   QString("Leonid Skorospelov\n") +
+                                   QString("Nikita Razdobreev");
+const QString APPLICATION_NAME = "Source Code Analyzer";
+const QString APPLICATION_COPYRIGHT = "\xA9 Open Source & Linux Lab, 2013";
+const QString MAINWINDOW_TITLE = APPLICATION_NAME;
 //[End preferences]
 
 //[MIMEData]
 const QString BINARY_DATA = "Binary Data";
 //[End MIMEData]
+
+//[About text]
+const QString ABOUT_TITLE = QString("About %1").arg(APPLICATION_NAME);
+const QString ABOUT_TEXT =
+        QString("%1 - tool to maintain base of sources.\n").arg(APPLICATION_NAME) +
+        QString("Current version: %1\n").arg(APPLICATION_VERSION) +
+        QString("Made by: \n%2\n").arg(APPLICATION_AUTORS) +
+        QString("%3").arg(APPLICATION_COPYRIGHT);
+//[End About text]
 
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

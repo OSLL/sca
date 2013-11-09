@@ -107,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -117,7 +117,14 @@
     <addaction name="actionOpenInTextViewer"/>
     <addaction name="actionOpenInBinaryView"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>?</string>
+    </property>
+    <addaction name="actionAbout"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpenInTextViewer">
@@ -133,6 +140,11 @@
   <action name="actionOpenInBinaryView">
    <property name="text">
     <string>Open in Binary View</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>
