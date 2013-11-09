@@ -160,7 +160,7 @@ void MainWindow::exportToImage()
 
 void MainWindow::openHelp()
 {
-    QString link = QString(QDir::currentPath()) +
+    QString link = QApplication::applicationDirPath() +
                    QString(HELP_PATH);
     QUrl url = QUrl::fromLocalFile(link);
     qDebug() << url;
