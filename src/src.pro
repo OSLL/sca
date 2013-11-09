@@ -5,14 +5,20 @@ target.path = /opt/sca/
 
 INSTALLS += target
 
-
+CONFIG(release, debug|release): DESTDIR = $$OUT_PWD/release
+CONFIG(debug, debug|release): DESTDIR = $$OUT_PWD/debug
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
+
+#Add copying help files
+help.path = $$DESTDIR/resources/
+help.files = $$PWD/resources/sca_help.html
+
+INSTALLS += help
 
 QT += core gui declarative
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 
 SOURCES += \
     main.cpp \
@@ -98,4 +104,7 @@ FORMS += \
     mainwindow.ui
 
 RESOURCES += \
-    resources.qrc
+    resources/resources.qrc
+
+OTHER_FILES += \
+    resources/sca_help.html
