@@ -26,6 +26,7 @@ public slots:
     void addToScene();
     void openAbout();
     void exportToImage();
+    void openHelp();
 private slots:
 };
 

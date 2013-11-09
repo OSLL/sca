@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QPixmap>
+#include <QDesktopServices>
 
 #include "widgets/SourceBrowser.h"
 #include "FileLoader.h"
@@ -52,6 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadBinaryFile()));
     connect(m_ui->actionAbout, SIGNAL(triggered()),
             this, SLOT(openAbout()));
+    connect(m_ui->actionHelp, SIGNAL(triggered()),
+            this, SLOT(openHelp()));
 }
 
 MainWindow::~MainWindow()
@@ -153,6 +156,15 @@ void MainWindow::exportToImage()
         path += ".bmp";
 
     m_ui->graphViewer->exportToImage(path);
+}
+
+void MainWindow::openHelp()
+{
+    QString link = QString(QDir::currentPath()) +
+                   QString("/resources/sca_help.html");
+    QUrl url = QUrl::fromLocalFile(link);
+    qDebug() << url;
+    QDesktopServices::openUrl(url);
 }
 
 void MainWindow::loadTextFile(const QString &code)

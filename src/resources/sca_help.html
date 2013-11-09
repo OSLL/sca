@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+ 	<meta charset="utf-8">
+<title>Source Code Analyzer v 0.1 User Guide </title>
+	<style>
+	h1 {
+		font-family: 'Times New Roman', Times, serif;
+		font-size: 200%;
+	} 
+	p {
+		font-family: Verdana, Arial, Helvetica, sans-serif; 
+		font-size: 11pt;
+	}
+	h2 {
+		font-family: 'Times New Roman', Times, serif;
+		font-size: 16pt;
+	}
+	h4 {
+		font-style: italic;
+	}
+	h5 {
+		font-family: 'Times New Roman', Times, serif;
+		font-style: bold;
+		font-size: 12pt;
+	}
+	</style>
+	</head> 
+<body>
+<h1>Source Code Analyzer v 0.1 User Guide</h1>
+
+<a name="content"><h2>Content</h2></a>
+<ol>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#workplaces">Workplaces</a></li>
+<li><a href="#filebrowser">File browser</a></li>
+<li><a href="#currentview">Current view</a></li>
+	<ol type = "a">
+	<li><a href="#textview">Text view</a></li>
+	<li><a href="#binaryview">Binary view</a></li>
+	<li><a href="#graphview">Graph view</a></li>
+	</ol>
+<li><a href="#objecttypes">Object types</a></li>
+<li><a href="#dragndrop">Drag’n’Drop</a></li>
+<li><a href="#hotkeys">Hotkeys</a></li>
+<li><a href="#contacts">Contacts</a></li>
+</ol>
+ 
+<h2><a name="overview">Overview</a></h2>
+<p>Source Code Analyzer (SCA) is a tool to maintain knowledge base around the sources and projects.</p>
+
+<p>SCA has two main workplaces:</p>
+
+<ol>
+	<li>File browser (on the left)</li>
+<li>Current view’s tab (on the right), which can be:</li>
+<ol type = "a">
+	<li><a href="#textview">Text view</a></li>
+	<li><a href="#binaryview">Binary view</a></li>
+	<li><a href="#graphview">Graph view</a></li>
+</ol>
+</ol>
+
+<h2><a name="workplaces">Workplaces</a></h2>
+<h3><a name="filebrowser">File browser</a></h3>
+
+<p>You can use file browser as your usual tree-browser: expand folders, fold them etc.</p>
+
+<p>To use file: set current view to view which you want to use with file and double click file. As a default, for <a href="#textview">Text view</a> it opens file using UTF-8 encoding, but you can force it to open in different encoding by calling context menu on file, selecting “Open in Text viewer as” and then selecting your preferable encoding out of supported ones. File browser supports <a href="#dragndrop">drag’n’drop.</a></p>
+
+<h3><a name="currentview">Current view</a></h3>
+
+<h4><a name="textview">Text view</a></h4>
+<p>Text view provides viewing files in different encodings: UTF-8, CP-866, ISO-8859-15. It also supports <a href="#dragndrop">drag’n’drop.</a></p>
+
+<h4><a name="binaryview">Binary view</a></h4>
+<p>Binary view provides viewing files as a HEX-files as any usual hex-editor. On the left you can see current offset of line in the table, in the next column - bytes loaded and separated by spaces, on the right you can see their symbolic representation.</p>
+
+<h4><a name="graphview">Graph view</a></h4>
+<p>Graph view is a workplace where you can <a href="#dragndrop">drag’n’drop.</a> object to.</p>
+
+<h2><a name="objecttypes">Object types</a></h2>
+<p>The type of representation of different types of object here is fixed, but you can change the type on object here by right-clicking on it and selecting which type you would prefer to set to this object. Currently available conversions:</p>
+<table border = '1'>
+	<tr>
+		<td align='center'><h5>From</h5></td>
+		<td align='center'><h5>To</h5></td>
+		<td align='center'><h5>Lose of data</h5></td>
+	</tr>
+	<tr>
+		<td>Text block</td>
+		<td>Identifier</td>
+		<td>None</td>
+	</tr>
+	<tr>
+		<td>Identifier</td>
+		<td>Text block</td>
+		<td>None</td>
+	</tr>
+</table>
+<p>Context menu also has an option “Connect nodes”, which would connect two objects on graph by link. To do this you should select any two nodes and then select “Connect nodes” in context menu or use hotkey <b>C</b>. To delete nodes or links select them and press <b>Delete</b> key.</p>
+
+<h2><a name="dragndrop">Drag’n’Drop</a></h2>
+<p>SCA’s interaction is mostly based on drag’n’drop technology. To add an object to graph you should hold your mouse on object you want to add and move the mouse to <a href="#graphview">Graph view</a> and when the object appears under your cursor release the mouse button. Graph View recognizes type of everything you drag from SCA’s views automatically, but you can change it. (see <a href="#objecttypes">Object types</a>)</p>
+
+<p>When you try to drag from text or binary view you will probably have Graph view covered, just drag firstly to it’s tab name without releasing mouse button, then on Graph view itself.</p>
+
+<h2><a name="hotkeys">Hotkeys</a></h2>
+<table border = '1'>
+	<tr>
+		<td align='center'><h5>Hotkey</h5></td>
+		<td align='center'><h5>Where is used</h5></td>
+		<td align='center'><h5>Description</h5></td>
+	</tr>
+	<tr>
+		<td>C</td>
+		<td>Graph view</td>
+		<td>Connects two selected nodes on graph by creating link between them.</td>
+	</tr>
+	<tr>
+		<td>Delete</td>
+		<td>Graph view</td>
+		<td>Deletes selected links and nodes on graph.</td>
+	</tr>
+	<tr>
+		<td>Ctrl+C</td>
+		<td>Text view</td>
+		<td>Copies selected text</td>
+	</tr>
+	<tr>
+		<td>Ctrl+A</td>
+		<td>Text view</td>
+		<td>Selects all text</td>
+	</tr>
+	<tr>
+		<td>Right/Left arrow</td>
+		<td>File browser</td>
+		<td>Expands or collapses folders (or goes level deeper/shallower)</td>
+	</tr>
+</table>
+
+<a name="contacts"><h3>Contacts</h3></a>
+<p>Tracker: <a href="https://dev.osll.ru/projects/srcgraph">here</a></p>
+<p>Our reposirepository on GitHub: <a href="https://github.com/OSLL/sca">here</a></p>
+(c) Open Source & Linux Lab, 2013
+</body>
+</html>
