@@ -252,6 +252,29 @@ void GraphView::setMenu(GraphViewContextMenu *menu)
     m_menu = menu;
 }
 
+void GraphView::exportToImage(const QString path)
+{
+
+    QRectF renderZone = scene()->itemsBoundingRect();
+    renderZone.adjust(-10, -10, 10, 10);
+    const int width = renderZone.width();
+    const int height = renderZone.height();
+
+    QImage img(width, height, QImage::Format_ARGB32_Premultiplied);
+    if(QFileInfo(path).suffix() == "png")
+    {
+        img.fill(Qt::transparent);
+    }
+    else
+    {
+        img.fill(Qt::white);
+    }
+    QPainter painter(&img);
+    scene()->render(&painter, QRectF(0, 0, width, height),renderZone);
+    painter.end();
+    img.save(path);
+}
+
 void GraphView::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::RightButton)

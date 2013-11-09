@@ -120,11 +120,11 @@ void MainWindow::addToScene()
     if (fileInf.isFile())
     {
         int sceneX = m_ui->graphViewer->horizontalScrollBar()->value(),
-            sceneY = m_ui->graphViewer->verticalScrollBar()->value();
+                sceneY = m_ui->graphViewer->verticalScrollBar()->value();
         QPointF pos = QPointF(sceneX, sceneY)
-                    + m_ui->graphViewer->rect().center()
-                    - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
-                              DEFAULT_FILE_VISUAL_HEIGHT / 2);
+                + m_ui->graphViewer->rect().center()
+                - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
+                          DEFAULT_FILE_VISUAL_HEIGHT / 2);
         IScaObjectFile *objFile = new IScaObjectFile(fileInf);
         m_scene->addFileVisual(pos, objFile);
     }
@@ -137,6 +137,22 @@ void MainWindow::openAbout()
                       QMessageBox::Ok, 0);
     about.setIconPixmap(QPixmap(":logo/icons/logo.png").scaled(64, 64));
     about.exec();
+}
+
+void MainWindow::exportToImage()
+{
+    QString selectedFilter = tr("Png(*png)");
+    QString path = QFileDialog::getSaveFileName(this, tr("Export to"), QDir::homePath(),
+                                                tr("PNG (*png);;JPEG (*jpg *jpeg);;BMP (*bmp)"),
+                                                &selectedFilter);
+    if(selectedFilter == tr("PNG (*png)"))
+        path += ".png";
+    if(selectedFilter == tr("JPEG (*jpg *jpeg)"))
+        path += ".jpg";
+    if(selectedFilter == tr("BMP (*bmp)"))
+        path += ".bmp";
+
+    m_ui->graphViewer->exportToImage(path);
 }
 
 void MainWindow::loadTextFile(const QString &code)
@@ -154,7 +170,7 @@ void MainWindow::loadTextFile(const QString &code)
     //or it is not file at all
     if (!fileInf.isFile() || //path and encoding same
             (m_ui->textViewer->getCurrentPath() == fileInf.filePath()
-            && code == m_ui->textViewer->getCurrentEncoding()))
+             && code == m_ui->textViewer->getCurrentEncoding()))
     {
         return;
     }

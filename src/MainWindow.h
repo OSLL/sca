@@ -25,6 +25,7 @@ public slots:
     void loadBinaryFile();
     void addToScene();
     void openAbout();
+    void exportToImage();
 private slots:
 };
 

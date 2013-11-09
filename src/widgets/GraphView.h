@@ -62,6 +62,8 @@ public:
     GraphViewContextMenu *menu() const;
     void setMenu(GraphViewContextMenu *menu);
 
+    void exportToImage(const QString path);
+
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;

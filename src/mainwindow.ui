@@ -107,7 +107,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>21</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -116,6 +116,7 @@
     </property>
     <addaction name="actionOpenInTextViewer"/>
     <addaction name="actionOpenInBinaryView"/>
+    <addaction name="actionExport"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -145,6 +146,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionExport">
+   <property name="text">
+    <string>Export ...</string>
    </property>
   </action>
  </widget>
@@ -178,8 +184,26 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionExport</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportToImage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>383</x>
+     <y>198</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>loadTextFile()</slot>
+  <slot>exportToImage()</slot>
  </slots>
 </ui>
