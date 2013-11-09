@@ -161,7 +161,7 @@ void MainWindow::exportToImage()
 void MainWindow::openHelp()
 {
     QString link = QString(QDir::currentPath()) +
-                   QString("/resources/sca_help.html");
+                   QString(HELP_PATH);
     QUrl url = QUrl::fromLocalFile(link);
     qDebug() << url;
     QDesktopServices::openUrl(url);

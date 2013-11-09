@@ -79,4 +79,8 @@ const QString ABOUT_TEXT =
         QString("%3").arg(APPLICATION_COPYRIGHT);
 //[End About text]
 
+//[Files paths]
+const QString HELP_PATH = "/resources/sca_help.html";
+//[End files paths]
+
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_
