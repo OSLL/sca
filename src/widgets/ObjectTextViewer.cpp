@@ -50,7 +50,7 @@
 #include <QObjectUserData>
 
 ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
-    QTextEdit(parent), currentPath("")
+    QTextEdit(parent), m_currentPath("")
 {
     setReadOnly(true);
     QFontMetrics metrics(currentFont());
@@ -59,21 +59,21 @@ ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
 
 QString ObjectTextViewer::getCurrentPath() const
 {
-    return currentPath;
+    return m_currentPath;
 }
 
 void ObjectTextViewer::setCurrentPath(const QString &value)
 {
-    currentPath = value;
+    m_currentPath = value;
 }
 QString ObjectTextViewer::getCurrentEncoding() const
 {
-    return currentEncoding;
+    return m_currentEncoding;
 }
 
 void ObjectTextViewer::setCurrentEncoding(const QString &value)
 {
-    currentEncoding = value;
+    m_currentEncoding = value;
 }
 
 int ObjectTextViewer::currentLineNumber() const

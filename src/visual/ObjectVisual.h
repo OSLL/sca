@@ -19,6 +19,11 @@ public:
     IScaObject *getObject() const;
     void setObject(IScaObject *object);
 
+    IScaObject::IScaObjectType getObjectType() const;
+
+    ObjectVisualType getType() const;
+    void setType(const ObjectVisualType &type);
+
 protected:
     ObjectVisualType m_type;
     IScaObject *m_object;

@@ -142,6 +142,8 @@ IScaObjectTextBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
             //Waiting for dividing block into 2 classes
             return NULL;
         }
+    default:
+        break;
     }
     qDebug() << "No conversion";
     return static_cast<IScaObjectTextBlockVisual *>(node);
@@ -168,6 +170,8 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
             //Waiting for dividing block into 2 classes
             return NULL;
         }
+    default:
+        break;
     }
     qDebug() << "No conversion";
     return static_cast<IScaObjectIdentifierVisual *>(node);
@@ -189,6 +193,8 @@ IScaObjectTextBlockVisual *GraphScene::addBinaryBlockFromNode(Node *node)
             //Waiting for dividing block into 2 classes
             return NULL;
         }
+    default:
+        break;
     }
     qDebug() << "No conversion";
     return static_cast<IScaObjectTextBlockVisual *>(node);

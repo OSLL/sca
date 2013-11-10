@@ -50,7 +50,7 @@ IScaObject::IScaObject(IScaObjectType type) :
     s_lastIndex++;
 }
 
-int IScaObject::getType() const
+IScaObject::IScaObjectType IScaObject::getType() const
 {
     return m_type;
 }

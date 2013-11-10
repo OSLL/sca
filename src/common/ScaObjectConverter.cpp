@@ -40,6 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "ScaObjectConverter.h"
+#include "visual/ObjectVisual.h"
 #include "visual/IScaObjectFileVisual.h"
 #include "visual/IScaObjectDirectoryVisual.h"
 #include "visual/IScaObjectTextBlockVisual.h"
@@ -57,10 +58,42 @@
 
 ScaObjectConverter::ScaObjectConverter()
 {
+
 }
 
 ScaObjectConverter::~ScaObjectConverter()
 {
+}
+
+bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType)
+{
+    switch(obj->getObjectType())
+    {
+    case IScaObject::IDENTIFIER:
+        if (toType == IScaObject::TEXTBLOCK)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        break;
+    case IScaObject::TEXTBLOCK:
+        if (toType == IScaObject::IDENTIFIER)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        break;
+    default:
+        return false;
+        break;
+    }
+    return false;
 }
 
 IScaObjectTextBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)

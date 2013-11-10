@@ -46,7 +46,9 @@
 class IScaObjectTextBlockVisual;
 class IScaObjectIdentifierVisual;
 class IScaObjectFileVisual;
-class IScaObjectVisual;
+class ObjectVisual;
+class Node;
+#include "common/IScaObject.h"
 
 /*!
  * Class description. May use HTML formatting
@@ -55,13 +57,13 @@ class IScaObjectVisual;
 class ScaObjectConverter
 {
 public:
-  ScaObjectConverter();
+    ScaObjectConverter();
 
-  ~ScaObjectConverter();
+    ~ScaObjectConverter();
 
-
-  IScaObjectTextBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
-  IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
+    bool canConvert(Node *obj, IScaObject::IScaObjectType toType);
+    IScaObjectTextBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
+    IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
 private:
 
 }; // class ScaObjectConverter

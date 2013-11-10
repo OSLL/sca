@@ -25,6 +25,22 @@ void ObjectVisual::setObject(IScaObject *object)
     m_object = object;
 }
 
+IScaObject::IScaObjectType ObjectVisual::getObjectType() const
+{
+    return m_object->getType();
+}
+
+ObjectVisual::ObjectVisualType ObjectVisual::getType() const
+{
+    return m_type;
+}
+
+void ObjectVisual::setType(const ObjectVisualType &type)
+{
+    m_type = type;
+}
+
+
 
 
 

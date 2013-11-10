@@ -67,7 +67,7 @@ public:
     };
   IScaObject(IScaObjectType type = OBJECT);
 
-  int getType() const;
+  IScaObjectType getType() const;
 
   unsigned int getIndex() const;
 

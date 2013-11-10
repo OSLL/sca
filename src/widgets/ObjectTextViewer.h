@@ -72,8 +72,8 @@ public slots:
 protected:
     QMimeData *createMimeDataFromSelection() const;
 private:
-    QString currentPath;
-    QString currentEncoding;
+    QString m_currentPath;
+    QString m_currentEncoding;
 };
 
 #endif //_ObjectTextViewer_H_FD315731_667E_45A5_AA99_53E0B6BD49D1_INCLUDED_

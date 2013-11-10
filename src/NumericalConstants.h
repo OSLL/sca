@@ -75,8 +75,6 @@ const int DEFAULT_ARROW_HEIGHT = 15;
 const QPen DEFAULT_PEN(QBrush(Qt::black), 5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 const QColor DEFAULT_COLOR(0, 0, 0);
 
-const qreal DEFAULT_OFFSET = 10;
-
 //Default export image size
 const int DEFAULT_IMAGE_WIDTH = 800;
 const int DEFAULT_IMAGE_HEIGHT = 600;

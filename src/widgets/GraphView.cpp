@@ -51,6 +51,7 @@
 #include "common/IScaObjectSymbol.h"
 #include "common/IScaObjectLine.h"
 #include "common/IScaObjectIdentifier.h"
+#include "common/ScaObjectConverter.h"
 #include "ScaMIMEDataProcessor.h"
 
 GraphView::GraphView(QWidget *parent) :
@@ -92,50 +93,55 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
                 m_temp = GraphView::scene()->addFileVisual(
                             mapToScene(evPos) - evPos,
                             static_cast<IScaObjectFile *>(object));
-                return;
+                break;
             }
         case IScaObject::DIRECTORY:
             {
                 m_temp = GraphView::scene()->addDirVisual(
                             mapToScene(evPos) - evPos,
                             static_cast<IScaObjectDirectory *>(object));
-                return;
+                break;
             }
         case IScaObject::BINARYBLOCK:
             {
                 m_temp = GraphView::scene()->addBinaryBlockVisual(
                             mapToScene(evPos) - evPos,
                             static_cast<IScaObjectBinaryBlock *>(object));
-                return;
+                break;
             }
         case IScaObject::TEXTBLOCK:
             {
                 m_temp = GraphView::scene()->addTextBlockVisual(
                             mapToScene(evPos) - evPos,
                             static_cast<IScaObjectTextBlock *>(object));
-                return;
+                break;
             }
         case IScaObject::IDENTIFIER:
             {
                 m_temp = GraphView::scene()->addIdentifierVisual(
                             mapToScene(evPos) - evPos,
                             static_cast<IScaObjectIdentifier *>(object));
-                return;
+                break;
             }
         case IScaObject::SYMBOL:
             {
                 m_temp = GraphView::scene()->addSymbolVisual(
                             mapToScene(evPos) - evPos,
                             static_cast<IScaObjectSymbol *>(object));
-                return;
+                break;
             }
         case IScaObject::LINE:
             {
                 m_temp = GraphView::scene()->addLineVisual(
                             mapToScene(evPos) - evPos,
                             static_cast<IScaObjectLine *>(object));
-                return;
+                break;
             }
+        }
+        if (m_temp != NULL)
+        {
+            scene()->clearSelection();
+            m_temp->setSelected(true);
         }
     }
 }
@@ -180,9 +186,34 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     QPoint globalPos = viewport()->mapToGlobal(pos);
 
 
-    QList<Node *> items = scene()->selectedNodes();
+    QList<Node *> nodes = scene()->selectedNodes();
+    QList<QGraphicsItem *> items = scene()->selectedItems();
+
+    QAction *del = m_menu->getActionByName(DELETE_ITEMS);
+    QAction *toText = m_menu->getActionByName(TO_TEXT_BLOCK);
+    QAction *toIdentifier = m_menu->getActionByName(TO_IDENTIFIER);
     QAction *conAct = m_menu->getActionByName(CONNECT_NODES);
-    conAct->setEnabled(items.size() == 2);
+
+    //#Setting up menu#//
+    //Setting connection available only if 2 nodes selected
+    conAct->setEnabled(nodes.size() == 2);
+
+    //Allow deleting only if something selected
+    del->setEnabled(!items.isEmpty());
+
+    //Reset conversions
+    toText->setEnabled(false);
+    toIdentifier->setEnabled(false);
+    //Converting available for proper types
+    if (nodes.size() == 1)
+    {
+        qDebug() << "One node!";
+        Node *node = nodes.at(0);
+        ScaObjectConverter *conv = new ScaObjectConverter();
+        toText->setEnabled(conv->canConvert(node, IScaObject::TEXTBLOCK));
+        toIdentifier->setEnabled(conv->canConvert(node, IScaObject::IDENTIFIER));
+        delete conv;
+    }
 
     //Show menu
     QAction *action = NULL;
@@ -195,22 +226,23 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Process chosen action
     if (action == conAct)
     {
-       scene()->addLinkVisual(items.at(1), items.at(0));
+       scene()->addLinkVisual(nodes.at(1), nodes.at(0));
+       return;
     }
-    if (action == m_menu->getActionByName(TO_TEXT_BLOCK))
+    else if (action == toText)
     {
-        m_temp = GraphView::scene()->addTextBlockFromNode(m_temp);
+        m_temp = scene()->addTextBlockFromNode(m_temp);
         return;
     }
-    if (action == m_menu->getActionByName(TO_IDENTIFIER))
+    else if (action == toIdentifier)
     {
-        m_temp = GraphView::scene()->addIdentifierFromNode(m_temp);
+        m_temp = scene()->addIdentifierFromNode(m_temp);
         return;
     }
-    if (action == m_menu->getActionByName(TO_BINARY_BLOCK))
+    else if (action == del)
     {
-        m_temp = GraphView::scene()->addBinaryBlockFromNode(m_temp);
-        return;
+        scene()->removeLinks(scene()->selectedLinks());
+        scene()->removeNodes(scene()->selectedNodes());
     }
 }
 
@@ -281,17 +313,31 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     {
         QGraphicsItem *item = NULL;
         item = itemAt(event->pos());
-        if (item == NULL)
+        if (item != NULL)
         {
-            return;
+            //nothing was selected->select under cursor
+            if (scene()->selectedItems().isEmpty())
+            {
+                item->setSelected(true);
+            }
+            else
+            {
+                //item under cursor is not selected->clear selection, select it
+                if (scene()->selectedItems().indexOf(item) == -1)
+                {
+                    scene()->clearSelection();
+                    item->setSelected(true);
+                }
+                else
+                {
+                    //item under cursor is selected->we are happy about it
+                }
+            }
         }
-
-        LinkVisual *link = NULL;
-        link = dynamic_cast<LinkVisual *>(item);
-        if (link != NULL)
+        else
         {
-            //Add processing contextmenu for links if you want here
-            return;
+            //no item under cursor->clear selection
+            scene()->clearSelection();
         }
 
         Node *node = NULL;
@@ -299,9 +345,9 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         if (node != NULL)
         {
             m_temp = node;
-            ShowContextMenu(event->pos());
-            return;
         }
+        ShowContextMenu(event->pos());
+        return;
     }
     QGraphicsView::mousePressEvent(event);
 }

@@ -44,7 +44,8 @@
 GraphViewContextMenu::GraphViewContextMenu(QWidget *parent) :
     ContextMenu(parent)
 {
-    addNewMenuEntry(CONNECT_NODES, false);
+    addNewMenuEntry(CONNECT_NODES);
+    addNewMenuEntry(DELETE_ITEMS);
     addSeparator();
     addNewMenuEntry(TO_TEXT_BLOCK);
     addNewMenuEntry(TO_IDENTIFIER);
