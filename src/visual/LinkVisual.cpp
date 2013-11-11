@@ -64,9 +64,13 @@ LinkVisual::LinkVisual(Node *source, Node *dest, bool sourceArrow, bool destinAr
              | QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(0);
     setZValue(-1);
-    setPen(DEFAULT_PEN);
+    setPen(DEFAULT_LINK_PEN);
 
     setDefaultArrows(sourceArrow, destinArrow);
+    m_sourceRadius = qSqrt(qPow(m_sourceNode->boundingRect().width(),2)
+                           + qPow(m_sourceNode->boundingRect().height(),2)) / 2 + 1;
+    m_destinRadius = qSqrt(qPow(m_destinNode->boundingRect().width(),2)
+                           + qPow(m_destinNode->boundingRect().height(),2)) / 2 + 1;
 }
 
 LinkVisual::~LinkVisual()
@@ -74,7 +78,6 @@ LinkVisual::~LinkVisual()
     qDebug() << "Removing " << *this;
     m_sourceNode->disconnectLink(this);
     m_destinNode->disconnectLink(this);
-
 }
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -90,6 +93,17 @@ void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
+    if (change == QGraphicsItem::ItemSelectedChange)
+    {
+        if (value == true)  //Now it is selected
+        {
+            setPen(SELECTED_LINK_PEN);
+        }
+        else    //Now it is unselected
+        {
+            setPen(DEFAULT_LINK_PEN);
+        }
+    }
     return QGraphicsItem::itemChange(change, value);
 }
 
@@ -100,9 +114,9 @@ void LinkVisual::refreshGeometry()
 
     prepareGeometryChange();
 
-    QPointF source = m_sourceNode->pos() + m_sourceNode->boundingRect().center();
+    QPointF source = m_sourceNode->pos();
 
-    QPointF dest = m_destinNode->pos() + m_destinNode->boundingRect().center();
+    QPointF dest = m_destinNode->pos();
 
     QPointF pos = (source + dest) / 2;
 
@@ -113,29 +127,30 @@ void LinkVisual::refreshGeometry()
 
     QLineF line(begin, end);
 
-    qreal sourceRadius = qSqrt(qPow(m_sourceNode->boundingRect().width(),2)
-                               + qPow(m_sourceNode->boundingRect().height(),2)) / 2 + 1;
-    qreal destinRadius = qSqrt(qPow(m_destinNode->boundingRect().width(),2)
-                               + qPow(m_destinNode->boundingRect().height(),2)) / 2 + 1;
+    QPointF sourceOffset((line.dx() * m_sourceRadius) / line.length(),
+                         (line.dy() * m_sourceRadius) / line.length());
+    QPointF destinOffset((line.dx() * m_destinRadius) / line.length(),
+                         (line.dy() * m_destinRadius) / line.length());
 
-    QPointF sourceOffset((line.dx() * sourceRadius) / line.length(),
-                         (line.dy() * sourceRadius) / line.length());
-    QPointF destinOffset((line.dx() * destinRadius) / line.length(),
-                         (line.dy() * destinRadius) / line.length());
-
-    begin = line.p1() + sourceOffset;
-    end = line.p2() - destinOffset;
+    if (line.length() > MIN_LINK_LENGTH)
+    {
+        begin = line.p1() + sourceOffset;
+        end = line.p2() - destinOffset;
+    }
 
     qreal angle = -line.angle();
 
-    if(m_sourceArrow != NULL)
+
+    if (m_sourceArrow != NULL)
     {
+        m_sourceArrow->setVisible(line.length() > MIN_LINK_LENGTH);
         m_sourceArrow->setPos(begin);
         m_sourceArrow->setRotation(angle + 90);
     }
 
-    if(m_destinArrow != NULL)
+    if (m_destinArrow != NULL)
     {
+        m_destinArrow->setVisible(line.length() > MIN_LINK_LENGTH);
         m_destinArrow->setPos(end);
         m_destinArrow->setRotation(angle - 90);
     }
@@ -169,6 +184,8 @@ QPainterPath LinkVisual::shape() const
     QPainterPathStroker str;
     path.moveTo(m_line.p1());
     path.lineTo(m_line.p2());
+    str.setWidth(DEFAULT_LINK_WIDTH + LINE_SELECTION_DELTA);
+    qDebug() << pos();
     return str.createStroke(path);
 }
 
@@ -176,8 +193,6 @@ void LinkVisual::setLine(const QLineF &line)
 {
     m_line = line;
 }
-
-
 
 void LinkVisual::disconnectFrom(Node *node)
 {
@@ -252,13 +267,13 @@ void LinkVisual::setDefaultArrows(bool sourceArrow, bool destinArrow)
     if(sourceArrow && (m_sourceArrow == NULL))
     {
         m_sourceArrow = new QGraphicsPolygonItem(QPolygon(points), this);
-        m_sourceArrow->setPen(DEFAULT_PEN);
+        m_sourceArrow->setPen(DEFAULT_LINK_PEN);
 
     }
     if(destinArrow && (m_destinArrow == NULL))
     {
         m_destinArrow = new QGraphicsPolygonItem(QPolygon(points), this);
-        m_destinArrow->setPen(DEFAULT_PEN);
+        m_destinArrow->setPen(DEFAULT_LINK_PEN);
     }
 
     refreshGeometry();

@@ -59,7 +59,7 @@ public:
     explicit GraphView(GraphScene *scene, QWidget *parent = 0);
     GraphScene *scene() const;
 
-    GraphViewContextMenu *menu() const;
+    GraphViewContextMenu *getMenu() const;
     void setMenu(GraphViewContextMenu *menu);
 
     void exportToImage(const QString path);

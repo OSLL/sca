@@ -72,7 +72,14 @@ const int MAX_TITLE_LENGTH = 15;
 const int DEFAULT_ARROW_WIDTH  = 15;
 const int DEFAULT_ARROW_HEIGHT = 15;
 
-const QPen DEFAULT_PEN(QBrush(Qt::black), 5, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+const int DEFAULT_LINK_WIDTH = 5;
+const int LINE_SELECTION_DELTA = 5;
+
+const qreal MIN_LINK_LENGTH = 45;
+
+const QPen DEFAULT_LINK_PEN(QBrush(Qt::black), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+const QPen SELECTED_LINK_PEN(QBrush(QColor(80,80,80)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+
 const QColor DEFAULT_COLOR(0, 0, 0);
 
 //Default export image size

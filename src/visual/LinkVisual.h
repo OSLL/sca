@@ -79,7 +79,8 @@ private:
     Node *m_destinNode;
 
     QLineF m_line;
-
+    qreal m_sourceRadius;
+    qreal m_destinRadius;
     QGraphicsPolygonItem *m_sourceArrow;
     QGraphicsPolygonItem *m_destinArrow;
 }; // class LinkVisual
