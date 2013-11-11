@@ -202,8 +202,21 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Setting connection available only if 2 nodes selected
     conAct->setEnabled(nodes.size() == 2);
 
-    setSrcArrow->setEnabled(links.size() == 1);
-    setDestArrow->setEnabled(links.size() == 1);
+    if(links.size() == 1)
+    {
+        setSrcArrow->setEnabled(true);
+        setDestArrow->setEnabled(true);
+        bool hasSrcArrow = links.at(0)->getSourceArrow() != NULL;
+        bool hasDesArrow = links.at(0)->getDestinArrow() != NULL;
+        setSrcArrow->setChecked(hasSrcArrow);
+        setDestArrow->setChecked(hasDesArrow);
+    }
+    else
+    {
+        setSrcArrow->setEnabled(false);
+        setDestArrow->setEnabled(false);
+    }
+
 
     //Allow deleting only if something selected
     del->setEnabled(!items.isEmpty());

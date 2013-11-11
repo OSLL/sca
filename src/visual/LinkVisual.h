@@ -68,6 +68,9 @@ public:
 
     friend QDebug operator<< (QDebug d, LinkVisual &edge);
 
+    QGraphicsPolygonItem *getSourceArrow();
+    QGraphicsPolygonItem *getDestinArrow();
+
     void setSourceArrow(QGraphicsPolygonItem *arrow);
     void setDestinArrow(QGraphicsPolygonItem *arrow);
     void setDefaultArrows(bool sourceArrow, bool destinArrow);

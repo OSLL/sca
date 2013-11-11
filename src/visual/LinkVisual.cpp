@@ -219,6 +219,16 @@ void LinkVisual::changeNode(Node *oldNode, Node *newNode)
     refreshGeometry();
 }
 
+QGraphicsPolygonItem *LinkVisual::getSourceArrow()
+{
+    return m_sourceArrow;
+}
+
+QGraphicsPolygonItem *LinkVisual::getDestinArrow()
+{
+    return m_destinArrow;
+}
+
 QDebug operator<<(QDebug d, LinkVisual &edge)
 {
     d << "LinkVisual: from "
