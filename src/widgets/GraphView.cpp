@@ -199,8 +199,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     QAction *toText = m_menu->getActionByName(TO_TEXT_BLOCK);
     QAction *toIdentifier = m_menu->getActionByName(TO_IDENTIFIER);
     QAction *conAct = m_menu->getActionByName(CONNECT_NODES);
-    QAction *setSrcArrow = m_menu->getActionByName(SET_LINK_SOURCE_ARROW);
-    QAction *setDestArrow = m_menu->getActionByName(SET_LINK_DESTINATION_ARROW);
+    QAction *setSrcArrow = m_menu->getActionByName(SOURCE_ARROW);
+    QAction *setDestArrow = m_menu->getActionByName(DESTINATION_ARROW);
 
 
     //#Setting up menu#//
