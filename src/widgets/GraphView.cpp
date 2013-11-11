@@ -41,6 +41,7 @@
 
 #include "GraphView.h"
 #include <QDragEnterEvent>
+#include <QApplication>
 #include <QDebug>
 #include <QUrl>
 #include "widgets/GraphViewContextMenu.h"
@@ -345,18 +346,30 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     //Selection logics goes here
     if (item != NULL)
     {
+        bool ctrlFlag = QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
         //nothing was selected->select under cursor
         if (scene()->selectedItems().isEmpty())
         {
             item->setSelected(true);
+            if (ctrlFlag)
+            {
+                return;
+            }
         }
         else
         {
             //item under cursor is not selected->clear selection, select it
             if (scene()->selectedItems().indexOf(item) == -1)
             {
-                scene()->clearSelection();
+                if (!ctrlFlag)
+                {
+                    scene()->clearSelection();
+                }
                 item->setSelected(true);
+                if (ctrlFlag)
+                {
+                    return;
+                }
             }
             else
             {
@@ -389,7 +402,6 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     {
         if (item != NULL)
         {
-            qDebug() << item;
             item->setSelected(true);
         }
     }
