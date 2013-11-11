@@ -5,8 +5,8 @@ ObjectVisual::ObjectVisual(IScaObject *object, ObjectVisualType type, QGraphicsI
     m_type(type),
     m_object(object)
 {
-    setFlag(QGraphicsItem::ItemIsMovable);
-    setFlag(QGraphicsItem::ItemIsSelectable);
+    setFlags(QGraphicsItem::ItemIsMovable |
+             QGraphicsItem::ItemIsSelectable);
 }
 
 ObjectVisual::~ObjectVisual()

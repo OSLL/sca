@@ -131,12 +131,16 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             break;
         }
         case IScaObject::LINE:
-        {
-            m_temp = GraphView::scene()->addLineVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectLine *>(object));
-            break;
-        }
+            {
+                m_temp = GraphView::scene()->addLineVisual(
+                            mapToScene(evPos) - evPos,
+                            static_cast<IScaObjectLine *>(object));
+                break;
+            }
+        default:
+            {
+                break;
+            }
         }
         if (m_temp != NULL)
         {
@@ -307,7 +311,7 @@ GraphScene *GraphView::scene() const
     return dynamic_cast<GraphScene *>(QGraphicsView::scene());
 }
 
-GraphViewContextMenu *GraphView::menu() const
+GraphViewContextMenu *GraphView::getMenu() const
 {
     return m_menu;
 }
@@ -336,37 +340,38 @@ void GraphView::exportToImage(const QString path)
 
 void GraphView::mousePressEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::RightButton)
+    QGraphicsItem *item = NULL;
+    item = itemAt(event->pos());
+    //Selection logics goes here
+    if (item != NULL)
     {
-        QGraphicsItem *item = NULL;
-        item = itemAt(event->pos());
-        if (item != NULL)
+        //nothing was selected->select under cursor
+        if (scene()->selectedItems().isEmpty())
         {
-            //nothing was selected->select under cursor
-            if (scene()->selectedItems().isEmpty())
+            item->setSelected(true);
+        }
+        else
+        {
+            //item under cursor is not selected->clear selection, select it
+            if (scene()->selectedItems().indexOf(item) == -1)
             {
+                scene()->clearSelection();
                 item->setSelected(true);
             }
             else
             {
-                //item under cursor is not selected->clear selection, select it
-                if (scene()->selectedItems().indexOf(item) == -1)
-                {
-                    scene()->clearSelection();
-                    item->setSelected(true);
-                }
-                else
-                {
-                    //item under cursor is selected->we are happy about it
-                }
+                //item under cursor is selected->we are happy about it
             }
         }
-        else
-        {
-            //no item under cursor->clear selection
-            scene()->clearSelection();
-        }
+    }
+    else
+    {
+        //no item under cursor->clear selection
+        scene()->clearSelection();
+    }
 
+    if (event->button() == Qt::RightButton)
+    {
         Node *node = NULL;
         node = dynamic_cast<Node *>(item);
         if (node != NULL)
@@ -377,6 +382,17 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         return;
     }
     QGraphicsView::mousePressEvent(event);
+    //Somehow line above unselects links
+    //In future it need some exploration, but it
+    //Shouldn't take much preformance for now
+    if (event->button() == Qt::LeftButton)
+    {
+        if (item != NULL)
+        {
+            qDebug() << item;
+            item->setSelected(true);
+        }
+    }
 }
 
 void GraphView::mouseMoveEvent(QMouseEvent *event)

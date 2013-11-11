@@ -109,6 +109,7 @@ void Node::removeTitle()
     if (m_title != NULL)
     {
         qDebug() << "Removing title";
+        scene()->removeItem(m_title);
         delete m_title;
         qDebug() << "Removed title";
     }
@@ -132,7 +133,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(painter)
     Q_UNUSED(option)
     Q_UNUSED(widget)
-    qDebug() << m_rect;
+    qDebug() << pos();
     if (m_title != NULL)
     {
         m_title->setPos(
