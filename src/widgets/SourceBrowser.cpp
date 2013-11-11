@@ -83,10 +83,14 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
     QFileSystemModel *fileModel = dynamic_cast<QFileSystemModel *>(this->model());
     if (fileModel != NULL)
     {
-        QAction *action = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER);
+        QAction *openText = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER);
+        QAction *openAsText = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER_AS);
+        QAction *openBinary = m_menu->getActionByName(OPEN_IN_BINARY_VIEWER);
         QFileInfo currentFile = fileModel->fileInfo(this->currentIndex());
         //Enable only if it is file
-        action->setEnabled(currentFile.isFile());
+        openText->setEnabled(currentFile.isFile());
+        openAsText->setEnabled(currentFile.isFile());
+        openBinary->setEnabled(currentFile.isFile());
     }
 
     //Show menu and process input
