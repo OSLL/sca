@@ -58,7 +58,6 @@ LinkVisual::LinkVisual(Node *source, Node *dest, bool sourceArrow, bool destinAr
     m_sourceNode->addLink(this);
     m_destinNode->addLink(this);
 
-    refreshGeometry();
 
     setFlags(QGraphicsItem::ItemIsSelectable
              | QGraphicsItem::ItemSendsGeometryChanges);
@@ -71,6 +70,7 @@ LinkVisual::LinkVisual(Node *source, Node *dest, bool sourceArrow, bool destinAr
                            + qPow(m_sourceNode->boundingRect().height(),2)) / 2 + 1;
     m_destinRadius = qSqrt(qPow(m_destinNode->boundingRect().width(),2)
                            + qPow(m_destinNode->boundingRect().height(),2)) / 2 + 1;
+    refreshGeometry();
 }
 
 LinkVisual::~LinkVisual()
