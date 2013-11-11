@@ -111,7 +111,7 @@ void MainWindow::loadBinaryFile()
     QByteArray arr;
     fLoader->loadToByteArray(arr);
     m_ui->hexEditor->setData(arr);
-    m_ui->textViewer->setCurrentPath(fileInf.filePath());
+    m_ui->hexEditor->setCurrentPath(fileInf.filePath());
     m_ui->ViewsTabs->setCurrentIndex(1);
     fLoader->deleteLater();
 }

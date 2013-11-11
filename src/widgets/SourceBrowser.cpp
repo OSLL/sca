@@ -101,3 +101,4 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
         return;
     }
 }
+

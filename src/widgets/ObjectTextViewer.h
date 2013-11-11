@@ -71,6 +71,9 @@ public slots:
 
 protected:
     QMimeData *createMimeDataFromSelection() const;
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dragMoveEvent(QDragMoveEvent *event);
+    void dropEvent(QDropEvent *event);
 private:
     QString m_currentPath;
     QString m_currentEncoding;

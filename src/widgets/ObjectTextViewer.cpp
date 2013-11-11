@@ -48,6 +48,11 @@
 #include <QDebug>
 #include <QTextBlock>
 #include <QObjectUserData>
+#include <QDragLeaveEvent>
+#include <QFileInfo>
+#include "FileLoader.h"
+#include "NumericalConstants.h"
+#include "StringConstants.h"
 
 ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
     QTextEdit(parent), m_currentPath("")
@@ -126,3 +131,53 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     qDebug() << "Lenght: " << cursor.selectionEnd() - cursor.selectionStart();
     return mime;
 }
+
+void ObjectTextViewer::dragEnterEvent(QDragEnterEvent *event)
+{
+    QString path = event->mimeData()->urls().at(0).toLocalFile();
+    if(QFileInfo(path).isFile())
+    {
+        event->setAccepted(true);
+    }
+    else
+    {
+        event->setAccepted(false);
+    }
+}
+
+void ObjectTextViewer::dragMoveEvent(QDragMoveEvent *event)
+{
+    event->acceptProposedAction();
+}
+
+void ObjectTextViewer::dropEvent(QDropEvent *event)
+{
+    const QMimeData *mime = event->mimeData();
+    QString path = mime->urls().at(0).toLocalFile();
+    int fileSize = QFileInfo(path).size();
+    if (fileSize > MAX_TEXT_FILE_SIZE)
+    {
+        QMessageBox::warning(this, ERROR_TOO_LARGE_TEXT_FILE_TITLE,
+                             ERROR_TOO_LARGE_TEXT_FILE_MSG.arg(QString::number(fileSize)),
+                             QMessageBox::Ok);
+        return;
+    }
+
+    if(getCurrentPath() == path)
+    {
+        return;
+    }
+
+    FileLoader *fLoader = new FileLoader();
+
+    fLoader->openFile(path);
+
+    fLoader->loadToTextDoc(document());
+    setCurrentPath(path);
+    setCurrentEncoding(UTF8);
+
+    fLoader->deleteLater();
+}
+
+
+
