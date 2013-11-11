@@ -39,7 +39,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>2</number>
+        <number>0</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -75,27 +75,14 @@
          </item>
         </layout>
        </widget>
-       <widget class="QWidget" name="GraphViewTab">
-        <attribute name="title">
-         <string>Graph</string>
-        </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <item>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="GraphView" name="graphViewer">
-             <property name="interactive">
-              <bool>true</bool>
-             </property>
-             <property name="dragMode">
-              <enum>QGraphicsView::RubberBandDrag</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
+      </widget>
+      <widget class="GraphView" name="graphViewer">
+       <property name="interactive">
+        <bool>true</bool>
+       </property>
+       <property name="dragMode">
+        <enum>QGraphicsView::RubberBandDrag</enum>
+       </property>
       </widget>
      </widget>
     </item>
