@@ -72,9 +72,11 @@ public:
     void setDestinArrow(QGraphicsPolygonItem *arrow);
     void setDefaultArrows(bool sourceArrow, bool destinArrow);
 
+    void removeSourceArrow();
+    void removeDestinArrow();
 private:
-    Node *m_source;
-    Node *m_dest;
+    Node *m_sourceNode;
+    Node *m_destinNode;
 
     QLineF m_line;
 

@@ -12,6 +12,7 @@
 #include "FileLoader.h"
 #include "widgets/ObjectTextViewer.h"
 #include "GraphScene.h"
+#include "visual/LinkVisual.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
@@ -144,16 +145,9 @@ void MainWindow::openAbout()
 
 void MainWindow::exportToImage()
 {
-    QString selectedFilter = tr("Png(*png)");
     QString path = QFileDialog::getSaveFileName(this, tr("Export to"), QDir::homePath(),
-                                                tr("PNG (*png);;JPEG (*jpg *jpeg);;BMP (*bmp)"),
-                                                &selectedFilter);
-    if(selectedFilter == tr("PNG (*png)"))
-        path += ".png";
-    if(selectedFilter == tr("JPEG (*jpg *jpeg)"))
-        path += ".jpg";
-    if(selectedFilter == tr("BMP (*bmp)"))
-        path += ".bmp";
+                                                tr("PNG (*png)"));
+    path += ".png";
 
     m_ui->graphViewer->exportToImage(path);
 }
@@ -165,6 +159,11 @@ void MainWindow::openHelp()
     QUrl url = QUrl::fromLocalFile(link);
     qDebug() << url;
     QDesktopServices::openUrl(url);
+}
+
+void MainWindow::changeLinkToolBar()
+{
+    m_ui->graphViewer->scene()->selectedLinks();
 }
 
 void MainWindow::loadTextFile(const QString &code)

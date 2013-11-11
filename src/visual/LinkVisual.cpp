@@ -50,13 +50,13 @@
 
 LinkVisual::LinkVisual(Node *source, Node *dest, bool sourceArrow, bool destinArrow) :
     ObjectVisual(new Link(source->getObject(), dest->getObject()), EDGE),
-    m_source(source),
-    m_dest(dest),
+    m_sourceNode(source),
+    m_destinNode(dest),
     m_sourceArrow(NULL),
     m_destinArrow(NULL)
 {
-    m_source->addLink(this);
-    m_dest->addLink(this);
+    m_sourceNode->addLink(this);
+    m_destinNode->addLink(this);
 
     refreshGeometry();
 
@@ -72,8 +72,8 @@ LinkVisual::LinkVisual(Node *source, Node *dest, bool sourceArrow, bool destinAr
 LinkVisual::~LinkVisual()
 {
     qDebug() << "Removing " << *this;
-    m_source->disconnectLink(this);
-    m_dest->disconnectLink(this);
+    m_sourceNode->disconnectLink(this);
+    m_destinNode->disconnectLink(this);
 
 }
 
@@ -95,14 +95,14 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
 
 void LinkVisual::refreshGeometry()
 {
-    if (m_source == NULL || m_dest == NULL)
+    if (m_sourceNode == NULL || m_destinNode == NULL)
         return;
 
     prepareGeometryChange();
 
-    QPointF source = m_source->pos() + m_source->boundingRect().center();
+    QPointF source = m_sourceNode->pos() + m_sourceNode->boundingRect().center();
 
-    QPointF dest = m_dest->pos() + m_dest->boundingRect().center();
+    QPointF dest = m_destinNode->pos() + m_destinNode->boundingRect().center();
 
     QPointF pos = (source + dest) / 2;
 
@@ -113,10 +113,10 @@ void LinkVisual::refreshGeometry()
 
     QLineF line(begin, end);
 
-    qreal sourceRadius = qSqrt(qPow(m_source->boundingRect().width(),2)
-                               + qPow(m_source->boundingRect().height(),2)) / 2 + 1;
-    qreal destinRadius = qSqrt(qPow(m_dest->boundingRect().width(),2)
-                               + qPow(m_dest->boundingRect().height(),2)) / 2 + 1;
+    qreal sourceRadius = qSqrt(qPow(m_sourceNode->boundingRect().width(),2)
+                               + qPow(m_sourceNode->boundingRect().height(),2)) / 2 + 1;
+    qreal destinRadius = qSqrt(qPow(m_destinNode->boundingRect().width(),2)
+                               + qPow(m_destinNode->boundingRect().height(),2)) / 2 + 1;
 
     QPointF sourceOffset((line.dx() * sourceRadius) / line.length(),
                          (line.dy() * sourceRadius) / line.length());
@@ -182,21 +182,21 @@ void LinkVisual::setLine(const QLineF &line)
 void LinkVisual::disconnectFrom(Node *node)
 {
     qDebug() << "Disconnecting " << *this << " from " << *node;
-    if (m_source == node)
+    if (m_sourceNode == node)
     {
         Link *link = static_cast<Link *>(getObject());
         if (link == NULL)
             return;
         link->setObjectFrom(NULL);
-        m_source = NULL;
+        m_sourceNode = NULL;
     }
-    if (m_dest == node)
+    if (m_destinNode == node)
     {
         Link *link = static_cast<Link *>(getObject());
         if (link == NULL)
             return;
         link->setObjectTo(NULL);
-        m_dest = NULL;
+        m_destinNode = NULL;
     }
     qDebug() << "Disconnected successfully.";
 }
@@ -205,14 +205,14 @@ void LinkVisual::changeNode(Node *oldNode, Node *newNode)
 {
     qDebug() << *oldNode << *newNode;
     Link *obj = static_cast<Link *>(getObject());
-    if (m_source == oldNode)
+    if (m_sourceNode == oldNode)
     {
-        m_source = newNode;
+        m_sourceNode = newNode;
         obj->setObjectFrom(newNode->getObject());
     }
-    if (m_dest == oldNode)
+    if (m_destinNode == oldNode)
     {
-        m_dest = newNode;
+        m_destinNode = newNode;
         obj->setObjectTo(newNode->getObject());
     }
 
@@ -222,9 +222,9 @@ void LinkVisual::changeNode(Node *oldNode, Node *newNode)
 QDebug operator<<(QDebug d, LinkVisual &edge)
 {
     d << "LinkVisual: from "
-      << edge.m_source->getTitle()->text()
+      << edge.m_sourceNode->getTitle()->text()
       << " to "
-      << edge.m_dest->getTitle()->text();
+      << edge.m_destinNode->getTitle()->text();
     return d;
 }
 
@@ -262,4 +262,17 @@ void LinkVisual::setDefaultArrows(bool sourceArrow, bool destinArrow)
     }
 
     refreshGeometry();
+}
+
+void LinkVisual::removeSourceArrow()
+{
+    delete(m_sourceArrow);
+    m_sourceArrow = NULL;
+}
+
+void LinkVisual::removeDestinArrow()
+{
+
+    delete(m_destinArrow);
+    m_destinArrow = NULL;
 }

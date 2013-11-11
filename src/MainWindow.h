@@ -14,6 +14,8 @@ private:
     Ui::MainWindow *m_ui;
     QFileSystemModel *m_fileModel;
     GraphScene *m_scene;
+
+    QToolBar *linkToolBar;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -27,6 +29,7 @@ public slots:
     void openAbout();
     void exportToImage();
     void openHelp();
+    void changeLinkToolBar();
 private slots:
 };
 

@@ -89,54 +89,54 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
         switch (object->getType())
         {
         case IScaObject::FILE:
-            {
-                m_temp = GraphView::scene()->addFileVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectFile *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addFileVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectFile *>(object));
+            break;
+        }
         case IScaObject::DIRECTORY:
-            {
-                m_temp = GraphView::scene()->addDirVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectDirectory *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addDirVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectDirectory *>(object));
+            break;
+        }
         case IScaObject::BINARYBLOCK:
-            {
-                m_temp = GraphView::scene()->addBinaryBlockVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectBinaryBlock *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addBinaryBlockVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectBinaryBlock *>(object));
+            break;
+        }
         case IScaObject::TEXTBLOCK:
-            {
-                m_temp = GraphView::scene()->addTextBlockVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectTextBlock *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addTextBlockVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectTextBlock *>(object));
+            break;
+        }
         case IScaObject::IDENTIFIER:
-            {
-                m_temp = GraphView::scene()->addIdentifierVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectIdentifier *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addIdentifierVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectIdentifier *>(object));
+            break;
+        }
         case IScaObject::SYMBOL:
-            {
-                m_temp = GraphView::scene()->addSymbolVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectSymbol *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addSymbolVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectSymbol *>(object));
+            break;
+        }
         case IScaObject::LINE:
-            {
-                m_temp = GraphView::scene()->addLineVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectLine *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addLineVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectLine *>(object));
+            break;
+        }
         }
         if (m_temp != NULL)
         {
@@ -187,16 +187,23 @@ void GraphView::ShowContextMenu(const QPoint &pos)
 
 
     QList<Node *> nodes = scene()->selectedNodes();
+    QList<LinkVisual *> links = scene()->selectedLinks();
     QList<QGraphicsItem *> items = scene()->selectedItems();
 
     QAction *del = m_menu->getActionByName(DELETE_ITEMS);
     QAction *toText = m_menu->getActionByName(TO_TEXT_BLOCK);
     QAction *toIdentifier = m_menu->getActionByName(TO_IDENTIFIER);
     QAction *conAct = m_menu->getActionByName(CONNECT_NODES);
+    QAction *setSrcArrow = m_menu->getActionByName(SET_LINK_SOURCE_ARROW);
+    QAction *setDestArrow = m_menu->getActionByName(SET_LINK_DESTINATION_ARROW);
+
 
     //#Setting up menu#//
     //Setting connection available only if 2 nodes selected
     conAct->setEnabled(nodes.size() == 2);
+
+    setSrcArrow->setEnabled(links.size() == 1);
+    setDestArrow->setEnabled(links.size() == 1);
 
     //Allow deleting only if something selected
     del->setEnabled(!items.isEmpty());
@@ -226,8 +233,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Process chosen action
     if (action == conAct)
     {
-       scene()->addLinkVisual(nodes.at(1), nodes.at(0));
-       return;
+        scene()->addLinkVisual(nodes.at(1), nodes.at(0));
+        return;
     }
     else if (action == toText)
     {
@@ -244,6 +251,20 @@ void GraphView::ShowContextMenu(const QPoint &pos)
         scene()->removeLinks(scene()->selectedLinks());
         scene()->removeNodes(scene()->selectedNodes());
     }
+    else if(action == setSrcArrow)
+    {
+        if(setSrcArrow->isChecked())
+            links.at(0)->setDefaultArrows(true, false);
+        else
+            links.at(0)->removeSourceArrow();
+    }
+    else if(action == setDestArrow)
+    {
+        if(setDestArrow->isChecked())
+            links.at(0)->setDefaultArrows(false, true);
+        else
+            links.at(0)->removeDestinArrow();
+    }
 }
 
 void GraphView::keyPressEvent(QKeyEvent *event)
@@ -251,19 +272,19 @@ void GraphView::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
     case Qt::Key_C:
+    {
+        QList<Node *> items = scene()->selectedNodes();
+        if(items.size() == 2)
         {
-            QList<Node *> items = scene()->selectedNodes();
-            if(items.size() == 2)
-            {
-                scene()->addLinkVisual(items.at(1), items.at(0));
-            }
+            scene()->addLinkVisual(items.at(1), items.at(0));
         }
+    }
         break;
     case Qt::Key_Delete:
-        {
-            scene()->removeLinks(scene()->selectedLinks());
-            scene()->removeNodes(scene()->selectedNodes());
-        }
+    {
+        scene()->removeLinks(scene()->selectedLinks());
+        scene()->removeNodes(scene()->selectedNodes());
+    }
         break;
     }
 }
@@ -293,14 +314,7 @@ void GraphView::exportToImage(const QString path)
     const int height = renderZone.height();
 
     QImage img(width, height, QImage::Format_ARGB32_Premultiplied);
-    if(QFileInfo(path).suffix() == "png")
-    {
-        img.fill(Qt::transparent);
-    }
-    else
-    {
-        img.fill(Qt::white);
-    }
+    img.fill(Qt::transparent);
     QPainter painter(&img);
     scene()->render(&painter, QRectF(0, 0, width, height),renderZone);
     painter.end();
