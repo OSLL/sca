@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
 
+    setWindowIcon(QIcon(LOGO_PATH));
     m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
     m_ui->graphViewer->setScene(m_scene);
     //Set up file model
@@ -139,7 +140,8 @@ void MainWindow::openAbout()
 {
     QMessageBox about(QMessageBox::NoIcon, ABOUT_TITLE, ABOUT_TEXT,
                       QMessageBox::Ok, 0);
-    about.setIconPixmap(QPixmap(":logo/icons/logo.png").scaled(64, 64));
+    about.setIconPixmap(QPixmap(LOGO_PATH).scaled(64, 64));
+    about.setWindowIcon(QIcon(LOGO_PATH));
     about.exec();
 }
 

@@ -5,6 +5,7 @@ target.path = /opt/sca/
 
 INSTALLS += target
 
+win32: RC_FILE = resources/win_icon.rc
 
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
