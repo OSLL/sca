@@ -84,6 +84,7 @@ const QString ABOUT_TEXT =
 
 //[Files paths]
 const QString HELP_PATH = "/resources/sca_help.html";
+const QString LOGO_PATH = ":logo/icons/logo.png";
 //[End files paths]
 
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_
