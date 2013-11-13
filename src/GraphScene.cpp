@@ -131,10 +131,10 @@ IScaObjectTextBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
     case IScaObject::IDENTIFIER:
         {
         qDebug() << "Converting id to text";
-            removeItem(node);
             IScaObjectTextBlockVisual *new_obj =
                     conv.getTextBlockFromIdentifier(
                         static_cast<IScaObjectIdentifierVisual *>(node), true);
+            removeItem(node);
             addItem(new_obj);
             return new_obj;
         }
@@ -159,10 +159,10 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
     case IScaObject::TEXTBLOCK:
         {
         qDebug() << "Converting text to id";
-            removeItem(node);
             IScaObjectIdentifierVisual *new_obj =
                     conv.getIdentifierFromBlock(
                         static_cast<IScaObjectTextBlockVisual *>(node), true);
+            removeItem(node);
             addItem(new_obj);
             return new_obj;
         }

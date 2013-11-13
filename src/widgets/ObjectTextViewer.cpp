@@ -134,15 +134,12 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
 
 void ObjectTextViewer::dragEnterEvent(QDragEnterEvent *event)
 {
+    if (!event->mimeData()->hasUrls())
+    {
+        return;
+    }
     QString path = event->mimeData()->urls().at(0).toLocalFile();
-    if(QFileInfo(path).isFile())
-    {
-        event->setAccepted(true);
-    }
-    else
-    {
-        event->setAccepted(false);
-    }
+    event->setAccepted(QFileInfo(path).isFile());
 }
 
 void ObjectTextViewer::dragMoveEvent(QDragMoveEvent *event)
@@ -178,6 +175,3 @@ void ObjectTextViewer::dropEvent(QDropEvent *event)
 
     fLoader->deleteLater();
 }
-
-
-

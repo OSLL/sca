@@ -235,12 +235,10 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Converting available for proper types
     if (nodes.size() == 1)
     {
-        qDebug() << "One node!";
         Node *node = nodes.at(0);
-        ScaObjectConverter *conv = new ScaObjectConverter();
-        toText->setEnabled(conv->canConvert(node, IScaObject::TEXTBLOCK));
-        toIdentifier->setEnabled(conv->canConvert(node, IScaObject::IDENTIFIER));
-        delete conv;
+        ScaObjectConverter conv;
+        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
+        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
     }
 
     //Show menu
