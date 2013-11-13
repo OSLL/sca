@@ -41,7 +41,9 @@
 
 #include "GraphScene.h"
 #include "common/ScaObjectConverter.h"
+#include "StringConstants.h"
 #include <QDebug>
+#include <QInputDialog>
 
 GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height,
                        QObject *parent) :

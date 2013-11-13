@@ -78,7 +78,6 @@ public:
     IScaObjectIdentifierVisual *addIdentifierFromNode(Node *node);
     IScaObjectTextBlockVisual *addBinaryBlockFromNode(Node *node);
 
-
     QGraphicsItem *addNode(const float x, const float y, IScaObject *object = 0);
     Node *addNode(const QPointF &coords, IScaObject *object = 0);
     LinkVisual *addLinkVisual(Node *source, Node *dest);

@@ -53,7 +53,8 @@ LinkVisual::LinkVisual(Node *source, Node *dest, bool sourceArrow, bool destinAr
     m_sourceNode(source),
     m_destinNode(dest),
     m_sourceArrow(NULL),
-    m_destinArrow(NULL)
+    m_destinArrow(NULL),
+    m_annotation(NULL)
 {
     m_sourceNode->addLink(this);
     m_destinNode->addLink(this);
@@ -301,3 +302,43 @@ void LinkVisual::removeDestinArrow()
     delete(m_destinArrow);
     m_destinArrow = NULL;
 }
+
+void LinkVisual::deleteAnnotation()
+{
+    if (m_annotation != NULL)
+    {
+        delete m_annotation;
+        m_annotation = NULL;
+    }
+}
+
+QString LinkVisual::getAnnotationText() const
+{
+    return getObject()->getAnnotation();
+}
+
+QGraphicsTextItem *LinkVisual::getAnnotation() const
+{
+    return m_annotation;
+}
+
+void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)
+{
+    m_annotation = annotation;
+}
+
+void LinkVisual::setAnnotation(const QString &str)
+{
+    if (getObject()->getAnnotation() == str)
+    {
+        return;
+    }
+    getObject()->setAnnotation(str);
+    deleteAnnotation();
+    QGraphicsTextItem *new_ann = new QGraphicsTextItem(str, this);
+    qreal dx = new_ann->boundingRect().center().x(),
+          dy = new_ann->boundingRect().center().y()/2;
+    new_ann->moveBy(-dx, dy);
+    m_annotation = new_ann;
+}
+

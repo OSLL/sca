@@ -77,6 +77,12 @@ public:
 
     void removeSourceArrow();
     void removeDestinArrow();
+
+    void deleteAnnotation();
+    QGraphicsTextItem *getAnnotation() const;
+    void setAnnotation(QGraphicsTextItem *annotation);
+    void setAnnotation(const QString &str);
+    QString getAnnotationText() const;
 private:
     Node *m_sourceNode;
     Node *m_destinNode;
@@ -86,6 +92,7 @@ private:
     qreal m_destinRadius;
     QGraphicsPolygonItem *m_sourceArrow;
     QGraphicsPolygonItem *m_destinArrow;
+    QGraphicsTextItem *m_annotation;
 }; // class LinkVisual
 
 

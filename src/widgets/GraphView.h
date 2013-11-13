@@ -64,6 +64,7 @@ public:
 
     void exportToImage(const QString path);
 
+    void editLinkAnnotation(LinkVisual *link);
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;

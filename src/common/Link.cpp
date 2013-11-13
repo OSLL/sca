@@ -65,6 +65,17 @@ void Link::setObjectTo(IScaObject *objectTo)
     m_objectTo = objectTo;
 }
 
+QString Link::getAnnotation() const
+{
+    return m_annotation;
+}
+
+void Link::setAnnotation(const QString &annotation)
+{
+    m_annotation = annotation;
+}
+
+
 IScaObject *Link::getObjectFrom() const
 {
     return m_objectFrom;

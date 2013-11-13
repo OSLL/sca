@@ -52,20 +52,23 @@
 class Link: public IScaObject
 {
 public:
-  Link();
-  Link(IScaObject *objectFrom, IScaObject *objectTo);
-  ~Link();
-  
-  IScaObject *getObjectFrom() const;
-  void setObjectFrom(IScaObject *objectFrom);
+    Link();
+    Link(IScaObject *objectFrom, IScaObject *objectTo);
+    ~Link();
 
-  IScaObject *getObjectTo() const;
-  void setObjectTo(IScaObject *objectTo);
+    IScaObject *getObjectFrom() const;
+    void setObjectFrom(IScaObject *objectFrom);
+
+    IScaObject *getObjectTo() const;
+    void setObjectTo(IScaObject *objectTo);
+
+    QString getAnnotation() const;
+    void setAnnotation(const QString &annotation);
 
 private:
-
-  IScaObject *m_objectFrom;
-  IScaObject *m_objectTo;
+    QString m_annotation;
+    IScaObject *m_objectFrom;
+    IScaObject *m_objectTo;
 
 }; // class Link
   

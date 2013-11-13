@@ -41,6 +41,7 @@
 
 #include "GraphView.h"
 #include <QDragEnterEvent>
+#include <QInputDialog>
 #include <QApplication>
 #include <QDebug>
 #include <QUrl>
@@ -201,11 +202,13 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     QAction *conAct = m_menu->getActionByName(CONNECT_NODES);
     QAction *setSrcArrow = m_menu->getActionByName(SOURCE_ARROW);
     QAction *setDestArrow = m_menu->getActionByName(DESTINATION_ARROW);
-
+    QAction *editAnnotation = m_menu->getActionByName(EDIT_ANNOTATION);
 
     //#Setting up menu#//
     //Setting connection available only if 2 nodes selected
     conAct->setEnabled(nodes.size() == 2);
+    //Editing annotation only if there is only one under selection
+    editAnnotation->setEnabled(links.size() == 1);
 
     if(links.size() == 1)
     {
@@ -269,19 +272,23 @@ void GraphView::ShowContextMenu(const QPoint &pos)
         scene()->removeLinks(scene()->selectedLinks());
         scene()->removeNodes(scene()->selectedNodes());
     }
-    else if(action == setSrcArrow)
+    else if (action == setSrcArrow)
     {
-        if(setSrcArrow->isChecked())
+        if (setSrcArrow->isChecked())
             links.at(0)->setDefaultArrows(true, false);
         else
             links.at(0)->removeSourceArrow();
     }
-    else if(action == setDestArrow)
+    else if (action == setDestArrow)
     {
-        if(setDestArrow->isChecked())
+        if (setDestArrow->isChecked())
             links.at(0)->setDefaultArrows(false, true);
         else
             links.at(0)->removeDestinArrow();
+    }
+    else if (action == editAnnotation)
+    {
+        editLinkAnnotation(links.at(0));
     }
 }
 
@@ -337,6 +344,22 @@ void GraphView::exportToImage(const QString path)
     scene()->render(&painter, QRectF(0, 0, width, height),renderZone);
     painter.end();
     img.save(path);
+}
+
+void GraphView::editLinkAnnotation(LinkVisual *link)
+{
+    if (link == NULL)
+        return;
+    bool ok = false;
+    QString new_annotation =
+            QInputDialog::getText(this, EDIT_ANNOTATION,
+                                  EDIT_ANNOTATION_LABEL, QLineEdit::Normal,
+                                  link->getAnnotationText(),
+                                  &ok);
+    if (ok == true && !new_annotation.isEmpty())
+    {
+        link->setAnnotation(new_annotation);
+    }
 }
 
 void GraphView::mousePressEvent(QMouseEvent *event)

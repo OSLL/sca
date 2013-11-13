@@ -54,6 +54,7 @@ GraphViewContextMenu::GraphViewContextMenu(QWidget *parent) :
     setSrcArrow->setCheckable(true);
     QAction *setDestArrow = addNewMenuEntry(DESTINATION_ARROW);
     setDestArrow->setCheckable(true);
+    addNewMenuEntry(EDIT_ANNOTATION);
     //addNewMenuEntry(TO_BINARY_BLOCK);
 }
 
