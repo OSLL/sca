@@ -53,7 +53,7 @@
 class LinkVisual : public ObjectVisual
 {
 public:
-    LinkVisual(Node *source, Node *dest, bool sourceArrow = false, bool destinArrow = false);
+    LinkVisual(Node *source, Node *dest);
     ~LinkVisual();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -73,7 +73,7 @@ public:
 
     void setSourceArrow(QGraphicsPolygonItem *arrow);
     void setDestinArrow(QGraphicsPolygonItem *arrow);
-    void setDefaultArrows(bool sourceArrow, bool destinArrow);
+    void setDefaultArrows(bool left);
 
     void removeSourceArrow();
     void removeDestinArrow();
@@ -83,6 +83,9 @@ public:
     void setAnnotation(QGraphicsTextItem *annotation);
     void setAnnotation(const QString &str);
     QString getAnnotationText() const;
+
+    QPointF getSource();
+    QPointF getDestin();
 private:
     Node *m_sourceNode;
     Node *m_destinNode;
@@ -93,6 +96,9 @@ private:
     QGraphicsPolygonItem *m_sourceArrow;
     QGraphicsPolygonItem *m_destinArrow;
     QGraphicsTextItem *m_annotation;
+
+    QPointF m_source;
+    QPointF m_destin;
 }; // class LinkVisual
 
 

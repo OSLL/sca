@@ -133,16 +133,16 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
             break;
         }
         case IScaObject::LINE:
-            {
-                m_temp = GraphView::scene()->addLineVisual(
-                            mapToScene(evPos) - evPos,
-                            static_cast<IScaObjectLine *>(object));
-                break;
-            }
+        {
+            m_temp = GraphView::scene()->addLineVisual(
+                        mapToScene(evPos) - evPos,
+                        static_cast<IScaObjectLine *>(object));
+            break;
+        }
         default:
-            {
-                break;
-            }
+        {
+            break;
+        }
         }
         if (m_temp != NULL)
         {
@@ -200,8 +200,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     QAction *toText = m_menu->getActionByName(TO_TEXT_BLOCK);
     QAction *toIdentifier = m_menu->getActionByName(TO_IDENTIFIER);
     QAction *conAct = m_menu->getActionByName(CONNECT_NODES);
-    QAction *setSrcArrow = m_menu->getActionByName(SOURCE_ARROW);
-    QAction *setDestArrow = m_menu->getActionByName(DESTINATION_ARROW);
+    QAction *setLeftArrow = m_menu->getActionByName(LEFT_ARROW);
+    QAction *setRightArrow = m_menu->getActionByName(RIGHT_ARROW);
     QAction *editAnnotation = m_menu->getActionByName(EDIT_ANNOTATION);
 
     //#Setting up menu#//
@@ -212,17 +212,28 @@ void GraphView::ShowContextMenu(const QPoint &pos)
 
     if(links.size() == 1)
     {
-        setSrcArrow->setEnabled(true);
-        setDestArrow->setEnabled(true);
-        bool hasSrcArrow = links.at(0)->getSourceArrow() != NULL;
-        bool hasDesArrow = links.at(0)->getDestinArrow() != NULL;
-        setSrcArrow->setChecked(hasSrcArrow);
-        setDestArrow->setChecked(hasDesArrow);
+        setLeftArrow->setEnabled(true);
+        setRightArrow->setEnabled(true);
+        bool hasLeftArrow = false;
+        bool hasRightArrow = false;
+
+        if(links.at(0)->getSource().x() < links.at(0)->getDestin().x())
+        {
+            hasLeftArrow = links.at(0)->getSourceArrow() != NULL;
+            hasRightArrow = links.at(0)->getDestinArrow() != NULL;
+        }
+        else
+        {
+            hasRightArrow = links.at(0)->getSourceArrow() != NULL;
+            hasLeftArrow = links.at(0)->getDestinArrow() != NULL;
+        }
+        setLeftArrow->setChecked(hasLeftArrow);
+        setRightArrow->setChecked(hasRightArrow);
     }
     else
     {
-        setSrcArrow->setEnabled(false);
-        setDestArrow->setEnabled(false);
+        setLeftArrow->setEnabled(false);
+        setRightArrow->setEnabled(false);
     }
 
 
@@ -270,17 +281,17 @@ void GraphView::ShowContextMenu(const QPoint &pos)
         scene()->removeLinks(scene()->selectedLinks());
         scene()->removeNodes(scene()->selectedNodes());
     }
-    else if (action == setSrcArrow)
+    else if (action == setLeftArrow)
     {
-        if (setSrcArrow->isChecked())
-            links.at(0)->setDefaultArrows(true, false);
+        if (setLeftArrow->isChecked())
+            links.at(0)->setDefaultArrows(true);
         else
             links.at(0)->removeSourceArrow();
     }
-    else if (action == setDestArrow)
+    else if (action == setRightArrow)
     {
-        if (setDestArrow->isChecked())
-            links.at(0)->setDefaultArrows(false, true);
+        if (setRightArrow->isChecked())
+            links.at(0)->setDefaultArrows(false);
         else
             links.at(0)->removeDestinArrow();
     }

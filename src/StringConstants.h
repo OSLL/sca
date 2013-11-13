@@ -47,8 +47,8 @@ const QString TO_TEXT_BLOCK = "Set as text block";
 const QString TO_IDENTIFIER = "Set as identifier";
 const QString TO_BINARY_BLOCK = "Set as binary block";
 const QString DELETE_ITEMS = "Delete selected";
-const QString SOURCE_ARROW = "Arrow to source";
-const QString DESTINATION_ARROW = "Arrow to destination";
+const QString LEFT_ARROW = "Left arrow";
+const QString RIGHT_ARROW = "Right arrow";
 const QString EDIT_ANNOTATION = "Edit annotation";
 const QString EDIT_ANNOTATION_LABEL = "Enter annotation: ";
 //[End GraphView's strings]

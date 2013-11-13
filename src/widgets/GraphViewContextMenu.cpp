@@ -50,9 +50,9 @@ GraphViewContextMenu::GraphViewContextMenu(QWidget *parent) :
     addNewMenuEntry(TO_TEXT_BLOCK);
     addNewMenuEntry(TO_IDENTIFIER);
     addSeparator();
-    QAction *setSrcArrow = addNewMenuEntry(SOURCE_ARROW);
+    QAction *setSrcArrow = addNewMenuEntry(LEFT_ARROW);
     setSrcArrow->setCheckable(true);
-    QAction *setDestArrow = addNewMenuEntry(DESTINATION_ARROW);
+    QAction *setDestArrow = addNewMenuEntry(RIGHT_ARROW);
     setDestArrow->setCheckable(true);
     addNewMenuEntry(EDIT_ANNOTATION);
     //addNewMenuEntry(TO_BINARY_BLOCK);
