@@ -218,7 +218,7 @@ void LinkVisual::disconnectFrom(Node *node)
 
 void LinkVisual::changeNode(Node *oldNode, Node *newNode)
 {
-    qDebug() << *oldNode << *newNode;
+    qDebug() << "Changing link from " << *oldNode << " to " << *newNode;
     Link *obj = static_cast<Link *>(getObject());
     if (m_sourceNode == oldNode)
     {

@@ -111,6 +111,7 @@ void Node::removeTitle()
         qDebug() << "Removing title";
         scene()->removeItem(m_title);
         delete m_title;
+        m_title = NULL;
         qDebug() << "Removed title";
     }
 }
