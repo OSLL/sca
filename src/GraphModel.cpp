@@ -1,6 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
-
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,63 +30,85 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObject.h
- * \brief Header of IScaObject
- * \todo add comment here
+ *
+ * \file GraphModel.cpp
+ * \brief GraphModel implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "GraphModel.h"
+#include "ScaMIMEDataProcessor.h"
 
-#ifndef _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
-#define _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
-/*!
- * Class description. May use HTML formatting
- *
- */
+unsigned int GraphModel::s_nextID = 0;
 
-#include <QString>
-#include <QVariant>
-
-class IScaObject
+GraphModel::GraphModel() :
+    QAbstractListModel()
 {
-public:
-    enum IScaObjectType{
-        OBJECT,
-        DIRECTORY,
-        FILE,
-        IDENTIFIER,
-        LINE,
-        SYMBOL,
-        TEXTBLOCK,
-        BINARYBLOCK,
-        GROUP,
-        LINK
-    };
-  IScaObject(IScaObjectType type = OBJECT);
 
-  IScaObjectType getType() const;
+}
 
-  unsigned int getIndex() const;
+GraphModel::~GraphModel()
+{
 
-  QString getAnnotation() const;
-  void setAnnotation(const QString &annotation);
+}
+
+void GraphModel::addObject(QMimeData *mimeData)
+{
+
+    if (!mimeData->hasUrls())
+    {
+        return;
+    }
+
+    ScaMIMEDataProcessor processor(mimeData);
+    IScaObject *object = processor.makeObject();
+    m_objects.insert(s_nextID, object);
+
+    QModelIndex changedIndex = index(s_nextID, 0);
+    emit dataChanged(changedIndex, changedIndex);
+
+    s_nextID++;
+}
+
+QVariant GraphModel::data(const QModelIndex &index, int role) const
+{
+    IScaObject *object = m_objects[index.row()];
+    QVariant stored;
+    stored.setValue(*object);
+
+    return stored;
+}
+
+Qt::ItemFlags GraphModel::flags(const QModelIndex &index) const
+{
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
+}
+
+bool GraphModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    return false;
+}
+
+bool GraphModel::removeRow(int row, const QModelIndex &parent)
+{
+    beginRemoveRows(parent, row, row);
+    m_objects.remove(row);
+    endRemoveRows();
+
+    return true;
+}
+
+bool GraphModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    return true;
+}
 
 
-private:
-  unsigned int m_index;
 
-  QString m_annotation;
-
-  static unsigned int s_lastIndex;
-
-protected:
-  IScaObjectType m_type;
-
-}; // class IScaObject
-
-Q_DECLARE_METATYPE(IScaObject)
-
-#endif //_IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+int GraphModel::rowCount(const QModelIndex &parent) const
+{
+    return m_objects.size();
+}

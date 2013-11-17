@@ -52,7 +52,8 @@ SOURCES += \
     common/ScaObjectConverter.cpp \
     common/IScaObjectBinaryBlock.cpp \
     common/IScaObjecTextBlock.cpp \
-    visual/IScaObjectBinaryBlockVisual.cpp
+    visual/IScaObjectBinaryBlockVisual.cpp \
+    GraphModel.cpp
 
 
 HEADERS += \
@@ -93,7 +94,8 @@ HEADERS += \
     common/ScaObjectConverter.h \
     common/IScaObjectTextBlock.h \
     common/IScaObjectBinaryBlock.h \
-    visual/IScaObjectBinaryBlockVisual.h
+    visual/IScaObjectBinaryBlockVisual.h \
+    GraphModel.h
 
 FORMS += \
     mainwindow.ui

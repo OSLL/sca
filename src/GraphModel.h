@@ -1,6 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
-
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file IScaObject.h
- * \brief Header of IScaObject
+ * \file GraphModel.h
+ * \brief Header of GraphModel
  * \todo add comment here
  *
  * File description
@@ -41,53 +40,37 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
-#define _IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#ifndef _GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_
+#define _GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_
+
 /*!
  * Class description. May use HTML formatting
  *
  */
 
-#include <QString>
-#include <QVariant>
+#include "common/IScaObject.h"
+#include <QAbstractListModel>
+#include <QMimeData>
 
-class IScaObject
+class GraphModel: QAbstractListModel
 {
+    Q_OBJECT
 public:
-    enum IScaObjectType{
-        OBJECT,
-        DIRECTORY,
-        FILE,
-        IDENTIFIER,
-        LINE,
-        SYMBOL,
-        TEXTBLOCK,
-        BINARYBLOCK,
-        GROUP,
-        LINK
-    };
-  IScaObject(IScaObjectType type = OBJECT);
+  explicit GraphModel();
+  ~GraphModel();
 
-  IScaObjectType getType() const;
-
-  unsigned int getIndex() const;
-
-  QString getAnnotation() const;
-  void setAnnotation(const QString &annotation);
-
+  void addObject(QMimeData *mimeData);
+  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+  Qt::ItemFlags flags(const QModelIndex &index) const;
+  bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+  bool removeRow(int row, const QModelIndex &parent);
+  bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+  int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
 private:
-  unsigned int m_index;
+  static unsigned int s_nextID;
+  QHash<unsigned int, IScaObject *> m_objects;
+}; // class GraphModel
+  
 
-  QString m_annotation;
-
-  static unsigned int s_lastIndex;
-
-protected:
-  IScaObjectType m_type;
-
-}; // class IScaObject
-
-Q_DECLARE_METATYPE(IScaObject)
-
-#endif //_IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
+#endif //_GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_
