@@ -42,14 +42,14 @@
 #include "IScaObjectSymbolVisual.h"
 #include <QPainter>
 
-IScaObjectSymbolVisual::IScaObjectSymbolVisual(const QPointF &coords, IScaObjectSymbol *object) :
-    Node(coords, object, DEFAULT_SYMBOL_COLOR)
+IScaObjectSymbolVisual::IScaObjectSymbolVisual(const char symbol) :
+    Node(DEFAULT_SYMBOL_COLOR)
 {
     m_rect = QRectF(-DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
                     -DEFAULT_SYMBOL_VISUAL_HEIGHT / 2,
                     DEFAULT_SYMBOL_VISUAL_WIDTH,
                     DEFAULT_SYMBOL_VISUAL_HEIGHT);
-    setTitle(QString(object->getSymbol()));
+    setTitle(QString(symbol));
 }
 
 void IScaObjectSymbolVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

@@ -32,7 +32,8 @@
 /*! ---------------------------------------------------------------
  * \file ScaObjectConverter.h
  * \brief Header of ScaObjectConverter
- * \todo add comment here
+ * \todo Fix canConvert(Node *obj, IScaObject::IScaObjectType toType)
+ * \todo Fix ScaObjectConverter
  *
  * File description
  *

@@ -52,7 +52,7 @@
 class IScaObjectFileVisual : public Node
 {
 public:
-    explicit IScaObjectFileVisual(const QPointF &coords, IScaObjectFile *object);
+    explicit IScaObjectFileVisual(QFileInfo fileInfo);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

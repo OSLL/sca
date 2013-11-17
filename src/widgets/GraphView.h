@@ -32,8 +32,9 @@
 /*! ---------------------------------------------------------------
  * \file GraphView.h
  * \brief Header of GraphView
- * \todo add comment here
- *
+ * \todo fix ContextMenu for model
+ * \todo fox editLinkAnnotation
+ * \todo fix node move
  * File description
  *
  * PROJ: OSLL/sca
@@ -50,6 +51,7 @@
 #include <QGraphicsView>
 #include "widgets/GraphViewContextMenu.h"
 #include "GraphScene.h"
+class GraphModel;
 
 class GraphView : public QGraphicsView
 {
@@ -65,10 +67,15 @@ public:
     void exportToImage(const QString path);
 
     void editLinkAnnotation(LinkVisual *link);
+    GraphModel *model() const;
+    void setModel(GraphModel *model);
+    void setScene(GraphScene *graphScene);
+
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;
     GraphViewContextMenu *m_menu;
+    GraphModel *m_model;
 
 public slots:
     void ShowContextMenu(const QPoint &pos);

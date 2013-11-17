@@ -52,7 +52,7 @@
 class IScaObjectTextBlockVisual : public Node
 {
 public:
-    explicit IScaObjectTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object);
+    explicit IScaObjectTextBlockVisual(QString &text);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

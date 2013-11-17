@@ -48,6 +48,7 @@
  *
  */
 #include <QGraphicsScene>
+#include <QModelIndex>
 #include "common/IScaObject.h"
 #include "visual/IScaObjectFileVisual.h"
 #include "visual/IScaObjectDirectoryVisual.h"
@@ -58,6 +59,7 @@
 #include "visual/IScaObjectIdentifierVisual.h"
 #include "visual/Node.h"
 #include "visual/LinkVisual.h"
+class GraphModel;
 
 class GraphScene : public QGraphicsScene
 {
@@ -66,30 +68,41 @@ public:
     explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
     ~GraphScene();
 
-    IScaObjectFileVisual *addFileVisual(const QPointF &coords, IScaObjectFile *object = 0);
-    IScaObjectDirectoryVisual *addDirVisual(const QPointF &coords, IScaObjectDirectory *object = 0);
-    IScaObjectTextBlockVisual *addTextBlockVisual(const QPointF &coords, IScaObjectTextBlock *object = 0);
-    IScaObjectSymbolVisual *addSymbolVisual(const QPointF &coords, IScaObjectSymbol *object = 0);
-    IScaObjectLineVisual *addLineVisual(const QPointF &coords, IScaObjectLine *object = 0);
-    IScaObjectBinaryBlockVisual *addBinaryBlockVisual(const QPointF &coords, IScaObjectBinaryBlock *object = 0);
-    IScaObjectIdentifierVisual *addIdentifierVisual(const QPointF &coords, IScaObjectIdentifier *object = 0);
+    IScaObjectFileVisual *addFileVisual(QFileInfo fileInfo);
+    IScaObjectDirectoryVisual *addDirVisual(QFileInfo fileInfo);
+    IScaObjectTextBlockVisual *addTextBlockVisual(QString text);
+    IScaObjectSymbolVisual *addSymbolVisual(const char symbol);
+    IScaObjectLineVisual *addLineVisual(QString line);
+    IScaObjectBinaryBlockVisual *addBinaryBlockVisual(QByteArray block);
+    IScaObjectIdentifierVisual *addIdentifierVisual(QString identifier);
 
     IScaObjectTextBlockVisual *addTextBlockFromNode(Node *node);
     IScaObjectIdentifierVisual *addIdentifierFromNode(Node *node);
     IScaObjectTextBlockVisual *addBinaryBlockFromNode(Node *node);
 
-    QGraphicsItem *addNode(const float x, const float y, IScaObject *object = 0);
-    Node *addNode(const QPointF &coords, IScaObject *object = 0);
+    Node *addNode();
     LinkVisual *addLinkVisual(Node *source, Node *dest);
 
     void removeNodes(QList<Node *> nodes);
     void removeLinks(QList<LinkVisual *> links);
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();
+
+    ObjectVisual *getObjectById(int id);
+
+    ObjectVisual *addObjectVisual(IScaObject *object, int id);
+
+    GraphModel *model() const;
+    void setModel(GraphModel *model);
+
+private:
+    QHash<int, ObjectVisual *> m_objects;
+
+    GraphModel *m_model;
 signals:
 
 public slots:
-
+    void updateObjects(QModelIndex row, QModelIndex column);
 }; // class GraphScene
 
 

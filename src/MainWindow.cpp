@@ -12,6 +12,7 @@
 #include "FileLoader.h"
 #include "widgets/ObjectTextViewer.h"
 #include "GraphScene.h"
+#include "GraphModel.h"
 #include "visual/LinkVisual.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -21,7 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowIcon(QIcon(LOGO_PATH));
     m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
+    m_model = new GraphModel();
     m_ui->graphViewer->setScene(m_scene);
+    m_ui->graphViewer->setModel(m_model);
     //Set up file model
     m_fileModel = new QFileSystemModel(this);
     m_fileModel->setRootPath("");
@@ -80,7 +83,7 @@ void MainWindow::processFile()
         loadBinaryFile();
         break;
     case 2: //Scene
-        addToScene();
+//        addToScene();
         break;
     }
 }
@@ -117,24 +120,24 @@ void MainWindow::loadBinaryFile()
     fLoader->deleteLater();
 }
 
-void MainWindow::addToScene()
-{
-    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
-    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
+//void MainWindow::addToScene()
+//{
+//    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
+//    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
 
-    if (fileInf.isFile())
-    {
-        int sceneX = m_ui->graphViewer->horizontalScrollBar()->value(),
-                sceneY = m_ui->graphViewer->verticalScrollBar()->value();
-        QPointF pos = QPointF(sceneX, sceneY)
-                + m_ui->graphViewer->rect().center()
-                - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
-                          DEFAULT_FILE_VISUAL_HEIGHT / 2);
-        IScaObjectFile *objFile = new IScaObjectFile(fileInf);
-        m_scene->addFileVisual(pos, objFile);
-    }
-    m_ui->ViewsTabs->setCurrentIndex(2);
-}
+//    if (fileInf.isFile())
+//    {
+//        int sceneX = m_ui->graphViewer->horizontalScrollBar()->value(),
+//                sceneY = m_ui->graphViewer->verticalScrollBar()->value();
+//        QPointF pos = QPointF(sceneX, sceneY)
+//                + m_ui->graphViewer->rect().center()
+//                - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
+//                          DEFAULT_FILE_VISUAL_HEIGHT / 2);
+//        IScaObjectFile *objFile = new IScaObjectFile(fileInf);
+//        m_scene->addFileVisual(objFile);
+//    }
+//    m_ui->ViewsTabs->setCurrentIndex(2);
+//}
 
 void MainWindow::openAbout()
 {

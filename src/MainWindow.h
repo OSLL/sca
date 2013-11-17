@@ -1,11 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+/*----------------------------
+ * \todo Fix addFileVisual(IScaobjectFile *&)
+ */
 
 #include <QMainWindow>
 #include <QFileSystemModel>
 #include <ui_mainwindow.h>
 class GraphScene;
+class GraphModel;
 
 class MainWindow : public QMainWindow
 {
@@ -14,6 +18,7 @@ private:
     Ui::MainWindow *m_ui;
     QFileSystemModel *m_fileModel;
     GraphScene *m_scene;
+    GraphModel *m_model;
 
     QToolBar *linkToolBar;
 public:

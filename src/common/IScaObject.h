@@ -70,18 +70,11 @@ public:
 
   IScaObjectType getType() const;
 
-  unsigned int getIndex() const;
-
   QString getAnnotation() const;
   void setAnnotation(const QString &annotation);
 
-
 private:
-  unsigned int m_index;
-
   QString m_annotation;
-
-  static unsigned int s_lastIndex;
 
 protected:
   IScaObjectType m_type;

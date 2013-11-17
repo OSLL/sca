@@ -49,8 +49,8 @@
 #include <QGraphicsScene>
 #include <QTextDocument>
 
-Node::Node(const QPointF &coords, IScaObject *object, QColor standardColor) :
-    ObjectVisual(object, NODE),
+Node::Node(QColor standardColor) :
+    ObjectVisual(NODE),
     m_title(NULL),
     m_standardColor(standardColor),
     m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,
@@ -58,7 +58,6 @@ Node::Node(const QPointF &coords, IScaObject *object, QColor standardColor) :
                             m_standardColor.blue() * SELECTION_COLOR_DELTA))
 {
     setColor(m_standardColor);
-    setPos(coords);
     setCacheMode(DeviceCoordinateCache);
     setFlag(ItemSendsGeometryChanges);
     setZValue(1);

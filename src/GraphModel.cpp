@@ -55,12 +55,12 @@ GraphModel::~GraphModel()
 
 }
 
-void GraphModel::addObject(QMimeData *mimeData)
+int GraphModel::addObject(const QMimeData *mimeData)
 {
 
     if (!mimeData->hasUrls())
     {
-        return;
+        return -1;
     }
 
     ScaMIMEDataProcessor processor(mimeData);
@@ -71,13 +71,15 @@ void GraphModel::addObject(QMimeData *mimeData)
     emit dataChanged(changedIndex, changedIndex);
 
     s_nextID++;
+
+    return (s_nextID - 1);
 }
 
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
     IScaObject *object = m_objects[index.row()];
     QVariant stored;
-    stored.setValue(*object);
+    stored.setValue((void *)object);
 
     return stored;
 }

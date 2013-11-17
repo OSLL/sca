@@ -51,7 +51,7 @@
 class IScaObjectBinaryBlockVisual: public Node
 {
 public:
-    explicit IScaObjectBinaryBlockVisual(const QPointF &coords, IScaObjectBinaryBlock *object);
+    explicit IScaObjectBinaryBlockVisual(QByteArray data);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

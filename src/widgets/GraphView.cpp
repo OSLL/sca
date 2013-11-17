@@ -55,10 +55,12 @@
 #include "common/IScaObjectIdentifier.h"
 #include "common/ScaObjectConverter.h"
 #include "ScaMIMEDataProcessor.h"
+#include "GraphModel.h"
 
 GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent),
-    m_temp(NULL)
+    m_temp(NULL),
+    m_model(NULL)
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_menu = new GraphViewContextMenu(this);
@@ -66,7 +68,8 @@ GraphView::GraphView(QWidget *parent) :
 
 GraphView::GraphView(GraphScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent),
-    m_temp(NULL)
+    m_temp(NULL),
+    m_model(NULL)
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_menu = new GraphViewContextMenu(this);
@@ -82,78 +85,24 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
     //Here you can also process different types of drops
     m_temp = NULL;
 
-    if (event->mimeData()->hasUrls())
+    const QMimeData *mimeData = event->mimeData();
+
+    int id = m_model->addObject(mimeData);
+    QPoint evPos = event->pos();
+    QPointF pos = mapToScene(evPos) - evPos;
+
+    m_temp = dynamic_cast<Node*>(scene()->getObjectById(id));
+    if(m_temp != NULL)
     {
-        event->acceptProposedAction();
-        ScaMIMEDataProcessor processor(event->mimeData());
-        IScaObject *object = processor.makeObject();
-        QPoint evPos = event->pos();
-        switch (object->getType())
-        {
-        case IScaObject::FILE:
-        {
-            m_temp = GraphView::scene()->addFileVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectFile *>(object));
-            break;
-        }
-        case IScaObject::DIRECTORY:
-        {
-            m_temp = GraphView::scene()->addDirVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectDirectory *>(object));
-            break;
-        }
-        case IScaObject::BINARYBLOCK:
-        {
-            m_temp = GraphView::scene()->addBinaryBlockVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectBinaryBlock *>(object));
-            break;
-        }
-        case IScaObject::TEXTBLOCK:
-        {
-            m_temp = GraphView::scene()->addTextBlockVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectTextBlock *>(object));
-            break;
-        }
-        case IScaObject::IDENTIFIER:
-        {
-            m_temp = GraphView::scene()->addIdentifierVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectIdentifier *>(object));
-            break;
-        }
-        case IScaObject::SYMBOL:
-        {
-            m_temp = GraphView::scene()->addSymbolVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectSymbol *>(object));
-            break;
-        }
-        case IScaObject::LINE:
-        {
-            m_temp = GraphView::scene()->addLineVisual(
-                        mapToScene(evPos) - evPos,
-                        static_cast<IScaObjectLine *>(object));
-            break;
-        }
-        default:
-        {
-            break;
-        }
-        }
-        if (m_temp != NULL)
-        {
-            scene()->clearSelection();
-            m_temp->setSelected(true);
-        }
+        m_temp->setPos(pos);
+        scene()->clearSelection();
+        m_temp->setSelected(true);
     }
 }
 
 void GraphView::dragMoveEvent(QDragMoveEvent *event)
 {
+    qDebug() << "Drag";
     if (m_temp != NULL)
         m_temp->setPos(mapToScene(event->pos()));
 }
@@ -173,11 +122,11 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
             GraphView::scene()->removeItem(m_temp);
         return;
     }
-    if (m_temp->getObject()->getType() == IScaObject::TEXTBLOCK)
-    {
-        QPoint pos = mapFromScene(m_temp->pos());
-        ShowContextMenu(pos);
-    }
+    //    if (m_temp->getObject()->getType() == IScaObject::TEXTBLOCK)
+    //    {
+    //        QPoint pos = mapFromScene(m_temp->pos());
+    //        ShowContextMenu(pos);
+    //    }
 }
 
 void GraphView::dropEvent(QDropEvent *event)
@@ -185,6 +134,7 @@ void GraphView::dropEvent(QDropEvent *event)
     Q_UNUSED(event)
     dragLeaveEvent(0, true);
 }
+
 
 void GraphView::ShowContextMenu(const QPoint &pos)
 {
@@ -248,8 +198,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     {
         Node *node = nodes.at(0);
         ScaObjectConverter conv;
-        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
-        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
+        //        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
+        //        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
     }
 
     //Show menu
@@ -268,12 +218,12 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == toText)
     {
-        m_temp = scene()->addTextBlockFromNode(m_temp);
+        //        m_temp = scene()->addTextBlockFromNode(m_temp);
         return;
     }
     else if (action == toIdentifier)
     {
-        m_temp = scene()->addIdentifierFromNode(m_temp);
+        //        m_temp = scene()->addIdentifierFromNode(m_temp);
         return;
     }
     else if (action == del)
@@ -297,7 +247,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == editAnnotation)
     {
-        editLinkAnnotation(links.at(0));
+        //        editLinkAnnotation(links.at(0));
     }
 }
 
@@ -354,22 +304,53 @@ void GraphView::exportToImage(const QString path)
     painter.end();
     img.save(path);
 }
-
-void GraphView::editLinkAnnotation(LinkVisual *link)
+GraphModel *GraphView::model() const
 {
-    if (link == NULL)
-        return;
-    bool ok = false;
-    QString new_annotation =
-            QInputDialog::getText(this, EDIT_ANNOTATION,
-                                  EDIT_ANNOTATION_LABEL, QLineEdit::Normal,
-                                  link->getAnnotationText(),
-                                  &ok);
-    if (ok == true && !new_annotation.isEmpty())
-    {
-        link->setAnnotation(new_annotation);
-    }
+    return m_model;
 }
+
+void GraphView::setModel(GraphModel *model)
+{
+    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+
+    m_model = model;
+    if(scene() != NULL)
+    {
+        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+    }
+    scene()->setModel(m_model);
+}
+
+void GraphView::setScene(GraphScene *graphScene)
+{
+    connect(m_model, SIGNAL(dataChanged(QModelIndex ,QModelIndex)), scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+
+    QGraphicsView::setScene(graphScene);
+    if(m_model != NULL)
+    {
+        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), graphScene, SLOT(updateObjects(QModelIndex, QModelIndex)));
+    }
+
+    graphScene->setModel(m_model);
+}
+
+
+
+//void GraphView::editLinkAnnotation(LinkVisual *link)
+//{
+//    if (link == NULL)
+//        return;
+//    bool ok = false;
+//    QString new_annotation =
+//            QInputDialog::getText(this, EDIT_ANNOTATION,
+//                                  EDIT_ANNOTATION_LABEL, QLineEdit::Normal,
+//                                  link->getAnnotationText(),
+//                                  &ok);
+//    if (ok == true && !new_annotation.isEmpty())
+//    {
+//        link->setAnnotation(new_annotation);
+//    }
+//}
 
 void GraphView::mousePressEvent(QMouseEvent *event)
 {
@@ -423,7 +404,7 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         {
             m_temp = node;
         }
-        ShowContextMenu(event->pos());
+        //        ShowContextMenu(event->pos());
         return;
     }
     QGraphicsView::mousePressEvent(event);

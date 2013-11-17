@@ -41,23 +41,15 @@
 
 #include "common/IScaObject.h"
 
-unsigned int IScaObject::s_lastIndex = 0;
 
 IScaObject::IScaObject(IScaObjectType type) :
-    m_index(s_lastIndex),
     m_type(type)
 {
-    s_lastIndex++;
 }
 
 IScaObject::IScaObjectType IScaObject::getType() const
 {
     return m_type;
-}
-
-unsigned int IScaObject::getIndex() const
-{
-    return m_index;
 }
 
 QString IScaObject::getAnnotation() const

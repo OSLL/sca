@@ -32,8 +32,9 @@
 /*! ---------------------------------------------------------------
  * \file LinkVisual.h
  * \brief Header of LinkVisual
- * \todo add comment here
- *
+ * \todo Fix disconnectingFrom(Node *)
+ * \todo Fix changeNode(Node *oldNode, Node *newNode)
+ * \todo Fix setAnnotation(QString &)
  * File description
  *
  * PROJ: OSLL/sca
@@ -79,13 +80,13 @@ public:
     void removeDestinArrow();
 
     void deleteAnnotation();
-    QGraphicsTextItem *getAnnotation() const;
     void setAnnotation(QGraphicsTextItem *annotation);
-    void setAnnotation(const QString &str);
+//    void setAnnotation(const QString &str);
     QString getAnnotationText() const;
 
     QPointF getSource();
     QPointF getDestin();
+    QGraphicsTextItem *getAnnotation() const;
 private:
     Node *m_sourceNode;
     Node *m_destinNode;

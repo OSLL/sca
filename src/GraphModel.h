@@ -52,14 +52,14 @@
 #include <QAbstractListModel>
 #include <QMimeData>
 
-class GraphModel: QAbstractListModel
+class GraphModel: public QAbstractListModel
 {
     Q_OBJECT
 public:
   explicit GraphModel();
   ~GraphModel();
 
-  void addObject(QMimeData *mimeData);
+  int addObject(const QMimeData *mimeData);
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex &index) const;
   bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());

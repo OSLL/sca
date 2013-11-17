@@ -55,7 +55,7 @@ class LinkVisual;
 class Node : public ObjectVisual
 {
 public:
-    Node(const QPointF &coords, IScaObject *object, QColor standardColor = DEFAULT_NODE_COLOR);
+    Node(QColor standardColor = DEFAULT_NODE_COLOR);
     ~Node();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
