@@ -40,7 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "common/IScaObject.h"
-
+#include <QDebug>
 
 IScaObject::IScaObject(IScaObjectType type) :
     m_type(type)
@@ -60,6 +60,12 @@ QString IScaObject::getAnnotation() const
 void IScaObject::setAnnotation(const QString &annotation)
 {
     m_annotation = annotation;
+}
+
+QDebug operator<<(QDebug d, IScaObject &object)
+{
+    d << "Object with type: " << object.getType() << ", annotation: " << object.getAnnotation();
+    return d;
 }
 
 

@@ -68,35 +68,35 @@ public:
     explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
     ~GraphScene();
 
-    IScaObjectFileVisual *addFileVisual(QFileInfo fileInfo);
-    IScaObjectDirectoryVisual *addDirVisual(QFileInfo fileInfo);
-    IScaObjectTextBlockVisual *addTextBlockVisual(QString text);
-    IScaObjectSymbolVisual *addSymbolVisual(const char symbol);
-    IScaObjectLineVisual *addLineVisual(QString line);
-    IScaObjectBinaryBlockVisual *addBinaryBlockVisual(QByteArray block);
-    IScaObjectIdentifierVisual *addIdentifierVisual(QString identifier);
+    IScaObjectFileVisual *addFileVisual(IScaObjectFile *object);
+    IScaObjectDirectoryVisual *addDirVisual(IScaObjectDirectory *object);
+    IScaObjectTextBlockVisual *addTextBlockVisual(IScaObjectTextBlock *object);
+    IScaObjectSymbolVisual *addSymbolVisual(IScaObjectSymbol *object);
+    IScaObjectLineVisual *addLineVisual(IScaObjectLine *object);
+    IScaObjectBinaryBlockVisual *addBinaryBlockVisual(IScaObjectBinaryBlock *object);
+    IScaObjectIdentifierVisual *addIdentifierVisual(IScaObjectIdentifier *object);
 
     IScaObjectTextBlockVisual *addTextBlockFromNode(Node *node);
     IScaObjectIdentifierVisual *addIdentifierFromNode(Node *node);
     IScaObjectTextBlockVisual *addBinaryBlockFromNode(Node *node);
 
-    Node *addNode();
-    LinkVisual *addLinkVisual(Node *source, Node *dest);
+    Node *addNode(IScaObject *object);
+    LinkVisual *addLinkVisual(Node *source, Node *dest, Link *object);
 
     void removeNodes(QList<Node *> nodes);
     void removeLinks(QList<LinkVisual *> links);
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();
 
-    ObjectVisual *getObjectById(int id);
+    ObjectVisual *getObjectById(quint64 id);
 
     ObjectVisual *addObjectVisual(IScaObject *object, int id);
 
-    GraphModel *model() const;
+    GraphModel *getModel() const;
     void setModel(GraphModel *model);
 
 private:
-    QHash<int, ObjectVisual *> m_objects;
+    QHash<quint64, ObjectVisual *> m_objects;
 
     GraphModel *m_model;
 signals:

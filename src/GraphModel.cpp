@@ -41,8 +41,10 @@
 
 #include "GraphModel.h"
 #include "ScaMIMEDataProcessor.h"
+#include "common/Link.h"
+#include <QDebug>
 
-unsigned int GraphModel::s_nextID = 0;
+quint64 GraphModel::s_nextID = 0;
 
 GraphModel::GraphModel() :
     QAbstractListModel()
@@ -55,9 +57,25 @@ GraphModel::~GraphModel()
 
 }
 
-int GraphModel::addObject(const QMimeData *mimeData)
+Link *GraphModel::connectObjects(quint64 id1, quint64 id2)
 {
+    return connectObjects(m_objects[id1], m_objects[id2]);
+}
 
+Link *GraphModel::connectObjects(IScaObject *source, IScaObject *dest)
+{
+    qDebug() << "Connecting " << *source << " with " << *dest;
+    Link *res = new Link(source, dest);
+    m_objects.insert(s_nextID, res);
+
+    QModelIndex changedIndex = index(s_nextID);
+    emit dataChanged(changedIndex, changedIndex);
+
+    return res;
+}
+
+quint64 GraphModel::addObject(const QMimeData *mimeData)
+{
     if (!mimeData->hasUrls())
     {
         return -1;
@@ -67,7 +85,7 @@ int GraphModel::addObject(const QMimeData *mimeData)
     IScaObject *object = processor.makeObject();
     m_objects.insert(s_nextID, object);
 
-    QModelIndex changedIndex = index(s_nextID, 0);
+    QModelIndex changedIndex = index(s_nextID);
     emit dataChanged(changedIndex, changedIndex);
 
     s_nextID++;
@@ -78,20 +96,12 @@ int GraphModel::addObject(const QMimeData *mimeData)
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
     IScaObject *object = m_objects[index.row()];
-    QVariant stored;
-    stored.setValue((void *)object);
-
-    return stored;
+    return QVariant::fromValue(object);
 }
 
 Qt::ItemFlags GraphModel::flags(const QModelIndex &index) const
 {
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsEditable;
-}
-
-bool GraphModel::insertRows(int row, int count, const QModelIndex &parent)
-{
-    return false;
 }
 
 bool GraphModel::removeRow(int row, const QModelIndex &parent)
@@ -105,12 +115,17 @@ bool GraphModel::removeRow(int row, const QModelIndex &parent)
 
 bool GraphModel::removeRows(int row, int count, const QModelIndex &parent)
 {
+    beginRemoveRows(parent, row, row + count - 1);
+    for (int i = 0; i < count; i++)
+    {
+        m_objects.remove(row + i);
+    }
+    endRemoveRows();
     return true;
 }
 
-
-
 int GraphModel::rowCount(const QModelIndex &parent) const
 {
+    qDebug() << "Objects: " << m_objects.size();
     return m_objects.size();
 }

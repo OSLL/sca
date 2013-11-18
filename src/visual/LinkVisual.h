@@ -54,7 +54,7 @@
 class LinkVisual : public ObjectVisual
 {
 public:
-    LinkVisual(Node *source, Node *dest);
+    LinkVisual(Node *source, Node *dest, Link *object);
     ~LinkVisual();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -81,7 +81,7 @@ public:
 
     void deleteAnnotation();
     void setAnnotation(QGraphicsTextItem *annotation);
-//    void setAnnotation(const QString &str);
+    void setAnnotation(const QString &str);
     QString getAnnotationText() const;
 
     QPointF getSource();

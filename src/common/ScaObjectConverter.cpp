@@ -65,71 +65,71 @@ ScaObjectConverter::~ScaObjectConverter()
 {
 }
 
-//bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType)
-//{
-//    switch(obj->getObjectType())
-//    {
-//    case IScaObject::IDENTIFIER:
-//        if (toType == IScaObject::TEXTBLOCK)
-//        {
-//            return true;
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//        break;
-//    case IScaObject::TEXTBLOCK:
-//        if (toType == IScaObject::IDENTIFIER)
-//        {
-//            return true;
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//        break;
-//    default:
-//        return false;
-//        break;
-//    }
-//    return false;
-//}
+bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType)
+{
+    switch(obj->getObjectType())
+    {
+    case IScaObject::IDENTIFIER:
+        if (toType == IScaObject::TEXTBLOCK)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        break;
+    case IScaObject::TEXTBLOCK:
+        if (toType == IScaObject::IDENTIFIER)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        break;
+    default:
+        return false;
+        break;
+    }
+    return false;
+}
 
-//IScaObjectTextBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
-//{
-//    IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
-//    IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
-//    IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
-//                                                    objId->getIdentifier().length(),
-//                                                    objId->getIdentifier());
-//    IScaObjectTextBlockVisual *new_obj = new IScaObjectTextBlockVisual(obj->pos(), objBlock);
-//    foreach(LinkVisual *link, obj->getLinks())
-//    {
-//        link->changeNode(obj, new_obj);
-//        new_obj->addLink(link);
-//        obj->disconnectLink(link);
-//    }
-//    if (autoDel)
-//        delete obj;
-//    return new_obj;
-//}
+IScaObjectTextBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
+{
+    IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
+    IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
+    IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
+                                                    objId->getIdentifier().length(),
+                                                    objId->getIdentifier());
+    IScaObjectTextBlockVisual *new_obj = new IScaObjectTextBlockVisual(objBlock);
+    foreach(LinkVisual *link, obj->getLinks())
+    {
+        link->changeNode(obj, new_obj);
+        new_obj->addLink(link);
+        obj->disconnectLink(link);
+    }
+    if (autoDel)
+        delete obj;
+    return new_obj;
+}
 
-//IScaObjectIdentifierVisual *ScaObjectConverter::getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
-//{
-//    IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
-//    IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
-//    IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
-//                                                           objBlock->getText());
+IScaObjectIdentifierVisual *ScaObjectConverter::getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
+{
+    IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
+    IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
+    IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
+                                                           objBlock->getText());
 
-//    IScaObjectIdentifierVisual *new_obj = new IScaObjectIdentifierVisual(obj->pos(), objId);
-//    foreach(LinkVisual *link, obj->getLinks())
-//    {
-//        link->changeNode(obj, new_obj);
-//        new_obj->addLink(link);
-//        obj->disconnectLink(link);
-//    }
-//    if (autoDel)
-//        delete obj;
-//    return new_obj;
-//}
+    IScaObjectIdentifierVisual *new_obj = new IScaObjectIdentifierVisual(objId);
+    foreach(LinkVisual *link, obj->getLinks())
+    {
+        link->changeNode(obj, new_obj);
+        new_obj->addLink(link);
+        obj->disconnectLink(link);
+    }
+    if (autoDel)
+        delete obj;
+    return new_obj;
+}

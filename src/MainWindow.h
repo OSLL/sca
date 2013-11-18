@@ -30,7 +30,7 @@ public slots:
     void processFile();
     void loadTextFile(const QString &code = UTF8);
     void loadBinaryFile();
-    void addToScene();
+    //void addToScene();
     void openAbout();
     void exportToImage();
     void openHelp();

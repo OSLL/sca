@@ -42,17 +42,20 @@
 #include "IScaObjectFileVisual.h"
 #include <QPainter>
 
-IScaObjectFileVisual::IScaObjectFileVisual(QFileInfo fileInfo) :
-    Node(DEFAULT_FILE_COLOR)
+IScaObjectFileVisual::IScaObjectFileVisual(IScaObjectFile *object) :
+    Node(object, DEFAULT_FILE_COLOR)
 {
     m_rect = QRectF(-DEFAULT_FILE_VISUAL_WIDTH / 2,
                     -DEFAULT_FILE_VISUAL_HEIGHT / 2,
                     DEFAULT_FILE_VISUAL_WIDTH,
                     DEFAULT_FILE_VISUAL_HEIGHT);
+    QFileInfo fileInfo = object->getFile();
     setTitle(fileInfo.fileName());
 }
 
-void IScaObjectFileVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void IScaObjectFileVisual::paint(QPainter *painter,
+                                 const QStyleOptionGraphicsItem *option,
+                                 QWidget *widget)
 {
     painter->setBrush(brush());
     painter->setPen(pen());

@@ -51,6 +51,7 @@
 #include "common/IScaObject.h"
 #include <QAbstractListModel>
 #include <QMimeData>
+class Link;
 
 class GraphModel: public QAbstractListModel
 {
@@ -59,17 +60,18 @@ public:
   explicit GraphModel();
   ~GraphModel();
 
-  int addObject(const QMimeData *mimeData);
+  quint64 addObject(const QMimeData *mimeData);
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex &index) const;
-  bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
   bool removeRow(int row, const QModelIndex &parent);
   bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
+  Link *connectObjects(quint64 id1, quint64 id2);
+  Link *connectObjects(IScaObject *source, IScaObject *dest);
 private:
-  static unsigned int s_nextID;
-  QHash<unsigned int, IScaObject *> m_objects;
+  static quint64 s_nextID;
+  QHash<quint64, IScaObject *> m_objects;
 }; // class GraphModel
   
 

@@ -42,18 +42,18 @@
 #include "IScaObjectTextBlockVisual.h"
 #include <QPainter>
 
-IScaObjectTextBlockVisual::IScaObjectTextBlockVisual(QString &text) :
-    Node(DEFAULT_TEXT_BLOCK_COLOR)
+IScaObjectTextBlockVisual::IScaObjectTextBlockVisual(IScaObjectTextBlock *object) :
+    Node(object, DEFAULT_TEXT_BLOCK_COLOR)
 {
     m_rect = QRectF(-DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,
                     -DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT / 2,
                     DEFAULT_TEXT_BLOCK_VISUAL_WIDTH,
                     DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT);
 
-    QString str = text;
-    if(text.size() > MAX_TITLE_LENGTH)
+    QString str = object->getText();
+    if(str.size() > MAX_TITLE_LENGTH)
     {
-        str.mid(0, MAX_TITLE_LENGTH) + "...";
+        str = str.mid(0, MAX_TITLE_LENGTH) + "...";
     }
     setTitle(str);
 }

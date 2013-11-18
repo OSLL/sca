@@ -42,19 +42,21 @@
 #include "IScaObjectLineVisual.h"
 #include <QPainter>
 
-IScaObjectLineVisual::IScaObjectLineVisual(QString line) :
-    Node(DEFAULT_LINE_COLOR)
+IScaObjectLineVisual::IScaObjectLineVisual(IScaObjectLine *object) :
+    Node(object, DEFAULT_LINE_COLOR)
 {
     m_rect = QRectF(-DEFAULT_LINE_VISUAL_WIDTH / 2,
                     -DEFAULT_LINE_VISUAL_HEIGHT / 2,
                     DEFAULT_LINE_VISUAL_WIDTH,
                     DEFAULT_LINE_VISUAL_HEIGHT);
-
-    line.mid(0, MAX_TITLE_LENGTH);
+    QString line = object->getLine();
+    line = line.mid(0, MAX_TITLE_LENGTH);
     setTitle(line);
 }
 
-void IScaObjectLineVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void IScaObjectLineVisual::paint(QPainter *painter,
+                                 const QStyleOptionGraphicsItem *option,
+                                 QWidget *widget)
 {
     painter->setBrush(brush());
     painter->setPen(pen());

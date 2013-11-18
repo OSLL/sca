@@ -52,7 +52,7 @@
 class IScaObjectSymbolVisual : public Node
 {
 public:
-    explicit IScaObjectSymbolVisual(const char symbol);
+    explicit IScaObjectSymbolVisual(IScaObjectSymbol *object);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

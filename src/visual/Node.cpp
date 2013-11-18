@@ -49,8 +49,8 @@
 #include <QGraphicsScene>
 #include <QTextDocument>
 
-Node::Node(QColor standardColor) :
-    ObjectVisual(NODE),
+Node::Node(IScaObject *object, QColor standardColor) :
+    ObjectVisual(object, NODE),
     m_title(NULL),
     m_standardColor(standardColor),
     m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,
@@ -59,7 +59,7 @@ Node::Node(QColor standardColor) :
 {
     setColor(m_standardColor);
     setCacheMode(DeviceCoordinateCache);
-    setFlag(ItemSendsGeometryChanges);
+    setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsGeometryChanges);
     setZValue(1);
 }
 

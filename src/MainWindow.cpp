@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));
     connect(m_ui->graphViewer, SIGNAL(customContextMenuRequested(QPoint)),

@@ -48,8 +48,8 @@
 #include <QGraphicsScene>
 #include <qmath.h>
 
-LinkVisual::LinkVisual(Node *source, Node *dest) :
-    ObjectVisual(EDGE),
+LinkVisual::LinkVisual(Node *source, Node *dest, Link *object) :
+    ObjectVisual(object, EDGE),
     m_sourceNode(source),
     m_destinNode(dest),
     m_sourceArrow(NULL),
@@ -194,45 +194,45 @@ void LinkVisual::setLine(const QLineF &line)
     m_line = line;
 }
 
-//void LinkVisual::disconnectFrom(Node *node)
-//{
-//    qDebug() << "Disconnecting " << *this << " from " << *node;
-//    if (m_sourceNode == node)
-//    {
-//        Link *link = static_cast<Link *>(getObject());
-//        if (link == NULL)
-//            return;
-//        link->setObjectFrom(NULL);
-//        m_sourceNode = NULL;
-//    }
-//    if (m_destinNode == node)
-//    {
-//        Link *link = static_cast<Link *>(getObject());
-//        if (link == NULL)
-//            return;
-//        link->setObjectTo(NULL);
-//        m_destinNode = NULL;
-//    }
-//    qDebug() << "Disconnected successfully.";
-//}
+void LinkVisual::disconnectFrom(Node *node)
+{
+    qDebug() << "Disconnecting " << *this << " from " << *node;
+    if (m_sourceNode == node)
+    {
+        Link *link = static_cast<Link *>(getObject());
+        if (link == NULL)
+            return;
+        link->setObjectFrom(NULL);
+        m_sourceNode = NULL;
+    }
+    if (m_destinNode == node)
+    {
+        Link *link = static_cast<Link *>(getObject());
+        if (link == NULL)
+            return;
+        link->setObjectTo(NULL);
+        m_destinNode = NULL;
+    }
+    qDebug() << "Disconnected successfully.";
+}
 
-//void LinkVisual::changeNode(Node *oldNode, Node *newNode)
-//{
-//    qDebug() << "Changing link from " << *oldNode << " to " << *newNode;
-//    Link *obj = static_cast<Link *>(getObject());
-//    if (m_sourceNode == oldNode)
-//    {
-//        m_sourceNode = newNode;
-//        obj->setObjectFrom(newNode->getObject());
-//    }
-//    if (m_destinNode == oldNode)
-//    {
-//        m_destinNode = newNode;
-//        obj->setObjectTo(newNode->getObject());
-//    }
+void LinkVisual::changeNode(Node *oldNode, Node *newNode)
+{
+    qDebug() << "Changing link from " << *oldNode << " to " << *newNode;
+    Link *obj = static_cast<Link *>(getObject());
+    if (m_sourceNode == oldNode)
+    {
+        m_sourceNode = newNode;
+        obj->setObjectFrom(newNode->getObject());
+    }
+    if (m_destinNode == oldNode)
+    {
+        m_destinNode = newNode;
+        obj->setObjectTo(newNode->getObject());
+    }
 
-//    refreshGeometry();
-//}
+    refreshGeometry();
+}
 
 QGraphicsPolygonItem *LinkVisual::getSourceArrow()
 {
@@ -337,18 +337,18 @@ void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)
     m_annotation = annotation;
 }
 
-//void LinkVisual::setAnnotation(const QString &str)
-//{
-//    if (getObject()->getAnnotation() == str)
-//    {
-//        return;
-//    }
-//    getObject()->setAnnotation(str);
-//    deleteAnnotation();
-//    QGraphicsTextItem *new_ann = new QGraphicsTextItem(str, this);
-//    qreal dx = new_ann->boundingRect().center().x(),
-//            dy = new_ann->boundingRect().center().y()/2;
-//    new_ann->moveBy(-dx, dy);
-//    m_annotation = new_ann;
-//}
+void LinkVisual::setAnnotation(const QString &str)
+{
+    if (getObject()->getAnnotation() == str)
+    {
+        return;
+    }
+    getObject()->setAnnotation(str);
+    deleteAnnotation();
+    QGraphicsTextItem *new_ann = new QGraphicsTextItem(str, this);
+    qreal dx = new_ann->boundingRect().center().x(),
+            dy = new_ann->boundingRect().center().y()/2;
+    new_ann->moveBy(-dx, dy);
+    m_annotation = new_ann;
+}
 

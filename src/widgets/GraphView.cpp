@@ -77,8 +77,6 @@ GraphView::GraphView(GraphScene *scene, QWidget *parent) :
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
 {
-
-
     //Turn off interaction for drag-n-drop processing, otherwise it will fail
     setInteractive(false);
     //Create temporary node to see where it will be placed
@@ -87,13 +85,17 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
 
     const QMimeData *mimeData = event->mimeData();
 
+    //Add object to model and get it's id + create it's visual representation
     int id = m_model->addObject(mimeData);
     QPoint evPos = event->pos();
     QPointF pos = mapToScene(evPos) - evPos;
 
+    //Get object by id
     m_temp = dynamic_cast<Node*>(scene()->getObjectById(id));
     if(m_temp != NULL)
     {
+        //So we created object
+        event->acceptProposedAction();
         m_temp->setPos(pos);
         scene()->clearSelection();
         m_temp->setSelected(true);
@@ -102,9 +104,10 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
 
 void GraphView::dragMoveEvent(QDragMoveEvent *event)
 {
-    qDebug() << "Drag";
     if (m_temp != NULL)
+    {
         m_temp->setPos(mapToScene(event->pos()));
+    }
 }
 
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
@@ -122,11 +125,11 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
             GraphView::scene()->removeItem(m_temp);
         return;
     }
-    //    if (m_temp->getObject()->getType() == IScaObject::TEXTBLOCK)
-    //    {
-    //        QPoint pos = mapFromScene(m_temp->pos());
-    //        ShowContextMenu(pos);
-    //    }
+    if (m_temp->getObject()->getType() == IScaObject::TEXTBLOCK)
+    {
+        QPoint pos = mapFromScene(m_temp->pos());
+        ShowContextMenu(pos);
+    }
 }
 
 void GraphView::dropEvent(QDropEvent *event)
@@ -198,8 +201,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     {
         Node *node = nodes.at(0);
         ScaObjectConverter conv;
-        //        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
-        //        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
+        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
+        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
     }
 
     //Show menu
@@ -213,17 +216,19 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Process chosen action
     if (action == conAct)
     {
-        scene()->addLinkVisual(nodes.at(1), nodes.at(0));
+        Node *src = nodes.at(0);
+        Node *dest = nodes.at(1);
+        m_model->connectObjects(src->getObject(), dest->getObject());
         return;
     }
     else if (action == toText)
     {
-        //        m_temp = scene()->addTextBlockFromNode(m_temp);
+        m_temp = scene()->addTextBlockFromNode(m_temp);
         return;
     }
     else if (action == toIdentifier)
     {
-        //        m_temp = scene()->addIdentifierFromNode(m_temp);
+        m_temp = scene()->addIdentifierFromNode(m_temp);
         return;
     }
     else if (action == del)
@@ -260,7 +265,9 @@ void GraphView::keyPressEvent(QKeyEvent *event)
         QList<Node *> items = scene()->selectedNodes();
         if(items.size() == 2)
         {
-            scene()->addLinkVisual(items.at(1), items.at(0));
+            Node *src = items.at(0);
+            Node *dest = items.at(1);
+            m_model->connectObjects(src->getObject(), dest->getObject());
         }
     }
         break;
@@ -311,30 +318,37 @@ GraphModel *GraphView::model() const
 
 void GraphView::setModel(GraphModel *model)
 {
-    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+    if (m_model != NULL && scene() != NULL)
+    {
+        disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                   scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+    }
 
     m_model = model;
     if(scene() != NULL)
     {
-        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
     }
     scene()->setModel(m_model);
 }
 
 void GraphView::setScene(GraphScene *graphScene)
 {
-    connect(m_model, SIGNAL(dataChanged(QModelIndex ,QModelIndex)), scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+    if (m_model != NULL && scene() != NULL)
+    {
+        disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                   scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+    }
 
     QGraphicsView::setScene(graphScene);
     if(m_model != NULL)
     {
-        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), graphScene, SLOT(updateObjects(QModelIndex, QModelIndex)));
+        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                graphScene, SLOT(updateObjects(QModelIndex, QModelIndex)));
     }
-
     graphScene->setModel(m_model);
 }
-
-
 
 //void GraphView::editLinkAnnotation(LinkVisual *link)
 //{
@@ -408,7 +422,7 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         return;
     }
     QGraphicsView::mousePressEvent(event);
-    //Somehow line above unselects links
+    // TODO (LeoSko) Somehow line above unselects links
     //In future it need some exploration, but it
     //Shouldn't take much preformance for now
     if (event->button() == Qt::LeftButton)

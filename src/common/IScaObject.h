@@ -66,21 +66,22 @@ public:
         GROUP,
         LINK
     };
-  IScaObject(IScaObjectType type = OBJECT);
+    IScaObject(IScaObjectType type = OBJECT);
 
-  IScaObjectType getType() const;
+    IScaObjectType getType() const;
 
-  QString getAnnotation() const;
-  void setAnnotation(const QString &annotation);
+    QString getAnnotation() const;
+    void setAnnotation(const QString &annotation);
 
+    friend QDebug operator<<(QDebug d, IScaObject &node);
 private:
-  QString m_annotation;
+    QString m_annotation;
 
 protected:
-  IScaObjectType m_type;
+    IScaObjectType m_type;
 
 }; // class IScaObject
 
-Q_DECLARE_METATYPE(IScaObject)
+Q_DECLARE_METATYPE(IScaObject *)
 
 #endif //_IScaObject_H_DEABB215_B876_4172_9900_18F7580370C7_INCLUDED_
