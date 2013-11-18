@@ -76,9 +76,9 @@ public:
     IScaObjectBinaryBlockVisual *addBinaryBlockVisual(IScaObjectBinaryBlock *object);
     IScaObjectIdentifierVisual *addIdentifierVisual(IScaObjectIdentifier *object);
 
-    IScaObjectTextBlockVisual *addTextBlockFromNode(Node *node);
-    IScaObjectIdentifierVisual *addIdentifierFromNode(Node *node);
-    IScaObjectTextBlockVisual *addBinaryBlockFromNode(Node *node);
+    quint64 addTextBlockFromNode(Node *node);
+    quint64 addIdentifierFromNode(Node *node);
+    quint64 addBinaryBlockFromNode(Node *node);
 
     Node *addNode(IScaObject *object);
     LinkVisual *addLinkVisual(Node *source, Node *dest, Link *object);
@@ -98,11 +98,12 @@ public:
 private:
     QHash<quint64, ObjectVisual *> m_objects;
 
+    QPointF m_posToAdd;
     GraphModel *m_model;
 signals:
 
 public slots:
-    void updateObjects(QModelIndex row, QModelIndex column);
+    void updateObjects(QModelIndex topLeft, QModelIndex rightBottom);
 }; // class GraphScene
 
 
