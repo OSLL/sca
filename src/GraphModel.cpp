@@ -93,6 +93,11 @@ quint64 GraphModel::addObject(const QMimeData *mimeData)
     return (s_nextID - 1);
 }
 
+quint64 GraphModel::getId(IScaObject *object)
+{
+    return m_objects.key(object);
+}
+
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
     IScaObject *object = m_objects[index.row()];

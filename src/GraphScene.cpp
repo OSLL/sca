@@ -343,7 +343,12 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         case IScaObject::LINK:
         {
             Link *link = static_cast<Link *>(object);
-            LinkVisual *visLink = addLinkVisual(NULL, NULL, link);
+            quint64 sourceId = m_model->getId(link->getObjectFrom());
+            quint64 destinId = m_model->getId(link->getObjectTo());
+            Node *sourceNode = static_cast<Node *>(m_objects[sourceId]);
+            Node *destinNode = static_cast<Node *>(m_objects[destinId]);
+            Q_ASSERT(sourceNode != NULL && destinNode != NULL);
+            LinkVisual *visLink = addLinkVisual(sourceNode, destinNode, link);
             m_objects.insert(id, visLink);
             break;
         }

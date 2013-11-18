@@ -61,6 +61,7 @@ public:
   ~GraphModel();
 
   quint64 addObject(const QMimeData *mimeData);
+  quint64 getId(IScaObject *object);
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex &index) const;
   bool removeRow(int row, const QModelIndex &parent);
