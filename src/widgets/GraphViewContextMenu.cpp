@@ -61,3 +61,12 @@ GraphViewContextMenu::GraphViewContextMenu(QWidget *parent) :
 GraphViewContextMenu::~GraphViewContextMenu()
 {
 }
+
+void GraphViewContextMenu::resetToDefault()
+{
+    foreach(QAction *act, actions())
+    {
+        act->setEnabled(false);
+        act->setChecked(false);
+    }
+}

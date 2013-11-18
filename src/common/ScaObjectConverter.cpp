@@ -55,8 +55,10 @@
 #include "common/IScaObjectSymbol.h"
 #include "common/IScaObjectLine.h"
 #include "common/IScaObjectIdentifier.h"
+#include "GraphModel.h"
 
-ScaObjectConverter::ScaObjectConverter()
+ScaObjectConverter::ScaObjectConverter(GraphModel *model) :
+    m_model(model)
 {
 
 }
@@ -78,7 +80,6 @@ bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType
         {
             return false;
         }
-        break;
     case IScaObject::TEXTBLOCK:
         if (toType == IScaObject::IDENTIFIER)
         {
@@ -88,48 +89,45 @@ bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType
         {
             return false;
         }
-        break;
     default:
         return false;
-        break;
     }
-    return false;
 }
 
-IScaObjectTextBlockVisual *ScaObjectConverter::getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
+quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
 {
     IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
+    quint64 objIndex = m_model->getId(objId);
     IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
     IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
                                                     objId->getIdentifier().length(),
                                                     objId->getIdentifier());
-    IScaObjectTextBlockVisual *new_obj = new IScaObjectTextBlockVisual(objBlock);
     foreach(LinkVisual *link, obj->getLinks())
     {
-        link->changeNode(obj, new_obj);
-        new_obj->addLink(link);
-        obj->disconnectLink(link);
+        // TODO (LeoSko) should save connection somehow
+        delete link;
     }
+    m_model->removeItemByIndex(objIndex);
     if (autoDel)
         delete obj;
-    return new_obj;
+    return m_model->addObject(objBlock);
 }
 
-IScaObjectIdentifierVisual *ScaObjectConverter::getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
+quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
 {
     IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
+    quint64 objIndex = m_model->getId(objBlock);
     IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
     IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
                                                            objBlock->getText());
 
-    IScaObjectIdentifierVisual *new_obj = new IScaObjectIdentifierVisual(objId);
     foreach(LinkVisual *link, obj->getLinks())
     {
-        link->changeNode(obj, new_obj);
-        new_obj->addLink(link);
-        obj->disconnectLink(link);
+        // TODO (LeoSko) should save connection somehow
+        delete link;
     }
+    m_model->removeItemByIndex(objIndex);
     if (autoDel)
         delete obj;
-    return new_obj;
+    return m_model->addObject(objId);
 }

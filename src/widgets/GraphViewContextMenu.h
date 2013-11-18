@@ -56,9 +56,9 @@ class GraphViewContextMenu : public ContextMenu
 {
 public:
     explicit GraphViewContextMenu(QWidget *parent = 0);
-
     ~GraphViewContextMenu();
 
+    void resetToDefault();
 private:
 
 }; // class GraphViewContextMenu

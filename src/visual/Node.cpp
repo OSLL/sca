@@ -133,7 +133,6 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(painter)
     Q_UNUSED(option)
     Q_UNUSED(widget)
-    qDebug() << pos();
     if (m_title != NULL)
     {
         m_title->setPos(

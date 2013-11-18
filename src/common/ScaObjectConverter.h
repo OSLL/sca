@@ -49,6 +49,7 @@ class IScaObjectIdentifierVisual;
 class IScaObjectFileVisual;
 class ObjectVisual;
 class Node;
+class GraphModel;
 #include "common/IScaObject.h"
 
 /*!
@@ -58,15 +59,15 @@ class Node;
 class ScaObjectConverter
 {
 public:
-    ScaObjectConverter();
+    explicit ScaObjectConverter(GraphModel *model);
 
     ~ScaObjectConverter();
 
     bool canConvert(Node *obj, IScaObject::IScaObjectType toType);
-    IScaObjectTextBlockVisual *getTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
-    IScaObjectIdentifierVisual *getIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
+    quint64 makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
+    quint64 makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
 private:
-
+    GraphModel *m_model;
 }; // class ScaObjectConverter
   
 

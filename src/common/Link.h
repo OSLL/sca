@@ -72,6 +72,7 @@ private:
 
 }; // class Link
   
+Q_DECLARE_METATYPE(Link *)
 
 #endif //_Link_H_DCF3C0AC_DBF1_4D8D_B8BD_6E10F500FD33_INCLUDED_
 

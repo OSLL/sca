@@ -185,7 +185,6 @@ QPainterPath LinkVisual::shape() const
     path.moveTo(m_line.p1());
     path.lineTo(m_line.p2());
     str.setWidth(DEFAULT_LINK_WIDTH + LINE_SELECTION_DELTA);
-    qDebug() << pos();
     return str.createStroke(path);
 }
 
@@ -255,14 +254,14 @@ QDebug operator<<(QDebug d, LinkVisual &edge)
 
 void LinkVisual::setSourceArrow(QGraphicsPolygonItem *arrow)
 {
-    delete(m_sourceArrow);
+    delete m_sourceArrow;
     m_sourceArrow = arrow;
     m_sourceArrow->setParentItem(this);
 }
 
 void LinkVisual::setDestinArrow(QGraphicsPolygonItem *arrow)
 {
-    delete(m_destinArrow);
+    delete m_destinArrow;
     m_destinArrow = arrow;
     m_destinArrow->setParentItem(this);
 }
@@ -350,5 +349,10 @@ void LinkVisual::setAnnotation(const QString &str)
             dy = new_ann->boundingRect().center().y()/2;
     new_ann->moveBy(-dx, dy);
     m_annotation = new_ann;
+}
+
+QString LinkVisual::getAnnotationText() const
+{
+    return m_object->getAnnotation();
 }
 

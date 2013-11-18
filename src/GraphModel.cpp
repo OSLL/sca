@@ -57,21 +57,23 @@ GraphModel::~GraphModel()
 
 }
 
-Link *GraphModel::connectObjects(quint64 id1, quint64 id2)
+quint64 GraphModel::connectObjects(quint64 id1, quint64 id2)
 {
+    if (!m_objects.contains(id1) || !m_objects.contains(id2))
+    {
+        return NULL;
+    }
     return connectObjects(m_objects[id1], m_objects[id2]);
 }
 
-Link *GraphModel::connectObjects(IScaObject *source, IScaObject *dest)
+quint64 GraphModel::connectObjects(IScaObject *source, IScaObject *dest)
 {
     qDebug() << "Connecting " << *source << " with " << *dest;
     Link *res = new Link(source, dest);
-    m_objects.insert(s_nextID, res);
+    QModelIndex changedIndex = createIndex(s_nextID, 0);
+    setData(changedIndex, QVariant::fromValue(res));
 
-    QModelIndex changedIndex = index(s_nextID);
-    emit dataChanged(changedIndex, changedIndex);
-
-    return res;
+    return s_nextID++;
 }
 
 quint64 GraphModel::addObject(const QMimeData *mimeData)
@@ -83,14 +85,16 @@ quint64 GraphModel::addObject(const QMimeData *mimeData)
 
     ScaMIMEDataProcessor processor(mimeData);
     IScaObject *object = processor.makeObject();
-    m_objects.insert(s_nextID, object);
+    return addObject(object);
+}
 
-    QModelIndex changedIndex = index(s_nextID);
-    emit dataChanged(changedIndex, changedIndex);
+quint64 GraphModel::addObject(IScaObject *object)
+{
+    qDebug() << "AddObject()";
+    QModelIndex changedIndex = createIndex(s_nextID, 0);
+    setData(changedIndex, QVariant::fromValue(object), Qt::DecorationRole);
 
-    s_nextID++;
-
-    return (s_nextID - 1);
+    return s_nextID++;
 }
 
 quint64 GraphModel::getId(IScaObject *object)
@@ -100,8 +104,20 @@ quint64 GraphModel::getId(IScaObject *object)
 
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
-    IScaObject *object = m_objects[index.row()];
-    return QVariant::fromValue(object);
+    qDebug() << "Data called!";
+    switch (role)
+    {
+    case Qt::DecorationRole:
+        {
+            IScaObject *object = m_objects[index.row()];
+            return QVariant::fromValue(object);
+        }
+    default:
+        {
+            return QVariant();
+        }
+    }
+
 }
 
 Qt::ItemFlags GraphModel::flags(const QModelIndex &index) const
@@ -112,7 +128,8 @@ Qt::ItemFlags GraphModel::flags(const QModelIndex &index) const
 bool GraphModel::removeRow(int row, const QModelIndex &parent)
 {
     beginRemoveRows(parent, row, row);
-    m_objects.remove(row);
+    int removed = m_objects.remove(row);
+    qDebug() << "Removed: ID = " << row;
     endRemoveRows();
 
     return true;
@@ -120,6 +137,10 @@ bool GraphModel::removeRow(int row, const QModelIndex &parent)
 
 bool GraphModel::removeRows(int row, int count, const QModelIndex &parent)
 {
+    if (!m_objects.contains(row))
+    {
+        return false;
+    }
     beginRemoveRows(parent, row, row + count - 1);
     for (int i = 0; i < count; i++)
     {
@@ -133,4 +154,49 @@ int GraphModel::rowCount(const QModelIndex &parent) const
 {
     qDebug() << "Objects: " << m_objects.size();
     return m_objects.size();
+}
+
+bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (value.isNull())
+        return false;
+    if (index.row() < 0)
+        return false;
+    switch (role)
+    {
+        case Qt::DecorationRole:
+        {
+            qDebug() << "Added element #" << s_nextID;
+            IScaObject *object = NULL;
+            object = qvariant_cast<IScaObject *>(value);
+            if (object == NULL)
+            {
+                object = qvariant_cast<Link *>(value);
+                if (object == NULL)
+                {
+                    qDebug() << "Can\'t cast object!";
+                    return false;
+                }
+            }
+            m_objects.insert(index.row(), object);
+            emit dataChanged(index, index);
+            return true;
+        }
+        default:
+        {
+            return false;
+            break;
+        }
+    }
+}
+
+//Returns true if item existed
+bool GraphModel::removeItemByIndex(quint64 id)
+{
+    return removeRow(id, QModelIndex());
+}
+
+bool GraphModel::removeItem(IScaObject *obj)
+{
+    return removeItemByIndex(m_objects.key(obj));
 }

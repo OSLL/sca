@@ -158,9 +158,11 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     QAction *editAnnotation = m_menu->getActionByName(EDIT_ANNOTATION);
 
     //#Setting up menu#//
+    //Reset to defaults
+    m_menu->resetToDefault();
     //Setting connection available only if 2 nodes selected
     conAct->setEnabled(nodes.size() == 2);
-    //Editing annotation only if there is only one under selection
+    //Editing annotation only if there is only one link under selection
     editAnnotation->setEnabled(links.size() == 1);
 
     if(links.size() == 1)
@@ -200,7 +202,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     if (nodes.size() == 1)
     {
         Node *node = nodes.at(0);
-        ScaObjectConverter conv;
+        ScaObjectConverter conv(m_model);
         toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
         toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
     }
@@ -223,16 +225,17 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == toText)
     {
-        m_temp = scene()->addTextBlockFromNode(m_temp);
+        scene()->addTextBlockFromNode(m_temp);
         return;
     }
     else if (action == toIdentifier)
     {
-        m_temp = scene()->addIdentifierFromNode(m_temp);
+        scene()->addIdentifierFromNode(m_temp);
         return;
     }
     else if (action == del)
     {
+        // TODO (LeoSko) removing should be in GraphModel, not GraphScene
         scene()->removeLinks(scene()->selectedLinks());
         scene()->removeNodes(scene()->selectedNodes());
     }
@@ -252,7 +255,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == editAnnotation)
     {
-        //        editLinkAnnotation(links.at(0));
+        editLinkAnnotation(links.at(0));
     }
 }
 
@@ -350,21 +353,21 @@ void GraphView::setScene(GraphScene *graphScene)
     graphScene->setModel(m_model);
 }
 
-//void GraphView::editLinkAnnotation(LinkVisual *link)
-//{
-//    if (link == NULL)
-//        return;
-//    bool ok = false;
-//    QString new_annotation =
-//            QInputDialog::getText(this, EDIT_ANNOTATION,
-//                                  EDIT_ANNOTATION_LABEL, QLineEdit::Normal,
-//                                  link->getAnnotationText(),
-//                                  &ok);
-//    if (ok == true && !new_annotation.isEmpty())
-//    {
-//        link->setAnnotation(new_annotation);
-//    }
-//}
+void GraphView::editLinkAnnotation(LinkVisual *link)
+{
+    if (link == NULL)
+        return;
+    bool ok = false;
+    QString new_annotation =
+            QInputDialog::getText(this, EDIT_ANNOTATION,
+                                  EDIT_ANNOTATION_LABEL, QLineEdit::Normal,
+                                  link->getAnnotationText(),
+                                  &ok);
+    if (ok == true && !new_annotation.isEmpty())
+    {
+        link->setAnnotation(new_annotation);
+    }
+}
 
 void GraphView::mousePressEvent(QMouseEvent *event)
 {

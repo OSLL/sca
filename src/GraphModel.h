@@ -61,6 +61,7 @@ public:
   ~GraphModel();
 
   quint64 addObject(const QMimeData *mimeData);
+  quint64 addObject(IScaObject *object);
   quint64 getId(IScaObject *object);
   QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
   Qt::ItemFlags flags(const QModelIndex &index) const;
@@ -68,8 +69,13 @@ public:
   bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
   int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-  Link *connectObjects(quint64 id1, quint64 id2);
-  Link *connectObjects(IScaObject *source, IScaObject *dest);
+  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::DecorationRole);
+
+  bool removeItemByIndex(quint64 id);
+  bool removeItem(IScaObject *obj);
+
+  quint64 connectObjects(quint64 id1, quint64 id2);
+  quint64 connectObjects(IScaObject *source, IScaObject *dest);
 private:
   static quint64 s_nextID;
   QHash<quint64, IScaObject *> m_objects;

@@ -119,81 +119,77 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(IScaObjectIdentifier
     return node;
 }
 
-IScaObjectTextBlockVisual *GraphScene::addTextBlockFromNode(Node *node)
+quint64 GraphScene::addTextBlockFromNode(Node *node)
 {
-    ScaObjectConverter conv;
-    switch(node->type())
+    ScaObjectConverter conv(m_model);
+    switch(node->getObjectType())
     {
     case IScaObject::IDENTIFIER:
         {
             qDebug() << "Converting id to text";
-            IScaObjectTextBlockVisual *new_obj =
-                    conv.getTextBlockFromIdentifier(
-                        static_cast<IScaObjectIdentifierVisual *>(node), true);
-            addItem(new_obj);
-            return new_obj;
+            m_posToAdd = node->pos();
+            return conv.makeTextBlockFromIdentifier(
+                        static_cast<IScaObjectIdentifierVisual *>(node), true);;
         }
     case IScaObject::BINARYBLOCK:
         {
             qDebug() << "Converting binary to text";
-            //Waiting for dividing block into 2 classes
-            return NULL;
+            //TODO (LeoSko) Waiting for dividing block into 2 classes
+            return -1;
         }
     default:
         break;
     }
     qDebug() << "No conversion";
-    return static_cast<IScaObjectTextBlockVisual *>(node);
+    return -1;
 }
 
-IScaObjectIdentifierVisual *GraphScene::addIdentifierFromNode(Node *node)
+quint64 GraphScene::addIdentifierFromNode(Node *node)
 {
-    ScaObjectConverter conv;
-    switch(node->getObject()->getType())
+    ScaObjectConverter conv(m_model);
+    switch(node->getObjectType())
     {
     case IScaObject::TEXTBLOCK:
         {
             qDebug() << "Converting text to id";
-            IScaObjectIdentifierVisual *new_obj =
-                    conv.getIdentifierFromBlock(
-                        static_cast<IScaObjectTextBlockVisual *>(node), true);
-            addItem(new_obj);
-            return new_obj;
+            m_posToAdd = node->pos();
+            return conv.makeIdentifierFromBlock(
+                                static_cast<IScaObjectTextBlockVisual *>(node), true);
         }
     case IScaObject::BINARYBLOCK:
         {
             qDebug() << "Converting binary to id";
-            //Waiting for dividing block into 2 classes
-            return NULL;
+            // TODO (LeoSko) Waiting for dividing block into 2 classes
+            return -1;
         }
     default:
         break;
     }
     qDebug() << "No conversion";
-    return static_cast<IScaObjectIdentifierVisual *>(node);
+    return -1;
 }
 
-IScaObjectTextBlockVisual *GraphScene::addBinaryBlockFromNode(Node *node)
+quint64 GraphScene::addBinaryBlockFromNode(Node *node)
 {
-    ScaObjectConverter conv;
+    ScaObjectConverter conv(m_model);
     switch(node->getObject()->getType())
     {
     case IScaObject::IDENTIFIER:
         {
-        qDebug() << "Converting id to binary";
-            return NULL;
+            qDebug() << "Converting id to binary";
+            return -1;
         }
     case IScaObject::TEXTBLOCK:
         {
-        qDebug() << "Converting text to binary";
-            //Waiting for dividing block into 2 classes
-            return NULL;
+            qDebug() << "Converting text to binary";
+            // TODO (LeoSko) Waiting for dividing block into 2 classes
+            return -1;
         }
     default:
         break;
     }
     qDebug() << "No conversion";
-    return static_cast<IScaObjectTextBlockVisual *>(node);
+    return -1;
 }
 
 IScaObjectDirectoryVisual *GraphScene::addDirVisual(IScaObjectDirectory *object)
@@ -233,7 +229,8 @@ void GraphScene::removeNodes(QList<Node *> nodes)
     qDebug() << "Removing " << nodes.size() << " nodes";
     foreach(Node *node, nodes)
     {
-        delete node;
+        m_model->removeItem(node->getObject());
+        delete m_objects.take(m_objects.key(node));
     }
 }
 
@@ -242,7 +239,8 @@ void GraphScene::removeLinks(QList<LinkVisual *> links)
     qDebug() << "Removing " << links.size() << " links";
     foreach(LinkVisual *link, links)
     {
-        delete link;
+        m_model->removeItem(link->getObject());
+        delete m_objects.take(m_objects.key(link));
     }
 }
 
@@ -295,6 +293,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         {
             IScaObjectFile *fileObject = static_cast<IScaObjectFile *>(object);
             IScaObjectFileVisual *visObject = addFileVisual(fileObject);
+            visObject->setPos(m_posToAdd);
             m_objects.insert(id, visObject);
             break;
         }
@@ -302,13 +301,15 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         {
             IScaObjectDirectory *dirObject = static_cast<IScaObjectDirectory *>(object);
             IScaObjectDirectoryVisual *visObject = addDirVisual(dirObject);
+            visObject->setPos(m_posToAdd);
             m_objects.insert(id, visObject);
             break;
         }
         case IScaObject::TEXTBLOCK:
         {
             IScaObjectTextBlock *textObject = static_cast<IScaObjectTextBlock *>(object);
-            IScaObjectTextBlockVisual*visObject = addTextBlockVisual(textObject);
+            IScaObjectTextBlockVisual *visObject = addTextBlockVisual(textObject);
+            visObject->setPos(m_posToAdd);
             m_objects.insert(id, visObject);
             break;
         }
@@ -316,6 +317,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         {
             IScaObjectBinaryBlock *binaryObject = static_cast<IScaObjectBinaryBlock *>(object);
             IScaObjectBinaryBlockVisual *visObject = addBinaryBlockVisual(binaryObject);
+            visObject->setPos(m_posToAdd);
             m_objects.insert(id, visObject);
             break;
         }
@@ -323,6 +325,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         {
             IScaObjectLine *lineObject = static_cast<IScaObjectLine *>(object);
             IScaObjectLineVisual *visObject = addLineVisual(lineObject);
+            visObject->setPos(m_posToAdd);
             m_objects.insert(id, visObject);
             break;
         }
@@ -330,14 +333,16 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         {
             IScaObjectIdentifier *identObject = static_cast<IScaObjectIdentifier *>(object);
             IScaObjectIdentifierVisual *visObject = addIdentifierVisual(identObject);
+            visObject->setPos(m_posToAdd);
             m_objects.insert(id, visObject);
             break;
         }
         case IScaObject::SYMBOL:
         {
             IScaObjectSymbol *symbolObject = static_cast<IScaObjectSymbol *>(object);
-            IScaObjectSymbolVisual *visSymbol = addSymbolVisual(symbolObject);
-            m_objects.insert(id, visSymbol);
+            IScaObjectSymbolVisual *visObject = addSymbolVisual(symbolObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
             break;
         }
         case IScaObject::LINK:
@@ -365,15 +370,15 @@ void GraphScene::setModel(GraphModel *model)
     m_model = model;
 }
 
-void GraphScene::updateObjects(QModelIndex row, QModelIndex column)
+void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
-    qDebug() << "Update object";
+    qDebug() << "Update object ID:" << leftTop.row();
 
-    quint64 id = row.row();
+    quint64 id = leftTop.row();
     ObjectVisual *visObject = getObjectById(id);
 
     //Construction for working with QVarint(pointer)
-    IScaObject *object = qvariant_cast<IScaObject *>(m_model->data(row));
+    IScaObject *object = qvariant_cast<IScaObject *>(m_model->data(leftTop, Qt::DecorationRole));
 
     if(visObject == NULL)
     {
