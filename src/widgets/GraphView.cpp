@@ -115,6 +115,8 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
     GraphView::dragLeaveEvent(event, false);
 }
 
+// TODO(Nikita): transfer all shit from dragEnter to dropEvent
+
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
 {
     Q_UNUSED(event)
@@ -125,11 +127,11 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
             GraphView::scene()->removeItem(m_temp);
         return;
     }
-    if (m_temp->getObject()->getType() == IScaObject::TEXTBLOCK)
-    {
-        QPoint pos = mapFromScene(m_temp->pos());
-        ShowContextMenu(pos);
-    }
+//    if (m_model->data(id))
+//    {
+//        QPoint pos = mapFromScene(m_temp->pos());
+//        ShowContextMenu(pos);
+//    }
 }
 
 void GraphView::dropEvent(QDropEvent *event)
@@ -167,7 +169,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
 
     if (!links.isEmpty() || !nodes.isEmpty())
     {
-        m_tempId = m_model->getId(m_temp->getObject());
+        m_tempId = scene()->getObjectId(m_temp);
     }
     if (links.size() == 1)
     {
@@ -207,8 +209,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     {
         Node *node = nodes.at(0);
         ScaObjectConverter conv(m_model);
-        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
-        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
+//        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
+//        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
     }
 
     //Show menu
@@ -224,7 +226,9 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     {
         Node *src = nodes.at(0);
         Node *dest = nodes.at(1);
-        m_model->connectObjects(src->getObject(), dest->getObject());
+        quint64 srcId = scene()->getObjectId(src);
+        quint64 destId = scene()->getObjectId(dest);
+        m_model->connectObjects(srcId, destId);
         return;
     }
     else if (action == toText)
@@ -239,9 +243,16 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == del)
     {
-        // TODO (LeoSko) removing should be in GraphModel, not GraphScene
-        scene()->removeLinks(scene()->selectedLinks());
-        scene()->removeNodes(scene()->selectedNodes());
+        // TODO (LeoSko) removing should be in GraphModel
+        foreach(LinkVisual *link, scene()->selectedLinks())
+        {
+            m_model->removeObject(scene()->getObjectId(link));
+        }
+        foreach(Node *node, scene()->selectedNodes())
+        {
+            m_model->removeObject(scene()->getObjectId(node));
+        }
+
     }
     else if (action == setLeftArrow)
     {
@@ -259,7 +270,9 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == editAnnotation)
     {
-        editLinkAnnotation(links.at(0));
+        //TODO(zo0mer) repair thos annotation
+        quint64 id = scene()->getObjectId(links.at(0));
+        editLinkAnnotation(id);
     }
 }
 
@@ -274,14 +287,17 @@ void GraphView::keyPressEvent(QKeyEvent *event)
         {
             Node *src = items.at(0);
             Node *dest = items.at(1);
-            m_model->connectObjects(src->getObject(), dest->getObject());
+            quint64 srcId = scene()->getObjectId(src);
+            quint64 destId = scene()->getObjectId(dest);
+            m_model->connectObjects(srcId, destId);
         }
     }
         break;
     case Qt::Key_Delete:
     {
-        scene()->removeLinks(scene()->selectedLinks());
-        scene()->removeNodes(scene()->selectedNodes());
+        //TODO (zo0mer): repair those too
+//        scene()->removeLinks(scene()->selectedLinks());
+//        scene()->removeNodes(scene()->selectedNodes());
     }
         break;
     }
@@ -329,6 +345,8 @@ void GraphView::setModel(GraphModel *model)
     {
         disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                    scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+        disconnect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+                   scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
 
     m_model = model;
@@ -336,6 +354,8 @@ void GraphView::setModel(GraphModel *model)
     {
         connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+        connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+                           scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
     scene()->setModel(m_model);
 }
@@ -346,6 +366,8 @@ void GraphView::setScene(GraphScene *graphScene)
     {
         disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                    scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+        disconnect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+                   scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
 
     QGraphicsView::setScene(graphScene);
@@ -353,23 +375,25 @@ void GraphView::setScene(GraphScene *graphScene)
     {
         connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 graphScene, SLOT(updateObjects(QModelIndex, QModelIndex)));
+        connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+                   scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
     graphScene->setModel(m_model);
 }
 
-void GraphView::editLinkAnnotation(LinkVisual *link)
+void GraphView::editLinkAnnotation(quint64 id)
 {
-    if (link == NULL)
+    if (id == NULL)
         return;
     bool ok = false;
     QString new_annotation =
             QInputDialog::getText(this, EDIT_ANNOTATION,
                                   EDIT_ANNOTATION_LABEL, QLineEdit::Normal,
-                                  link->getAnnotationText(),
+                                  QString(""),
                                   &ok);
     if (ok == true && !new_annotation.isEmpty())
     {
-        link->setAnnotation(new_annotation);
+        m_model->setAnnotation(id, new_annotation);
     }
 }
 

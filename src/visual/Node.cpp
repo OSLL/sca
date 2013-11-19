@@ -50,8 +50,8 @@
 #include <QTextDocument>
 #include "GraphScene.h"
 
-Node::Node(IScaObject *object, QColor standardColor) :
-    ObjectVisual(object, NODE),
+Node::Node(QColor standardColor) :
+    ObjectVisual(NODE),
     m_title(NULL),
     m_standardColor(standardColor),
     m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,
@@ -70,19 +70,35 @@ Node::~Node()
     removeTitle();
 }
 
-void Node::addLink(LinkVisual *link)
+void Node::addLinkFrom(quint64 linkId)
 {
-    m_object->addLink(static_cast<Link *>(link->getObject()));
+    m_linksFrom.append(linkId);
+    scene()->refreshLinkPosFrom(linkId, pos());
 }
 
-QList<Link *> Node::getLinks()
+void Node::addLinkTo(quint64 linkId)
 {
-    return m_object->getLinks();
+    m_linksTo.append(linkId);
+    scene()->refreshLinkPosTo(linkId, pos());
 }
 
-void Node::disconnectLink(LinkVisual *link)
+QList<quint64> Node::fromLinks() const
 {
-    m_object->disconnectLink(static_cast<Link *>(link->getObject()));
+    return m_linksFrom;
+}
+
+void Node::setFromLinks(const QList<quint64> &fromLinks)
+{
+    m_linksFrom = fromLinks;
+}
+QList<quint64> Node::linksTo() const
+{
+    return m_linksTo;
+}
+
+void Node::setLinksTo(const QList<quint64> &linksTo)
+{
+    m_linksTo = linksTo;
 }
 
 QRectF Node::getRect() const
@@ -105,7 +121,10 @@ void Node::removeTitle()
     if (m_title != NULL)
     {
         qDebug() << "Removing title";
-        scene()->removeItem(m_title);
+        if(scene() != NULL)
+        {
+            scene()->removeItem(m_title);
+        }
         delete m_title;
         m_title = NULL;
         qDebug() << "Removed title";
@@ -157,10 +176,15 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
     case ItemPositionChange:
-        foreach (Link *link, m_object->getLinks())
+        foreach (quint64 linkId, m_linksFrom)
         {
-            scene()->refreshLinkPos(link);
+            scene()->refreshLinkPosFrom(linkId, pos());
         }
+        foreach(quint64 linkId, m_linksTo)
+        {
+            scene()->refreshLinkPosTo(linkId, pos());
+        }
+
         break;
     case ItemSelectedHasChanged:
         if (value == true) //It is selected now
@@ -182,7 +206,7 @@ QDebug operator<<(QDebug d, Node &node)
 {
     d << "Node: "
       << "type: " << node.m_type
-      << ", name: " << node.getTitle()->text()
-      << ", links: " << node.getObject()->getLinks().size();
+      << ", name: " << node.getTitle()->text();
+//      << ", links: " << node.getLinks().size();
     return d;
 }

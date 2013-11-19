@@ -75,13 +75,15 @@ GraphScene::~GraphScene()
             links.push_back(link);
         }
     }
-    removeLinks(links);
-    removeNodes(nodes);
+    //TODO repair those too
+    //    removeLinks(links);
+    //    removeNodes(nodes);
 }
 
 IScaObjectFileVisual *GraphScene::addFileVisual(IScaObjectFile *object)
 {
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(object);
+    QFileInfo fileInfo = object->getFile();
+    IScaObjectFileVisual *node = new IScaObjectFileVisual(fileInfo);
 
     addItem(node);
     return node;
@@ -89,7 +91,8 @@ IScaObjectFileVisual *GraphScene::addFileVisual(IScaObjectFile *object)
 
 IScaObjectSymbolVisual *GraphScene::addSymbolVisual(IScaObjectSymbol *object)
 {
-    IScaObjectSymbolVisual *node = new IScaObjectSymbolVisual(object);
+    char symbol = object->getSymbol();
+    IScaObjectSymbolVisual *node = new IScaObjectSymbolVisual(symbol);
 
     addItem(node);
     return node;
@@ -97,7 +100,8 @@ IScaObjectSymbolVisual *GraphScene::addSymbolVisual(IScaObjectSymbol *object)
 
 IScaObjectLineVisual *GraphScene::addLineVisual(IScaObjectLine *object)
 {
-    IScaObjectLineVisual *node = new IScaObjectLineVisual(object);
+    QString line = object->getLine();
+    IScaObjectLineVisual *node = new IScaObjectLineVisual(line);
 
     addItem(node);
     return node;
@@ -105,7 +109,8 @@ IScaObjectLineVisual *GraphScene::addLineVisual(IScaObjectLine *object)
 
 IScaObjectBinaryBlockVisual *GraphScene::addBinaryBlockVisual(IScaObjectBinaryBlock *object)
 {
-    IScaObjectBinaryBlockVisual *node = new IScaObjectBinaryBlockVisual(object);
+    QByteArray data = object->getData();
+    IScaObjectBinaryBlockVisual *node = new IScaObjectBinaryBlockVisual(data);
 
     addItem(node);
     return node;
@@ -113,7 +118,8 @@ IScaObjectBinaryBlockVisual *GraphScene::addBinaryBlockVisual(IScaObjectBinaryBl
 
 IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(IScaObjectIdentifier *object)
 {
-    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(object);
+    QString identifier = object->getIdentifier();
+    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(identifier);
 
     addItem(node);
     return node;
@@ -121,7 +127,8 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(IScaObjectIdentifier
 
 IScaObjectDirectoryVisual *GraphScene::addDirVisual(IScaObjectDirectory *object)
 {
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(object);
+    QFileInfo fileInfo = object->getFile();
+    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(fileInfo);
 
     addItem(node);
     return node;
@@ -129,7 +136,8 @@ IScaObjectDirectoryVisual *GraphScene::addDirVisual(IScaObjectDirectory *object)
 
 IScaObjectTextBlockVisual *GraphScene::addTextBlockVisual(IScaObjectTextBlock *object)
 {
-    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(object);
+    QString text = object->getText();
+    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(text);
 
     addItem(node);
     return node;
@@ -137,41 +145,27 @@ IScaObjectTextBlockVisual *GraphScene::addTextBlockVisual(IScaObjectTextBlock *o
 
 Node *GraphScene::addNode(IScaObject *object)
 {
-    Node *node = new Node(object, DEFAULT_NODE_COLOR);
+    Node *node = new Node(DEFAULT_NODE_COLOR);
 
     addItem(node);
     return node;
 }
 
-LinkVisual *GraphScene::addLinkVisual(Node *source, Node *dest, Link *object)
+LinkVisual *GraphScene::addLinkVisual(QString annotation)
 {
-    LinkVisual *link = new LinkVisual(object);
-    source->addLink(link);
-    dest->addLink(link);
-    link->refreshGeometry(source->pos(), dest->pos());
+    LinkVisual *link = new LinkVisual(annotation);
 
     addItem(link);
     return link;
 }
 
-void GraphScene::removeNodes(QList<Node *> nodes)
+void GraphScene::removeObject(ObjectVisual *object)
 {
-    qDebug() << "Removing " << nodes.size() << " nodes";
-    foreach(Node *node, nodes)
-    {
-        m_model->removeItem(node->getObject());
-        delete m_objects.take(m_objects.key(node));
-    }
-}
-
-void GraphScene::removeLinks(QList<LinkVisual *> links)
-{
-    qDebug() << "Removing " << links.size() << " links";
-    foreach(LinkVisual *link, links)
-    {
-        m_model->removeItem(link->getObject());
-        delete m_objects.take(m_objects.key(link));
-    }
+    quint64 id = getObjectId(object);
+    qDebug() << "Removing object #" << id;
+    m_objects.remove(id);
+    removeItem(object);
+    delete(object);
 }
 
 QList<Node *> GraphScene::selectedNodes()
@@ -204,18 +198,27 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
-void GraphScene::refreshLinkPos(Link *objLink)
+void GraphScene::refreshLinkPosTo(quint64 linkId, QPointF pos)
 {
-    quint64 linkId = m_model->getId(objLink);
-    LinkVisual *link = static_cast<LinkVisual *>(m_objects[linkId]);
-    IScaObject *src = objLink->getObjectFrom();
-    IScaObject *dest = objLink->getObjectTo();
-    quint64 srcId = m_model->getId(src);
-    quint64 destId = m_model->getId(dest);
-    ObjectVisual *srcVisual = m_objects[srcId];
-    ObjectVisual *destVisual = m_objects[destId];
-    link->refreshGeometry(srcVisual->pos(), destVisual->pos());
+    if (!m_objects.contains(linkId))
+    {
+        return;
+    }
+    LinkVisual *link = static_cast<LinkVisual *>(m_objects.value(linkId, NULL));
+    link->refreshGeometryTo(pos);
 }
+
+void GraphScene::refreshLinkPosFrom(quint64 linkId, QPointF pos)
+{
+
+    if (!m_objects.contains(linkId))
+    {
+        return;
+    }
+    LinkVisual *link = static_cast<LinkVisual *>(m_objects.value(linkId, NULL));
+    link->refreshGeometryFrom(pos);
+}
+
 
 ObjectVisual *GraphScene::getObjectById(quint64 id)
 {
@@ -230,77 +233,88 @@ ObjectVisual *GraphScene::getObjectById(quint64 id)
 ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
 {
     IScaObject::IScaObjectType type = object->getType();
+    qDebug() << "Adding #" << id << ", type: " << type;
     switch(type)
     {
-        case IScaObject::FILE:
-        {
-            IScaObjectFile *fileObject = static_cast<IScaObjectFile *>(object);
-            IScaObjectFileVisual *visObject = addFileVisual(fileObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-        case IScaObject::DIRECTORY:
-        {
-            IScaObjectDirectory *dirObject = static_cast<IScaObjectDirectory *>(object);
-            IScaObjectDirectoryVisual *visObject = addDirVisual(dirObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-        case IScaObject::TEXTBLOCK:
-        {
-            IScaObjectTextBlock *textObject = static_cast<IScaObjectTextBlock *>(object);
-            IScaObjectTextBlockVisual *visObject = addTextBlockVisual(textObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-        case IScaObject::BINARYBLOCK:
-        {
-            IScaObjectBinaryBlock *binaryObject = static_cast<IScaObjectBinaryBlock *>(object);
-            IScaObjectBinaryBlockVisual *visObject = addBinaryBlockVisual(binaryObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-        case IScaObject::LINE:
-        {
-            IScaObjectLine *lineObject = static_cast<IScaObjectLine *>(object);
-            IScaObjectLineVisual *visObject = addLineVisual(lineObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-        case IScaObject::IDENTIFIER:
-        {
-            IScaObjectIdentifier *identObject = static_cast<IScaObjectIdentifier *>(object);
-            IScaObjectIdentifierVisual *visObject = addIdentifierVisual(identObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-        case IScaObject::SYMBOL:
-        {
-            IScaObjectSymbol *symbolObject = static_cast<IScaObjectSymbol *>(object);
-            IScaObjectSymbolVisual *visObject = addSymbolVisual(symbolObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-        case IScaObject::LINK:
-        {
-            Link *link = static_cast<Link *>(object);
-            quint64 sourceId = m_model->getId(link->getObjectFrom());
-            quint64 destinId = m_model->getId(link->getObjectTo());
-            Node *sourceNode = static_cast<Node *>(m_objects[sourceId]);
-            Node *destinNode = static_cast<Node *>(m_objects[destinId]);
-            Q_ASSERT(sourceNode != NULL && destinNode != NULL);
-            LinkVisual *visLink = addLinkVisual(sourceNode, destinNode, link);
-            m_objects.insert(id, visLink);
-            break;
-        }
+    case IScaObject::FILE:
+    {
+        IScaObjectFile *fileObject = static_cast<IScaObjectFile *>(object);
+        IScaObjectFileVisual *visObject = addFileVisual(fileObject);
+        visObject->setPos(m_posToAdd);
+        m_objects.insert(id, visObject);
+        break;
     }
+    case IScaObject::DIRECTORY:
+    {
+        IScaObjectDirectory *dirObject = static_cast<IScaObjectDirectory *>(object);
+        IScaObjectDirectoryVisual *visObject = addDirVisual(dirObject);
+        visObject->setPos(m_posToAdd);
+        m_objects.insert(id, visObject);
+        break;
+    }
+    case IScaObject::TEXTBLOCK:
+    {
+        IScaObjectTextBlock *textObject = static_cast<IScaObjectTextBlock *>(object);
+        IScaObjectTextBlockVisual *visObject = addTextBlockVisual(textObject);
+        visObject->setPos(m_posToAdd);
+        m_objects.insert(id, visObject);
+        break;
+    }
+    case IScaObject::BINARYBLOCK:
+    {
+        IScaObjectBinaryBlock *binaryObject = static_cast<IScaObjectBinaryBlock *>(object);
+        IScaObjectBinaryBlockVisual *visObject = addBinaryBlockVisual(binaryObject);
+        visObject->setPos(m_posToAdd);
+        m_objects.insert(id, visObject);
+        break;
+    }
+    case IScaObject::LINE:
+    {
+        IScaObjectLine *lineObject = static_cast<IScaObjectLine *>(object);
+        IScaObjectLineVisual *visObject = addLineVisual(lineObject);
+        visObject->setPos(m_posToAdd);
+        m_objects.insert(id, visObject);
+        break;
+    }
+    case IScaObject::IDENTIFIER:
+    {
+        IScaObjectIdentifier *identObject = static_cast<IScaObjectIdentifier *>(object);
+        IScaObjectIdentifierVisual *visObject = addIdentifierVisual(identObject);
+        visObject->setPos(m_posToAdd);
+        m_objects.insert(id, visObject);
+        break;
+    }
+    case IScaObject::SYMBOL:
+    {
+        IScaObjectSymbol *symbolObject = static_cast<IScaObjectSymbol *>(object);
+        IScaObjectSymbolVisual *visObject = addSymbolVisual(symbolObject);
+        visObject->setPos(m_posToAdd);
+        m_objects.insert(id, visObject);
+        break;
+    }
+    case IScaObject::LINK:
+    {
+        Link *link = static_cast<Link *>(object);
+        quint64 sourceId = m_model->getId(link->getObjectFrom());
+        quint64 destinId = m_model->getId(link->getObjectTo());
+        QString annotation = link->getAnnotation();
+        Node *sourceNode = static_cast<Node *>(m_objects[sourceId]);
+        Node *destinNode = static_cast<Node *>(m_objects[destinId]);
+        LinkVisual *visLink = addLinkVisual(annotation);
+        m_objects.insert(id, visLink);
+        sourceNode->addLinkFrom(id);
+        destinNode->addLinkTo(id);
+
+        Q_ASSERT(visLink != NULL && sourceNode != NULL && destinNode != NULL);
+
+        break;
+    }
+    }
+}
+
+quint64 GraphScene::getObjectId(ObjectVisual *object)
+{
+    return m_objects.key(object);
 }
 
 GraphModel *GraphScene::getModel() const
@@ -323,6 +337,17 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     addObjectVisual(object, id);
 }
 
+void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
+{
+    if(!(first == last))
+    {
+        return;
+    }
+    //TODO (zo0mer): we must delete ids of removed link from nodes
+    ObjectVisual *object = getObjectById(first);
+    removeObject(object);
+}
+
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
     qDebug() << "Update object #" << leftTop.row();
@@ -341,7 +366,7 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
         return;
     }
 
-    if(visObject == NULL)
+    if (visObject == NULL)
     {
         addObjectVisual(object, id);
     }

@@ -1,10 +1,9 @@
 #include "ObjectVisual.h"
 #include "GraphScene.h"
 
-ObjectVisual::ObjectVisual(IScaObject *object, ObjectVisualType type, QGraphicsItem *parent):
+ObjectVisual::ObjectVisual(ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),
-    m_type(type),
-    m_object(object)
+    m_type(type)
 {
     setFlags(QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemIsSelectable);
@@ -27,19 +26,4 @@ ObjectVisual::ObjectVisualType ObjectVisual::getType() const
 void ObjectVisual::setType(const ObjectVisualType &type)
 {
     m_type = type;
-}
-
-IScaObject *ObjectVisual::getObject() const
-{
-    return m_object;
-}
-
-void ObjectVisual::setObject(IScaObject *object)
-{
-    m_object = object;
-}
-
-IScaObject::IScaObjectType ObjectVisual::getObjectType() const
-{
-    return m_object->getType();
 }

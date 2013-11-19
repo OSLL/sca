@@ -66,7 +66,6 @@ public:
     ~ScaObjectConverter();
 
     bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
-    bool canConvert(Node *obj, IScaObject::IScaObjectType toType);
 
     quint64 convert(IScaObject *obj, IScaObject::IScaObjectType toType, bool autoDel = false);
     quint64 makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);

@@ -94,10 +94,6 @@ bool ScaObjectConverter::canConvert(IScaObject::IScaObjectType fromType, IScaObj
     }
 }
 
-bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType)
-{
-    return canConvert(obj->getObjectType(), toType);
-}
 
 quint64 ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectType toType, bool autoDel)
 {
@@ -137,23 +133,24 @@ quint64 ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectType 
     }
 }
 
+// TODO (Zo0ER) repair this functions
 quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
 {
-    IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
-    quint64 objIndex = m_model->getId(objId);
-    IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
-    IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
-                                                    objId->getIdentifier().length(),
-                                                    objId->getIdentifier());
-    foreach(Link *link, obj->getLinks())
-    {
-        // TODO (LeoSko) should save connection somehow
-        m_model->removeItem(link);
-    }
-    m_model->removeItemByIndex(objIndex);
-    if (autoDel)
-        delete obj;
-    return m_model->addObject(objBlock);
+//    IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
+//    quint64 objIndex = m_model->getId(objId);
+//    IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
+//    IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
+//                                                    objId->getIdentifier().length(),
+//                                                    objId->getIdentifier());
+//    foreach(Link *link, obj->getLinks())
+//    {
+//        // TODO (LeoSko) should save connection somehow
+//        m_model->removeItem(link);
+//    }
+//    m_model->removeItemByIndex(objIndex);
+//    if (autoDel)
+//        delete obj;
+//    return m_model->addObject(objBlock);
 }
 
 quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel)
@@ -163,21 +160,21 @@ quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifier *ob
 
 quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
 {
-    IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
-    quint64 objIndex = m_model->getId(objBlock);
-    IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
-    IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
-                                                           objBlock->getText());
+//    IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
+//    quint64 objIndex = m_model->getId(objBlock);
+//    IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
+//    IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
+//                                                           objBlock->getText());
 
-    foreach(Link *link, obj->getLinks())
-    {
-        // TODO (LeoSko) should save connection somehow
-        delete link;
-    }
-    m_model->removeItemByIndex(objIndex);
-    if (autoDel)
-        delete obj;
-    return m_model->addObject(objId);
+//    foreach(Link *link, obj->getLinks())
+//    {
+//        // TODO (LeoSko) should save connection somehow
+//        delete link;
+//    }
+//    m_model->removeItemByIndex(objIndex);
+//    if (autoDel)
+//        delete obj;
+//    return m_model->addObject(objId);
 }
 
 quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel)

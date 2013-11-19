@@ -54,12 +54,14 @@
 class LinkVisual : public ObjectVisual
 {
 public:
-    LinkVisual(Link *object);
+    LinkVisual(QString annotation);
     ~LinkVisual();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
     void refreshGeometry(QPointF from, QPointF to);
+    void refreshGeometryTo(QPointF to);
+    void refreshGeometryFrom(QPointF fromZ);
     QRectF boundingRect() const;
     QPainterPath shape() const;
     void setLine(const QLineF &line);
@@ -86,6 +88,9 @@ public:
     QGraphicsTextItem *getAnnotation() const;
     void setSource(const QPointF &source);
     void setDestin(const QPointF &destin);
+
+    quint64 getSourceId();
+    quint64 getDestinId();
 
 private:
     QLineF m_line;

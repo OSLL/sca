@@ -71,6 +71,8 @@ quint64 GraphModel::connectObjects(IScaObject *source, IScaObject *dest)
 {
     qDebug() << "Connecting " << *source << " with " << *dest;
     Link *res = new Link(source, dest);
+    source->addLink(res);
+    dest->addLink(res);
     QModelIndex changedIndex = createIndex(s_nextID, 0);
     setData(changedIndex, QVariant::fromValue(res));
 
@@ -105,7 +107,7 @@ quint64 GraphModel::getId(IScaObject *object)
 
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "Data called!";
+    qDebug() << "Data called for #" << index.row();
     if (!m_objects.contains(index.row()))
         return QVariant();
     switch (role)
@@ -137,7 +139,7 @@ bool GraphModel::removeRow(int row, const QModelIndex &parent)
     IScaObject *object = m_objects.take(row);
     foreach(Link *link, object->getLinks())
     {
-        removeRow(getId(link), parent);
+        removeObject(link);
     }
     delete object;
 
@@ -180,7 +182,6 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
     {
         case Qt::DecorationRole:
         {
-            qDebug() << "Added element #" << s_nextID;
             IScaObject *object = NULL;
             //Try casting to object or link, then add it
             object = qvariant_cast<IScaObject *>(value);
@@ -193,6 +194,7 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
                     return false;
                 }
             }
+            qDebug() << "Added element #" << s_nextID << ", type: " << object->getType();
             m_objects.insert(index.row(), object);
             emit dataChanged(index, index);
             return true;
@@ -206,14 +208,14 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
 }
 
 //Returns true if item existed
-bool GraphModel::removeItemByIndex(quint64 id)
+bool GraphModel::removeObject(quint64 id)
 {
     return removeRow(id, QModelIndex());
 }
 
-bool GraphModel::removeItem(IScaObject *obj)
+bool GraphModel::removeObject(IScaObject *obj)
 {
-    return removeItemByIndex(m_objects.key(obj));
+    return removeObject(m_objects.key(obj));
 }
 
 bool GraphModel::convert(quint64 id, IScaObject::IScaObjectType toType)
@@ -231,3 +233,13 @@ void GraphModel::addLinkTo(IScaObject *obj, Link *link)
 {
     obj->addLink(link);
 }
+
+void GraphModel::setAnnotation(quint64 id, QString annotation)
+{
+    Link *link = static_cast<Link *>(m_objects[id]);
+    Q_ASSERT(link != NULL);
+    link->setAnnotation(annotation);
+    QModelIndex index = createIndex(id, 0);
+    emit dataChanged(index, index);
+}
+

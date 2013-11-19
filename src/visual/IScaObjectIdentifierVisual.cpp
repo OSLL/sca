@@ -42,22 +42,21 @@
 #include "IScaObjectIdentifierVisual.h"
 #include <QPainter>
 
-IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(IScaObjectIdentifier *object) :
-    Node(object, DEFAULT_IDENTIFIER_COLOR)
+IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(QString identifier) :
+    Node(DEFAULT_IDENTIFIER_COLOR)
 {
     m_rect = QRectF(-DEFAULT_IDENTIFIER_VISUAL_WIDTH / 2,
                     -DEFAULT_IDENTIFIER_VISUAL_HEIGHT / 2,
                     DEFAULT_IDENTIFIER_VISUAL_WIDTH,
                     DEFAULT_IDENTIFIER_VISUAL_HEIGHT);
 
-    QString str = object->getIdentifier();
-    if (str != NULL)
+    if (identifier != NULL)
     {
-        if(str.size() > MAX_TITLE_LENGTH)
+        if(identifier.size() > MAX_TITLE_LENGTH)
         {
-            str = str.mid(0, 15) + "...";
+            identifier = identifier.mid(0, 15) + "...";
         }
-        setTitle(str);
+        setTitle(identifier);
     }
 }
 

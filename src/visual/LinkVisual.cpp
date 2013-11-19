@@ -48,11 +48,12 @@
 #include <QGraphicsScene>
 #include <qmath.h>
 
-LinkVisual::LinkVisual(Link *object) :
-    ObjectVisual(object, EDGE),
+LinkVisual::LinkVisual(QString annotation) :
+    ObjectVisual(LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
-    m_annotation(NULL)
+    m_source(QPointF(0, 0)),
+    m_destin(QPointF(0, 0))
 {
     setFlags(QGraphicsItem::ItemIsSelectable
              | QGraphicsItem::ItemSendsGeometryChanges);
@@ -62,11 +63,16 @@ LinkVisual::LinkVisual(Link *object) :
 
     m_sourceRadius = 5;
     m_destinRadius = 5;
+
+    setAnnotation(annotation);
 }
 
 LinkVisual::~LinkVisual()
 {
-    qDebug() << "Removing " << *this;
+    delete(m_sourceArrow);
+    delete(m_destinArrow);
+
+    qDebug() << "Removing link";
 }
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -94,6 +100,17 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
         }
     }
     return QGraphicsItem::itemChange(change, value);
+}
+
+void LinkVisual::refreshGeometryTo(QPointF to)
+{
+    refreshGeometry(m_source, to);
+}
+
+void LinkVisual::refreshGeometryFrom(QPointF from)
+{
+    refreshGeometry(from, m_destin);
+
 }
 
 void LinkVisual::refreshGeometry(QPointF from, QPointF to)
@@ -294,21 +311,11 @@ void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)
 
 void LinkVisual::setAnnotation(const QString &str)
 {
-    if (getObject()->getAnnotation() == str)
-    {
-        return;
-    }
-    getObject()->setAnnotation(str);
     deleteAnnotation();
     QGraphicsTextItem *new_ann = new QGraphicsTextItem(str, this);
     qreal dx = new_ann->boundingRect().center().x(),
             dy = new_ann->boundingRect().center().y()/2;
     new_ann->moveBy(-dx, dy);
     m_annotation = new_ann;
-}
-
-QString LinkVisual::getAnnotationText() const
-{
-    return m_object->getAnnotation();
 }
 

@@ -77,20 +77,23 @@ public:
     IScaObjectIdentifierVisual *addIdentifierVisual(IScaObjectIdentifier *object);
 
     Node *addNode(IScaObject *object);
-    LinkVisual *addLinkVisual(Node *source, Node *dest, Link *object);
+    LinkVisual *addLinkVisual(QString annotation);
 
-    void removeNodes(QList<Node *> nodes);
-    void removeLinks(QList<LinkVisual *> links);
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();
 
     ObjectVisual *getObjectById(quint64 id);
     ObjectVisual *addObjectVisual(IScaObject *object, int id);
 
+    quint64 getObjectId(ObjectVisual *object);
+
     GraphModel *getModel() const;
     void setModel(GraphModel *model);
 
-    void refreshLinkPos(Link *objLink);
+    void refreshLinkPosTo(quint64 linkId, QPointF pos);
+    void refreshLinkPosFrom(quint64 linkId, QPointF pos);
+
+    void removeObject(ObjectVisual *object);
 private:
     QHash<quint64, ObjectVisual *> m_objects;
 
@@ -101,6 +104,8 @@ signals:
 public slots:
     void updateObjects(QModelIndex topLeft, QModelIndex rightBottom);
     void updateObjectVisual(IScaObject *object, int id);
+    void removeObject(const QModelIndex & parent, int first, int last);
+
 }; // class GraphScene
 
 

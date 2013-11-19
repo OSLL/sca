@@ -52,7 +52,7 @@
 class IScaObjectIdentifierVisual : public Node
 {
 public:
-    explicit IScaObjectIdentifierVisual(IScaObjectIdentifier *object);
+    explicit IScaObjectIdentifierVisual(QString identifier);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

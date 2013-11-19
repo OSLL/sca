@@ -71,14 +71,16 @@ public:
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::DecorationRole);
 
-    bool removeItemByIndex(quint64 id);
-    bool removeItem(IScaObject *obj);
+    bool removeObject(quint64 id);
+    bool removeObject(IScaObject *obj);
 
     bool convert(quint64 id, IScaObject::IScaObjectType toType);
 
     quint64 connectObjects(quint64 id1, quint64 id2);
     quint64 connectObjects(IScaObject *source, IScaObject *dest);
     void addLinkTo(IScaObject *obj, Link *link);
+
+    void setAnnotation(quint64 id, QString annotation);
 private:
     static quint64 s_nextID;
     QHash<quint64, IScaObject *> m_objects;
