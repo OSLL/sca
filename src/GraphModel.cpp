@@ -43,6 +43,7 @@
 #include "ScaMIMEDataProcessor.h"
 #include "common/Link.h"
 #include <QDebug>
+#include "common/ScaObjectConverter.h"
 
 quint64 GraphModel::s_nextID = 0;
 
@@ -105,19 +106,24 @@ quint64 GraphModel::getId(IScaObject *object)
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
     qDebug() << "Data called!";
+    if (!m_objects.contains(index.row()))
+        return QVariant();
     switch (role)
     {
-    case Qt::DecorationRole:
+        case Qt::DisplayRole:
+        {
+            return QVariant(m_objects[index.row()]->getAnnotation());
+        }
+        case Qt::DecorationRole:
         {
             IScaObject *object = m_objects[index.row()];
             return QVariant::fromValue(object);
         }
-    default:
+        default:
         {
             return QVariant();
         }
     }
-
 }
 
 Qt::ItemFlags GraphModel::flags(const QModelIndex &index) const
@@ -128,10 +134,18 @@ Qt::ItemFlags GraphModel::flags(const QModelIndex &index) const
 bool GraphModel::removeRow(int row, const QModelIndex &parent)
 {
     beginRemoveRows(parent, row, row);
-    int removed = m_objects.remove(row);
+    IScaObject *object = m_objects.take(row);
+    foreach(Link *link, object->getLinks())
+    {
+        removeRow(getId(link), parent);
+    }
+    delete object;
+
     qDebug() << "Removed: ID = " << row;
     endRemoveRows();
 
+    QModelIndex index = createIndex(row, 0);
+    emit dataChanged(index, index);
     return true;
 }
 
@@ -168,6 +182,7 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
         {
             qDebug() << "Added element #" << s_nextID;
             IScaObject *object = NULL;
+            //Try casting to object or link, then add it
             object = qvariant_cast<IScaObject *>(value);
             if (object == NULL)
             {
@@ -199,4 +214,20 @@ bool GraphModel::removeItemByIndex(quint64 id)
 bool GraphModel::removeItem(IScaObject *obj)
 {
     return removeItemByIndex(m_objects.key(obj));
+}
+
+bool GraphModel::convert(quint64 id, IScaObject::IScaObjectType toType)
+{
+    ScaObjectConverter converter(this);
+
+    qDebug() << "Converting #" << id << " to type: " << toType;
+    quint64 new_id = converter.convert(m_objects[id], toType, true);
+
+    QModelIndex index = createIndex(new_id, 0);
+    emit dataChanged(index, index);
+}
+
+void GraphModel::addLinkTo(IScaObject *obj, Link *link)
+{
+    obj->addLink(link);
 }

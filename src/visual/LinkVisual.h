@@ -54,18 +54,15 @@
 class LinkVisual : public ObjectVisual
 {
 public:
-    LinkVisual(Node *source, Node *dest, Link *object);
+    LinkVisual(Link *object);
     ~LinkVisual();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
-    void refreshGeometry();
+    void refreshGeometry(QPointF from, QPointF to);
     QRectF boundingRect() const;
     QPainterPath shape() const;
     void setLine(const QLineF &line);
-
-    void disconnectFrom(Node *node);
-    void changeNode(Node *oldNode, Node *newNode);
 
     friend QDebug operator<< (QDebug d, LinkVisual &edge);
 
@@ -87,10 +84,10 @@ public:
     QPointF getSource();
     QPointF getDestin();
     QGraphicsTextItem *getAnnotation() const;
-private:
-    Node *m_sourceNode;
-    Node *m_destinNode;
+    void setSource(const QPointF &source);
+    void setDestin(const QPointF &destin);
 
+private:
     QLineF m_line;
     qreal m_sourceRadius;
     qreal m_destinRadius;

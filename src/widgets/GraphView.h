@@ -74,6 +74,7 @@ public:
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;
+    quint64 m_tempId;
     GraphViewContextMenu *m_menu;
     GraphModel *m_model;
 

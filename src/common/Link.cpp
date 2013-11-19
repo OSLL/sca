@@ -55,6 +55,29 @@ Link::Link(IScaObject *objectFrom, IScaObject *objectTo) :
 {
 }
 
+Link::~Link()
+{
+
+}
+
+void Link::changeConnection(IScaObject *oldObj, IScaObject *newObj)
+{
+    if (m_objectTo == oldObj)
+    {
+        m_objectTo->disconnectLink(this);
+        m_objectTo = newObj;
+        newObj->addLink(this);
+        return;
+    }
+    if (m_objectFrom == oldObj)
+    {
+        m_objectFrom->disconnectLink(this);
+        m_objectFrom = newObj;
+        newObj->addLink(this);
+        return;
+    }
+}
+
 IScaObject *Link::getObjectTo() const
 {
     return m_objectTo;
@@ -74,7 +97,6 @@ void Link::setAnnotation(const QString &annotation)
 {
     m_annotation = annotation;
 }
-
 
 IScaObject *Link::getObjectFrom() const
 {

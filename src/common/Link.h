@@ -56,6 +56,8 @@ public:
     Link(IScaObject *objectFrom, IScaObject *objectTo);
     ~Link();
 
+    void changeConnection(IScaObject *oldObj, IScaObject *newObj);
+
     IScaObject *getObjectFrom() const;
     void setObjectFrom(IScaObject *objectFrom);
 

@@ -50,6 +50,7 @@
 
 #include <QString>
 #include <QVariant>
+class Link;
 
 class IScaObject
 {
@@ -67,17 +68,27 @@ public:
         LINK
     };
     IScaObject(IScaObjectType type = OBJECT);
+    ~IScaObject();
 
     IScaObjectType getType() const;
+
+
 
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
 
     friend QDebug operator<<(QDebug d, IScaObject &node);
+
+    QList<Link *> getLinks() const;
+    void setLinks(const QList<Link *> &links);
+
+    void disconnectLink(Link *link);
+    void addLink(Link *link);
 private:
     QString m_annotation;
 
 protected:
+    QList<Link *> m_links;
     IScaObjectType m_type;
 
 }; // class IScaObject

@@ -72,18 +72,18 @@ public:
     void removeTitle();
 
     void addLink(LinkVisual *link);
-    QList<LinkVisual *> getLinks();
-    void disconnectLink(LinkVisual *link);
+    QList<Link *> getLinks();
+    void disconnectLink(Link *link);
 
     QColor getColor() const;
     void setColor(const QColor &color);
 
     friend QDebug operator<<(QDebug d, Node &node);
+    void disconnectLink(LinkVisual *link);
 protected:
     QRectF m_rect;
     QGraphicsSimpleTextItem *m_title;
     QColor m_standardColor;
     QColor m_selectionColor;
-    QList<LinkVisual *> m_links;
 }; // class Node
 #endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_

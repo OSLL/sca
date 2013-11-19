@@ -48,6 +48,7 @@
 #include <QRectF>
 #include <QGraphicsScene>
 #include <QTextDocument>
+#include "GraphScene.h"
 
 Node::Node(IScaObject *object, QColor standardColor) :
     ObjectVisual(object, NODE),
@@ -66,26 +67,22 @@ Node::Node(IScaObject *object, QColor standardColor) :
 Node::~Node()
 {
     qDebug() << "Removing " << *this;
-    foreach(LinkVisual *link, m_links)
-    {
-        delete link;
-    }
     removeTitle();
 }
 
 void Node::addLink(LinkVisual *link)
 {
-    m_links.append(link);
+    m_object->addLink(static_cast<Link *>(link->getObject()));
 }
 
-QList<LinkVisual *> Node::getLinks()
+QList<Link *> Node::getLinks()
 {
-    return m_links;
+    return m_object->getLinks();
 }
 
 void Node::disconnectLink(LinkVisual *link)
 {
-    m_links.takeAt(m_links.indexOf(link));
+    m_object->disconnectLink(static_cast<Link *>(link->getObject()));
 }
 
 QRectF Node::getRect() const
@@ -160,8 +157,10 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
     case ItemPositionChange:
-        foreach (LinkVisual *link, m_links)
-            link->refreshGeometry();
+        foreach (Link *link, m_object->getLinks())
+        {
+            scene()->refreshLinkPos(link);
+        }
         break;
     case ItemSelectedHasChanged:
         if (value == true) //It is selected now
@@ -184,6 +183,6 @@ QDebug operator<<(QDebug d, Node &node)
     d << "Node: "
       << "type: " << node.m_type
       << ", name: " << node.getTitle()->text()
-      << ", links: " << node.m_links.size();
+      << ", links: " << node.getObject()->getLinks().size();
     return d;
 }

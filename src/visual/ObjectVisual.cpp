@@ -1,4 +1,5 @@
 #include "ObjectVisual.h"
+#include "GraphScene.h"
 
 ObjectVisual::ObjectVisual(IScaObject *object, ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),
@@ -13,6 +14,10 @@ ObjectVisual::~ObjectVisual()
 {
 }
 
+GraphScene *ObjectVisual::scene() const
+{
+    return static_cast<GraphScene *>(QGraphicsItem::scene());
+}
 
 ObjectVisual::ObjectVisualType ObjectVisual::getType() const
 {

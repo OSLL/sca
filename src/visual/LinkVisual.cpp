@@ -48,36 +48,25 @@
 #include <QGraphicsScene>
 #include <qmath.h>
 
-LinkVisual::LinkVisual(Node *source, Node *dest, Link *object) :
+LinkVisual::LinkVisual(Link *object) :
     ObjectVisual(object, EDGE),
-    m_sourceNode(source),
-    m_destinNode(dest),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
     m_annotation(NULL)
 {
-    m_sourceNode->addLink(this);
-    m_destinNode->addLink(this);
-
-
     setFlags(QGraphicsItem::ItemIsSelectable
              | QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(0);
     setZValue(-1);
     setPen(DEFAULT_LINK_PEN);
 
-    m_sourceRadius = qSqrt(qPow(m_sourceNode->boundingRect().width(),2)
-                           + qPow(m_sourceNode->boundingRect().height(),2)) / 2 + 1;
-    m_destinRadius = qSqrt(qPow(m_destinNode->boundingRect().width(),2)
-                           + qPow(m_destinNode->boundingRect().height(),2)) / 2 + 1;
-    refreshGeometry();
+    m_sourceRadius = 5;
+    m_destinRadius = 5;
 }
 
 LinkVisual::~LinkVisual()
 {
     qDebug() << "Removing " << *this;
-    m_sourceNode->disconnectLink(this);
-    m_destinNode->disconnectLink(this);
 }
 
 void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -107,16 +96,13 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
     return QGraphicsItem::itemChange(change, value);
 }
 
-void LinkVisual::refreshGeometry()
+void LinkVisual::refreshGeometry(QPointF from, QPointF to)
 {
-    if (m_sourceNode == NULL || m_destinNode == NULL)
-        return;
-
     prepareGeometryChange();
 
-    m_source = m_sourceNode->pos();
+    m_source = from;
 
-    m_destin = m_destinNode->pos();
+    m_destin = to;
 
     QPointF pos = (m_source + m_destin) / 2;
 
@@ -193,46 +179,6 @@ void LinkVisual::setLine(const QLineF &line)
     m_line = line;
 }
 
-void LinkVisual::disconnectFrom(Node *node)
-{
-    qDebug() << "Disconnecting " << *this << " from " << *node;
-    if (m_sourceNode == node)
-    {
-        Link *link = static_cast<Link *>(getObject());
-        if (link == NULL)
-            return;
-        link->setObjectFrom(NULL);
-        m_sourceNode = NULL;
-    }
-    if (m_destinNode == node)
-    {
-        Link *link = static_cast<Link *>(getObject());
-        if (link == NULL)
-            return;
-        link->setObjectTo(NULL);
-        m_destinNode = NULL;
-    }
-    qDebug() << "Disconnected successfully.";
-}
-
-void LinkVisual::changeNode(Node *oldNode, Node *newNode)
-{
-    qDebug() << "Changing link from " << *oldNode << " to " << *newNode;
-    Link *obj = static_cast<Link *>(getObject());
-    if (m_sourceNode == oldNode)
-    {
-        m_sourceNode = newNode;
-        obj->setObjectFrom(newNode->getObject());
-    }
-    if (m_destinNode == oldNode)
-    {
-        m_destinNode = newNode;
-        obj->setObjectTo(newNode->getObject());
-    }
-
-    refreshGeometry();
-}
-
 QGraphicsPolygonItem *LinkVisual::getSourceArrow()
 {
     return m_sourceArrow;
@@ -245,10 +191,8 @@ QGraphicsPolygonItem *LinkVisual::getDestinArrow()
 
 QDebug operator<<(QDebug d, LinkVisual &edge)
 {
-    d << "LinkVisual: from "
-      << edge.m_sourceNode->getTitle()->text()
-      << " to "
-      << edge.m_destinNode->getTitle()->text();
+    d << "LinkVisual: "
+      << edge.m_source << " to " << edge.m_destin;
     return d;
 }
 
@@ -291,7 +235,7 @@ void LinkVisual::setDefaultArrows(bool left)
         m_destinArrow->setPen(DEFAULT_LINK_PEN);
     }
 
-    refreshGeometry();
+    refreshGeometry(m_source, m_destin);
 }
 
 void LinkVisual::removeSourceArrow()
@@ -329,6 +273,18 @@ QPointF LinkVisual::getDestin()
 QGraphicsTextItem *LinkVisual::getAnnotation() const
 {
     return m_annotation;
+}
+
+void LinkVisual::setSource(const QPointF &source)
+{
+    qDebug() << "Setting new source point: " << source;
+    m_source = source;
+}
+
+void LinkVisual::setDestin(const QPointF &destin)
+{
+    qDebug() << "Setting new destin point: " << destin;
+    m_destin = destin;
 }
 
 void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)

@@ -3,6 +3,7 @@
 
 #include <QAbstractGraphicsShapeItem>
 #include "common/IScaObject.h"
+class GraphScene;
 
 class ObjectVisual : public QAbstractGraphicsShapeItem
 {
@@ -23,6 +24,7 @@ public:
 
     ObjectVisualType getType() const;
     void setType(const ObjectVisualType &type);
+    GraphScene *scene() const;
 protected:
     ObjectVisualType m_type;
     IScaObject *m_object;

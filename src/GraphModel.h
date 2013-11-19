@@ -57,29 +57,32 @@ class GraphModel: public QAbstractListModel
 {
     Q_OBJECT
 public:
-  explicit GraphModel();
-  ~GraphModel();
+    explicit GraphModel();
+    ~GraphModel();
 
-  quint64 addObject(const QMimeData *mimeData);
-  quint64 addObject(IScaObject *object);
-  quint64 getId(IScaObject *object);
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-  Qt::ItemFlags flags(const QModelIndex &index) const;
-  bool removeRow(int row, const QModelIndex &parent);
-  bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
-  int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    quint64 addObject(const QMimeData *mimeData);
+    quint64 addObject(IScaObject *object);
+    quint64 getId(IScaObject *object);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool removeRow(int row, const QModelIndex &parent);
+    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-  bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::DecorationRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::DecorationRole);
 
-  bool removeItemByIndex(quint64 id);
-  bool removeItem(IScaObject *obj);
+    bool removeItemByIndex(quint64 id);
+    bool removeItem(IScaObject *obj);
 
-  quint64 connectObjects(quint64 id1, quint64 id2);
-  quint64 connectObjects(IScaObject *source, IScaObject *dest);
+    bool convert(quint64 id, IScaObject::IScaObjectType toType);
+
+    quint64 connectObjects(quint64 id1, quint64 id2);
+    quint64 connectObjects(IScaObject *source, IScaObject *dest);
+    void addLinkTo(IScaObject *obj, Link *link);
 private:
-  static quint64 s_nextID;
-  QHash<quint64, IScaObject *> m_objects;
+    static quint64 s_nextID;
+    QHash<quint64, IScaObject *> m_objects;
 }; // class GraphModel
-  
+
 
 #endif //_GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_

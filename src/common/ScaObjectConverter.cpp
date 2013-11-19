@@ -67,9 +67,9 @@ ScaObjectConverter::~ScaObjectConverter()
 {
 }
 
-bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType)
+bool ScaObjectConverter::canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType)
 {
-    switch(obj->getObjectType())
+    switch (fromType)
     {
     case IScaObject::IDENTIFIER:
         if (toType == IScaObject::TEXTBLOCK)
@@ -94,6 +94,49 @@ bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType
     }
 }
 
+bool ScaObjectConverter::canConvert(Node *obj, IScaObject::IScaObjectType toType)
+{
+    return canConvert(obj->getObjectType(), toType);
+}
+
+quint64 ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectType toType, bool autoDel)
+{
+    if (!canConvert(obj->getType(), toType))
+    {
+        return false;
+    }
+    switch (obj->getType())
+    {
+        case IScaObject::IDENTIFIER:
+        {
+            IScaObjectIdentifier *object = static_cast<IScaObjectIdentifier *>(obj);
+            switch (toType)
+            {
+                case IScaObject::TEXTBLOCK:
+                    return makeTextBlockFromIdentifier(object, autoDel);
+                default:
+                    //Conversion can't be done
+                    return false;
+            }
+        }
+        case IScaObject::TEXTBLOCK:
+        {
+            IScaObjectTextBlock *object = static_cast<IScaObjectTextBlock *>(obj);
+            switch (toType)
+            {
+                case IScaObject::IDENTIFIER:
+                    return makeIdentifierFromBlock(object, autoDel);
+                default:
+                    //Conversion can't be done
+                    return false;
+            }
+        }
+        default:
+            //Conversion can't be done
+            return false;
+    }
+}
+
 quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
 {
     IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
@@ -102,15 +145,20 @@ quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisu
     IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
                                                     objId->getIdentifier().length(),
                                                     objId->getIdentifier());
-    foreach(LinkVisual *link, obj->getLinks())
+    foreach(Link *link, obj->getLinks())
     {
         // TODO (LeoSko) should save connection somehow
-        delete link;
+        m_model->removeItem(link);
     }
     m_model->removeItemByIndex(objIndex);
     if (autoDel)
         delete obj;
     return m_model->addObject(objBlock);
+}
+
+quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel)
+{
+
 }
 
 quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
@@ -121,7 +169,7 @@ quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *o
     IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
                                                            objBlock->getText());
 
-    foreach(LinkVisual *link, obj->getLinks())
+    foreach(Link *link, obj->getLinks())
     {
         // TODO (LeoSko) should save connection somehow
         delete link;
@@ -131,3 +179,9 @@ quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *o
         delete obj;
     return m_model->addObject(objId);
 }
+
+quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel)
+{
+
+}
+

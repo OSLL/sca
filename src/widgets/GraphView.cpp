@@ -165,7 +165,11 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Editing annotation only if there is only one link under selection
     editAnnotation->setEnabled(links.size() == 1);
 
-    if(links.size() == 1)
+    if (!links.isEmpty() || !nodes.isEmpty())
+    {
+        m_tempId = m_model->getId(m_temp->getObject());
+    }
+    if (links.size() == 1)
     {
         setLeftArrow->setEnabled(true);
         setRightArrow->setEnabled(true);
@@ -225,12 +229,12 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == toText)
     {
-        scene()->addTextBlockFromNode(m_temp);
+        m_model->convert(m_tempId, IScaObject::TEXTBLOCK);
         return;
     }
     else if (action == toIdentifier)
     {
-        scene()->addIdentifierFromNode(m_temp);
+        m_model->convert(m_tempId, IScaObject::IDENTIFIER);
         return;
     }
     else if (action == del)

@@ -47,6 +47,11 @@ IScaObject::IScaObject(IScaObjectType type) :
 {
 }
 
+IScaObject::~IScaObject()
+{
+
+}
+
 IScaObject::IScaObjectType IScaObject::getType() const
 {
     return m_type;
@@ -60,6 +65,26 @@ QString IScaObject::getAnnotation() const
 void IScaObject::setAnnotation(const QString &annotation)
 {
     m_annotation = annotation;
+}
+
+QList<Link *> IScaObject::getLinks() const
+{
+    return m_links;
+}
+
+void IScaObject::disconnectLink(Link *link)
+{
+    m_links.takeAt(m_links.indexOf(link));
+}
+
+void IScaObject::addLink(Link *link)
+{
+    m_links.append(link);
+}
+
+void IScaObject::setLinks(const QList<Link *> &links)
+{
+    m_links = links;
 }
 
 QDebug operator<<(QDebug d, IScaObject &object)

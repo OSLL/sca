@@ -119,79 +119,6 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(IScaObjectIdentifier
     return node;
 }
 
-quint64 GraphScene::addTextBlockFromNode(Node *node)
-{
-    ScaObjectConverter conv(m_model);
-    switch(node->getObjectType())
-    {
-    case IScaObject::IDENTIFIER:
-        {
-            qDebug() << "Converting id to text";
-            m_posToAdd = node->pos();
-            return conv.makeTextBlockFromIdentifier(
-                        static_cast<IScaObjectIdentifierVisual *>(node), true);;
-        }
-    case IScaObject::BINARYBLOCK:
-        {
-            qDebug() << "Converting binary to text";
-            //TODO (LeoSko) Waiting for dividing block into 2 classes
-            return -1;
-        }
-    default:
-        break;
-    }
-    qDebug() << "No conversion";
-    return -1;
-}
-
-quint64 GraphScene::addIdentifierFromNode(Node *node)
-{
-    ScaObjectConverter conv(m_model);
-    switch(node->getObjectType())
-    {
-    case IScaObject::TEXTBLOCK:
-        {
-            qDebug() << "Converting text to id";
-            m_posToAdd = node->pos();
-            return conv.makeIdentifierFromBlock(
-                                static_cast<IScaObjectTextBlockVisual *>(node), true);
-        }
-    case IScaObject::BINARYBLOCK:
-        {
-            qDebug() << "Converting binary to id";
-            // TODO (LeoSko) Waiting for dividing block into 2 classes
-            return -1;
-        }
-    default:
-        break;
-    }
-    qDebug() << "No conversion";
-    return -1;
-}
-
-quint64 GraphScene::addBinaryBlockFromNode(Node *node)
-{
-    ScaObjectConverter conv(m_model);
-    switch(node->getObject()->getType())
-    {
-    case IScaObject::IDENTIFIER:
-        {
-            qDebug() << "Converting id to binary";
-            return -1;
-        }
-    case IScaObject::TEXTBLOCK:
-        {
-            qDebug() << "Converting text to binary";
-            // TODO (LeoSko) Waiting for dividing block into 2 classes
-            return -1;
-        }
-    default:
-        break;
-    }
-    qDebug() << "No conversion";
-    return -1;
-}
-
 IScaObjectDirectoryVisual *GraphScene::addDirVisual(IScaObjectDirectory *object)
 {
     IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(object);
@@ -218,7 +145,10 @@ Node *GraphScene::addNode(IScaObject *object)
 
 LinkVisual *GraphScene::addLinkVisual(Node *source, Node *dest, Link *object)
 {
-    LinkVisual *link = new LinkVisual(source, dest, object);
+    LinkVisual *link = new LinkVisual(object);
+    source->addLink(link);
+    dest->addLink(link);
+    link->refreshGeometry(source->pos(), dest->pos());
 
     addItem(link);
     return link;
@@ -272,6 +202,19 @@ QList<LinkVisual *> GraphScene::selectedLinks()
         }
     }
     return links;
+}
+
+void GraphScene::refreshLinkPos(Link *objLink)
+{
+    quint64 linkId = m_model->getId(objLink);
+    LinkVisual *link = static_cast<LinkVisual *>(m_objects[linkId]);
+    IScaObject *src = objLink->getObjectFrom();
+    IScaObject *dest = objLink->getObjectTo();
+    quint64 srcId = m_model->getId(src);
+    quint64 destId = m_model->getId(dest);
+    ObjectVisual *srcVisual = m_objects[srcId];
+    ObjectVisual *destVisual = m_objects[destId];
+    link->refreshGeometry(srcVisual->pos(), destVisual->pos());
 }
 
 ObjectVisual *GraphScene::getObjectById(quint64 id)
@@ -370,19 +313,42 @@ void GraphScene::setModel(GraphModel *model)
     m_model = model;
 }
 
+void GraphScene::updateObjectVisual(IScaObject *object, int id)
+{
+    if (object == NULL || !m_objects.contains(id))
+        return;
+
+    // TODO (LeoSko) We are just re-creating object, maybe it's better to edit old one?
+    delete m_objects.take(id);
+    addObjectVisual(object, id);
+}
+
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
-    qDebug() << "Update object ID:" << leftTop.row();
+    qDebug() << "Update object #" << leftTop.row();
 
-    quint64 id = leftTop.row();
+    quint64 id = leftTop.row();//Get object that changed
+    QVariant var = m_model->data(leftTop, Qt::DecorationRole);
+    IScaObject *object = NULL;
+    object = qvariant_cast<IScaObject *>(var);
+    //Maybe it is on scene?
     ObjectVisual *visObject = getObjectById(id);
 
-    //Construction for working with QVarint(pointer)
-    IScaObject *object = qvariant_cast<IScaObject *>(m_model->data(leftTop, Qt::DecorationRole));
+    if (object == NULL) //Object no longer exists, but it was there
+    {
+        removeItem(visObject);
+        delete visObject;
+        return;
+    }
 
     if(visObject == NULL)
     {
         addObjectVisual(object, id);
     }
+    else
+    {
+        updateObjectVisual(object, id);
+    }
+
 }
 

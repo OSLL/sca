@@ -47,6 +47,8 @@
 class IScaObjectTextBlockVisual;
 class IScaObjectIdentifierVisual;
 class IScaObjectFileVisual;
+class IScaObjectIdentifier;
+class IScaObjectTextBlock;
 class ObjectVisual;
 class Node;
 class GraphModel;
@@ -63,9 +65,14 @@ public:
 
     ~ScaObjectConverter();
 
+    bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
     bool canConvert(Node *obj, IScaObject::IScaObjectType toType);
+
+    quint64 convert(IScaObject *obj, IScaObject::IScaObjectType toType, bool autoDel = false);
     quint64 makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
+    quint64 makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
     quint64 makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
+    quint64 makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
 private:
     GraphModel *m_model;
 }; // class ScaObjectConverter
