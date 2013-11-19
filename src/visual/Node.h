@@ -76,15 +76,15 @@ public:
 
     friend QDebug operator<<(QDebug d, Node &node);
     void disconnectLink(LinkVisual *link);
+
     void addLinkFrom(quint64 linkId);
-
-    QList<quint64> fromLinks() const;
-    void setFromLinks(const QList<quint64> &fromLinks);
-
-    QList<quint64> linksTo() const;
+    QList<quint64> getLinksTo() const;
     void setLinksTo(const QList<quint64> &linksTo);
 
     void addLinkTo(quint64 linkId);
+    QList<quint64> getLinksFrom() const;
+    void setLinksFrom(const QList<quint64> &linksFrom);
+
 protected:
     QRectF m_rect;
     QGraphicsSimpleTextItem *m_title;

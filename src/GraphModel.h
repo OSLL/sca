@@ -62,6 +62,7 @@ public:
 
     quint64 addObject(const QMimeData *mimeData);
     quint64 addObject(IScaObject *object);
+    quint64 replaceObject(IScaObject *object, quint64 id);
     quint64 getId(IScaObject *object);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;

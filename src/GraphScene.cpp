@@ -75,9 +75,6 @@ GraphScene::~GraphScene()
             links.push_back(link);
         }
     }
-    //TODO repair those too
-    //    removeLinks(links);
-    //    removeNodes(nodes);
 }
 
 IScaObjectFileVisual *GraphScene::addFileVisual(IScaObjectFile *object)
@@ -167,6 +164,7 @@ void GraphScene::removeObject(ObjectVisual *object)
     removeItem(object);
     delete(object);
 }
+
 
 QList<Node *> GraphScene::selectedNodes()
 {
@@ -329,12 +327,27 @@ void GraphScene::setModel(GraphModel *model)
 
 void GraphScene::updateObjectVisual(IScaObject *object, int id)
 {
+    qDebug() << "Updating object #" << id << "Type " << object->getType();
+
     if (object == NULL || !m_objects.contains(id))
         return;
 
-    // TODO (LeoSko) We are just re-creating object, maybe it's better to edit old one?
-    delete m_objects.take(id);
-    addObjectVisual(object, id);
+    ObjectVisual *objectVis = m_objects.take(id);
+
+    if(objectVis->getType() == ObjectVisual::NODE)
+    {
+        Node *prevObject = static_cast<Node *>(objectVis);
+        QPointF pos = prevObject->pos();
+
+        addObjectVisual(object, id);
+        Node *node = static_cast<Node *>(m_objects[id]);
+        node->setPos(pos);
+        node->setLinksFrom(prevObject->getLinksFrom());
+        node->setLinksTo(prevObject->getLinksTo());
+    }
+
+    removeItem(objectVis);
+    delete(objectVis);
 }
 
 void GraphScene::removeObject(const QModelIndex &parent, int first, int last)

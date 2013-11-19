@@ -49,7 +49,6 @@
  */
 #include <QGraphicsScene>
 #include <QModelIndex>
-#include "common/IScaObject.h"
 #include "visual/IScaObjectFileVisual.h"
 #include "visual/IScaObjectDirectoryVisual.h"
 #include "visual/IScaObjectTextBlockVisual.h"
@@ -59,6 +58,8 @@
 #include "visual/IScaObjectIdentifierVisual.h"
 #include "visual/Node.h"
 #include "visual/LinkVisual.h"
+#include "visual/ObjectVisual.h"
+
 class GraphModel;
 
 class GraphScene : public QGraphicsScene

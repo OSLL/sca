@@ -100,6 +100,18 @@ quint64 GraphModel::addObject(IScaObject *object)
     return s_nextID++;
 }
 
+quint64 GraphModel::replaceObject(IScaObject *object, quint64 id)
+{
+    delete(m_objects[id]);
+    m_objects[id] = NULL;
+
+    qDebug() << "AddObject()";
+    QModelIndex changedIndex = createIndex(id, 0);
+    setData(changedIndex, QVariant::fromValue(object), Qt::DecorationRole);
+
+    return id;
+}
+
 quint64 GraphModel::getId(IScaObject *object)
 {
     return m_objects.key(object);
@@ -215,18 +227,26 @@ bool GraphModel::removeObject(quint64 id)
 
 bool GraphModel::removeObject(IScaObject *obj)
 {
-    return removeObject(m_objects.key(obj));
+    quint64 key = m_objects.key(obj);
+    if(m_objects.contains(key))
+        return removeObject(key);
+    else
+        return false;
 }
 
 bool GraphModel::convert(quint64 id, IScaObject::IScaObjectType toType)
 {
-    ScaObjectConverter converter(this);
+    ScaObjectConverter *converter = new ScaObjectConverter();
 
     qDebug() << "Converting #" << id << " to type: " << toType;
-    quint64 new_id = converter.convert(m_objects[id], toType, true);
+    IScaObject *object = converter->convert(m_objects[id], toType);
+    if(object == NULL)
+    {
+        return false;
+    }
 
-    QModelIndex index = createIndex(new_id, 0);
-    emit dataChanged(index, index);
+    replaceObject(object, id);
+    return true;
 }
 
 void GraphModel::addLinkTo(IScaObject *obj, Link *link)

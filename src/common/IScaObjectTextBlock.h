@@ -72,7 +72,6 @@ public:
 
     QString getText() const;
     void setText(const QString &value);
-
 private:
     quint64 m_length;
     quint64 m_offset;

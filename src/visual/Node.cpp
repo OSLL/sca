@@ -81,17 +81,18 @@ void Node::addLinkTo(quint64 linkId)
     m_linksTo.append(linkId);
     scene()->refreshLinkPosTo(linkId, pos());
 }
-
-QList<quint64> Node::fromLinks() const
+QList<quint64> Node::getLinksFrom() const
 {
     return m_linksFrom;
 }
 
-void Node::setFromLinks(const QList<quint64> &fromLinks)
+void Node::setLinksFrom(const QList<quint64> &linksFrom)
 {
-    m_linksFrom = fromLinks;
+    m_linksFrom = linksFrom;
 }
-QList<quint64> Node::linksTo() const
+
+
+QList<quint64> Node::getLinksTo() const
 {
     return m_linksTo;
 }

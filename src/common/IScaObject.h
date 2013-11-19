@@ -72,8 +72,6 @@ public:
 
     IScaObjectType getType() const;
 
-
-
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
 

@@ -57,8 +57,7 @@
 #include "common/IScaObjectIdentifier.h"
 #include "GraphModel.h"
 
-ScaObjectConverter::ScaObjectConverter(GraphModel *model) :
-    m_model(model)
+ScaObjectConverter::ScaObjectConverter()
 {
 
 }
@@ -76,30 +75,24 @@ bool ScaObjectConverter::canConvert(IScaObject::IScaObjectType fromType, IScaObj
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
     case IScaObject::TEXTBLOCK:
         if (toType == IScaObject::IDENTIFIER)
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
     default:
         return false;
     }
+
+    return false;
 }
 
 
-quint64 ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectType toType, bool autoDel)
+IScaObject *ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectType toType)
 {
     if (!canConvert(obj->getType(), toType))
     {
-        return false;
+        return NULL;
     }
     switch (obj->getType())
     {
@@ -109,10 +102,10 @@ quint64 ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectType 
             switch (toType)
             {
                 case IScaObject::TEXTBLOCK:
-                    return makeTextBlockFromIdentifier(object, autoDel);
+                    return makeTextBlockFromIdentifier(object);
                 default:
                     //Conversion can't be done
-                    return false;
+                    return NULL;
             }
         }
         case IScaObject::TEXTBLOCK:
@@ -121,21 +114,20 @@ quint64 ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectType 
             switch (toType)
             {
                 case IScaObject::IDENTIFIER:
-                    return makeIdentifierFromBlock(object, autoDel);
+                    return makeIdentifierFromBlock(object);
                 default:
                     //Conversion can't be done
-                    return false;
+                    return NULL;
             }
         }
         default:
             //Conversion can't be done
-            return false;
+            return NULL;
     }
 }
 
-// TODO (Zo0ER) repair this functions
-quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
-{
+//quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
+//{
 //    IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
 //    quint64 objIndex = m_model->getId(objId);
 //    IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
@@ -151,15 +143,20 @@ quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisu
 //    if (autoDel)
 //        delete obj;
 //    return m_model->addObject(objBlock);
+//}
+
+IScaObjectTextBlock *ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel)
+{
+    IScaObjectFile *file = new IScaObjectFile(obj->getFile());
+    unsigned int offset = obj->getOffset();
+    QString text = obj->getIdentifier();
+
+    IScaObjectTextBlock *textBlock = new IScaObjectTextBlock(file, offset, text.size(), text);
+    return textBlock;
 }
 
-quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel)
-{
-
-}
-
-quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
-{
+//quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
+//{
 //    IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
 //    quint64 objIndex = m_model->getId(objBlock);
 //    IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
@@ -175,10 +172,15 @@ quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *o
 //    if (autoDel)
 //        delete obj;
 //    return m_model->addObject(objId);
-}
+//}
 
-quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel)
+IScaObjectIdentifier *ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel)
 {
+    IScaObjectFile *file = new IScaObjectFile(obj->getFile());
+    unsigned int offset = obj->getOffset();
+    QString text = obj->getText();
 
+    IScaObjectIdentifier *identifier = new IScaObjectIdentifier(file, offset, text);
+    return identifier;
 }
 

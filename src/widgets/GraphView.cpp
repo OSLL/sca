@@ -77,10 +77,21 @@ GraphView::GraphView(GraphScene *scene, QWidget *parent) :
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
 {
-    //Turn off interaction for drag-n-drop processing, otherwise it will fail
-    setInteractive(false);
-    //Create temporary node to see where it will be placed
-    //Here you can also process different types of drops
+    event->acceptProposedAction();
+}
+
+void GraphView::dragMoveEvent(QDragMoveEvent *event)
+{
+
+}
+
+void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
+{
+}
+
+
+void GraphView::dropEvent(QDropEvent *event)
+{
     m_temp = NULL;
 
     const QMimeData *mimeData = event->mimeData();
@@ -99,45 +110,14 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
         m_temp->setPos(pos);
         scene()->clearSelection();
         m_temp->setSelected(true);
-    }
-}
-
-void GraphView::dragMoveEvent(QDragMoveEvent *event)
-{
-    if (m_temp != NULL)
-    {
         m_temp->setPos(mapToScene(event->pos()));
     }
-}
 
-void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
-{
-    GraphView::dragLeaveEvent(event, false);
-}
-
-// TODO(Nikita): transfer all shit from dragEnter to dropEvent
-
-void GraphView::dragLeaveEvent(QDragLeaveEvent *event, bool dropped)
-{
-    Q_UNUSED(event)
-    setInteractive(true);
-    if (!dropped)
-    {
-        if (m_temp != NULL)
-            GraphView::scene()->removeItem(m_temp);
-        return;
-    }
-//    if (m_model->data(id))
-//    {
-//        QPoint pos = mapFromScene(m_temp->pos());
-//        ShowContextMenu(pos);
-//    }
-}
-
-void GraphView::dropEvent(QDropEvent *event)
-{
-    Q_UNUSED(event)
-    dragLeaveEvent(0, true);
+    //    if (m_model->data(id))
+    //    {
+    //        QPoint pos = mapFromScene(m_temp->pos());
+    //        ShowContextMenu(pos);
+    //    }
 }
 
 
@@ -202,14 +182,13 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     del->setEnabled(!items.isEmpty());
 
     //Reset conversions
-    toText->setEnabled(false);
-    toIdentifier->setEnabled(false);
+    toText->setEnabled(true);
+    toIdentifier->setEnabled(true);
     //Converting available for proper types
     if (nodes.size() == 1)
     {
         Node *node = nodes.at(0);
-        ScaObjectConverter conv(m_model);
-//        toText->setEnabled(conv.canConvert(node, IScaObject::TEXTBLOCK));
+//        toText->setEnabled();
 //        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
     }
 
@@ -243,7 +222,6 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == del)
     {
-        // TODO (LeoSko) removing should be in GraphModel
         foreach(LinkVisual *link, scene()->selectedLinks())
         {
             m_model->removeObject(scene()->getObjectId(link));
@@ -270,7 +248,6 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == editAnnotation)
     {
-        //TODO(zo0mer) repair thos annotation
         quint64 id = scene()->getObjectId(links.at(0));
         editLinkAnnotation(id);
     }
@@ -295,9 +272,15 @@ void GraphView::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_Delete:
     {
-        //TODO (zo0mer): repair those too
-//        scene()->removeLinks(scene()->selectedLinks());
-//        scene()->removeNodes(scene()->selectedNodes());
+        foreach(LinkVisual *link, scene()->selectedLinks())
+        {
+            m_model->removeObject(scene()->getObjectId(link));
+        }
+        foreach(Node *node, scene()->selectedNodes())
+        {
+            m_model->removeObject(scene()->getObjectId(node));
+        }
+
     }
         break;
     }
@@ -355,7 +338,7 @@ void GraphView::setModel(GraphModel *model)
         connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
         connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-                           scene(), SLOT(removeObject(QModelIndex,int,int)));
+                scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
     scene()->setModel(m_model);
 }
@@ -376,7 +359,7 @@ void GraphView::setScene(GraphScene *graphScene)
         connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                 graphScene, SLOT(updateObjects(QModelIndex, QModelIndex)));
         connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-                   scene(), SLOT(removeObject(QModelIndex,int,int)));
+                scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
     graphScene->setModel(m_model);
 }

@@ -61,19 +61,20 @@ class GraphModel;
 class ScaObjectConverter
 {
 public:
-    explicit ScaObjectConverter(GraphModel *model);
+    explicit ScaObjectConverter();
 
     ~ScaObjectConverter();
 
     bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
 
-    quint64 convert(IScaObject *obj, IScaObject::IScaObjectType toType, bool autoDel = false);
-    quint64 makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
-    quint64 makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
-    quint64 makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
-    quint64 makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
-private:
-    GraphModel *m_model;
+    IScaObject *convert(IScaObject *obj, IScaObject::IScaObjectType toType);
+
+    //    quint64 makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
+    IScaObjectTextBlock *makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
+
+    // TODO (Zo0ER) we need this functions or not? Anyway fix it later
+//    quint64 makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
+    IScaObjectIdentifier *makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
 }; // class ScaObjectConverter
   
 
