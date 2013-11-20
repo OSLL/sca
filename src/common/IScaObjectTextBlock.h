@@ -73,8 +73,8 @@ public:
     QString getText() const;
     void setText(const QString &value);
 private:
-    quint64 m_length;
-    quint64 m_offset;
+    quint32 m_length;
+    quint32 m_offset;
     QString m_text;
     IScaObjectFile *m_file;
 

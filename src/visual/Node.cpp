@@ -70,34 +70,34 @@ Node::~Node()
     removeTitle();
 }
 
-void Node::addLinkFrom(quint64 linkId)
+void Node::addLinkFrom(quint32 linkId)
 {
     m_linksFrom.append(linkId);
     scene()->refreshLinkPosFrom(linkId, pos());
 }
 
-void Node::addLinkTo(quint64 linkId)
+void Node::addLinkTo(quint32 linkId)
 {
     m_linksTo.append(linkId);
     scene()->refreshLinkPosTo(linkId, pos());
 }
-QList<quint64> Node::getLinksFrom() const
+QList<quint32> Node::getLinksFrom() const
 {
     return m_linksFrom;
 }
 
-void Node::setLinksFrom(const QList<quint64> &linksFrom)
+void Node::setLinksFrom(const QList<quint32> &linksFrom)
 {
     m_linksFrom = linksFrom;
 }
 
 
-QList<quint64> Node::getLinksTo() const
+QList<quint32> Node::getLinksTo() const
 {
     return m_linksTo;
 }
 
-void Node::setLinksTo(const QList<quint64> &linksTo)
+void Node::setLinksTo(const QList<quint32> &linksTo)
 {
     m_linksTo = linksTo;
 }
@@ -177,11 +177,11 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
     case ItemPositionChange:
-        foreach (quint64 linkId, m_linksFrom)
+        foreach (quint32 linkId, m_linksFrom)
         {
             scene()->refreshLinkPosFrom(linkId, pos());
         }
-        foreach(quint64 linkId, m_linksTo)
+        foreach(quint32 linkId, m_linksTo)
         {
             scene()->refreshLinkPosTo(linkId, pos());
         }

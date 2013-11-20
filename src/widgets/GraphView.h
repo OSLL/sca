@@ -66,7 +66,7 @@ public:
 
     void exportToImage(const QString path);
 
-    void editLinkAnnotation(quint64 id);
+    void editLinkAnnotation(quint32 id);
     GraphModel *model() const;
     void setModel(GraphModel *model);
     void setScene(GraphScene *graphScene);
@@ -74,7 +74,7 @@ public:
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;
-    quint64 m_tempId;
+    quint32 m_tempId;
     GraphViewContextMenu *m_menu;
     GraphModel *m_model;
 

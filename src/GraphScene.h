@@ -83,20 +83,20 @@ public:
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();
 
-    ObjectVisual *getObjectById(quint64 id);
+    ObjectVisual *getObjectById(quint32 id);
     ObjectVisual *addObjectVisual(IScaObject *object, int id);
 
-    quint64 getObjectId(ObjectVisual *object);
+    quint32 getObjectId(ObjectVisual *object);
 
     GraphModel *getModel() const;
     void setModel(GraphModel *model);
 
-    void refreshLinkPosTo(quint64 linkId, QPointF pos);
-    void refreshLinkPosFrom(quint64 linkId, QPointF pos);
+    void refreshLinkPosTo(quint32 linkId, QPointF pos);
+    void refreshLinkPosFrom(quint32 linkId, QPointF pos);
 
     void removeObject(ObjectVisual *object);
 private:
-    QHash<quint64, ObjectVisual *> m_objects;
+    QHash<quint32, ObjectVisual *> m_objects;
 
     QPointF m_posToAdd;
     GraphModel *m_model;

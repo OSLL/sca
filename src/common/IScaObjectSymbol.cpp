@@ -82,12 +82,12 @@ void IScaObjectSymbol::setSymbol(char symbol)
 {
     m_symbol = symbol;
 }
-quint64 IScaObjectSymbol::getOffset() const
+quint32 IScaObjectSymbol::getOffset() const
 {
     return m_offset;
 }
 
-void IScaObjectSymbol::setOffset(const quint64 &offset)
+void IScaObjectSymbol::setOffset(const quint32 &offset)
 {
     m_offset = offset;
 }

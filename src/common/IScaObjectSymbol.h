@@ -65,12 +65,12 @@ public:
     char getSymbol() const;
     void setSymbol(char symbol);
 
-    quint64 getOffset() const;
-    void setOffset(const quint64 &offset);
+    quint32 getOffset() const;
+    void setOffset(const quint32 &offset);
 
 private:
     char m_symbol;
-    quint64 m_offset;
+    quint32 m_offset;
     IScaObjectFile *m_file;
 
 }; // class IScaObjectSymbol

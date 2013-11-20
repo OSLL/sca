@@ -205,8 +205,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     {
         Node *src = nodes.at(0);
         Node *dest = nodes.at(1);
-        quint64 srcId = scene()->getObjectId(src);
-        quint64 destId = scene()->getObjectId(dest);
+        quint32 srcId = scene()->getObjectId(src);
+        quint32 destId = scene()->getObjectId(dest);
         m_model->connectObjects(srcId, destId);
         return;
     }
@@ -248,7 +248,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == editAnnotation)
     {
-        quint64 id = scene()->getObjectId(links.at(0));
+        quint32 id = scene()->getObjectId(links.at(0));
         editLinkAnnotation(id);
     }
 }
@@ -264,8 +264,8 @@ void GraphView::keyPressEvent(QKeyEvent *event)
         {
             Node *src = items.at(0);
             Node *dest = items.at(1);
-            quint64 srcId = scene()->getObjectId(src);
-            quint64 destId = scene()->getObjectId(dest);
+            quint32 srcId = scene()->getObjectId(src);
+            quint32 destId = scene()->getObjectId(dest);
             m_model->connectObjects(srcId, destId);
         }
     }
@@ -364,7 +364,7 @@ void GraphView::setScene(GraphScene *graphScene)
     graphScene->setModel(m_model);
 }
 
-void GraphView::editLinkAnnotation(quint64 id)
+void GraphView::editLinkAnnotation(quint32 id)
 {
     if (id == NULL)
         return;

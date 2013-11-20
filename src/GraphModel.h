@@ -60,31 +60,31 @@ public:
     explicit GraphModel();
     ~GraphModel();
 
-    quint64 addObject(const QMimeData *mimeData);
-    quint64 addObject(IScaObject *object);
-    quint64 replaceObject(IScaObject *object, quint64 id);
-    quint64 getId(IScaObject *object);
+    quint32 addObject(const QMimeData *mimeData);
+    quint32 addObject(IScaObject *object);
+    quint32 replaceObject(IScaObject *object, quint32 id);
+    quint32 getId(IScaObject *object);
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
-    bool removeRow(int row, const QModelIndex &parent);
+    bool removeRow(quint32 id, const QModelIndex &parent);
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::DecorationRole);
 
-    bool removeObject(quint64 id);
+    bool removeObject(quint32 id);
     bool removeObject(IScaObject *obj);
 
-    bool convert(quint64 id, IScaObject::IScaObjectType toType);
+    bool convert(quint32 id, IScaObject::IScaObjectType toType);
 
-    quint64 connectObjects(quint64 id1, quint64 id2);
-    quint64 connectObjects(IScaObject *source, IScaObject *dest);
+    quint32 connectObjects(quint32 id1, quint32 id2);
+    quint32 connectObjects(IScaObject *source, IScaObject *dest);
     void addLinkTo(IScaObject *obj, Link *link);
 
-    void setAnnotation(quint64 id, QString annotation);
+    void setAnnotation(quint32 id, QString annotation);
 private:
-    static quint64 s_nextID;
-    QHash<quint64, IScaObject *> m_objects;
+    static quint32 s_nextID;
+    QHash<quint32, IScaObject *> m_objects;
 }; // class GraphModel
 
 

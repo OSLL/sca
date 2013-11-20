@@ -56,7 +56,7 @@ class IScaObjectLine: public IScaObject
 {
 public:
     IScaObjectLine();
-    IScaObjectLine(IScaObjectFile *file, quint64 lineNumber = 0, QString line = "");
+    IScaObjectLine(IScaObjectFile *file, quint32 lineNumber = 0, QString line = "");
     ~IScaObjectLine();
 
     QString getLine() const;
@@ -65,12 +65,12 @@ public:
     QFileInfo getFile() const;
     void setFile(const QFileInfo &file);
 
-    quint64 lineNumber() const;
-    void setLineNumber(const quint64 &lineNumber);
+    quint32 lineNumber() const;
+    void setLineNumber(const quint32 &lineNumber);
 
 private:
     QString m_line;
-    quint64 m_lineNumber;
+    quint32 m_lineNumber;
     IScaObjectFile *m_file;
 }; // class IScaObjectLine
 

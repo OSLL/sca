@@ -89,8 +89,8 @@ public:
     void setSource(const QPointF &source);
     void setDestin(const QPointF &destin);
 
-    quint64 getSourceId();
-    quint64 getDestinId();
+    quint32 getSourceId();
+    quint32 getDestinId();
 
 private:
     QLineF m_line;

@@ -72,8 +72,8 @@ public:
     void setData(const QByteArray &block);
 
 private:
-    quint64 m_length;
-    quint64 m_offset;
+    quint32 m_length;
+    quint32 m_offset;
     QByteArray m_data;
     IScaObjectFile *m_file;
 

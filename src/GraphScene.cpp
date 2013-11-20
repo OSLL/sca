@@ -158,7 +158,7 @@ LinkVisual *GraphScene::addLinkVisual(QString annotation)
 
 void GraphScene::removeObject(ObjectVisual *object)
 {
-    quint64 id = getObjectId(object);
+    quint32 id = getObjectId(object);
     qDebug() << "Removing object #" << id;
     m_objects.remove(id);
     removeItem(object);
@@ -196,7 +196,7 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
-void GraphScene::refreshLinkPosTo(quint64 linkId, QPointF pos)
+void GraphScene::refreshLinkPosTo(quint32 linkId, QPointF pos)
 {
     if (!m_objects.contains(linkId))
     {
@@ -206,7 +206,7 @@ void GraphScene::refreshLinkPosTo(quint64 linkId, QPointF pos)
     link->refreshGeometryTo(pos);
 }
 
-void GraphScene::refreshLinkPosFrom(quint64 linkId, QPointF pos)
+void GraphScene::refreshLinkPosFrom(quint32 linkId, QPointF pos)
 {
 
     if (!m_objects.contains(linkId))
@@ -218,7 +218,7 @@ void GraphScene::refreshLinkPosFrom(quint64 linkId, QPointF pos)
 }
 
 
-ObjectVisual *GraphScene::getObjectById(quint64 id)
+ObjectVisual *GraphScene::getObjectById(quint32 id)
 {
     if(!m_objects.contains(id))
     {
@@ -293,8 +293,8 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     case IScaObject::LINK:
     {
         Link *link = static_cast<Link *>(object);
-        quint64 sourceId = m_model->getId(link->getObjectFrom());
-        quint64 destinId = m_model->getId(link->getObjectTo());
+        quint32 sourceId = m_model->getId(link->getObjectFrom());
+        quint32 destinId = m_model->getId(link->getObjectTo());
         QString annotation = link->getAnnotation();
         Node *sourceNode = static_cast<Node *>(m_objects[sourceId]);
         Node *destinNode = static_cast<Node *>(m_objects[destinId]);
@@ -310,7 +310,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     }
 }
 
-quint64 GraphScene::getObjectId(ObjectVisual *object)
+quint32 GraphScene::getObjectId(ObjectVisual *object)
 {
     return m_objects.key(object);
 }
@@ -363,9 +363,9 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
-    qDebug() << "Update object #" << leftTop.row();
+    qDebug() << "Update object #" << leftTop.internalId();
 
-    quint64 id = leftTop.row();//Get object that changed
+    quint32 id = leftTop.internalId();//Get object that changed
     QVariant var = m_model->data(leftTop, Qt::DecorationRole);
     IScaObject *object = NULL;
     object = qvariant_cast<IScaObject *>(var);

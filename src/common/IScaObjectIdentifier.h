@@ -65,11 +65,11 @@ public:
   QString getIdentifier() const;
   void setIdentifier(const QString &identifier);
 
-  quint64 getOffset() const;
-  void setOffset(const quint64 &offset);
+  quint32 getOffset() const;
+  void setOffset(const quint32 &offset);
 
 private:
-  quint64 m_offset;
+  quint32 m_offset;
   QString m_identifier;
   IScaObjectFile *m_file;
 }; // class IScaObjectIdintifier
