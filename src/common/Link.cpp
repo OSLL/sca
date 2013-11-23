@@ -57,7 +57,6 @@ Link::Link(IScaObject *objectFrom, IScaObject *objectTo) :
 
 Link::~Link()
 {
-
 }
 
 void Link::changeConnection(IScaObject *oldObj, IScaObject *newObj)

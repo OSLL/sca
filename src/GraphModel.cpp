@@ -62,7 +62,7 @@ quint32 GraphModel::connectObjects(quint32 id1, quint32 id2)
 {
     if (!m_objects.contains(id1) || !m_objects.contains(id2))
     {
-        return NULL;
+        return 0;
     }
     return connectObjects(m_objects[id1], m_objects[id2]);
 }
@@ -78,6 +78,32 @@ quint32 GraphModel::connectObjects(IScaObject *source, IScaObject *dest)
 
     return s_nextID++;
 }
+
+void GraphModel::disconnectObjects(quint32 id1, quint32 id2, Link *link)
+{
+    m_objects[id1]->disconnectLink(link);
+    m_objects[id2]->disconnectLink(link);
+
+    QModelIndex sourceIndex = createIndex(0, 0, id1);
+    QModelIndex destinIndex = createIndex(0, 0, id2);
+
+    emit dataChanged(sourceIndex, sourceIndex);
+    emit dataChanged(destinIndex, destinIndex);
+}
+
+void GraphModel::disconnectObjects(IScaObject *source, IScaObject *dest, Link *link)
+{
+    if(source == NULL || dest == NULL || link == NULL)
+    {
+        return;
+    }
+
+    quint32 sourceId = m_objects.key(source);
+    quint32 destinId = m_objects.key(dest);
+
+    return disconnectObjects(sourceId, destinId, link);
+}
+
 
 quint32 GraphModel::addObject(const QMimeData *mimeData)
 {
@@ -124,19 +150,19 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
         return QVariant();
     switch (role)
     {
-        case Qt::DisplayRole:
-        {
-            return QVariant(m_objects[index.internalId()]->getAnnotation());
-        }
-        case Qt::DecorationRole:
-        {
-            IScaObject *object = m_objects[index.internalId()];
-            return QVariant::fromValue(object);
-        }
-        default:
-        {
-            return QVariant();
-        }
+    case Qt::DisplayRole:
+    {
+        return QVariant(m_objects[index.internalId()]->getAnnotation());
+    }
+    case Qt::DecorationRole:
+    {
+        IScaObject *object = m_objects[index.internalId()];
+        return QVariant::fromValue(object);
+    }
+    default:
+    {
+        return QVariant();
+    }
     }
 }
 
@@ -149,6 +175,19 @@ bool GraphModel::removeRow(quint32 id, const QModelIndex &parent)
 {
     beginRemoveRows(parent, id, id);
     IScaObject *object = m_objects.take(id);
+
+    if(object == NULL)
+    {
+        qDebug() << "Object does't exist";
+        return false;
+    }
+
+    if(object->getType() == IScaObject::LINK)
+    {
+        Link *link = static_cast<Link *>(object);
+        removeLink(link);
+    }
+
     foreach(Link *link, object->getLinks())
     {
         removeObject(link);
@@ -158,8 +197,6 @@ bool GraphModel::removeRow(quint32 id, const QModelIndex &parent)
     qDebug() << "Removed: ID = " << id;
     endRemoveRows();
 
-    QModelIndex index = createIndex(0, 0, id);
-    emit dataChanged(index, index);
     return true;
 }
 
@@ -180,6 +217,7 @@ bool GraphModel::removeRows(int row, int count, const QModelIndex &parent)
 
 int GraphModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
     qDebug() << "Objects: " << m_objects.size();
     return m_objects.size();
 }
@@ -192,30 +230,30 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
         return false;
     switch (role)
     {
-        case Qt::DecorationRole:
+    case Qt::DecorationRole:
+    {
+        IScaObject *object = NULL;
+        //Try casting to object or link, then add it
+        object = qvariant_cast<IScaObject *>(value);
+        if (object == NULL)
         {
-            IScaObject *object = NULL;
-            //Try casting to object or link, then add it
-            object = qvariant_cast<IScaObject *>(value);
+            object = qvariant_cast<Link *>(value);
             if (object == NULL)
             {
-                object = qvariant_cast<Link *>(value);
-                if (object == NULL)
-                {
-                    qDebug() << "Can\'t cast object!";
-                    return false;
-                }
+                qDebug() << "Can\'t cast object!";
+                return false;
             }
-            qDebug() << "Added element #" << s_nextID << ", type: " << object->getType();
-            m_objects.insert(index.internalId(), object);
-            emit dataChanged(index, index);
-            return true;
         }
-        default:
-        {
-            return false;
-            break;
-        }
+        qDebug() << "Added element #" << s_nextID << ", type: " << object->getType();
+        m_objects.insert(index.internalId(), object);
+        emit dataChanged(index, index);
+        return true;
+    }
+    default:
+    {
+        return false;
+        break;
+    }
     }
 }
 
@@ -232,6 +270,26 @@ bool GraphModel::removeObject(IScaObject *obj)
         return removeObject(key);
     else
         return false;
+}
+
+bool GraphModel::removeLink(Link *link)
+{
+    if(link == NULL)
+    {
+        return false;
+    }
+
+    IScaObject *source = link->getObjectFrom();
+    IScaObject *destin = link->getObjectTo();
+
+    if(source == NULL || destin == NULL)
+    {
+        return false;
+    }
+
+    disconnectObjects(source, destin, link);
+
+    return true;
 }
 
 bool GraphModel::convert(quint32 id, IScaObject::IScaObjectType toType)

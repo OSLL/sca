@@ -74,7 +74,7 @@ QList<Link *> IScaObject::getLinks() const
 
 void IScaObject::disconnectLink(Link *link)
 {
-    m_links.takeAt(m_links.indexOf(link));
+    m_links.removeAt(m_links.indexOf(link));
 }
 
 void IScaObject::addLink(Link *link)
