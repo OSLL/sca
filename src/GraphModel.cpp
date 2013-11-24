@@ -70,6 +70,15 @@ quint32 GraphModel::connectObjects(quint32 id1, quint32 id2)
 
 quint32 GraphModel::connectObjects(IScaObject *source, IScaObject *dest)
 {
+    foreach(Link *link, source->getLinks())
+    {
+        if(link->getObjectFrom() == dest || link->getObjectTo())
+        {
+            qDebug() << "Link already exist";
+            return 0;
+        }
+    }
+
     qDebug() << "Connecting " << *source << " with " << *dest;
     Link *res = new Link(source, dest);
     source->addLink(res);
