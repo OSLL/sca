@@ -78,7 +78,7 @@ public:
     IScaObjectIdentifierVisual *addIdentifierVisual(IScaObjectIdentifier *object);
 
     Node *addNode(IScaObject *object);
-    LinkVisual *addLinkVisual(QString annotation);
+    LinkVisual *addLinkVisual(Link *object);
 
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();

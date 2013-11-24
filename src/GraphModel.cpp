@@ -149,20 +149,26 @@ quint32 GraphModel::getId(IScaObject *object)
     return m_objects.key(object);
 }
 
+QModelIndex GraphModel::index(int row, int column, const QModelIndex &parent) const
+{
+    return createIndex(row, column, parent.internalPointer());
+}
+
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "Data called for #" << index.internalId();
-    if (!m_objects.contains(index.internalId()))
+    quintptr id = index.internalId();
+    qDebug() << "Data called for #" << id;
+    if (!m_objects.contains(id))
         return QVariant();
     switch (role)
     {
-    case Qt::DisplayRole:
+    case Qt::DisplayRole:   //For standart text views
     {
-        return QVariant(m_objects[index.internalId()]->getAnnotation());
+        return QVariant(m_objects[id]->getAnnotation());
     }
-    case Qt::DecorationRole:
+    case Qt::DecorationRole:    //For graphics representation return full object
     {
-        IScaObject *object = m_objects[index.internalId()];
+        IScaObject *object = m_objects[id];
         return QVariant::fromValue(object);
     }
     default:

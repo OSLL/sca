@@ -51,7 +51,8 @@ IScaObjectLine::IScaObjectLine() :
 {
 }
 
-IScaObjectLine::IScaObjectLine(IScaObjectFile *file, quint32 lineNumber, QString line) :
+IScaObjectLine::IScaObjectLine(IScaObjectFile *file, const quint32 &lineNumber,
+                               const QString &line) :
     IScaObject(LINE),
     m_line(line),
     m_lineNumber(lineNumber),

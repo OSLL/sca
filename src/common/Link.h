@@ -67,6 +67,8 @@ public:
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
 
+    friend QDebug operator<<(QDebug d, Link &link);
+
 private:
     QString m_annotation;
     IScaObject *m_objectFrom;

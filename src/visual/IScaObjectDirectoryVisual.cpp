@@ -42,13 +42,14 @@
 #include "IScaObjectDirectoryVisual.h"
 #include <QPainter>
 
-IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(QFileInfo fileInfo) :
+IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(IScaObjectDirectory *obj) :
     Node(DEFAULT_DIR_COLOR)
 {
     m_rect = QRectF(-DEFAULT_DIR_VISUAL_WIDTH / 2,
                     -DEFAULT_DIR_VISUAL_HEIGHT / 2,
                     DEFAULT_DIR_VISUAL_WIDTH,
                     DEFAULT_DIR_VISUAL_HEIGHT);
+    QFileInfo fileInfo = obj->getFile();
     if (fileInfo.isRoot())
         setTitle(fileInfo.absoluteFilePath().section('/', 0, 0));
     else

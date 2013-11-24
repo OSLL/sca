@@ -51,7 +51,8 @@ IScaObjectTextBlock::IScaObjectTextBlock() :
 {
 }
 
-IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file, unsigned int offset, unsigned int length, QString text) :
+IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file, unsigned int offset,
+                                         unsigned int length, const QString &text) :
     IScaObject(TEXTBLOCK),
     m_length(length),
     m_offset(offset),

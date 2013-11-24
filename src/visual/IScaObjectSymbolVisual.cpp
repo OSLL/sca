@@ -42,9 +42,10 @@
 #include "IScaObjectSymbolVisual.h"
 #include <QPainter>
 
-IScaObjectSymbolVisual::IScaObjectSymbolVisual(char symbol) :
+IScaObjectSymbolVisual::IScaObjectSymbolVisual(IScaObjectSymbol *obj) :
     Node(DEFAULT_SYMBOL_COLOR)
 {
+    char symbol = obj->getSymbol();
     m_rect = QRectF(-DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
                     -DEFAULT_SYMBOL_VISUAL_HEIGHT / 2,
                     DEFAULT_SYMBOL_VISUAL_WIDTH,

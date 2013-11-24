@@ -52,7 +52,7 @@
 class IScaObjectDirectoryVisual : public Node
 {
 public:
-    explicit IScaObjectDirectoryVisual(QFileInfo fileInfo);
+    explicit IScaObjectDirectoryVisual(IScaObjectDirectory *obj);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

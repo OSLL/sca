@@ -52,7 +52,7 @@
 class IScaObjectLineVisual : public Node
 {
 public:
-    explicit IScaObjectLineVisual(QString line);
+    explicit IScaObjectLineVisual(IScaObjectLine *obj);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

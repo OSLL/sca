@@ -40,6 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "common/Link.h"
+#include <QDebug>
 
 Link::Link() :
     IScaObject(LINK),
@@ -95,6 +96,12 @@ QString Link::getAnnotation() const
 void Link::setAnnotation(const QString &annotation)
 {
     m_annotation = annotation;
+}
+
+QDebug operator<<(QDebug d, Link &link)
+{
+    d << "Link(" << link.getObjectFrom() << ";" << link.getObjectTo() << ";ann="
+      << link.getAnnotation() << ")";
 }
 
 IScaObject *Link::getObjectFrom() const

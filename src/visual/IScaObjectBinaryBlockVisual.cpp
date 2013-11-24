@@ -44,7 +44,7 @@
 #include <QPainter>
 #include <QDebug>
 
-IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(QByteArray data) :
+IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(IScaObjectBinaryBlock *obj) :
     Node(DEFAULT_BINARY_BLOCK_COLOR)
 {
     m_rect = QRectF(-DEFAULT_BINARY_BLOCK_VISUAL_WIDTH / 2,
@@ -53,6 +53,7 @@ IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(QByteArray data) :
                     DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT);
 
     QString str;
+    QByteArray data = obj->getData();
     for (int i = 0; i < data.length(); i++)
     {
         str += data.mid(i, 1).toHex() + " ";

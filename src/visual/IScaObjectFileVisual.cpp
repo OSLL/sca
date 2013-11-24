@@ -42,9 +42,10 @@
 #include "IScaObjectFileVisual.h"
 #include <QPainter>
 
-IScaObjectFileVisual::IScaObjectFileVisual(QFileInfo fileInfo) :
+IScaObjectFileVisual::IScaObjectFileVisual(IScaObjectFile *obj) :
     Node(DEFAULT_FILE_COLOR)
 {
+    QFileInfo fileInfo = obj->getFile();
     m_rect = QRectF(-DEFAULT_FILE_VISUAL_WIDTH / 2,
                     -DEFAULT_FILE_VISUAL_HEIGHT / 2,
                     DEFAULT_FILE_VISUAL_WIDTH,

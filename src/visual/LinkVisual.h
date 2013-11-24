@@ -54,7 +54,7 @@
 class LinkVisual : public ObjectVisual
 {
 public:
-    LinkVisual(QString annotation);
+    LinkVisual(Link *obj);
     ~LinkVisual();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

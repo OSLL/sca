@@ -48,13 +48,14 @@
 #include <QGraphicsScene>
 #include <qmath.h>
 
-LinkVisual::LinkVisual(QString annotation) :
+LinkVisual::LinkVisual(Link *obj) :
     ObjectVisual(LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
     m_source(QPointF(0, 0)),
     m_destin(QPointF(0, 0))
 {
+    QString annotation = obj->getAnnotation();
     setFlags(QGraphicsItem::ItemIsSelectable
              | QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(0);

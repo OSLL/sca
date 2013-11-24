@@ -51,9 +51,9 @@ SOURCES += \
     widgets/ContextMenu.cpp \
     common/ScaObjectConverter.cpp \
     common/IScaObjectBinaryBlock.cpp \
-    common/IScaObjecTextBlock.cpp \
     visual/IScaObjectBinaryBlockVisual.cpp \
-    GraphModel.cpp
+    GraphModel.cpp \
+    common/IScaObjectTextBlock.cpp
 
 
 HEADERS += \

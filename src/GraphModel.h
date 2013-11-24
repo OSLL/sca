@@ -64,6 +64,7 @@ public:
     quint32 addObject(IScaObject *object);
     quint32 replaceObject(IScaObject *object, quint32 id);
     quint32 getId(IScaObject *object);
+    QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool removeRow(quint32 id, const QModelIndex &parent);

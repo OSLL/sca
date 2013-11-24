@@ -56,7 +56,7 @@ class IScaObjectBinaryBlock: public IScaObject
 public:
     IScaObjectBinaryBlock();
     IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int offset,
-                          unsigned int length, QByteArray data = QByteArray());
+                          unsigned int length, const QByteArray &data = QByteArray());
     ~IScaObjectBinaryBlock();
 
     unsigned int getOffset() const;

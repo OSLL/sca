@@ -75,13 +75,13 @@ public:
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
 
-    friend QDebug operator<<(QDebug d, IScaObject &node);
-
     QList<Link *> getLinks() const;
     void setLinks(const QList<Link *> &links);
 
     void disconnectLink(Link *link);
     void addLink(Link *link);
+
+    friend QDebug operator<<(QDebug d, IScaObject &node);
 private:
     QString m_annotation;
 

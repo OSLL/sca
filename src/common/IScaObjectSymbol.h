@@ -56,7 +56,8 @@ class IScaObjectSymbol: public IScaObject
 {
 public:
     IScaObjectSymbol();
-    IScaObjectSymbol(IScaObjectFile *file, unsigned int offset = 0, char symbol = 0);
+    IScaObjectSymbol(IScaObjectFile *file, unsigned int offset = 0,
+                     const char &symbol = 0);
     ~IScaObjectSymbol();
 
     IScaObjectFile *file() const;

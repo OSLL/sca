@@ -53,7 +53,7 @@ IScaObjectBinaryBlock::IScaObjectBinaryBlock() :
 }
 
 IScaObjectBinaryBlock::IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int offset,
-                                             unsigned int length, QByteArray data) :
+                                             unsigned int length, const QByteArray &data) :
     IScaObject(BINARYBLOCK),
     m_length(length),
     m_offset(offset),

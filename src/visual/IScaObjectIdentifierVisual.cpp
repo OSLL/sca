@@ -42,9 +42,10 @@
 #include "IScaObjectIdentifierVisual.h"
 #include <QPainter>
 
-IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(QString identifier) :
+IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(IScaObjectIdentifier *obj) :
     Node(DEFAULT_IDENTIFIER_COLOR)
 {
+    QString identifier = obj->getIdentifier();
     m_rect = QRectF(-DEFAULT_IDENTIFIER_VISUAL_WIDTH / 2,
                     -DEFAULT_IDENTIFIER_VISUAL_HEIGHT / 2,
                     DEFAULT_IDENTIFIER_VISUAL_WIDTH,

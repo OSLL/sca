@@ -51,7 +51,7 @@
 class IScaObjectBinaryBlockVisual: public Node
 {
 public:
-    explicit IScaObjectBinaryBlockVisual(QByteArray data);
+    explicit IScaObjectBinaryBlockVisual(IScaObjectBinaryBlock *obj);
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 

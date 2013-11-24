@@ -93,7 +93,8 @@ void IScaObject::setLinks(const QList<Link *> &links)
 
 QDebug operator<<(QDebug d, IScaObject &object)
 {
-    d << "Object with type: " << object.getType() << ", annotation: " << object.getAnnotation();
+    d << "IScaObject(type=" << object.getType() << ";cons=" << object.getLinks().size()
+      << ";ann=" << object.getAnnotation() << ")";
     return d;
 }
 

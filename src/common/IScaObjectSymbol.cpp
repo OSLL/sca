@@ -50,7 +50,8 @@ IScaObjectSymbol::IScaObjectSymbol():
 {
 }
 
-IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset, char symbol):
+IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset,
+                                   const char &symbol):
     IScaObject(SYMBOL),
     m_symbol(symbol),
     m_offset(offset),

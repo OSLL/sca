@@ -79,8 +79,7 @@ GraphScene::~GraphScene()
 
 IScaObjectFileVisual *GraphScene::addFileVisual(IScaObjectFile *object)
 {
-    QFileInfo fileInfo = object->getFile();
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(fileInfo);
+    IScaObjectFileVisual *node = new IScaObjectFileVisual(object);
 
     addItem(node);
     return node;
@@ -88,8 +87,7 @@ IScaObjectFileVisual *GraphScene::addFileVisual(IScaObjectFile *object)
 
 IScaObjectSymbolVisual *GraphScene::addSymbolVisual(IScaObjectSymbol *object)
 {
-    char symbol = object->getSymbol();
-    IScaObjectSymbolVisual *node = new IScaObjectSymbolVisual(symbol);
+    IScaObjectSymbolVisual *node = new IScaObjectSymbolVisual(object);
 
     addItem(node);
     return node;
@@ -97,8 +95,7 @@ IScaObjectSymbolVisual *GraphScene::addSymbolVisual(IScaObjectSymbol *object)
 
 IScaObjectLineVisual *GraphScene::addLineVisual(IScaObjectLine *object)
 {
-    QString line = object->getLine();
-    IScaObjectLineVisual *node = new IScaObjectLineVisual(line);
+    IScaObjectLineVisual *node = new IScaObjectLineVisual(object);
 
     addItem(node);
     return node;
@@ -106,8 +103,7 @@ IScaObjectLineVisual *GraphScene::addLineVisual(IScaObjectLine *object)
 
 IScaObjectBinaryBlockVisual *GraphScene::addBinaryBlockVisual(IScaObjectBinaryBlock *object)
 {
-    QByteArray data = object->getData();
-    IScaObjectBinaryBlockVisual *node = new IScaObjectBinaryBlockVisual(data);
+    IScaObjectBinaryBlockVisual *node = new IScaObjectBinaryBlockVisual(object);
 
     addItem(node);
     return node;
@@ -115,8 +111,7 @@ IScaObjectBinaryBlockVisual *GraphScene::addBinaryBlockVisual(IScaObjectBinaryBl
 
 IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(IScaObjectIdentifier *object)
 {
-    QString identifier = object->getIdentifier();
-    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(identifier);
+    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(object);
 
     addItem(node);
     return node;
@@ -124,8 +119,7 @@ IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(IScaObjectIdentifier
 
 IScaObjectDirectoryVisual *GraphScene::addDirVisual(IScaObjectDirectory *object)
 {
-    QFileInfo fileInfo = object->getFile();
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(fileInfo);
+    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(object);
 
     addItem(node);
     return node;
@@ -133,8 +127,7 @@ IScaObjectDirectoryVisual *GraphScene::addDirVisual(IScaObjectDirectory *object)
 
 IScaObjectTextBlockVisual *GraphScene::addTextBlockVisual(IScaObjectTextBlock *object)
 {
-    QString text = object->getText();
-    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(text);
+    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(object);
 
     addItem(node);
     return node;
@@ -148,9 +141,9 @@ Node *GraphScene::addNode(IScaObject *object)
     return node;
 }
 
-LinkVisual *GraphScene::addLinkVisual(QString annotation)
+LinkVisual *GraphScene::addLinkVisual(Link *object)
 {
-    LinkVisual *link = new LinkVisual(annotation);
+    LinkVisual *link = new LinkVisual(object);
 
     addItem(link);
     return link;
@@ -159,7 +152,7 @@ LinkVisual *GraphScene::addLinkVisual(QString annotation)
 void GraphScene::removeObject(ObjectVisual *object)
 {
     quint32 id = getObjectId(object);
-    qDebug() << "Removing object #" << id;
+    qDebug() << "Removing object #" << id << " from scene.";
     m_objects.remove(id);
     removeItem(object);
     delete(object);
@@ -295,10 +288,9 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         Link *link = static_cast<Link *>(object);
         quint32 sourceId = m_model->getId(link->getObjectFrom());
         quint32 destinId = m_model->getId(link->getObjectTo());
-        QString annotation = link->getAnnotation();
         Node *sourceNode = static_cast<Node *>(m_objects[sourceId]);
         Node *destinNode = static_cast<Node *>(m_objects[destinId]);
-        LinkVisual *visLink = addLinkVisual(annotation);
+        LinkVisual *visLink = addLinkVisual(link);
         m_objects.insert(id, visLink);
         sourceNode->addLinkFrom(id);
         destinNode->addLinkTo(id);
