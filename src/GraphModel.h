@@ -67,7 +67,7 @@ public:
     QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
-    bool removeRow(quint32 id, const QModelIndex &parent);
+    bool removeRow(quint32 id, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
@@ -76,17 +76,15 @@ public:
     bool removeObject(quint32 id);
     bool removeObject(IScaObject *obj);
 
-    bool removeLink(Link *link);
+    bool freeLink(Link *link);
 
     bool convert(quint32 id, IScaObject::IScaObjectType toType);
 
     quint32 connectObjects(quint32 id1, quint32 id2);
     quint32 connectObjects(IScaObject *source, IScaObject *dest);
 
-    void disconnectObjects(quint32 id1, quint32 id2, Link *linkId);
-    void disconnectObjects(IScaObject *source, IScaObject *dest, Link *link);
-
     void addLinkTo(IScaObject *obj, Link *link);
+    void editLinkAnnotation(quint32 id);
 
     void setAnnotation(quint32 id, QString annotation);
 private:

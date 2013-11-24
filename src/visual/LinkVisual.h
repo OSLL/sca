@@ -89,9 +89,6 @@ public:
     void setSource(const QPointF &source);
     void setDestin(const QPointF &destin);
 
-    quint32 getSourceId();
-    quint32 getDestinId();
-
 private:
     QLineF m_line;
     qreal m_sourceRadius;

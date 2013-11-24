@@ -77,60 +77,54 @@ GraphView::GraphView(GraphScene *scene, QWidget *parent) :
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
 {
+    m_temp = NULL;
+    //Add object to model and get it's id + create it's visual representation
+    m_tempId = m_model->addObject(event->mimeData());
+    if (m_tempId <= 0)
+    {
+        return;
+    }
+
     event->acceptProposedAction();
+    scene()->clearSelection();
+    m_temp = static_cast<Node *>(scene()->getObjectById(m_tempId));
+    if (m_temp == NULL)
+    {
+        qDebug() << "Unable to find new element in scene.";
+    }
+    m_temp->setSelected(true);
 }
 
 void GraphView::dragMoveEvent(QDragMoveEvent *event)
 {
-
+    m_temp->setPos(mapToScene(event->pos()));
 }
 
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
 {
+    //We went out of scene, delete created item
+    m_model->removeObject(m_tempId);
 }
-
 
 void GraphView::dropEvent(QDropEvent *event)
 {
+    //We just save new item
     m_temp = NULL;
-
-    const QMimeData *mimeData = event->mimeData();
-
-    //Add object to model and get it's id + create it's visual representation
-    int id = m_model->addObject(mimeData);
-    QPoint evPos = event->pos();
-    QPointF pos = mapToScene(evPos) - evPos;
-
-    //Get object by id
-    m_temp = dynamic_cast<Node*>(scene()->getObjectById(id));
-    if(m_temp != NULL)
-    {
-        //So we created object
-        event->acceptProposedAction();
-        m_temp->setPos(pos);
-        scene()->clearSelection();
-        m_temp->setSelected(true);
-        m_temp->setPos(mapToScene(event->pos()));
-    }
-
-    //    if (m_model->data(id))
-    //    {
-    //        QPoint pos = mapFromScene(m_temp->pos());
-    //        ShowContextMenu(pos);
-    //    }
 }
-
 
 void GraphView::ShowContextMenu(const QPoint &pos)
 {
     //Move menu
     QPoint globalPos = viewport()->mapToGlobal(pos);
 
-
+    //Get what is selected
     QList<Node *> nodes = scene()->selectedNodes();
     QList<LinkVisual *> links = scene()->selectedLinks();
     QList<QGraphicsItem *> items = scene()->selectedItems();
 
+    ScaObjectConverter conv;
+
+    //Get actions to interact with
     QAction *del = m_menu->getActionByName(DELETE_ITEMS);
     QAction *toText = m_menu->getActionByName(TO_TEXT_BLOCK);
     QAction *toIdentifier = m_menu->getActionByName(TO_IDENTIFIER);
@@ -181,15 +175,15 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Allow deleting only if something selected
     del->setEnabled(!items.isEmpty());
 
-    //Reset conversions
-    toText->setEnabled(true);
-    toIdentifier->setEnabled(true);
     //Converting available for proper types
     if (nodes.size() == 1)
     {
         Node *node = nodes.at(0);
-//        toText->setEnabled();
-//        toIdentifier->setEnabled(conv.canConvert(node, IScaObject::IDENTIFIER));
+        quint32 id = scene()->getObjectId(node);
+        QVariant var = m_model->data(m_model->index(id), Qt::DecorationRole);
+        IScaObject *obj = qvariant_cast<IScaObject *>(var);
+        toText->setEnabled(conv.canConvert(obj, IScaObject::TEXTBLOCK));
+        toIdentifier->setEnabled(conv.canConvert(obj, IScaObject::IDENTIFIER));
     }
 
     //Show menu
@@ -222,11 +216,11 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == del)
     {
-        foreach(LinkVisual *link, scene()->selectedLinks())
+        foreach(LinkVisual *link, links)
         {
             m_model->removeObject(scene()->getObjectId(link));
         }
-        foreach(Node *node, scene()->selectedNodes())
+        foreach(Node *node, nodes)
         {
             m_model->removeObject(scene()->getObjectId(node));
         }
@@ -317,30 +311,31 @@ void GraphView::exportToImage(const QString path)
     painter.end();
     img.save(path);
 }
-GraphModel *GraphView::model() const
+GraphModel *GraphView::getModel() const
 {
     return m_model;
 }
 
 void GraphView::setModel(GraphModel *model)
 {
-    if (m_model != NULL && scene() != NULL)
+    GraphScene *sc = scene();
+    if (m_model != NULL && sc != NULL)
     {
-        disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                   scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+        disconnect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+                   sc, SLOT(updateObjects(QModelIndex, QModelIndex)));
         disconnect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-                   scene(), SLOT(removeObject(QModelIndex,int,int)));
+                   sc, SLOT(removeObject(QModelIndex, int, int)));
     }
 
     m_model = model;
-    if(scene() != NULL)
+    if(sc != NULL)
     {
-        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                scene(), SLOT(updateObjects(QModelIndex, QModelIndex)));
+        connect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+                sc, SLOT(updateObjects(QModelIndex, QModelIndex)));
         connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-                scene(), SLOT(removeObject(QModelIndex,int,int)));
+                sc, SLOT(removeObject(QModelIndex, int, int)));
     }
-    scene()->setModel(m_model);
+    sc->setModel(m_model);
 }
 
 void GraphView::setScene(GraphScene *graphScene)
@@ -366,18 +361,7 @@ void GraphView::setScene(GraphScene *graphScene)
 
 void GraphView::editLinkAnnotation(quint32 id)
 {
-    if (id == NULL)
-        return;
-    bool ok = false;
-    QString new_annotation =
-            QInputDialog::getText(this, EDIT_ANNOTATION,
-                                  EDIT_ANNOTATION_LABEL, QLineEdit::Normal,
-                                  QString(""),
-                                  &ok);
-    if (ok == true && !new_annotation.isEmpty())
-    {
-        m_model->setAnnotation(id, new_annotation);
-    }
+    m_model->editLinkAnnotation(id);
 }
 
 void GraphView::mousePressEvent(QMouseEvent *event)

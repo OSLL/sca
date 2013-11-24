@@ -66,6 +66,11 @@ ScaObjectConverter::~ScaObjectConverter()
 {
 }
 
+bool ScaObjectConverter::canConvert(IScaObject *obj, IScaObject::IScaObjectType toType)
+{
+    return canConvert(obj->getType(), toType);
+}
+
 bool ScaObjectConverter::canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType)
 {
     switch (fromType)

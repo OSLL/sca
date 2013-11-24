@@ -121,14 +121,12 @@ void Node::removeTitle()
 {
     if (m_title != NULL)
     {
-        qDebug() << "Removing title";
         if(scene() != NULL)
         {
             scene()->removeItem(m_title);
         }
         delete m_title;
         m_title = NULL;
-        qDebug() << "Removed title";
     }
 }
 
@@ -171,6 +169,22 @@ QColor Node::getColor() const
 void Node::setColor(const QColor &color)
 {
     setBrush(color);
+}
+
+void Node::disconnectLink(quint32 linkId)
+{
+    int from = m_linksFrom.indexOf(linkId);
+    if (from != -1)
+    {
+        m_linksFrom.takeAt(from);
+        return;
+    }
+    int to = m_linksTo.indexOf(linkId);
+    if (to != -1)
+    {
+        m_linksTo.takeAt(to);
+        return;
+    }
 }
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)

@@ -1,5 +1,6 @@
 #include "ObjectVisual.h"
 #include "GraphScene.h"
+#include <qDebug>
 
 ObjectVisual::ObjectVisual(ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),

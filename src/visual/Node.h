@@ -75,7 +75,7 @@ public:
     void setColor(const QColor &color);
 
     friend QDebug operator<<(QDebug d, Node &node);
-    void disconnectLink(LinkVisual *link);
+    void disconnectLink(quint32 linkId);
 
     void addLinkFrom(quint32 linkId);
     QList<quint32> getLinksTo() const;

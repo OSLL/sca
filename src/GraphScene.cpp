@@ -149,16 +149,6 @@ LinkVisual *GraphScene::addLinkVisual(Link *object)
     return link;
 }
 
-void GraphScene::removeObject(ObjectVisual *object)
-{
-    quint32 id = getObjectId(object);
-    qDebug() << "Removing object #" << id << " from scene.";
-    m_objects.remove(id);
-    removeItem(object);
-    delete(object);
-}
-
-
 QList<Node *> GraphScene::selectedNodes()
 {
     QList<Node *> nodes;
@@ -224,81 +214,80 @@ ObjectVisual *GraphScene::getObjectById(quint32 id)
 ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
 {
     IScaObject::IScaObjectType type = object->getType();
-    qDebug() << "Adding #" << id << ", type: " << type;
+    qDebug() << "Adding #" << id << " to scene.";
     switch(type)
     {
     case IScaObject::FILE:
-    {
-        IScaObjectFile *fileObject = static_cast<IScaObjectFile *>(object);
-        IScaObjectFileVisual *visObject = addFileVisual(fileObject);
-        visObject->setPos(m_posToAdd);
-        m_objects.insert(id, visObject);
-        break;
-    }
+        {
+            IScaObjectFile *fileObject = static_cast<IScaObjectFile *>(object);
+            IScaObjectFileVisual *visObject = addFileVisual(fileObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
+            break;
+        }
     case IScaObject::DIRECTORY:
-    {
-        IScaObjectDirectory *dirObject = static_cast<IScaObjectDirectory *>(object);
-        IScaObjectDirectoryVisual *visObject = addDirVisual(dirObject);
-        visObject->setPos(m_posToAdd);
-        m_objects.insert(id, visObject);
-        break;
-    }
+        {
+            IScaObjectDirectory *dirObject = static_cast<IScaObjectDirectory *>(object);
+            IScaObjectDirectoryVisual *visObject = addDirVisual(dirObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
+            break;
+        }
     case IScaObject::TEXTBLOCK:
-    {
-        IScaObjectTextBlock *textObject = static_cast<IScaObjectTextBlock *>(object);
-        IScaObjectTextBlockVisual *visObject = addTextBlockVisual(textObject);
-        visObject->setPos(m_posToAdd);
-        m_objects.insert(id, visObject);
-        break;
-    }
+        {
+            IScaObjectTextBlock *textObject = static_cast<IScaObjectTextBlock *>(object);
+            IScaObjectTextBlockVisual *visObject = addTextBlockVisual(textObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
+            break;
+        }
     case IScaObject::BINARYBLOCK:
-    {
-        IScaObjectBinaryBlock *binaryObject = static_cast<IScaObjectBinaryBlock *>(object);
-        IScaObjectBinaryBlockVisual *visObject = addBinaryBlockVisual(binaryObject);
-        visObject->setPos(m_posToAdd);
-        m_objects.insert(id, visObject);
-        break;
-    }
+        {
+            IScaObjectBinaryBlock *binaryObject = static_cast<IScaObjectBinaryBlock *>(object);
+            IScaObjectBinaryBlockVisual *visObject = addBinaryBlockVisual(binaryObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
+            break;
+        }
     case IScaObject::LINE:
-    {
-        IScaObjectLine *lineObject = static_cast<IScaObjectLine *>(object);
-        IScaObjectLineVisual *visObject = addLineVisual(lineObject);
-        visObject->setPos(m_posToAdd);
-        m_objects.insert(id, visObject);
-        break;
-    }
+        {
+            IScaObjectLine *lineObject = static_cast<IScaObjectLine *>(object);
+            IScaObjectLineVisual *visObject = addLineVisual(lineObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
+            break;
+        }
     case IScaObject::IDENTIFIER:
-    {
-        IScaObjectIdentifier *identObject = static_cast<IScaObjectIdentifier *>(object);
-        IScaObjectIdentifierVisual *visObject = addIdentifierVisual(identObject);
-        visObject->setPos(m_posToAdd);
-        m_objects.insert(id, visObject);
-        break;
-    }
+        {
+            IScaObjectIdentifier *identObject = static_cast<IScaObjectIdentifier *>(object);
+            IScaObjectIdentifierVisual *visObject = addIdentifierVisual(identObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
+            break;
+        }
     case IScaObject::SYMBOL:
-    {
-        IScaObjectSymbol *symbolObject = static_cast<IScaObjectSymbol *>(object);
-        IScaObjectSymbolVisual *visObject = addSymbolVisual(symbolObject);
-        visObject->setPos(m_posToAdd);
-        m_objects.insert(id, visObject);
-        break;
-    }
+        {
+            IScaObjectSymbol *symbolObject = static_cast<IScaObjectSymbol *>(object);
+            IScaObjectSymbolVisual *visObject = addSymbolVisual(symbolObject);
+            visObject->setPos(m_posToAdd);
+            m_objects.insert(id, visObject);
+            break;
+        }
     case IScaObject::LINK:
-    {
-        Link *link = static_cast<Link *>(object);
-        quint32 sourceId = m_model->getId(link->getObjectFrom());
-        quint32 destinId = m_model->getId(link->getObjectTo());
-        Node *sourceNode = static_cast<Node *>(m_objects[sourceId]);
-        Node *destinNode = static_cast<Node *>(m_objects[destinId]);
-        LinkVisual *visLink = addLinkVisual(link);
-        m_objects.insert(id, visLink);
-        sourceNode->addLinkFrom(id);
-        destinNode->addLinkTo(id);
-
-        Q_ASSERT(visLink != NULL && sourceNode != NULL && destinNode != NULL);
-
-        break;
-    }
+        {
+            Link *link = static_cast<Link *>(object);
+            Q_ASSERT(link != NULL);
+            quint32 sourceId = m_model->getId(link->getObjectFrom());
+            quint32 destinId = m_model->getId(link->getObjectTo());
+            Node *sourceNode = static_cast<Node *>(m_objects[sourceId]);
+            Node *destinNode = static_cast<Node *>(m_objects[destinId]);
+            LinkVisual *visLink = addLinkVisual(link);
+            Q_ASSERT(visLink != NULL && sourceNode != NULL && destinNode != NULL);
+            m_objects.insert(id, visLink);
+            sourceNode->addLinkFrom(id);
+            destinNode->addLinkTo(id);
+            break;
+        }
     }
 }
 
@@ -319,18 +308,21 @@ void GraphScene::setModel(GraphModel *model)
 
 void GraphScene::updateObjectVisual(IScaObject *object, int id)
 {
-    qDebug() << "Updating object #" << id << "Type " << object->getType();
+    qDebug() << "Updating existing #" << id << " in scene.";
 
     if (object == NULL || !m_objects.contains(id))
+    {
         return;
+    }
 
     ObjectVisual *objectVis = m_objects.take(id);
 
     if(objectVis->getType() == ObjectVisual::NODE)
     {
-        Node *prevObject = static_cast<Node *>(objectVis);
+        Node *prevObject = static_cast<Node *>(objectVis);  //Save previous visual state of object
         QPointF pos = prevObject->pos();
 
+        //It adds object with old id so we save associations
         addObjectVisual(object, id);
         Node *node = static_cast<Node *>(m_objects[id]);
         node->setPos(pos);
@@ -339,37 +331,61 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     }
 
     removeItem(objectVis);
-    delete(objectVis);
+    delete objectVis;
 }
 
 void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 {
-    if(!(first == last))
+    for (int i = first; i <= last; i++)
     {
-        return;
+        ObjectVisual *obj = m_objects.take(i);
+        qDebug() << "Removing #" << i << " from scene. Items left: " << m_objects.size();
+        if (obj->getType() == ObjectVisual::LINK)
+        {
+            QVariant var = m_model->data(m_model->index(i), Qt::DecorationRole);
+            Link *l = qvariant_cast<Link *>(var);
+            Q_ASSERT(l != NULL);
+            quint32 fromId = m_model->getId(l->getObjectFrom()),
+                    toId = m_model->getId(l->getObjectTo());
+            Node *from = static_cast<Node *>(m_objects[fromId]);
+            Node *to = static_cast<Node *>(m_objects[toId]);
+            Q_ASSERT(from != NULL && to != NULL);
+            from->disconnectLink(i);
+            to->disconnectLink(i);
+        }
+        removeItem(obj);
+        delete obj;
     }
-    //TODO (zo0mer): we must delete ids of removed link from nodes
-    ObjectVisual *object = getObjectById(first);
-    removeObject(object);
 }
 
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
-    qDebug() << "Update object #" << leftTop.internalId();
+    Q_UNUSED(rightBottom);
+    qDebug() << "Update #" << leftTop.internalId() << " to scene.";
 
-    quint32 id = leftTop.internalId();//Get object that changed
+    //Get object that changed
+    quint32 id = leftTop.internalId();
     QVariant var = m_model->data(leftTop, Qt::DecorationRole);
     IScaObject *object = NULL;
     object = qvariant_cast<IScaObject *>(var);
-    //Maybe it is on scene?
-    ObjectVisual *visObject = getObjectById(id);
 
-    if (object == NULL) //Object no longer exists, but it was there
+    if (object == NULL)
     {
-        removeItem(visObject);
-        delete visObject;
+        object = qvariant_cast<Link *>(var);
+    }
+
+    if (object == NULL)
+    {
+        if (m_objects.contains(id))
+        {
+            //Object no longer exists, but it was there, so delete it
+            removeObject(leftTop, id, id);
+        }
         return;
     }
+
+    //Maybe it is already on scene?
+    ObjectVisual *visObject = getObjectById(id);
 
     if (visObject == NULL)
     {
@@ -381,4 +397,3 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     }
 
 }
-

@@ -93,8 +93,6 @@ public:
 
     void refreshLinkPosTo(quint32 linkId, QPointF pos);
     void refreshLinkPosFrom(quint32 linkId, QPointF pos);
-
-    void removeObject(ObjectVisual *object);
 private:
     QHash<quint32, ObjectVisual *> m_objects;
 
