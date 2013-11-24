@@ -45,7 +45,8 @@
 #include <QDebug>
 #include "common/ScaObjectConverter.h"
 
-quint32 GraphModel::s_nextID = 0;
+//ID = 0 for objects, which doesn't exist in model
+quint32 GraphModel::s_nextID = 1;
 
 GraphModel::GraphModel() :
     QAbstractListModel()
@@ -81,6 +82,11 @@ quint32 GraphModel::connectObjects(IScaObject *source, IScaObject *dest)
 
 void GraphModel::disconnectObjects(quint32 id1, quint32 id2, Link *link)
 {
+    if (id1 == 0 || id2 == 0)
+    {
+        qDebug() << "Nodes no more exist";
+        return;
+    }
     m_objects[id1]->disconnectLink(link);
     m_objects[id2]->disconnectLink(link);
 
