@@ -49,6 +49,7 @@
  */
 
 #include <QTextEdit>
+#include "StringConstants.h"
 class QDrag;
 
 class ObjectTextViewer : public QTextEdit
@@ -65,6 +66,8 @@ public:
 
     int currentLineNumber() const;
     int symbolsInCurrentLine() const;
+
+    void loadFromFile(const QString &path, const QString &code = UTF8);
 signals:
     
 public slots:

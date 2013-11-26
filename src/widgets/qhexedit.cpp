@@ -2,6 +2,7 @@
 
 #include "qhexedit.h"
 #include "StringConstants.h"
+#include <FileLoader.h>
 /*LICENCE
  *GNU LESSER GENERAL PUBLIC LICENSE
      Version 2.1, February 1999
@@ -559,6 +560,36 @@ QString QHexEdit::selectionToReadableString()
     return qHexEdit_p->selectionToReadableString();
 }
 
+void QHexEdit::loadFromFile(const QString &path)
+{
+    QFileInfo fileInf(path);
+    if (fileInf.size() > MAX_BINARY_FILE_SIZE)
+    {
+        QMessageBox::warning(this, ERROR_TOO_LARGE_BINARY_FILE_TITLE,
+                             ERROR_TOO_LARGE_BINARY_FILE_MSG.arg(
+                                 QString::number(fileInf.size())),
+                             QMessageBox::Ok);
+        return;
+    }
+    //Check if the file has already been opened
+    //or it is not file at all
+    if (getCurrentPath() == fileInf.filePath()
+            || !fileInf.isFile())
+    {
+        return;
+    }
+
+    FileLoader *fLoader = new FileLoader();
+
+    fLoader->openFile(fileInf.filePath());
+
+    QByteArray arr;
+    fLoader->loadToByteArray(arr);
+    setData(arr);
+    setCurrentPath(fileInf.filePath());
+    fLoader->deleteLater();
+}
+
 
 void QHexEdit::setAddressArea(bool addressArea)
 {
@@ -689,7 +720,26 @@ void QHexEdit::setCurrentPath(const QString &value)
     qHexEdit_p->setCurrentPath(value);
 }
 
+void QHexEdit::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (!event->mimeData()->hasUrls())
+    {
+        return;
+    }
+    QString path = event->mimeData()->urls().at(0).toLocalFile();
+    QFileInfo fileInf(path);
+    event->setAccepted(fileInf.isFile());
+}
 
+void QHexEdit::dragMoveEvent(QDragMoveEvent *)
+{
+}
+
+void QHexEdit::dropEvent(QDropEvent *event)
+{
+    QString path = event->mimeData()->urls().at(0).toLocalFile();
+    loadFromFile(path);
+}
 
 const QFont & QHexEdit::font() const
 {

@@ -662,6 +662,8 @@ public:
     */
     QString selectionToReadableString();
 
+    void loadFromFile(const QString &path);
+
     /*! \cond docNever */
     void setAddressOffset(int offset);
     int addressOffset();
@@ -683,6 +685,9 @@ public:
     void setFont(const QFont &);
     QString getCurrentPath() const;
     void setCurrentPath(const QString &value);
+    void dragEnterEvent(QDragEnterEvent *);
+    void dragMoveEvent(QDragMoveEvent *);
+    void dropEvent(QDropEvent *);
     /*! \endcond docNever */
 
 public slots:

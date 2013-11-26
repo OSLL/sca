@@ -83,9 +83,6 @@ void MainWindow::processFile()
     case 1: //Binary view
         loadBinaryFile();
         break;
-    case 2: //Scene
-//        addToScene();
-        break;
     }
 }
 
@@ -93,52 +90,9 @@ void MainWindow::loadBinaryFile()
 {
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
     QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
-    if (fileInf.size() > MAX_BINARY_FILE_SIZE)
-    {
-        QMessageBox::warning(this, ERROR_TOO_LARGE_BINARY_FILE_TITLE,
-                             ERROR_TOO_LARGE_BINARY_FILE_MSG.arg(
-                                 QString::number(fileInf.size())),
-                             QMessageBox::Ok);
-        return;
-    }
-    //Check if the file has already been opened
-    //or it is not file at all
-    if (m_ui->hexEditor->getCurrentPath() == fileInf.filePath()
-            || !fileInf.isFile())
-    {
-        return;
-    }
-
-    FileLoader *fLoader = new FileLoader();
-
-    fLoader->openFile(fileInf.filePath());
-
-    QByteArray arr;
-    fLoader->loadToByteArray(arr);
-    m_ui->hexEditor->setData(arr);
-    m_ui->hexEditor->setCurrentPath(fileInf.filePath());
+    m_ui->hexEditor->loadFromFile(fileInf.absoluteFilePath());
     m_ui->ViewsTabs->setCurrentIndex(1);
-    fLoader->deleteLater();
 }
-
-//void MainWindow::addToScene()
-//{
-//    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
-//    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
-
-//    if (fileInf.isFile())
-//    {
-//        int sceneX = m_ui->graphViewer->horizontalScrollBar()->value(),
-//                sceneY = m_ui->graphViewer->verticalScrollBar()->value();
-//        QPointF pos = QPointF(sceneX, sceneY)
-//                + m_ui->graphViewer->rect().center()
-//                - QPointF(DEFAULT_FILE_VISUAL_WIDTH / 2,
-//                          DEFAULT_FILE_VISUAL_HEIGHT / 2);
-//        IScaObjectFile *objFile = new IScaObjectFile(fileInf);
-//        m_scene->addFileVisual(objFile);
-//    }
-//    m_ui->ViewsTabs->setCurrentIndex(2);
-//}
 
 void MainWindow::openAbout()
 {
@@ -176,31 +130,7 @@ void MainWindow::loadTextFile(const QString &code)
 {
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
     QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
-    if (fileInf.size() > MAX_TEXT_FILE_SIZE)
-    {
-        QMessageBox::warning(this, ERROR_TOO_LARGE_TEXT_FILE_TITLE,
-                             ERROR_TOO_LARGE_TEXT_FILE_MSG.arg(QString::number(fileInf.size())),
-                             QMessageBox::Ok);
-        return;
-    }
-    //Check if the file has already been opened
-    //or it is not file at all
-    if (!fileInf.isFile() || //path and encoding same
-            (m_ui->textViewer->getCurrentPath() == fileInf.filePath()
-             && code == m_ui->textViewer->getCurrentEncoding()))
-    {
-        return;
-    }
-
-    FileLoader *fLoader = new FileLoader();
-
-    fLoader->openFile(fileInf.filePath());
-
-    fLoader->loadToTextDoc(m_ui->textViewer->document(), code.toStdString().c_str());
-    m_ui->textViewer->setCurrentPath(fileInf.filePath());
-    m_ui->textViewer->setCurrentEncoding(code);
-
+    m_ui->textViewer->loadFromFile(fileInf.absoluteFilePath(), code);
     m_ui->ViewsTabs->setCurrentIndex(0);
-    fLoader->deleteLater();
 }
 

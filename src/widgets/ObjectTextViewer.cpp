@@ -106,6 +106,33 @@ int ObjectTextViewer::symbolsInCurrentLine() const
     return cursor.block().length();
 }
 
+void ObjectTextViewer::loadFromFile(const QString &path, const QString &code)
+{
+    int fileSize = QFileInfo(path).size();
+    if (fileSize > MAX_TEXT_FILE_SIZE)
+    {
+        QMessageBox::warning(this, ERROR_TOO_LARGE_TEXT_FILE_TITLE,
+                             ERROR_TOO_LARGE_TEXT_FILE_MSG.arg(QString::number(fileSize)),
+                             QMessageBox::Ok);
+        return;
+    }
+
+    if(getCurrentPath() == path)
+    {
+        return;
+    }
+
+    FileLoader *fLoader = new FileLoader();
+
+    fLoader->openFile(path);
+
+    fLoader->loadToTextDoc(document());
+    setCurrentPath(path);
+    setCurrentEncoding(code);
+
+    fLoader->deleteLater();
+}
+
 QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
 {
     QMimeData *mime = new QMimeData();
@@ -144,34 +171,11 @@ void ObjectTextViewer::dragEnterEvent(QDragEnterEvent *event)
 
 void ObjectTextViewer::dragMoveEvent(QDragMoveEvent *event)
 {
-    event->acceptProposedAction();
 }
 
 void ObjectTextViewer::dropEvent(QDropEvent *event)
 {
     const QMimeData *mime = event->mimeData();
     QString path = mime->urls().at(0).toLocalFile();
-    int fileSize = QFileInfo(path).size();
-    if (fileSize > MAX_TEXT_FILE_SIZE)
-    {
-        QMessageBox::warning(this, ERROR_TOO_LARGE_TEXT_FILE_TITLE,
-                             ERROR_TOO_LARGE_TEXT_FILE_MSG.arg(QString::number(fileSize)),
-                             QMessageBox::Ok);
-        return;
-    }
-
-    if(getCurrentPath() == path)
-    {
-        return;
-    }
-
-    FileLoader *fLoader = new FileLoader();
-
-    fLoader->openFile(path);
-
-    fLoader->loadToTextDoc(document());
-    setCurrentPath(path);
-    setCurrentEncoding(UTF8);
-
-    fLoader->deleteLater();
+    loadFromFile(path);
 }

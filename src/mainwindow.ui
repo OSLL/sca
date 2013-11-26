@@ -69,7 +69,11 @@
          <item>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
-            <widget class="QHexEdit" name="hexEditor" native="true"/>
+            <widget class="QHexEdit" name="hexEditor" native="true">
+             <property name="acceptDrops">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </item>
@@ -94,7 +98,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
