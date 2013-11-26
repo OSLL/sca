@@ -191,10 +191,8 @@ void GraphScene::refreshLinkPos(quint32 linkId)
     QVariant var = m_model->data(m_model->index(linkId), Qt::DecorationRole);
     Link *objLink = qvariant_cast<Link *>(var);
 
-    IScaObject  *fromObj = objLink->getObjectFrom(),
-                *toObj = objLink->getObjectTo();
-    quint32 fromId = m_model->getId(fromObj),
-            toId = m_model->getId(toObj);
+    quint32 fromId = objLink->getObjectFrom(),
+            toId = objLink->getObjectTo();
     // TODO (LeoSko) It really seems we don't have nice interface there, right?
     Node    *from = static_cast<Node *>(m_objects.value(fromId, NULL)),
             *to = static_cast<Node *>(m_objects.value(toId, NULL));
@@ -279,8 +277,8 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         {
             Link *link = static_cast<Link *>(object);
             Q_ASSERT(link != NULL);
-            quint32 sourceId = m_model->getId(link->getObjectFrom());
-            quint32 destinId = m_model->getId(link->getObjectTo());
+            quint32 sourceId = link->getObjectFrom();
+            quint32 destinId = link->getObjectTo();
             Node *sourceNode = static_cast<Node *>(m_objects.value(sourceId, NULL));
             Node *destinNode = static_cast<Node *>(m_objects.value(destinId, NULL));
             visObject = addLinkVisual(link);
@@ -325,17 +323,23 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
         return;
     }
 
+    //Take it from scene
     ObjectVisual *objectVis = m_objects.take(id);
 
+    //We re-create object, saving some old parameters of it
     QPointF pos = objectVis->pos();
+    QList<quint32> links = objectVis->getLinks();
+
+    //Get new object
     QVariant var = m_model->data(m_model->index(id), Qt::DecorationRole);
     IScaObject *obj = qvariant_cast<IScaObject *>(var);
 
-    //It adds object with old id so we save associations for links
+    //Adds object with old id so we save associations for links
     ObjectVisual *newObject = addObjectVisual(obj, id);
     newObject->setPos(pos);
-    newObject->setLinks(objectVis->getLinks());
+    newObject->setLinks(links);
 
+    //Remove old one
     removeItem(objectVis);
     delete objectVis;
 }
@@ -355,8 +359,8 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
             QVariant var = m_model->data(m_model->index(i), Qt::DecorationRole);
             Link *l = qvariant_cast<Link *>(var);
             Q_ASSERT(l != NULL);
-            quint32 fromId = m_model->getId(l->getObjectFrom()),
-                    toId = m_model->getId(l->getObjectTo());
+            quint32 fromId = l->getObjectFrom(),
+                    toId = l->getObjectTo();
             Node *from = static_cast<Node *>(m_objects[fromId]);
             Node *to = static_cast<Node *>(m_objects[toId]);
             Q_ASSERT(from != NULL && to != NULL);
@@ -401,11 +405,12 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     {
         //It is not on scene, but it is in model
         addObjectVisual(object, id);
+        return;
     }
     else
     {
         //It is on scene and in model, update representation
         updateObjectVisual(object, id);
+        return;
     }
-
 }

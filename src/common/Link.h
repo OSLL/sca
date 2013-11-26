@@ -53,16 +53,14 @@ class Link: public IScaObject
 {
 public:
     Link();
-    Link(IScaObject *objectFrom, IScaObject *objectTo);
+    Link(quint32 objectFrom, quint32 objectTo);
     ~Link();
 
-    void changeConnection(IScaObject *oldObj, IScaObject *newObj);
+    quint32 getObjectFrom() const;
+    void setObjectFrom(quint32 objectFrom);
 
-    IScaObject *getObjectFrom() const;
-    void setObjectFrom(IScaObject *objectFrom);
-
-    IScaObject *getObjectTo() const;
-    void setObjectTo(IScaObject *objectTo);
+    quint32 getObjectTo() const;
+    void setObjectTo(quint32 objectTo);
 
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
@@ -71,8 +69,8 @@ public:
 
 private:
     QString m_annotation;
-    IScaObject *m_objectFrom;
-    IScaObject *m_objectTo;
+    quint32 m_objectFrom;
+    quint32 m_objectTo;
 
 }; // class Link
   

@@ -52,9 +52,9 @@ LinkVisual::LinkVisual(Link *obj) :
     ObjectVisual(LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
+    m_annotation(NULL),
     m_source(QPointF(0, 0)),
-    m_destin(QPointF(0, 0)),
-    m_annotation(NULL)
+    m_destin(QPointF(0, 0))
 {
     QString annotation = obj->getAnnotation();
     setFlags(QGraphicsItem::ItemIsSelectable
@@ -307,4 +307,3 @@ void LinkVisual::setAnnotation(const QString &str)
     new_ann->moveBy(-dx, dy);
     m_annotation = new_ann;
 }
-

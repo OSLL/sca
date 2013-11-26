@@ -50,7 +50,7 @@ Link::Link() :
 {
 }
 
-Link::Link(IScaObject *objectFrom, IScaObject *objectTo) :
+Link::Link(quint32 objectFrom, quint32 objectTo) :
     IScaObject(LINK),
     m_annotation(QString("")),
     m_objectFrom(objectFrom),
@@ -62,30 +62,12 @@ Link::~Link()
 {
 }
 
-void Link::changeConnection(IScaObject *oldObj, IScaObject *newObj)
-{
-    if (m_objectTo == oldObj)
-    {
-        m_objectTo->disconnectLink(this);
-        m_objectTo = newObj;
-        newObj->addLink(this);
-        return;
-    }
-    if (m_objectFrom == oldObj)
-    {
-        m_objectFrom->disconnectLink(this);
-        m_objectFrom = newObj;
-        newObj->addLink(this);
-        return;
-    }
-}
-
-IScaObject *Link::getObjectTo() const
+quint32 Link::getObjectTo() const
 {
     return m_objectTo;
 }
 
-void Link::setObjectTo(IScaObject *objectTo)
+void Link::setObjectTo(quint32 objectTo)
 {
     m_objectTo = objectTo;
 }
@@ -107,12 +89,12 @@ QDebug operator<<(QDebug d, Link &link)
     return d;
 }
 
-IScaObject *Link::getObjectFrom() const
+quint32 Link::getObjectFrom() const
 {
     return m_objectFrom;
 }
 
-void Link::setObjectFrom(IScaObject *objectFrom)
+void Link::setObjectFrom(quint32 objectFrom)
 {
     m_objectFrom = objectFrom;
 }

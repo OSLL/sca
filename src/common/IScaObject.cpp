@@ -49,7 +49,6 @@ IScaObject::IScaObject(IScaObjectType type) :
 
 IScaObject::~IScaObject()
 {
-
 }
 
 IScaObject::IScaObjectType IScaObject::getType() const
@@ -67,12 +66,12 @@ void IScaObject::setAnnotation(const QString &annotation)
     m_annotation = annotation;
 }
 
-QList<Link *> IScaObject::getLinks() const
+QList<quint32> IScaObject::getLinks() const
 {
     return m_links;
 }
 
-void IScaObject::disconnectLink(Link *link)
+void IScaObject::disconnectLink(quint32 link)
 {
     int index = m_links.indexOf(link);
     if (index != -1)
@@ -81,12 +80,12 @@ void IScaObject::disconnectLink(Link *link)
     }
 }
 
-void IScaObject::addLink(Link *link)
+void IScaObject::addLink(quint32 link)
 {
     m_links.append(link);
 }
 
-void IScaObject::setLinks(const QList<Link *> &links)
+void IScaObject::setLinks(const QList<quint32> &links)
 {
     m_links = links;
 }
