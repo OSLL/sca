@@ -53,7 +53,8 @@ LinkVisual::LinkVisual(Link *obj) :
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
     m_source(QPointF(0, 0)),
-    m_destin(QPointF(0, 0))
+    m_destin(QPointF(0, 0)),
+    m_annotation(NULL)
 {
     QString annotation = obj->getAnnotation();
     setFlags(QGraphicsItem::ItemIsSelectable
@@ -70,8 +71,8 @@ LinkVisual::LinkVisual(Link *obj) :
 
 LinkVisual::~LinkVisual()
 {
-    delete(m_sourceArrow);
-    delete(m_destinArrow);
+    delete m_sourceArrow;
+    delete m_destinArrow;
 
     qDebug() << "Removing link";
 }
@@ -101,17 +102,6 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
         }
     }
     return QGraphicsItem::itemChange(change, value);
-}
-
-void LinkVisual::refreshGeometryTo(QPointF to)
-{
-    refreshGeometry(m_source, to);
-}
-
-void LinkVisual::refreshGeometryFrom(QPointF from)
-{
-    refreshGeometry(from, m_destin);
-
 }
 
 void LinkVisual::refreshGeometry(QPointF from, QPointF to)
@@ -295,13 +285,11 @@ QGraphicsTextItem *LinkVisual::getAnnotation() const
 
 void LinkVisual::setSource(const QPointF &source)
 {
-    qDebug() << "Setting new source point: " << source;
     m_source = source;
 }
 
 void LinkVisual::setDestin(const QPointF &destin)
 {
-    qDebug() << "Setting new destin point: " << destin;
     m_destin = destin;
 }
 

@@ -69,11 +69,8 @@ public:
 
     IScaObject *convert(IScaObject *obj, IScaObject::IScaObjectType toType);
 
-    //    quint64 makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel = false);
     IScaObjectTextBlock *makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
 
-    // TODO (Zo0ER) we need this functions or not? Anyway fix it later
-//    quint64 makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel = false);
     IScaObjectIdentifier *makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
     bool canConvert(IScaObject *obj, IScaObject::IScaObjectType toType);
 }; // class ScaObjectConverter

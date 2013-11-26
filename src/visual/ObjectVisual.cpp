@@ -1,6 +1,6 @@
 #include "ObjectVisual.h"
 #include "GraphScene.h"
-#include <qDebug>
+#include <QDebug>
 
 ObjectVisual::ObjectVisual(ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),
@@ -14,36 +14,39 @@ ObjectVisual::~ObjectVisual()
 {
 }
 
-void ObjectVisual::addLinkFrom(quint32 linkId)
+QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    m_linksFrom.append(linkId);
-    scene()->refreshLinkPosFrom(linkId, pos());
+    switch(change)
+    {
+    case ItemPositionChange:
+        foreach (quint32 linkId, m_links)
+        {
+            scene()->refreshLinkPos(linkId);
+        }
+        break;
+    default:
+        {
+            break;
+        }
+    }
+    return QGraphicsItem::itemChange(change, value);
 }
 
-void ObjectVisual::addLinkTo(quint32 linkId)
+void ObjectVisual::addLink(quint32 linkId)
 {
-    m_linksTo.append(linkId);
-    scene()->refreshLinkPosTo(linkId, pos());
-}
-QList<quint32> ObjectVisual::getLinksFrom() const
-{
-    return m_linksFrom;
+    qDebug() << "Appending link #" << linkId;
+    m_links.append(linkId);
+    scene()->refreshLinkPos(linkId);
 }
 
-void ObjectVisual::setLinksFrom(const QList<quint32> &linksFrom)
+QList<quint32> ObjectVisual::getLinks() const
 {
-    m_linksFrom = linksFrom;
+    return m_links;
 }
 
-
-QList<quint32> ObjectVisual::getLinksTo() const
+void ObjectVisual::setLinks(const QList<quint32> &links)
 {
-    return m_linksTo;
-}
-
-void ObjectVisual::setLinksTo(const QList<quint32> &linksTo)
-{
-    m_linksTo = linksTo;
+    m_links = links;
 }
 
 GraphScene *ObjectVisual::scene() const

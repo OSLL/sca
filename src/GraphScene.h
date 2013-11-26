@@ -91,8 +91,7 @@ public:
     GraphModel *getModel() const;
     void setModel(GraphModel *model);
 
-    void refreshLinkPosTo(quint32 linkId, QPointF pos);
-    void refreshLinkPosFrom(quint32 linkId, QPointF pos);
+    void refreshLinkPos(quint32 linkId);
 private:
     QHash<quint32, ObjectVisual *> m_objects;
 

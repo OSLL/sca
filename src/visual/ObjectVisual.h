@@ -17,20 +17,19 @@ public:
     ObjectVisual(ObjectVisualType type = OBJECT, QGraphicsItem *parent = 0);
     ~ObjectVisual();
 
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+
     ObjectVisualType getType() const;
     void setType(const ObjectVisualType &type);
     GraphScene *scene() const;
 
-    void addLinkFrom(quint32 linkId);
-    QList<quint32> getLinksTo() const;
-    void setLinksTo(const QList<quint32> &linksTo);
+    void addLink(quint32 linkId);
 
-    void addLinkTo(quint32 linkId);
-    QList<quint32> getLinksFrom() const;
-    void setLinksFrom(const QList<quint32> &linksFrom);
+    QList<quint32> getLinks() const;
+    void setLinks(const QList<quint32> &links);
+
 protected:
-    QList<quint32> m_linksFrom;
-    QList<quint32> m_linksTo;
+    QList<quint32> m_links;
     ObjectVisualType m_type;
 };
 

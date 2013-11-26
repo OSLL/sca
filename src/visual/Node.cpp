@@ -142,16 +142,11 @@ void Node::setColor(const QColor &color)
 
 void Node::disconnectLink(quint32 linkId)
 {
-    int from = m_linksFrom.indexOf(linkId);
+    int from = m_links.indexOf(linkId);
     if (from != -1)
     {
-        m_linksFrom.takeAt(from);
-        return;
-    }
-    int to = m_linksTo.indexOf(linkId);
-    if (to != -1)
-    {
-        m_linksTo.takeAt(to);
+        qDebug() << "Removing link from visual node.";
+        m_links.takeAt(from);
         return;
     }
 }
@@ -159,17 +154,6 @@ void Node::disconnectLink(quint32 linkId)
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
-    case ItemPositionChange:
-        foreach (quint32 linkId, m_linksFrom)
-        {
-            scene()->refreshLinkPosFrom(linkId, pos());
-        }
-        foreach(quint32 linkId, m_linksTo)
-        {
-            scene()->refreshLinkPosTo(linkId, pos());
-        }
-
-        break;
     case ItemSelectedHasChanged:
         if (value == true) //It is selected now
         {
@@ -183,14 +167,11 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
         break;
     };
 
-    return QGraphicsItem::itemChange(change, value);
+    return ObjectVisual::itemChange(change, value);
 }
 
 QDebug operator<<(QDebug d, Node &node)
 {
-    d << "Node: "
-      << "type: " << node.m_type
-      << ", name: " << node.getTitle()->text();
-//      << ", links: " << node.getLinks().size();
+    d << "Node(type=" << node.m_type << ";cons=" << node.m_links.size() << ");";
     return d;
 }

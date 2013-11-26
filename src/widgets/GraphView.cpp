@@ -102,12 +102,14 @@ void GraphView::dragMoveEvent(QDragMoveEvent *event)
 
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
 {
+    Q_UNUSED(event);
     //We went out of scene, delete created item
     m_model->removeObject(m_tempId);
 }
 
 void GraphView::dropEvent(QDropEvent *event)
 {
+    Q_UNUSED(event);
     //We just save new item
     m_temp = NULL;
 }

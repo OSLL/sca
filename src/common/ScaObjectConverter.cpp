@@ -80,11 +80,13 @@ bool ScaObjectConverter::canConvert(IScaObject::IScaObjectType fromType, IScaObj
         {
             return true;
         }
+        break;
     case IScaObject::TEXTBLOCK:
         if (toType == IScaObject::IDENTIFIER)
         {
             return true;
         }
+        break;
     default:
         return false;
     }
@@ -131,25 +133,6 @@ IScaObject *ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectT
     }
 }
 
-//quint64 ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifierVisual *obj, bool autoDel)
-//{
-//    IScaObjectIdentifier *objId = static_cast<IScaObjectIdentifier *>(obj->getObject());
-//    quint64 objIndex = m_model->getId(objId);
-//    IScaObjectFile *objFile = new IScaObjectFile(objId->getFile());
-//    IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, objId->getOffset(),
-//                                                    objId->getIdentifier().length(),
-//                                                    objId->getIdentifier());
-//    foreach(Link *link, obj->getLinks())
-//    {
-//        // TODO (LeoSko) should save connection somehow
-//        m_model->removeItem(link);
-//    }
-//    m_model->removeItemByIndex(objIndex);
-//    if (autoDel)
-//        delete obj;
-//    return m_model->addObject(objBlock);
-//}
-
 IScaObjectTextBlock *ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel)
 {
     IScaObjectFile *file = new IScaObjectFile(obj->getFile());
@@ -160,25 +143,6 @@ IScaObjectTextBlock *ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectI
     return textBlock;
 }
 
-//quint64 ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlockVisual *obj, bool autoDel)
-//{
-//    IScaObjectTextBlock *objBlock = static_cast<IScaObjectTextBlock *>(obj->getObject());
-//    quint64 objIndex = m_model->getId(objBlock);
-//    IScaObjectFile *objFile = new IScaObjectFile(objBlock->getFile());
-//    IScaObjectIdentifier *objId = new IScaObjectIdentifier(objFile, objBlock->getOffset(),
-//                                                           objBlock->getText());
-
-//    foreach(Link *link, obj->getLinks())
-//    {
-//        // TODO (LeoSko) should save connection somehow
-//        delete link;
-//    }
-//    m_model->removeItemByIndex(objIndex);
-//    if (autoDel)
-//        delete obj;
-//    return m_model->addObject(objId);
-//}
-
 IScaObjectIdentifier *ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel)
 {
     IScaObjectFile *file = new IScaObjectFile(obj->getFile());
@@ -188,4 +152,3 @@ IScaObjectIdentifier *ScaObjectConverter::makeIdentifierFromBlock(IScaObjectText
     IScaObjectIdentifier *identifier = new IScaObjectIdentifier(file, offset, text);
     return identifier;
 }
-

@@ -60,8 +60,6 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
     void refreshGeometry(QPointF from, QPointF to);
-    void refreshGeometryTo(QPointF to);
-    void refreshGeometryFrom(QPointF fromZ);
     QRectF boundingRect() const;
     QPainterPath shape() const;
     void setLine(const QLineF &line);

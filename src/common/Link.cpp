@@ -44,6 +44,7 @@
 
 Link::Link() :
     IScaObject(LINK),
+    m_annotation(QString("")),
     m_objectFrom(NULL),
     m_objectTo(NULL)
 {
@@ -51,6 +52,7 @@ Link::Link() :
 
 Link::Link(IScaObject *objectFrom, IScaObject *objectTo) :
     IScaObject(LINK),
+    m_annotation(QString("")),
     m_objectFrom(objectFrom),
     m_objectTo(objectTo)
 {
@@ -102,6 +104,7 @@ QDebug operator<<(QDebug d, Link &link)
 {
     d << "Link(" << link.getObjectFrom() << ";" << link.getObjectTo() << ";ann="
       << link.getAnnotation() << ")";
+    return d;
 }
 
 IScaObject *Link::getObjectFrom() const
