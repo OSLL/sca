@@ -323,6 +323,12 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
         return;
     }
 
+    if (object->getType() == IScaObject::LINK)
+    {
+        LinkVisual *link = static_cast<LinkVisual *>(m_objects[id]);
+        link->setAnnotation(object->getAnnotation());
+        return;
+    }
     //Take it from scene
     ObjectVisual *objectVis = m_objects.take(id);
 
