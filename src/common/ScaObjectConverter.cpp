@@ -140,6 +140,10 @@ IScaObjectTextBlock *ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectI
     QString text = obj->getIdentifier();
 
     IScaObjectTextBlock *textBlock = new IScaObjectTextBlock(file, offset, text.size(), text);
+    if (autoDel)
+    {
+        delete obj;
+    }
     return textBlock;
 }
 
@@ -150,5 +154,9 @@ IScaObjectIdentifier *ScaObjectConverter::makeIdentifierFromBlock(IScaObjectText
     QString text = obj->getText();
 
     IScaObjectIdentifier *identifier = new IScaObjectIdentifier(file, offset, text);
+    if (autoDel)
+    {
+        delete obj;
+    }
     return identifier;
 }

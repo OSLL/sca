@@ -110,6 +110,7 @@ void ContextMenu::connectActionByName(const QString &name,
 
 QAction *ContextMenu::getActionByName(const QString &name, const QString &submenuName)
 {
+    Q_UNUSED(submenuName);
     QList<QAction *> acts = findChildren<QAction *>();
     foreach(QAction *act, acts)
     {
