@@ -58,7 +58,10 @@ GraphModel::GraphModel() :
 
 GraphModel::~GraphModel()
 {
-
+    foreach(IScaObject *obj, m_objects)
+    {
+        removeRow(getId(obj));
+    }
 }
 
 quint32 GraphModel::connectObjects(quint32 id1, quint32 id2)
@@ -167,8 +170,7 @@ Qt::ItemFlags GraphModel::flags(const QModelIndex &index) const
 
 bool GraphModel::removeRow(quint32 id, const QModelIndex &parent)
 {
-    beginRemoveRows(parent, id, id);
-    IScaObject *object = m_objects.take(id);
+    IScaObject *object = m_objects.value(id, NULL);
 
     if (object == NULL)
     {
@@ -176,21 +178,27 @@ bool GraphModel::removeRow(quint32 id, const QModelIndex &parent)
         return false;
     }
 
-    if (object->getType() == IScaObject::LINK)
-    {
-        //Disconnect it from source and destination
-        Link *l = static_cast<Link *>(object);
-        freeLink(l);
-    }
-
-    //Remove connections in model of that object
+    //Remove connections in model of that object first (recursively)
     foreach(Link *link, object->getLinks())
     {
         removeObject(link);
     }
+
+    //Start removing object itself
+    beginRemoveRows(parent, id, id);
+
+    if (object->getType() == IScaObject::LINK)
+    {
+        //Disconnect it from source and destination
+        Link *l = static_cast<Link *>(object);
+        qDebug() << "Freeing link #" << getId(l);
+        freeLink(l);
+    }
+
     //Remove it from memory
     delete object;
 
+    m_objects.remove(id);
     qDebug() << "Removed: ID = " << id << " from model. Items left: " << m_objects.size();
     endRemoveRows();
 

@@ -203,12 +203,7 @@ void GraphScene::refreshLinkPosFrom(quint32 linkId, QPointF pos)
 
 ObjectVisual *GraphScene::getObjectById(quint32 id)
 {
-    if(!m_objects.contains(id))
-    {
-        return NULL;
-    }
-
-    return m_objects[id];
+    return m_objects.value(id, NULL);
 }
 
 ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
@@ -317,18 +312,16 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
 
     ObjectVisual *objectVis = m_objects.take(id);
 
-    if(objectVis->getType() == ObjectVisual::NODE)
-    {
-        Node *prevObject = static_cast<Node *>(objectVis);  //Save previous visual state of object
-        QPointF pos = prevObject->pos();
+    QPointF pos = objectVis->pos();
+    QVariant var = m_model->data(m_model->index(id), Qt::DecorationRole);
+    IScaObject *obj = qvariant_cast<IScaObject *>(var);
 
-        //It adds object with old id so we save associations
-        addObjectVisual(object, id);
-        Node *node = static_cast<Node *>(m_objects[id]);
-        node->setPos(pos);
-        node->setLinksFrom(prevObject->getLinksFrom());
-        node->setLinksTo(prevObject->getLinksTo());
-    }
+    //It adds object with old id so we save associations
+    addObjectVisual(obj, id);
+    ObjectVisual *node = static_cast<ObjectVisual *>(m_objects[id]);
+    node->setPos(pos);
+    node->setLinksFrom(objectVis->getLinksFrom());
+    node->setLinksTo(objectVis->getLinksTo());
 
     removeItem(objectVis);
     delete objectVis;

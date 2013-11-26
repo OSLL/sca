@@ -77,13 +77,6 @@ public:
     friend QDebug operator<<(QDebug d, Node &node);
     void disconnectLink(quint32 linkId);
 
-    void addLinkFrom(quint32 linkId);
-    QList<quint32> getLinksTo() const;
-    void setLinksTo(const QList<quint32> &linksTo);
-
-    void addLinkTo(quint32 linkId);
-    QList<quint32> getLinksFrom() const;
-    void setLinksFrom(const QList<quint32> &linksFrom);
 
 protected:
     QRectF m_rect;
@@ -91,7 +84,5 @@ protected:
     QColor m_standardColor;
     QColor m_selectionColor;
 
-    QList<quint32> m_linksFrom;
-    QList<quint32> m_linksTo;
 }; // class Node
 #endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_

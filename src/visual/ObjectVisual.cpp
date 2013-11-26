@@ -14,6 +14,38 @@ ObjectVisual::~ObjectVisual()
 {
 }
 
+void ObjectVisual::addLinkFrom(quint32 linkId)
+{
+    m_linksFrom.append(linkId);
+    scene()->refreshLinkPosFrom(linkId, pos());
+}
+
+void ObjectVisual::addLinkTo(quint32 linkId)
+{
+    m_linksTo.append(linkId);
+    scene()->refreshLinkPosTo(linkId, pos());
+}
+QList<quint32> ObjectVisual::getLinksFrom() const
+{
+    return m_linksFrom;
+}
+
+void ObjectVisual::setLinksFrom(const QList<quint32> &linksFrom)
+{
+    m_linksFrom = linksFrom;
+}
+
+
+QList<quint32> ObjectVisual::getLinksTo() const
+{
+    return m_linksTo;
+}
+
+void ObjectVisual::setLinksTo(const QList<quint32> &linksTo)
+{
+    m_linksTo = linksTo;
+}
+
 GraphScene *ObjectVisual::scene() const
 {
     return static_cast<GraphScene *>(QGraphicsItem::scene());

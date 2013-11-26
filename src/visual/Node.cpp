@@ -70,37 +70,6 @@ Node::~Node()
     removeTitle();
 }
 
-void Node::addLinkFrom(quint32 linkId)
-{
-    m_linksFrom.append(linkId);
-    scene()->refreshLinkPosFrom(linkId, pos());
-}
-
-void Node::addLinkTo(quint32 linkId)
-{
-    m_linksTo.append(linkId);
-    scene()->refreshLinkPosTo(linkId, pos());
-}
-QList<quint32> Node::getLinksFrom() const
-{
-    return m_linksFrom;
-}
-
-void Node::setLinksFrom(const QList<quint32> &linksFrom)
-{
-    m_linksFrom = linksFrom;
-}
-
-
-QList<quint32> Node::getLinksTo() const
-{
-    return m_linksTo;
-}
-
-void Node::setLinksTo(const QList<quint32> &linksTo)
-{
-    m_linksTo = linksTo;
-}
 
 QRectF Node::getRect() const
 {
