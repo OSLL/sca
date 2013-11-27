@@ -138,8 +138,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //#Setting up menu#//
     //Reset to defaults
     m_menu->resetToDefault();
-    //Setting connection available only if 2 nodes selected
-    conAct->setEnabled(nodes.size() == 2);
+    //Setting connection available only if 2 nodes or links selected
+    conAct->setEnabled(nodes.size() == 2 || links.size() == 2);
     //Editing annotation only if there is only one link under selection
     editAnnotation->setEnabled(links.size() == 1);
 
@@ -199,8 +199,17 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Process chosen action
     if (action == conAct)
     {
-        Node *src = nodes.at(0);
-        Node *dest = nodes.at(1);
+        ObjectVisual *src, *dest;
+        if (nodes.size() == 2)
+        {
+            src = nodes.at(0);
+            dest = nodes.at(1);
+        }
+        else
+        {
+            src = links.at(0),
+            dest = links.at(1);
+        }
         quint32 srcId = scene()->getObjectId(src);
         quint32 destId = scene()->getObjectId(dest);
         m_model->connectObjects(srcId, destId);

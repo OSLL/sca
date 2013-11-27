@@ -101,7 +101,7 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
             setPen(DEFAULT_LINK_PEN);
         }
     }
-    return QGraphicsItem::itemChange(change, value);
+    return ObjectVisual::itemChange(change, value);
 }
 
 void LinkVisual::refreshGeometry(QPointF from, QPointF to)

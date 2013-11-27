@@ -169,7 +169,7 @@ void ObjectTextViewer::dragEnterEvent(QDragEnterEvent *event)
     event->setAccepted(QFileInfo(path).isFile());
 }
 
-void ObjectTextViewer::dragMoveEvent(QDragMoveEvent *event)
+void ObjectTextViewer::dragMoveEvent(QDragMoveEvent *)
 {
 }
 
