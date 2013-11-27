@@ -56,7 +56,8 @@ Node::Node(QColor standardColor) :
     m_standardColor(standardColor),
     m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,
                             m_standardColor.green()* SELECTION_COLOR_DELTA,
-                            m_standardColor.blue() * SELECTION_COLOR_DELTA))
+                            m_standardColor.blue() * SELECTION_COLOR_DELTA)),
+    m_filterColor(Qt::red)
 {
     setColor(m_standardColor);
     setCacheMode(DeviceCoordinateCache);
@@ -161,7 +162,14 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
         }
         else
         {
-            setColor(m_standardColor);
+            if(m_filtered)
+            {
+                setColor(m_filterColor);
+            }
+            else
+            {
+                setColor(m_standardColor);
+            }
         }
     default:
         break;

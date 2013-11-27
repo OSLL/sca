@@ -80,7 +80,6 @@ GraphScene::~GraphScene()
 IScaObjectFileVisual *GraphScene::addFileVisual(IScaObjectFile *object)
 {
     IScaObjectFileVisual *node = new IScaObjectFileVisual(object);
-
     addItem(node);
     return node;
 }
@@ -188,7 +187,7 @@ void GraphScene::refreshLinkPos(quint32 linkId)
     }
     LinkVisual *link = static_cast<LinkVisual *>(m_objects.value(linkId, NULL));
     Q_ASSERT(link);
-    QVariant var = m_model->data(m_model->index(linkId), Qt::DecorationRole);
+    QVariant var = m_model->data(m_model->index(linkId, 0), Qt::DecorationRole);
     Link *objLink = qvariant_cast<Link *>(var);
 
     quint32 fromId = objLink->getObjectFrom(),
@@ -197,6 +196,22 @@ void GraphScene::refreshLinkPos(quint32 linkId)
     Node    *from = static_cast<Node *>(m_objects.value(fromId, NULL)),
             *to = static_cast<Node *>(m_objects.value(toId, NULL));
     link->refreshGeometry(from->pos(), to->pos());
+}
+
+void GraphScene::refreshAll()
+{
+    qDebug() << "Refresh all visual objects";
+    QList<QModelIndex> indeces;
+    foreach(quint32 id, m_objects.keys())
+    {
+        qDebug() << "index #" << id;
+        indeces.append(m_model->index(id, 0));
+    }
+
+    foreach (QModelIndex index, indeces)
+    {
+       updateObjects(index, index);
+    }
 }
 
 ObjectVisual *GraphScene::getObjectById(quint32 id)
@@ -304,14 +319,15 @@ quint32 GraphScene::getObjectId(ObjectVisual *object)
     return m_objects.key(object);
 }
 
-GraphModel *GraphScene::getModel() const
+QAbstractItemModel *GraphScene::getModel() const
 {
     return m_model;
 }
 
-void GraphScene::setModel(GraphModel *model)
+void GraphScene::setModel(QAbstractItemModel *model)
 {
     m_model = model;
+    refreshAll();
 }
 
 void GraphScene::updateObjectVisual(IScaObject *object, int id)
@@ -337,8 +353,9 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     QList<quint32> links = objectVis->getLinks();
 
     //Get new object
-    QVariant var = m_model->data(m_model->index(id), Qt::DecorationRole);
+    QVariant var = m_model->data(m_model->index(id, 0), Qt::DecorationRole);
     IScaObject *obj = qvariant_cast<IScaObject *>(var);
+    Q_ASSERT(obj != NULL);
 
     //Adds object with old id so we save associations for links
     ObjectVisual *newObject = addObjectVisual(obj, id);
@@ -348,6 +365,10 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     //Remove old one
     removeItem(objectVis);
     delete objectVis;
+
+    //Update for object filtering
+    QVariant filtered = m_model->data(m_model->index(id, 0), Qt::ToolTipRole);
+    newObject->setFiltered(filtered.toBool());
 }
 
 void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
@@ -362,7 +383,7 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
         qDebug() << "Removing #" << i << "from scene. Items left: " << m_objects.size();
         if (obj->getType() == ObjectVisual::LINK)
         {
-            QVariant var = m_model->data(m_model->index(i), Qt::DecorationRole);
+            QVariant var = m_model->data(m_model->index(i, 0), Qt::DecorationRole);
             Link *l = qvariant_cast<Link *>(var);
             Q_ASSERT(l != NULL);
             quint32 fromId = l->getObjectFrom(),

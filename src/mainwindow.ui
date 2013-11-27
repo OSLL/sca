@@ -39,7 +39,7 @@
         <enum>QTabWidget::Rounded</enum>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideNone</enum>
@@ -80,13 +80,33 @@
         </layout>
        </widget>
       </widget>
-      <widget class="GraphView" name="graphViewer">
-       <property name="interactive">
-        <bool>true</bool>
-       </property>
-       <property name="dragMode">
-        <enum>QGraphicsView::RubberBandDrag</enum>
-       </property>
+      <widget class="QWidget" name="gridLayoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="GraphView" name="graphViewer"/>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
+          <item>
+           <widget class="QLineEdit" name="filterLine"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="filterButton">
+            <property name="text">
+             <string>Filter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="unsetFilterButton">
+            <property name="text">
+             <string>Unset filter</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

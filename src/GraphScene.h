@@ -88,15 +88,17 @@ public:
 
     quint32 getObjectId(ObjectVisual *object);
 
-    GraphModel *getModel() const;
-    void setModel(GraphModel *model);
+    QAbstractItemModel *getModel() const;
+    void setModel(QAbstractItemModel *model);
 
     void refreshLinkPos(quint32 linkId);
+
+    void refreshAll();
 private:
     QHash<quint32, ObjectVisual *> m_objects;
 
     QPointF m_posToAdd;
-    GraphModel *m_model;
+    QAbstractItemModel *m_model;
 signals:
 
 public slots:

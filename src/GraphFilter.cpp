@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,59 +30,72 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file Node.h
- * \brief Header of Node
- * \todo add comment here
+ *
+ * \file GraphFilter.cpp
+ * \brief GraphFilter implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
-#define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+#include <QDebug>
+#include "GraphFilter.h"
+#include "GraphModel.h"
+#include "common/IScaObject.h"
 
-#include "visual/ObjectVisual.h"
-#include "NumericalConstants.h"
 
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-class LinkVisual;
-
-class Node : public ObjectVisual
+GraphFilter::GraphFilter(QObject *parent):
+    QSortFilterProxyModel(parent)
 {
-public:
-    explicit Node(QColor standardColor);
-    ~Node();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QRectF boundingRect() const;
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+}
 
-    QRectF getRect() const;
-    void setRect(const QRectF &rect);
+GraphFilter::~GraphFilter()
+{
 
-    QGraphicsSimpleTextItem *getTitle() const;
-    void setTitle(QGraphicsSimpleTextItem *title);
-    void setTitle(const QString &title);
+}
 
-    void removeTitle();
+QVariant GraphFilter::data(const QModelIndex &index, int role) const
+{
+    if(role == Qt::ToolTipRole)
+    {
+        return QVariant(filterAcceptsId(index));
+    }
+    else if (role == Qt::DecorationRole)
+    {
+        return sourceModel()->data(index, role);
+    }
+    return QVariant();
+}
 
-    QColor getColor() const;
-    void setColor(const QColor &color);
+bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
+{
+    GraphModel *model = static_cast<GraphModel *>(sourceModel());
+    if(model == NULL)
+    {
+        qDebug() << "This filter acceptebale only for GraphModel";
+        return false;
+    }
+    QVariant var = sourceModel()->data(index, Qt::DecorationRole);
+    IScaObject *object = qvariant_cast<IScaObject *>(var);
+    if(object == NULL)
+    {
+        qDebug() << "Can't get object";
+        return false;
+    }
+    bool acceptable = object->getFile().absoluteFilePath().contains(filterRegExp());
+    qDebug() << "Path:" << object->getFile().absoluteFilePath();
+    if(acceptable)
+        qDebug() << "Object #" << index.internalId() << "acceptable for filter";
+    else
+        qDebug() << "Object #" << index.internalId() << "unacceptable for filter";
 
-    friend QDebug operator<<(QDebug d, Node &node);
-    void disconnectLink(quint32 linkId);
+    return acceptable;
+}
 
-protected:
-    QRectF m_rect;
-    QGraphicsSimpleTextItem *m_title;
-    QColor m_standardColor;
-    QColor m_selectionColor;
-    QColor m_filterColor;
+QModelIndex GraphFilter::index(int row, int column, const QModelIndex &parent) const
+{
+    return sourceModel()->index(row, column, parent);
+}
 
-}; // class Node
-#endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_

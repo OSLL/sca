@@ -47,22 +47,21 @@ IScaObjectDirectory::IScaObjectDirectory():
 }
 
 IScaObjectDirectory::IScaObjectDirectory(const QFileInfo &fileInfo):
-    IScaObject(DIRECTORY),
-    m_fileInfo(fileInfo)
+    IScaObject(DIRECTORY, fileInfo)
 {
 }
 
 QFileInfo IScaObjectDirectory::getFile() const
 {
-    return m_fileInfo;
+    return m_file;
 }
 
 void IScaObjectDirectory::setFile(const QString &filePath)
 {
-    m_fileInfo.setFile(filePath);
+    m_file.setFile(filePath);
 }
 
-void IScaObjectDirectory::setFile(const QFile &file)
+void IScaObjectDirectory::setFile(const QFileInfo &file)
 {
-    m_fileInfo.setFile(file);
+    m_file = file;
 }

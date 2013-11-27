@@ -53,7 +53,8 @@ SOURCES += \
     common/IScaObjectBinaryBlock.cpp \
     visual/IScaObjectBinaryBlockVisual.cpp \
     GraphModel.cpp \
-    common/IScaObjectTextBlock.cpp
+    common/IScaObjectTextBlock.cpp \
+    GraphFilter.cpp
 
 
 HEADERS += \
@@ -95,7 +96,8 @@ HEADERS += \
     common/IScaObjectTextBlock.h \
     common/IScaObjectBinaryBlock.h \
     visual/IScaObjectBinaryBlockVisual.h \
-    GraphModel.h
+    GraphModel.h \
+    GraphFilter.h
 
 FORMS += \
     mainwindow.ui

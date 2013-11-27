@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file Node.h
- * \brief Header of Node
+ * \file GraphFilter.h
+ * \brief Header of GraphFilter
  * \todo add comment here
  *
  * File description
@@ -39,50 +39,32 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
-#define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
 
-#include "visual/ObjectVisual.h"
-#include "NumericalConstants.h"
+#ifndef _GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
+#define _GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
+#include <QSortFilterProxyModel>
 
 /*!
  * Class description. May use HTML formatting
  *
  */
 
-class LinkVisual;
-
-class Node : public ObjectVisual
+class GraphFilter: public QSortFilterProxyModel
 {
+
+    Q_OBJECT
 public:
-    explicit Node(QColor standardColor);
-    ~Node();
+    GraphFilter(QObject *parent = 0);
+    ~GraphFilter();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QRectF boundingRect() const;
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
-    QRectF getRect() const;
-    void setRect(const QRectF &rect);
+    bool filterAcceptsId(const QModelIndex &index) const;
 
-    QGraphicsSimpleTextItem *getTitle() const;
-    void setTitle(QGraphicsSimpleTextItem *title);
-    void setTitle(const QString &title);
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
+private:
 
-    void removeTitle();
+}; // class GraphFilter
 
-    QColor getColor() const;
-    void setColor(const QColor &color);
 
-    friend QDebug operator<<(QDebug d, Node &node);
-    void disconnectLink(quint32 linkId);
-
-protected:
-    QRectF m_rect;
-    QGraphicsSimpleTextItem *m_title;
-    QColor m_standardColor;
-    QColor m_selectionColor;
-    QColor m_filterColor;
-
-}; // class Node
-#endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
+#endif //_GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_

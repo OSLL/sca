@@ -35,6 +35,9 @@ public slots:
     void openHelp();
     void changeLinkToolBar();
 private slots:
+    void on_pushButton_clicked();
+    void on_filterButton_clicked();
+    void on_unsetFilterButton_clicked();
 };
 
 #endif // MAINWINDOW_H

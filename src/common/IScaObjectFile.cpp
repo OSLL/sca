@@ -47,8 +47,7 @@ IScaObjectFile::IScaObjectFile() :
 }
 
 IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo) :
-    IScaObject(FILE),
-    m_fileInfo(fileInfo)
+    IScaObject(FILE, fileInfo)
 {
 }
 
@@ -59,15 +58,15 @@ IScaObjectFile::~IScaObjectFile()
 
 QFileInfo IScaObjectFile::getFile() const
 {
-    return m_fileInfo;
+    return m_file;
 }
 
 void IScaObjectFile::setFile(const QString &filePath)
 {
-    m_fileInfo.setFile(filePath);
+    m_file.setFile(filePath);
 }
 
-void IScaObjectFile::setFile(const QFile &file)
+void IScaObjectFile::setFile(const QFileInfo &file)
 {
-    m_fileInfo.setFile(file);
+    m_file = file;
 }

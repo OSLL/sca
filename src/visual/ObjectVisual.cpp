@@ -4,7 +4,8 @@
 
 ObjectVisual::ObjectVisual(ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),
-    m_type(type)
+    m_type(type),
+    m_filtered(false)
 {
     setFlags(QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemIsSelectable);
@@ -47,6 +48,18 @@ QList<quint32> ObjectVisual::getLinks() const
 void ObjectVisual::setLinks(const QList<quint32> &links)
 {
     m_links = links;
+}
+
+void ObjectVisual::setFiltered(bool filtered)
+{
+    m_filtered = filtered;
+    if(m_filtered)
+        setBrush(FILTER_BRUSH);
+}
+
+bool ObjectVisual::getFiltered()
+{
+
 }
 
 GraphScene *ObjectVisual::scene() const

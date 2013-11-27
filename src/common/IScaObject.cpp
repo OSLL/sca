@@ -42,8 +42,9 @@
 #include "common/IScaObject.h"
 #include <QDebug>
 
-IScaObject::IScaObject(IScaObjectType type) :
-    m_type(type)
+IScaObject::IScaObject(IScaObjectType type, QFileInfo file) :
+    m_type(type),
+    m_file(file)
 {
 }
 
@@ -83,6 +84,16 @@ void IScaObject::disconnectLink(quint32 link)
 void IScaObject::addLink(quint32 link)
 {
     m_links.append(link);
+}
+
+QFileInfo IScaObject::getFile()
+{
+    return m_file;
+}
+
+void IScaObject::setFile(const QFileInfo &file)
+{
+    m_file = file;
 }
 
 void IScaObject::setLinks(const QList<quint32> &links)

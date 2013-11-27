@@ -134,3 +134,19 @@ void MainWindow::loadTextFile(const QString &code)
     m_ui->ViewsTabs->setCurrentIndex(0);
 }
 
+
+void MainWindow::on_pushButton_clicked()
+{
+
+}
+
+void MainWindow::on_filterButton_clicked()
+{
+    QString filter = m_ui->filterLine->text();
+    m_ui->graphViewer->setFilter(filter);
+}
+
+void MainWindow::on_unsetFilterButton_clicked()
+{
+    m_ui->graphViewer->removeFilter();
+}

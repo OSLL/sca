@@ -61,9 +61,8 @@ public:
 
   QFileInfo getFile() const;
   void setFile(const QString &filePath);
-  void setFile(const QFile &file);
+  void setFile(const QFileInfo &file);
 private:
-  QFileInfo m_fileInfo;
 }; // class IScaObjectFile
   
 

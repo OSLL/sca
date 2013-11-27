@@ -56,6 +56,7 @@
 #include "common/ScaObjectConverter.h"
 #include "ScaMIMEDataProcessor.h"
 #include "GraphModel.h"
+#include "GraphFilter.h"
 
 GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent),
@@ -368,6 +369,24 @@ void GraphView::setScene(GraphScene *graphScene)
                 scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
     graphScene->setModel(m_model);
+}
+
+void GraphView::setFilter(GraphFilter *filter)
+{
+    scene()->setModel(filter);
+}
+
+void GraphView::setFilter(QString pattern)
+{
+    GraphFilter *filter = new GraphFilter();
+    filter->setFilterRegExp(pattern);
+    filter->setSourceModel(m_model);
+    setFilter(filter);
+}
+
+void GraphView::removeFilter()
+{
+    scene()->setModel(m_model);
 }
 
 void GraphView::editLinkAnnotation(quint32 id)

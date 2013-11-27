@@ -51,6 +51,7 @@
 #include <QGraphicsView>
 #include "widgets/GraphViewContextMenu.h"
 #include "GraphScene.h"
+class GraphFilter;
 class GraphModel;
 
 class GraphView : public QGraphicsView
@@ -70,7 +71,9 @@ public:
     GraphModel *getModel() const;
     void setModel(GraphModel *model);
     void setScene(GraphScene *graphScene);
-
+    void setFilter(GraphFilter *filter);
+    void setFilter(QString pattern);
+    void removeFilter();
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;

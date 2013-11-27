@@ -47,7 +47,7 @@ IScaObjectTextBlock::IScaObjectTextBlock() :
     m_length(0),
     m_offset(0),
     m_text(QString("")),
-    m_file(NULL)
+    m_fileObject(NULL)
 {
 }
 
@@ -57,14 +57,15 @@ IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file, unsigned int offs
     m_length(length),
     m_offset(offset),
     m_text(text),
-    m_file(file)
+    m_fileObject(file)
 {
+    IScaObject::setFile(file->getFile());
 }
 
 IScaObjectTextBlock::~IScaObjectTextBlock()
 {
-    if (m_file != NULL)
-        delete m_file;
+    if (m_fileObject != NULL)
+        delete m_fileObject;
 }
 
 unsigned int IScaObjectTextBlock::getOffset() const
@@ -79,12 +80,13 @@ void IScaObjectTextBlock::setOffset(unsigned int offset)
 
 QFileInfo IScaObjectTextBlock::getFile() const
 {
-    return m_file->getFile();
+    return m_file;
 }
 
-void IScaObjectTextBlock::setFile(QFileInfo fileInfo)
+void IScaObjectTextBlock::setFile(const QFileInfo &file)
 {
-    m_file->setFile(fileInfo.filePath());
+    m_file = file;
+    m_fileObject->setFile(file.filePath());
 }
 
 unsigned int IScaObjectTextBlock::getLength() const

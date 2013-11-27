@@ -71,7 +71,7 @@ public:
 private:
   quint32 m_offset;
   QString m_identifier;
-  IScaObjectFile *m_file;
+  IScaObjectFile *m_fileObject;
 }; // class IScaObjectIdintifier
   
 

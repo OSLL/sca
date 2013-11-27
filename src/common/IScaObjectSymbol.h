@@ -61,7 +61,7 @@ public:
     ~IScaObjectSymbol();
 
     IScaObjectFile *file() const;
-    void setFile(IScaObjectFile *file);
+    void setFile(const QFileInfo &file);
 
     char getSymbol() const;
     void setSymbol(char symbol);
@@ -72,7 +72,7 @@ public:
 private:
     char m_symbol;
     quint32 m_offset;
-    IScaObjectFile *m_file;
+    IScaObjectFile *m_fileObject;
 
 }; // class IScaObjectSymbol
 

@@ -63,7 +63,7 @@ public:
     void setOffset(unsigned int offset);
 
     QFileInfo getFile() const;
-    void setFile(QFileInfo fileInfo);
+    void setFile(const QFileInfo &file);
 
     unsigned int getLength() const;
     void setLength(unsigned int length);
@@ -75,7 +75,7 @@ private:
     quint32 m_length;
     quint32 m_offset;
     QByteArray m_data;
-    IScaObjectFile *m_file;
+    IScaObjectFile *m_fileObject;
 
 }; // class IScaObjectBinaryBlock
   

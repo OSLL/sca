@@ -28,9 +28,13 @@ public:
     QList<quint32> getLinks() const;
     void setLinks(const QList<quint32> &links);
 
+    void setFiltered(bool filtered);
+    bool getFiltered();
+
 protected:
     QList<quint32> m_links;
     ObjectVisualType m_type;
+    bool m_filtered;
 };
 
 #endif // OBJECTVISUAL_H

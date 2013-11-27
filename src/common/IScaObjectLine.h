@@ -72,7 +72,7 @@ public:
 private:
     QString m_line;
     quint32 m_lineNumber;
-    IScaObjectFile *m_file;
+    IScaObjectFile *m_fileObject;
 }; // class IScaObjectLine
 
 

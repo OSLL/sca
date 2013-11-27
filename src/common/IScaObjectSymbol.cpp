@@ -46,7 +46,7 @@ IScaObjectSymbol::IScaObjectSymbol():
     IScaObject(SYMBOL),
     m_symbol(0),
     m_offset(0),
-    m_file(NULL)
+    m_fileObject(NULL)
 {
 }
 
@@ -55,24 +55,26 @@ IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset,
     IScaObject(SYMBOL),
     m_symbol(symbol),
     m_offset(offset),
-    m_file(file)
+    m_fileObject(file)
 {
+    IScaObject::setFile(file->getFile());
 }
 
 IScaObjectSymbol::~IScaObjectSymbol()
 {
-    if (m_file != NULL)
-        delete m_file;
+    if (m_fileObject != NULL)
+        delete m_fileObject;
 }
 
 IScaObjectFile *IScaObjectSymbol::file() const
 {
-    return m_file;
+    return m_fileObject;
 }
 
-void IScaObjectSymbol::setFile(IScaObjectFile *file)
+void IScaObjectSymbol::setFile(const QFileInfo &file)
 {
     m_file = file;
+    m_fileObject->setFile(file);
 }
 char IScaObjectSymbol::getSymbol() const
 {

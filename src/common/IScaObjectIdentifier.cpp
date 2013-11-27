@@ -45,7 +45,7 @@ IScaObjectIdentifier::IScaObjectIdentifier() :
     IScaObject(IDENTIFIER),
     m_offset(0),
     m_identifier(QString("")),
-    m_file(NULL)
+    m_fileObject(NULL)
 {
 }
 
@@ -53,28 +53,27 @@ IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, unsigned int of
     IScaObject(IDENTIFIER),
     m_offset(offset),
     m_identifier(identifier),
-    m_file(file)
+    m_fileObject(file)
 {
+    IScaObject::setFile(file->getFile());
 }
 
 IScaObjectIdentifier::~IScaObjectIdentifier()
 {
-    if (m_file != NULL)
-        delete m_file;
+    if (m_fileObject != NULL)
+        delete m_fileObject;
 
 }
 
 QFileInfo IScaObjectIdentifier::getFile() const
 {
-    return m_file->getFile();
+    return m_file;
 }
-
-
-
 
 void IScaObjectIdentifier::setFile(const QFileInfo &file)
 {
-    m_file->setFile(file.filePath());
+    m_file = file;
+    m_fileObject->setFile(file.filePath());
 }
 
 QString IScaObjectIdentifier::getIdentifier() const

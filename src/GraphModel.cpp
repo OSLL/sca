@@ -138,7 +138,7 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
     {
         return QVariant();
     }
-    //qDebug() << "Data called for #" << id << "(" << *(m_objects.value(id, NULL)) << ")";
+    qDebug() << "Data called for #" << id << "(" << *(m_objects.value(id, NULL)) << ")";
     if (!m_objects.contains(id))
     {
         qDebug() << "Model doesn\'t have this object.";
@@ -159,6 +159,10 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
                 return QVariant::fromValue(link);
             }
             return QVariant::fromValue(object);
+        }
+    case Qt::ToolTipRole:
+        {
+            return QVariant(false);
         }
     default:
         {
@@ -357,4 +361,3 @@ void GraphModel::setAnnotation(quint32 id, QString annotation)
     QModelIndex ind = index(id);
     emit dataChanged(ind, ind);
 }
-

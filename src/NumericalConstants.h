@@ -79,11 +79,11 @@ const qreal MIN_LINK_LENGTH = 45;
 
 const QPen DEFAULT_LINK_PEN(QBrush(Qt::black), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
 const QPen SELECTED_LINK_PEN(QBrush(QColor(80,80,80)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-
-const QColor DEFAULT_COLOR(0, 0, 0);
+const QBrush FILTER_BRUSH((Qt::red));
 
 //Default export image size
 const int DEFAULT_IMAGE_WIDTH = 800;
 const int DEFAULT_IMAGE_HEIGHT = 600;
+
 
 #endif //_NumericalConstants_H_B55D9E18_0180_4F9B_B243_BC6FD77B58FD_INCLUDED_

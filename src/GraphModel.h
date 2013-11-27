@@ -86,6 +86,7 @@ public:
     void editLinkAnnotation(quint32 id);
 
     void setAnnotation(quint32 id, QString annotation);
+
 private:
     static quint32 s_nextID;
     QHash<quint32, IScaObject *> m_objects;

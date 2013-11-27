@@ -50,6 +50,7 @@
 
 #include <QString>
 #include <QVariant>
+#include <QFileInfo>
 class Link;
 
 class IScaObject
@@ -67,8 +68,8 @@ public:
         GROUP,
         LINK
     };
-    IScaObject(IScaObjectType type = OBJECT);
-    ~IScaObject();
+    IScaObject(IScaObjectType type = OBJECT, QFileInfo file = QFileInfo());
+    virtual ~IScaObject();
 
     IScaObjectType getType() const;
 
@@ -82,12 +83,17 @@ public:
     void addLink(quint32 link);
 
     friend QDebug operator<<(QDebug d, IScaObject &node);
+
+    virtual QFileInfo getFile();
+    virtual void setFile(const QFileInfo &file);
+;
 private:
     QString m_annotation;
 
 protected:
     QList<quint32> m_links;
     IScaObjectType m_type;
+    QFileInfo m_file;
 
 }; // class IScaObject
 
