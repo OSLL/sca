@@ -29,7 +29,6 @@ public:
     void setLinks(const QList<quint32> &links);
 
     void setFiltered(bool filtered);
-    bool getFiltered();
 
 protected:
     QList<quint32> m_links;

@@ -57,11 +57,6 @@ void ObjectVisual::setFiltered(bool filtered)
         setBrush(FILTER_BRUSH);
 }
 
-bool ObjectVisual::getFiltered()
-{
-
-}
-
 GraphScene *ObjectVisual::scene() const
 {
     return static_cast<GraphScene *>(QGraphicsItem::scene());

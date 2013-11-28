@@ -44,8 +44,8 @@
 #define _FilterDialog_H_E11AD786_3F67_4A8B_8622_38B097BC9862_INCLUDED_
 
 #include <QDialog>
-#include "GraphFilter.h"
-#include "GraphScene.h"
+#include "../GraphFilter.h"
+#include "../GraphScene.h"
 #include <ui_FilterDialog.h>
 
 class FilterDialog : public QDialog

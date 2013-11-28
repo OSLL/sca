@@ -39,9 +39,8 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "widgets/GraphView.h"
-#include "widgets/FilterDialog.h"
-#include "ui_FilterWidget.h"
+#include "GraphView.h"
+#include "FilterDialog.h"
 #include "MainWindow.h"
 #include "StringConstants.h"
 
