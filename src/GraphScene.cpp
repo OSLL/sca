@@ -200,11 +200,11 @@ void GraphScene::refreshLinkPos(quint32 linkId)
 
 void GraphScene::refreshAll()
 {
-    qDebug() << "Refresh all visual objects";
+    //qDebug() << "Refresh all visual objects";
     QList<QModelIndex> indeces;
     foreach(quint32 id, m_objects.keys())
     {
-        qDebug() << "index #" << id;
+        //qDebug() << "index #" << id;
         indeces.append(m_model->index(id, 0));
     }
 
@@ -228,7 +228,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     }
     IScaObject::IScaObjectType type = object->getType();
     ObjectVisual *visObject = NULL;
-    qDebug() << "Adding #" << id << "-" << type << " to scene.";
+    //qDebug() << "Adding #" << id << "-" << type << " to scene.";
 
     switch(type)
     {
@@ -310,7 +310,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
             break;
         }
     }
-    qDebug() << "Successfully added object to scene.";
+    //qDebug() << "Successfully added object to scene.";
     return visObject;
 }
 
@@ -332,7 +332,7 @@ void GraphScene::setModel(QAbstractItemModel *model)
 
 void GraphScene::updateObjectVisual(IScaObject *object, int id)
 {
-    qDebug() << "Updating existing #" << id << " in scene.";
+    //qDebug() << "Updating existing #" << id << " in scene.";
 
     if (object == NULL || !m_objects.contains(id))
     {
@@ -374,13 +374,13 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
 void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 {
     Q_UNUSED(parent);
-    qDebug() << "Removing objects from scene.";
+    //qDebug() << "Removing objects from scene.";
     for (int i = first; i <= last; i++)
     {
         ObjectVisual *obj = m_objects.take(i);
         int linksCount = obj->getLinks().size();
         Q_ASSERT(linksCount == 0);
-        qDebug() << "Removing #" << i << "from scene. Items left: " << m_objects.size();
+        //qDebug() << "Removing #" << i << "from scene. Items left: " << m_objects.size();
         if (obj->getType() == ObjectVisual::LINK)
         {
             QVariant var = m_model->data(m_model->index(i, 0), Qt::DecorationRole);
@@ -402,7 +402,7 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
     Q_UNUSED(rightBottom);
-    qDebug() << "Update #" << leftTop.internalId() << " to scene.";
+    //qDebug() << "Update #" << leftTop.internalId() << " to scene.";
 
     //Get object that changed
     quint32 id = leftTop.internalId();

@@ -83,24 +83,28 @@
       <widget class="QWidget" name="gridLayoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="GraphView" name="graphViewer"/>
+         <widget class="GraphView" name="graphViewer">
+          <property name="dragMode">
+           <enum>QGraphicsView::RubberBandDrag</enum>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QLineEdit" name="filterLine"/>
-          </item>
-          <item>
-           <widget class="QPushButton" name="filterButton">
+           <widget class="QLabel" name="filterLabel">
             <property name="text">
-             <string>Filter</string>
+             <string>Filter by path:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="unsetFilterButton">
+           <widget class="QLineEdit" name="filterLine"/>
+          </item>
+          <item>
+           <widget class="QToolButton" name="advancedFilterButton">
             <property name="text">
-             <string>Unset filter</string>
+             <string>...</string>
             </property>
            </widget>
           </item>
@@ -166,8 +170,25 @@
    </property>
   </action>
   <action name="actionHelp">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Help</string>
+   </property>
+  </action>
+  <action name="actionFilterItems">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Filter items</string>
+   </property>
+   <property name="toolTip">
+    <string>Filter items that is shown on scene</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>

@@ -54,7 +54,8 @@ SOURCES += \
     visual/IScaObjectBinaryBlockVisual.cpp \
     GraphModel.cpp \
     common/IScaObjectTextBlock.cpp \
-    GraphFilter.cpp
+    GraphFilter.cpp \
+    widgets/FilterDialog.cpp
 
 
 HEADERS += \
@@ -97,10 +98,12 @@ HEADERS += \
     common/IScaObjectBinaryBlock.h \
     visual/IScaObjectBinaryBlockVisual.h \
     GraphModel.h \
-    GraphFilter.h
+    GraphFilter.h \
+    widgets/FilterDialog.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    FilterDialog.ui
 
 RESOURCES += \
     resources/resources.qrc

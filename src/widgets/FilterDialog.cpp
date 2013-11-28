@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,74 +30,56 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphFilter.h
- * \brief Header of GraphFilter
- * \todo add comment here
+ *
+ * \file FilterDialog.cpp
+ * \brief FilterDialog implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "widgets/GraphView.h"
+#include "widgets/FilterDialog.h"
+#include "ui_FilterWidget.h"
+#include "MainWindow.h"
+#include "StringConstants.h"
 
-#ifndef _GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
-#define _GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
-#include <QSortFilterProxyModel>
-#include "common/IScaObject.h"
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-
-class GraphFilter: public QSortFilterProxyModel
+FilterDialog::FilterDialog(GraphFilter *filter, GraphScene* scene, QWidget *parent) :
+    QDialog(parent),
+    m_graphFilter(filter),
+    m_scene(scene),
+    m_ui(new Ui::FilterDialog)
 {
-    Q_OBJECT
+    m_ui->setupUi(this);
+    m_ui->regexpLineEdit->setText(m_graphFilter->getRegExpPattern());
+}
 
-public:
-    enum boolOperation{
-        OR,
-        AND,
-        NOT
-    };
+FilterDialog::~FilterDialog()
+{
+    delete m_ui;
+}
 
-    GraphFilter(QObject *parent = 0);
-    ~GraphFilter();
+void FilterDialog::reset()
+{
+    m_ui->regexpLineEdit->setText(DEFAULT_FILTER_REGEXP);
+}
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+void FilterDialog::on_regexpCheckBox_stateChanged(int arg1)
+{
+    m_ui->regexpLineEdit->setEnabled(arg1);
+}
 
-    bool filterAcceptsId(const QModelIndex &index) const;
-
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-
-    bool checkRegExp(IScaObject *object) const;
-
-    QString getRegExpPattern() const;
-    QRegExp *getRegExp() const;
-    void setRegExp(const QRegExp &regExp);
-    void setRegExpPattern(const QString &pattern);
-
-    void refreshRegExp();
-
-    QString getFileName() const;
-    void setFileName(const QString &fileName);
-
-    QString getFilePath() const;
-    void setFilePath(const QString &filePath);
-
-    IScaObject::IScaObjectType getObjType() const;
-    void setObjType(const IScaObject::IScaObjectType &objType);
-
-    QString getAnnotation() const;
-    void setAnnotation(const QString &annotation);
-
-private:
-    QString m_fileName;
-    QString m_filePath;
-    IScaObject::IScaObjectType m_objType;
-    QString m_annotation;
-    QRegExp *m_regExp;
-}; // class GraphFilter
-
-
-#endif //_GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
+void FilterDialog::on_regexpLineEdit_textChanged(const QString &arg1)
+{
+    if (QRegExp(arg1).isValid())
+    {
+        m_graphFilter->setRegExpPattern(arg1);
+        m_ui->regexpCheckBox->setIcon(QIcon());
+        m_scene->refreshAll();
+    }
+    else
+    {
+        m_ui->regexpCheckBox->setIcon(QIcon::fromTheme("dialog-warning"));
+    }
+}

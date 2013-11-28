@@ -57,7 +57,7 @@ class GraphModel: public QAbstractListModel
 {
     Q_OBJECT
 public:
-    explicit GraphModel();
+    explicit GraphModel(QObject *parent = 0);
     ~GraphModel();
 
     quint32 addObject(const QMimeData *mimeData);

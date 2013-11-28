@@ -43,17 +43,22 @@
 #include "GraphFilter.h"
 #include "GraphModel.h"
 #include "common/IScaObject.h"
-
+#include "StringConstants.h"
 
 GraphFilter::GraphFilter(QObject *parent):
-    QSortFilterProxyModel(parent)
+    QSortFilterProxyModel(parent),
+    m_fileName(QString("")),
+    m_filePath(QString("")),
+    m_objType(IScaObject::OBJECT),
+    m_annotation(QString("")),
+    m_regExp(new QRegExp(DEFAULT_FILTER_REGEXP, Qt::CaseInsensitive, QRegExp::Wildcard))
 {
 
 }
 
 GraphFilter::~GraphFilter()
 {
-
+    delete m_regExp;
 }
 
 QVariant GraphFilter::data(const QModelIndex &index, int role) const
@@ -84,7 +89,9 @@ bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
         qDebug() << "Can't get object";
         return false;
     }
-    bool acceptable = object->getFile().absoluteFilePath().contains(filterRegExp());
+
+    bool acceptable = checkRegExp(object);
+
     qDebug() << "Path:" << object->getFile().absoluteFilePath();
     if(acceptable)
         qDebug() << "Object #" << index.internalId() << "acceptable for filter";
@@ -99,3 +106,118 @@ QModelIndex GraphFilter::index(int row, int column, const QModelIndex &parent) c
     return sourceModel()->index(row, column, parent);
 }
 
+bool GraphFilter::checkRegExp(IScaObject *object) const
+{
+    //If filter didn't change from default, nothing matches
+    // TODO (LeoSko) this condition is bad on perfomance,
+    // somehow maybe move it to check once a refresh needed
+    if (m_regExp->pattern() == DEFAULT_FILTER_REGEXP)
+    {
+        return false;
+    }
+
+    //Check info of object to regexp
+    QString info = object->getInfo();
+    return m_regExp->exactMatch(info);
+}
+
+QString GraphFilter::getRegExpPattern() const
+{
+    return m_regExp->pattern();
+}
+
+QRegExp *GraphFilter::getRegExp() const
+{
+    return m_regExp;
+}
+
+void GraphFilter::setRegExpPattern(const QString &pattern)
+{
+    m_regExp->setPattern(pattern);
+}
+
+void GraphFilter::refreshRegExp()
+{
+    QString pattern = OBJECTINFO_PATTERN;
+
+    qDebug() << m_filePath;
+    qDebug() << pattern;
+    //Set object type filter
+    if (m_objType == IScaObject::OBJECT)
+        pattern = pattern.arg("*");
+    else
+        pattern = pattern.arg(QString::number(m_objType));
+
+    qDebug() << pattern;
+    //Set filename filter
+    if (m_fileName.isEmpty())
+        pattern = pattern.arg("*");
+    else
+        pattern = pattern.arg(m_fileName.append("*").insert(0, "*"));
+
+    qDebug() << pattern;
+    //Set filepath filter
+    if (m_filePath.isEmpty())
+        pattern = pattern.arg("*");
+    else
+        pattern = pattern.arg(m_filePath.append("*").insert(0, "*"));
+
+    qDebug() << pattern;
+    //Set annotation filter
+    if (m_annotation.isEmpty())
+        pattern = pattern.arg("*");
+    else
+        pattern = pattern.arg(m_annotation.append("*").insert(0, "*"));
+
+    qDebug() << pattern;
+    m_regExp->setPattern(pattern);
+}
+
+QString GraphFilter::getFileName() const
+{
+    return m_fileName;
+}
+
+void GraphFilter::setFileName(const QString &fileName)
+{
+    m_fileName = fileName;
+    refreshRegExp();
+}
+
+QString GraphFilter::getFilePath() const
+{
+    return m_filePath;
+}
+
+void GraphFilter::setFilePath(const QString &filePath)
+{
+    m_filePath = filePath;
+    refreshRegExp();
+}
+
+IScaObject::IScaObjectType GraphFilter::getObjType() const
+{
+    return m_objType;
+}
+
+void GraphFilter::setObjType(const IScaObject::IScaObjectType &objType)
+{
+    m_objType = objType;
+    refreshRegExp();
+}
+
+QString GraphFilter::getAnnotation() const
+{
+    return m_annotation;
+}
+
+void GraphFilter::setAnnotation(const QString &annotation)
+{
+    m_annotation = annotation;
+    refreshRegExp();
+}
+
+void GraphFilter::setRegExp(const QRegExp &regExp)
+{
+    m_regExp->setPattern(regExp.pattern());
+}

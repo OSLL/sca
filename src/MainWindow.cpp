@@ -14,6 +14,8 @@
 #include "GraphScene.h"
 #include "GraphModel.h"
 #include "visual/LinkVisual.h"
+#include "widgets/FilterDialog.h"
+#include "GraphFilter.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
@@ -21,24 +23,35 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->setupUi(this);
 
     setWindowIcon(QIcon(LOGO_PATH));
-    m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
-    m_model = new GraphModel();
+
+    //Create and setup model and filter
+    m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT, this);
+    m_model = new GraphModel(this);
+    m_filter = new GraphFilter(this);
+    m_filter->setSourceModel(m_model);
+
     m_ui->graphViewer->setScene(m_scene);
     m_ui->graphViewer->setModel(m_model);
+    m_scene->setModel(m_filter);
+
     //Set up file model
     m_fileModel = new QFileSystemModel(this);
     m_fileModel->setRootPath("");
     m_ui->sourceBrowser->setModel(m_fileModel);
+    m_ui->filterLine->setText("");
 
-    m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
     //Leave only "name"(zero) column in SourceBrowser
     for (int i = 1; i < m_fileModel->columnCount(); i++)
     {
         m_ui->sourceBrowser->hideColumn(i);
     }
 
+    //Set some flags for widgets
+    m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    //Connect customContextMenus
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));
     connect(m_ui->graphViewer, SIGNAL(customContextMenuRequested(QPoint)),
@@ -71,6 +84,8 @@ MainWindow::~MainWindow()
         delete m_fileModel;
     if (m_ui != NULL)
         delete m_ui;
+    if (m_filter != NULL)
+        delete m_filter;
 }
 
 void MainWindow::processFile()
@@ -121,9 +136,9 @@ void MainWindow::openHelp()
     QDesktopServices::openUrl(url);
 }
 
-void MainWindow::changeLinkToolBar()
+void MainWindow::refreshFilterLine(const QString &text)
 {
-    m_ui->graphViewer->scene()->selectedLinks();
+    m_ui->filterLine->setText(text);
 }
 
 void MainWindow::loadTextFile(const QString &code)
@@ -134,19 +149,25 @@ void MainWindow::loadTextFile(const QString &code)
     m_ui->ViewsTabs->setCurrentIndex(0);
 }
 
-
-void MainWindow::on_pushButton_clicked()
+void MainWindow::on_filterLine_textChanged(const QString &arg1)
 {
-
+    m_filter->setFilePath(arg1);
+    m_scene->refreshAll();
 }
 
-void MainWindow::on_filterButton_clicked()
+void MainWindow::on_advancedFilterButton_clicked()
 {
-    QString filter = m_ui->filterLine->text();
-    m_ui->graphViewer->setFilter(filter);
-}
-
-void MainWindow::on_unsetFilterButton_clicked()
-{
-    m_ui->graphViewer->removeFilter();
+    FilterDialog *wid;
+    QList<FilterDialog *> filters = findChildren<FilterDialog *>();
+    if (filters.size() == 1)
+    {
+        //So filter already showed up
+        wid = static_cast<FilterDialog *>(filters.at(0));
+        wid->raise();
+        wid->move(QApplication::desktop()->screen()->rect().center()
+                  - wid->rect().center());
+    }
+    wid = new FilterDialog(m_filter, m_scene, this);
+    qDebug() << "Advanced filter called";
+    wid->show();
 }

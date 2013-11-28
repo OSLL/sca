@@ -79,21 +79,18 @@ public:
 
     Node *addNode(IScaObject *object);
     LinkVisual *addLinkVisual(Link *object);
+    ObjectVisual *addObjectVisual(IScaObject *object, int id);
 
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();
 
     ObjectVisual *getObjectById(quint32 id);
-    ObjectVisual *addObjectVisual(IScaObject *object, int id);
-
     quint32 getObjectId(ObjectVisual *object);
 
     QAbstractItemModel *getModel() const;
     void setModel(QAbstractItemModel *model);
 
     void refreshLinkPos(quint32 linkId);
-
-    void refreshAll();
 private:
     QHash<quint32, ObjectVisual *> m_objects;
 
@@ -102,6 +99,7 @@ private:
 signals:
 
 public slots:
+    void refreshAll();
     void updateObjects(QModelIndex topLeft, QModelIndex rightBottom);
     void updateObjectVisual(IScaObject *object, int id);
     void removeObject(const QModelIndex & parent, int first, int last);

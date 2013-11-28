@@ -89,4 +89,11 @@ const QString HELP_PATH = "/resources/sca_help.html";
 const QString LOGO_PATH = ":logo/icons/logo.png";
 //[End files paths]
 
+//[GraphFilter strings]
+const QString OBJECTINFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4";
+const QString DEFAULT_FILTER_REGEXP = OBJECTINFO_PATTERN.arg("*").arg("*").arg("*").arg("*");
+const QString GRAPH_FILTER_TITLE = "Advanced graph filter";
+const QString BOOL_CONDITIONS("OR;AND;NOT");
+//[End GraphFilter strings]
+
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

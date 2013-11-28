@@ -71,9 +71,6 @@ public:
     GraphModel *getModel() const;
     void setModel(GraphModel *model);
     void setScene(GraphScene *graphScene);
-    void setFilter(GraphFilter *filter);
-    void setFilter(QString pattern);
-    void removeFilter();
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;

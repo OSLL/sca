@@ -79,6 +79,8 @@ public:
     QList<quint32> getLinks() const;
     void setLinks(const QList<quint32> &links);
 
+    QString getInfo() const;
+
     void disconnectLink(quint32 link);
     void addLink(quint32 link);
 

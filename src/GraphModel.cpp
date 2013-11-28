@@ -50,8 +50,8 @@
 //ID = 0 for objects, which doesn't exist in model
 quint32 GraphModel::s_nextID = 1;
 
-GraphModel::GraphModel() :
-    QAbstractListModel()
+GraphModel::GraphModel(QObject *parent) :
+    QAbstractListModel(parent)
 {
 
 }
@@ -66,7 +66,7 @@ GraphModel::~GraphModel()
 
 quint32 GraphModel::connectObjects(quint32 source, quint32 dest)
 {
-    qDebug() << "Connecting " << source << " to " << dest;
+    //qDebug() << "Connecting " << source << " to " << dest;
     Link *link = new Link(source, dest);
     QModelIndex linkIndex = index(s_nextID);
     m_objects[source]->addLink(s_nextID);
@@ -93,7 +93,6 @@ quint32 GraphModel::addObject(const QMimeData *mimeData)
 
 quint32 GraphModel::addObject(IScaObject *object)
 {
-    qDebug() << "";
     QModelIndex changedIndex = index(s_nextID);
     setData(changedIndex, QVariant::fromValue(object), Qt::DecorationRole);
 
@@ -138,7 +137,7 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
     {
         return QVariant();
     }
-    qDebug() << "Data called for #" << id << "(" << *(m_objects.value(id, NULL)) << ")";
+    //qDebug() << "Data called for #" << id << "(" << *(m_objects.value(id, NULL)) << ")";
     if (!m_objects.contains(id))
     {
         qDebug() << "Model doesn\'t have this object.";

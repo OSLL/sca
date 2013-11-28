@@ -19,8 +19,7 @@ private:
     QFileSystemModel *m_fileModel;
     GraphScene *m_scene;
     GraphModel *m_model;
-
-    QToolBar *linkToolBar;
+    GraphFilter *m_filter;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -33,11 +32,10 @@ public slots:
     void openAbout();
     void exportToImage();
     void openHelp();
-    void changeLinkToolBar();
+    void refreshFilterLine(const QString &text);
 private slots:
-    void on_pushButton_clicked();
-    void on_filterButton_clicked();
-    void on_unsetFilterButton_clicked();
+    void on_filterLine_textChanged(const QString &arg1);
+    void on_advancedFilterButton_clicked();
 };
 
 #endif // MAINWINDOW_H

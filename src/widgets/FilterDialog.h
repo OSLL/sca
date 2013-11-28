@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,74 +30,50 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphFilter.h
- * \brief Header of GraphFilter
+ * \file FilterDialog.h
+ * \brief Header of FilterDialog
  * \todo add comment here
  *
- * File description
+ * Widget that provides filtering objects in scene as far as searching them
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
 
-#ifndef _GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
-#define _GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
-#include <QSortFilterProxyModel>
-#include "common/IScaObject.h"
+#ifndef _FilterDialog_H_E11AD786_3F67_4A8B_8622_38B097BC9862_INCLUDED_
+#define _FilterDialog_H_E11AD786_3F67_4A8B_8622_38B097BC9862_INCLUDED_
 
-/*!
- * Class description. May use HTML formatting
- *
- */
+#include <QDialog>
+#include "GraphFilter.h"
+#include "GraphScene.h"
+#include <ui_FilterDialog.h>
 
-class GraphFilter: public QSortFilterProxyModel
+class FilterDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    enum boolOperation{
-        OR,
-        AND,
-        NOT
+    enum indexes{
+        FILENAMEINDEX = 0,
+        FILEPATHINDEX = 1,
+        TYPEINDEX = 2,
+        ANNOTATIONINDEX = 3
     };
 
-    GraphFilter(QObject *parent = 0);
-    ~GraphFilter();
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-    bool filterAcceptsId(const QModelIndex &index) const;
-
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-
-    bool checkRegExp(IScaObject *object) const;
-
-    QString getRegExpPattern() const;
-    QRegExp *getRegExp() const;
-    void setRegExp(const QRegExp &regExp);
-    void setRegExpPattern(const QString &pattern);
-
-    void refreshRegExp();
-
-    QString getFileName() const;
-    void setFileName(const QString &fileName);
-
-    QString getFilePath() const;
-    void setFilePath(const QString &filePath);
-
-    IScaObject::IScaObjectType getObjType() const;
-    void setObjType(const IScaObject::IScaObjectType &objType);
-
-    QString getAnnotation() const;
-    void setAnnotation(const QString &annotation);
+    explicit FilterDialog(GraphFilter *filter, GraphScene *scene, QWidget *parent = 0);
+    ~FilterDialog();
 
 private:
-    QString m_fileName;
-    QString m_filePath;
-    IScaObject::IScaObjectType m_objType;
-    QString m_annotation;
-    QRegExp *m_regExp;
-}; // class GraphFilter
+    GraphFilter *m_graphFilter;
+    GraphScene *m_scene;
+    Ui::FilterDialog *m_ui;
+signals:
+    void filterChanged();
+public slots:
+    void reset();
+private slots:
+    void on_regexpCheckBox_stateChanged(int arg1);
+    void on_regexpLineEdit_textChanged(const QString &arg1);
+};
 
-
-#endif //_GraphFilter_H_17F0E77A_8435_483E_A4C3_DBB67209895D_INCLUDED_
+#endif // FILTERDIALOG_H
