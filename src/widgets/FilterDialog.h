@@ -67,13 +67,19 @@ private:
     GraphFilter *m_graphFilter;
     GraphScene *m_scene;
     Ui::FilterDialog *m_ui;
+
 signals:
     void filterChanged();
+
 public slots:
     void reset();
+
 private slots:
+    //Use this slot to tell filter state of current regexp
+    void setValidRegExpState(bool arg);
+    void refreshRegExp();
     void on_regexpCheckBox_stateChanged(int arg1);
-    void on_regexpLineEdit_textChanged(const QString &arg1);
+    void on_typeComboBox_currentIndexChanged(int index);
 };
 
 #endif // FILTERDIALOG_H

@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
 
+    connect(m_filter, SIGNAL(filterChanged()), m_scene, SLOT(refreshAll()));
     //Connect customContextMenus
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));
@@ -152,7 +153,6 @@ void MainWindow::loadTextFile(const QString &code)
 void MainWindow::on_filterLine_textChanged(const QString &arg1)
 {
     m_filter->setFilePath(arg1);
-    m_scene->refreshAll();
 }
 
 void MainWindow::on_advancedFilterButton_clicked()

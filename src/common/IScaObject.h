@@ -65,8 +65,8 @@ public:
         SYMBOL,
         TEXTBLOCK,
         BINARYBLOCK,
-        GROUP,
-        LINK
+        LINK,
+        GROUP
     };
     IScaObject(IScaObjectType type = OBJECT, QFileInfo file = QFileInfo());
     virtual ~IScaObject();

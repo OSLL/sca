@@ -43,6 +43,7 @@
 #include "FilterDialog.h"
 #include "MainWindow.h"
 #include "StringConstants.h"
+#include "../common/IScaObject.h"
 
 FilterDialog::FilterDialog(GraphFilter *filter, GraphScene* scene, QWidget *parent) :
     QDialog(parent),
@@ -51,7 +52,39 @@ FilterDialog::FilterDialog(GraphFilter *filter, GraphScene* scene, QWidget *pare
     m_ui(new Ui::FilterDialog)
 {
     m_ui->setupUi(this);
+    //Set current filter state to UI
+    setValidRegExpState(m_graphFilter->getRegExp()->isValid());
+    m_ui->annotationLineEdit->setText(m_graphFilter->getAnnotation());
+    m_ui->fileNameLineEdit->setText(m_graphFilter->getFileName());
+    m_ui->pathLineEdit->setText(m_graphFilter->getFilePath());
+    m_ui->typeComboBox->setCurrentIndex((int)m_graphFilter->getObjType());
     m_ui->regexpLineEdit->setText(m_graphFilter->getRegExpPattern());
+
+    //Connect changes of fields to graphFilter
+    connect(m_ui->annotationLineEdit, SIGNAL(textEdited(QString)),
+            m_graphFilter, SLOT(setAnnotation(QString)));
+    connect(m_ui->fileNameLineEdit, SIGNAL(textEdited(QString)),
+            m_graphFilter, SLOT(setFileName(QString)));
+    connect(m_ui->pathLineEdit, SIGNAL(textEdited(QString)),
+            m_graphFilter, SLOT(setFilePath(QString)));
+    connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)),
+            m_graphFilter, SLOT(setObjType(int)));
+    connect(m_ui->annotationLineEdit, SIGNAL(textEdited(QString)),
+            m_ui->regexpRefreshButton, SLOT(click()));
+    connect(m_ui->fileNameLineEdit, SIGNAL(textEdited(QString)),
+            m_ui->regexpRefreshButton, SLOT(click()));
+    connect(m_ui->pathLineEdit, SIGNAL(textEdited(QString)),
+            m_ui->regexpRefreshButton, SLOT(click()));
+    connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)),
+            m_ui->regexpRefreshButton, SLOT(click()));
+    //Connect most advanced filter
+    connect(m_ui->regexpRefreshButton, SIGNAL(clicked()),
+            this, SLOT(refreshRegExp()));
+    connect(m_ui->regexpLineEdit, SIGNAL(textEdited(QString)),
+            m_graphFilter, SLOT(setRegExpPattern(QString)));
+    //Connect to warn user that regexp is probably not valid in such case
+    connect(m_graphFilter, SIGNAL(validRegExpState(bool)),
+            this, SLOT(setValidRegExpState(bool)));
 }
 
 FilterDialog::~FilterDialog()
@@ -64,21 +97,38 @@ void FilterDialog::reset()
     m_ui->regexpLineEdit->setText(DEFAULT_FILTER_REGEXP);
 }
 
-void FilterDialog::on_regexpCheckBox_stateChanged(int arg1)
+void FilterDialog::setValidRegExpState(bool arg)
 {
-    m_ui->regexpLineEdit->setEnabled(arg1);
-}
-
-void FilterDialog::on_regexpLineEdit_textChanged(const QString &arg1)
-{
-    if (QRegExp(arg1).isValid())
+    if (arg)
     {
-        m_graphFilter->setRegExpPattern(arg1);
-        m_ui->regexpCheckBox->setIcon(QIcon());
-        m_scene->refreshAll();
+        m_ui->regexpStateCheckBox->setText(VALID_REGEXP_STATE);
+        m_ui->regexpStateCheckBox->setChecked(true);
+        m_ui->regexpStateCheckBox->setIcon(QIcon());
     }
     else
     {
-        m_ui->regexpCheckBox->setIcon(QIcon::fromTheme("dialog-warning"));
+        m_ui->regexpStateCheckBox->setText(INVALID_REGEXP_STATE);
+        m_ui->regexpStateCheckBox->setChecked(false);
+        m_ui->regexpStateCheckBox->setIcon(QIcon::fromTheme("dialog-warning"));
     }
+}
+
+void FilterDialog::refreshRegExp()
+{
+    m_ui->regexpLineEdit->setText(m_graphFilter->getRegExpPattern());
+}
+
+void FilterDialog::on_regexpCheckBox_stateChanged(int arg1)
+{
+    m_ui->regexpLineEdit->setReadOnly(!arg1);
+}
+
+void FilterDialog::on_typeComboBox_currentIndexChanged(int index)
+{
+    bool isLink = (index == IScaObject::LINK);
+    bool isDir = (index == IScaObject::DIRECTORY);
+    //Allow to edit filepath only for non-link objects
+    m_ui->pathLineEdit->setEnabled(!isLink);
+    //Allow to edit filename for non-dir&&non-link objects
+    m_ui->fileNameLineEdit->setEnabled(!isLink && !isDir);
 }

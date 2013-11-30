@@ -53,7 +53,6 @@ GraphFilter::GraphFilter(QObject *parent):
     m_annotation(QString("")),
     m_regExp(new QRegExp(DEFAULT_FILTER_REGEXP, Qt::CaseInsensitive, QRegExp::Wildcard))
 {
-
 }
 
 GraphFilter::~GraphFilter()
@@ -134,43 +133,42 @@ QRegExp *GraphFilter::getRegExp() const
 void GraphFilter::setRegExpPattern(const QString &pattern)
 {
     m_regExp->setPattern(pattern);
+    emit validRegExpState(m_regExp->isValid());
+    emit filterChanged();
 }
 
 void GraphFilter::refreshRegExp()
 {
     QString pattern = OBJECTINFO_PATTERN;
 
-    qDebug() << m_filePath;
-    qDebug() << pattern;
     //Set object type filter
     if (m_objType == IScaObject::OBJECT)
         pattern = pattern.arg("*");
     else
         pattern = pattern.arg(QString::number(m_objType));
 
-    qDebug() << pattern;
     //Set filename filter
     if (m_fileName.isEmpty())
         pattern = pattern.arg("*");
     else
-        pattern = pattern.arg(m_fileName.append("*").insert(0, "*"));
+        pattern = pattern.arg(QString("*") + m_fileName + QString("*"));
 
-    qDebug() << pattern;
     //Set filepath filter
     if (m_filePath.isEmpty())
         pattern = pattern.arg("*");
     else
-        pattern = pattern.arg(m_filePath.append("*").insert(0, "*"));
+        pattern = pattern.arg(QString("*")+ m_filePath + QString("*"));
 
-    qDebug() << pattern;
     //Set annotation filter
     if (m_annotation.isEmpty())
         pattern = pattern.arg("*");
     else
-        pattern = pattern.arg(m_annotation.append("*").insert(0, "*"));
+        pattern = pattern.arg(QString("*") + m_annotation + QString("*"));
 
-    qDebug() << pattern;
     m_regExp->setPattern(pattern);
+
+    emit validRegExpState(m_regExp->isValid());
+    emit filterChanged();
 }
 
 QString GraphFilter::getFileName() const
@@ -204,6 +202,12 @@ void GraphFilter::setObjType(const IScaObject::IScaObjectType &objType)
 {
     m_objType = objType;
     refreshRegExp();
+}
+
+void GraphFilter::setObjType(const int &objType)
+{
+    IScaObject::IScaObjectType type = static_cast<IScaObject::IScaObjectType>(objType);
+    setObjType(type);
 }
 
 QString GraphFilter::getAnnotation() const

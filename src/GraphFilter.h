@@ -75,21 +75,24 @@ public:
     QString getRegExpPattern() const;
     QRegExp *getRegExp() const;
     void setRegExp(const QRegExp &regExp);
-    void setRegExpPattern(const QString &pattern);
-
-    void refreshRegExp();
 
     QString getFileName() const;
-    void setFileName(const QString &fileName);
-
     QString getFilePath() const;
-    void setFilePath(const QString &filePath);
-
     IScaObject::IScaObjectType getObjType() const;
-    void setObjType(const IScaObject::IScaObjectType &objType);
-
     QString getAnnotation() const;
+
+public slots:
+    void refreshRegExp();
+    void setRegExpPattern(const QString &pattern);
+
     void setAnnotation(const QString &annotation);
+    void setObjType(const IScaObject::IScaObjectType &objType);
+    void setObjType(const int &objType);
+    void setFilePath(const QString &filePath);
+    void setFileName(const QString &fileName);
+signals:
+    void filterChanged();
+    void validRegExpState(bool);
 
 private:
     QString m_fileName;
