@@ -301,9 +301,12 @@ void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)
 void LinkVisual::setAnnotation(const QString &str)
 {
     deleteAnnotation();
-    QGraphicsTextItem *new_ann = new QGraphicsTextItem(str, this);
+    QGraphicsTextItem *new_ann = new QGraphicsTextItem(this);
     qreal dx = new_ann->boundingRect().center().x(),
             dy = new_ann->boundingRect().center().y()/2;
     new_ann->moveBy(-dx, dy);
     m_annotation = new_ann;
+
+    QString htmlStr("<div style='background-color:#FFFFF0;'>" + str + "</div>");
+    m_annotation->setHtml(htmlStr);
 }

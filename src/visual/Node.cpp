@@ -82,7 +82,7 @@ void Node::setRect(const QRectF &rect)
     m_rect = rect;
 }
 
-QGraphicsSimpleTextItem *Node::getTitle() const
+QGraphicsTextItem *Node::getTitle() const
 {
     return m_title;
 }
@@ -103,10 +103,12 @@ void Node::removeTitle()
 void Node::setTitle(const QString &title)
 {
     removeTitle();
-    m_title = new QGraphicsSimpleTextItem(title, this);
+    QString htmlTitle("<div style='background-color:#FFFFF0;'>" + title + "</div>");
+    m_title = new QGraphicsTextItem(this);
+    m_title->setHtml(htmlTitle);
 }
 
-void Node::setTitle(QGraphicsSimpleTextItem *title)
+void Node::setTitle(QGraphicsTextItem *title)
 {
     removeTitle();
     m_title = title;

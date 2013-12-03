@@ -44,6 +44,8 @@
 
 #include "visual/ObjectVisual.h"
 #include "NumericalConstants.h"
+#include <QGraphicsTextItem>
+
 
 /*!
  * Class description. May use HTML formatting
@@ -65,8 +67,8 @@ public:
     QRectF getRect() const;
     void setRect(const QRectF &rect);
 
-    QGraphicsSimpleTextItem *getTitle() const;
-    void setTitle(QGraphicsSimpleTextItem *title);
+    QGraphicsTextItem *getTitle() const;
+    void setTitle(QGraphicsTextItem *title);
     void setTitle(const QString &title);
 
     void removeTitle();
@@ -79,7 +81,7 @@ public:
 
 protected:
     QRectF m_rect;
-    QGraphicsSimpleTextItem *m_title;
+    QGraphicsTextItem *m_title;
     QColor m_standardColor;
     QColor m_selectionColor;
     QColor m_filterColor;
