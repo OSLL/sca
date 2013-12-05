@@ -41,8 +41,8 @@
 
 #include "GraphView.h"
 #include "FilterDialog.h"
-#include "MainWindow.h"
-#include "StringConstants.h"
+#include "../MainWindow.h"
+#include "../StringConstants.h"
 #include "../common/IScaObject.h"
 
 FilterDialog::FilterDialog(GraphFilter *filter, GraphScene* scene, QWidget *parent) :
