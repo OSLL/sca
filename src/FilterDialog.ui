@@ -151,7 +151,7 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item alignment="Qt::AlignLeft">
+     <item >
       <widget class="QLineEdit" name="regexpLineEdit">
        <property name="enabled">
         <bool>true</bool>
