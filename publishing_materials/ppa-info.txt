@@ -1,0 +1,2 @@
+https://launchpad.net/~source-code-analyzer/+archive/ppa
+https://github.com/OSLL/sca

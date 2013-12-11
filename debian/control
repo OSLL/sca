@@ -1,7 +1,7 @@
 Source: sca
 Section: devel
 Priority: optional
-Maintainer: Mark Zaslavskiy <mark.zaslavskiy@gmail.com>
+Maintainer: Mark Zaslavskiy <sca-support@osll.ru>
 Standards-Version: 3.9.3.0
 Build-Depends: debhelper (>= 7), g++, make, libqt4-dev, qt4-qmake
 

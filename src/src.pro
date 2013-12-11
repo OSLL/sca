@@ -1,9 +1,16 @@
 TEMPLATE = app
 TARGET = sca
 
-target.path = /opt/sca/
+target.path = /opt/extras.ubuntu.com/sca/
 
-INSTALLS += target
+icon.files = ../publishing_materials/icon_512.png
+icon.path = /opt/extras.ubuntu.com/sca/
+
+desktop_file.files = ../scripts/extras-sca.desktop
+desktop_file.path = /usr/share/applications/
+
+
+INSTALLS += target icon desktop_file
 
 win32: RC_FILE = resources/win_icon.rc
 
