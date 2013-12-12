@@ -183,7 +183,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     {
         Node *node = nodes.at(0);
         quint32 id = scene()->getObjectId(node);
-        QVariant var = m_model->data(m_model->index(id), Qt::DecorationRole);
+        QVariant var = m_model->data(m_model->index(id), GraphModel::rawObjectRole);
         IScaObject *obj = qvariant_cast<IScaObject *>(var);
         toText->setEnabled(conv.canConvert(obj, IScaObject::TEXTBLOCK));
         toIdentifier->setEnabled(conv.canConvert(obj, IScaObject::IDENTIFIER));
@@ -264,30 +264,30 @@ void GraphView::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
     case Qt::Key_C:
-    {
-        QList<Node *> items = scene()->selectedNodes();
-        if(items.size() == 2)
         {
-            Node *src = items.at(0);
-            Node *dest = items.at(1);
-            quint32 srcId = scene()->getObjectId(src);
-            quint32 destId = scene()->getObjectId(dest);
-            m_model->connectObjects(srcId, destId);
+            QList<Node *> items = scene()->selectedNodes();
+            if(items.size() == 2)
+            {
+                Node *src = items.at(0);
+                Node *dest = items.at(1);
+                quint32 srcId = scene()->getObjectId(src);
+                quint32 destId = scene()->getObjectId(dest);
+                m_model->connectObjects(srcId, destId);
+            }
         }
-    }
         break;
     case Qt::Key_Delete:
-    {
-        foreach(LinkVisual *link, scene()->selectedLinks())
         {
-            m_model->removeObject(scene()->getObjectId(link));
-        }
-        foreach(Node *node, scene()->selectedNodes())
-        {
-            m_model->removeObject(scene()->getObjectId(node));
-        }
+            foreach(LinkVisual *link, scene()->selectedLinks())
+            {
+                m_model->removeObject(scene()->getObjectId(link));
+            }
+            foreach(Node *node, scene()->selectedNodes())
+            {
+                m_model->removeObject(scene()->getObjectId(node));
+            }
 
-    }
+        }
         break;
     }
 }

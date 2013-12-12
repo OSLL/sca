@@ -80,7 +80,7 @@ public:
     QList<quint32> getLinks() const;
     void setLinks(const QList<quint32> &links);
 
-    QString getInfo(QString pattern = OBJECT_INFO_PATTERN) const;
+    QString getInfo(const QString &pattern = OBJECT_INFO_PATTERN) const;
 
     void disconnectLink(quint32 link);
     void addLink(quint32 link);

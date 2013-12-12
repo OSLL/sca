@@ -99,7 +99,11 @@ const QString BOOL_CONDITIONS("OR;AND;NOT");
 //[End GraphFilter strings]
 
 //[ObjectVisual tooltip strings]
-const QString OBJECT_TOOLTIP_PATTERN = "%1 %2 %3 %4 %5";
+const QString OBJECT_TOOLTIP_PATTERN =  QString("Type: %1 <br />")
+                                        + QString("Filename: %2 <br />")
+                                        + QString("Path: %3 <br />")
+                                        + QString("Annotation: %4 <br />")
+                                        + QString("Content: %5");
 //[End ObjectVisual tooltip strings]
 
 

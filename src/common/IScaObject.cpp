@@ -106,10 +106,9 @@ void IScaObject::setLinks(const QList<quint32> &links)
     m_links = links;
 }
 
-QString IScaObject::getInfo(QString pattern) const
+QString IScaObject::getInfo(const QString &pattern) const
 {
-    QString result(pattern);
-    return  result
+    return  pattern
             .arg(m_type)
             .arg(m_file.fileName())
             .arg(m_file.absoluteFilePath())
