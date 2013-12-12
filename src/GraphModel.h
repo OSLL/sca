@@ -64,8 +64,8 @@ public:
     explicit GraphModel(QObject *parent = 0);
     ~GraphModel();
 
-    quint32 addObject(const QMimeData *mimeData);
-    quint32 addObject(IScaObject *object);
+    int addObject(const QMimeData *mimeData);
+    int addObject(IScaObject *object);
     quint32 replaceObject(IScaObject *object, quint32 id);
     quint32 getId(IScaObject *object);
     QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;

@@ -183,7 +183,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     {
         Node *node = nodes.at(0);
         quint32 id = scene()->getObjectId(node);
-        QVariant var = m_model->data(m_model->index(id), Qt::DecorationRole);
+        QVariant var = m_model->data(m_model->index(id), GraphModel::rawObjectRole);
         IScaObject *obj = qvariant_cast<IScaObject *>(var);
         toText->setEnabled(conv.canConvert(obj, IScaObject::TEXTBLOCK));
         toIdentifier->setEnabled(conv.canConvert(obj, IScaObject::IDENTIFIER));

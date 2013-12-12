@@ -15,6 +15,18 @@ ObjectVisual::~ObjectVisual()
 {
 }
 
+void ObjectVisual::disconnectLink(quint32 linkId)
+{
+    if (m_links.removeOne(linkId))
+    {
+        qDebug() << "Removing link from" << *this;
+    }
+    else
+    {
+        qDebug() << "Tried to remove unexisting link from" << *this;
+    }
+}
+
 QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     switch(change)
@@ -70,4 +82,10 @@ ObjectVisual::ObjectVisualType ObjectVisual::getType() const
 void ObjectVisual::setType(const ObjectVisualType &type)
 {
     m_type = type;
+}
+
+QDebug operator<<(QDebug d, ObjectVisual &node)
+{
+    d << "Node(type=" << node.getType() << ";cons=" << node.m_links.size() << ");";
+    return d;
 }

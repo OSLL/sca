@@ -16,6 +16,7 @@
 #include "visual/LinkVisual.h"
 #include "widgets/FilterDialog.h"
 #include "GraphFilter.h"
+#include "GraphTableProxyModel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
@@ -28,11 +29,13 @@ MainWindow::MainWindow(QWidget *parent) :
     m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT, this);
     m_model = new GraphModel(this);
     m_filter = new GraphFilter(this);
+    m_tableProxy = new GraphTableProxyModel(m_filter, this);
     m_filter->setSourceModel(m_model);
 
     m_ui->graphViewer->setScene(m_scene);
     m_ui->graphViewer->setModel(m_model);
     m_scene->setModel(m_filter);
+    m_ui->tableView->setModel(m_tableProxy);
 
     //Set up file model
     m_fileModel = new QFileSystemModel(this);

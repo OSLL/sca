@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Nikita Razdobreev  exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,68 +30,44 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphView.h
- * \brief Header of GraphView
- * \todo fix ContextMenu for model
- * \todo fox editLinkAnnotation
- * \todo fix node move
+ * \file GraphTableProxyModel.h
+ * \brief Header of GraphTableProxyModel
+ * \todo add comment here
+ *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
 
-#ifndef _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
-#define _GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
-
+#ifndef _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
+#define _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
+#include <QAbstractProxyModel>
+#include <GraphModel.h>
 /*!
  * Class description. May use HTML formatting
  *
  */
-#include <QGraphicsView>
-#include "widgets/GraphViewContextMenu.h"
-#include "GraphScene.h"
-class GraphFilter;
-class GraphModel;
-
-class GraphView : public QGraphicsView
+class GraphTableProxyModel : public QAbstractProxyModel
 {
     Q_OBJECT
 public:
-    GraphView(QWidget *parent = 0);
-    explicit GraphView(GraphScene *scene, QWidget *parent = 0);
-    GraphScene *scene() const;
+    GraphTableProxyModel(QAbstractItemModel *source, QObject *parent);
+    ~GraphTableProxyModel();
 
-    GraphViewContextMenu *getMenu() const;
-    void setMenu(GraphViewContextMenu *menu);
-
-    void exportToImage(const QString path);
-
-    void editLinkAnnotation(quint32 id);
-    GraphModel *getModel() const;
-    void setModel(GraphModel *model);
-    void setScene(GraphScene *graphScene);
+    int rowCount(const QModelIndex &parent) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
+    QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
+    QVariant data(const QModelIndex &proxyIndex, int role) const;
+    QModelIndex parent(const QModelIndex &child) const;
 private:
-    //This is used for drag-n-drop technology
-    Node *m_temp;
-    int m_tempId;
-    GraphViewContextMenu *m_menu;
-    GraphModel *m_model;
+    QMap<quint32, quint32> m_idMap;
 
 public slots:
-    void ShowContextMenu(const QPoint &pos);
-
-protected:
-    void mousePressEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
-    void dragEnterEvent(QDragEnterEvent* event);
-    void dragMoveEvent(QDragMoveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event);
-    void dragLeaveEvent(QDragLeaveEvent *event = 0, bool = false);
-    void dropEvent(QDropEvent * event);
-    void keyPressEvent(QKeyEvent *event);
-}; // class GraphView
+    void updateMap(QModelIndex from, QModelIndex to);
+}; // class GraphTableProxyModel
 
 
-#endif //_GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
-
+#endif //_GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_

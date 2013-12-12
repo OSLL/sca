@@ -75,10 +75,6 @@ public:
 
     QColor getColor() const;
     void setColor(const QColor &color);
-
-    friend QDebug operator<<(QDebug d, Node &node);
-    void disconnectLink(quint32 linkId);
-
 protected:
     QRectF m_rect;
     QGraphicsTextItem *m_title;

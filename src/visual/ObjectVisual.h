@@ -24,12 +24,14 @@ public:
     GraphScene *scene() const;
 
     void addLink(quint32 linkId);
+    void disconnectLink(quint32 linkId);
 
     QList<quint32> getLinks() const;
     void setLinks(const QList<quint32> &links);
 
     void setFiltered(bool filtered);
 
+    friend QDebug operator<<(QDebug d, ObjectVisual &node);
 protected:
     QList<quint32> m_links;
     ObjectVisualType m_type;
