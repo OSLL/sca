@@ -73,6 +73,17 @@ const QString MAINWINDOW_TITLE = APPLICATION_NAME;
 
 //[MIMEData]
 const QString BINARY_DATA = "Binary Data";
+const QString SCA_OBJECT = "Object";
+const QString SCA_DIRECTORY = "Directory";
+const QString SCA_FILE = "File";
+const QString SCA_IDENTIFIER = "Identifier";
+const QString SCA_TEXTBLOCK = "Textblock";
+const QString SCA_BINARYBLOCK = "Binaryblock";
+const QString SCA_LINE = "Line";
+const QString SCA_SYMBOL = "Symbol";
+const QString SCA_LINK = "Link";
+const QString SCA_GROUP = "Group";
+const QString SCA_UNKNOWN = "Unknown type";
 //[End MIMEData]
 
 //[About text]

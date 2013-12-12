@@ -282,7 +282,7 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
     Q_UNUSED(rightBottom);
-    //qDebug() << "Update #" << leftTop.internalId() << " to scene.";
+    qDebug() << "Update #" << leftTop.row() << " to scene.";
 
     //Get object that changed
     quint32 id = leftTop.row();

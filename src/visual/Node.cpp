@@ -143,17 +143,6 @@ void Node::setColor(const QColor &color)
     setBrush(color);
 }
 
-void Node::disconnectLink(quint32 linkId)
-{
-    int from = m_links.indexOf(linkId);
-    if (from != -1)
-    {
-        qDebug() << "Removing link from visual node.";
-        m_links.takeAt(from);
-        return;
-    }
-}
-
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
@@ -178,10 +167,4 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
     };
 
     return ObjectVisual::itemChange(change, value);
-}
-
-QDebug operator<<(QDebug d, Node &node)
-{
-    d << "Node(type=" << node.m_type << ";cons=" << node.m_links.size() << ");";
-    return d;
 }

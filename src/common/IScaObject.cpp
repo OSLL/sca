@@ -57,6 +57,36 @@ IScaObject::IScaObjectType IScaObject::getType() const
     return m_type;
 }
 
+QString IScaObject::getTypeName() const
+{
+    // TODO (LeoSko) Make a static container (Map) for these strings
+    switch (m_type)
+    {
+    case OBJECT:
+        return SCA_OBJECT;
+    case DIRECTORY:
+        return SCA_DIRECTORY;
+    case FILE:
+        return SCA_FILE;
+    case IDENTIFIER:
+        return SCA_IDENTIFIER;
+    case TEXTBLOCK:
+        return SCA_TEXTBLOCK;
+    case BINARYBLOCK:
+        return SCA_BINARYBLOCK;
+    case LINE:
+        return SCA_LINE;
+    case SYMBOL:
+        return SCA_SYMBOL;
+    case LINK:
+        return SCA_LINK;
+    case GROUP:
+        return SCA_GROUP;
+    default:
+        return SCA_UNKNOWN;
+    }
+}
+
 QString IScaObject::getAnnotation() const
 {
     return m_annotation;
@@ -74,11 +104,7 @@ QList<quint32> IScaObject::getLinks() const
 
 void IScaObject::disconnectLink(quint32 link)
 {
-    int index = m_links.indexOf(link);
-    if (index != -1)
-    {
-        m_links.removeAt(index);
-    }
+    m_links.removeOne(link);
 }
 
 void IScaObject::addLink(quint32 link)

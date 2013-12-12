@@ -79,7 +79,7 @@ quint32 GraphModel::connectObjects(quint32 source, quint32 dest)
     return s_nextID++;
 }
 
-quint32 GraphModel::addObject(const QMimeData *mimeData)
+int GraphModel::addObject(const QMimeData *mimeData)
 {
     if (!mimeData->hasUrls())
     {
@@ -91,7 +91,7 @@ quint32 GraphModel::addObject(const QMimeData *mimeData)
     return addObject(object);
 }
 
-quint32 GraphModel::addObject(IScaObject *object)
+int GraphModel::addObject(IScaObject *object)
 {
     QModelIndex changedIndex = index(s_nextID);
     setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
@@ -137,12 +137,12 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
     {
         return QVariant();
     }
-    //qDebug() << "Data called for #" << id << "(" << *(m_objects.value(id, NULL)) << ")";
     if (!m_objects.contains(id))
     {
-        qDebug() << "Model doesn\'t have this object.";
+        qDebug() << "Model doesn\'t have object#" << id;
         return QVariant();
     }
+    qDebug() << "Data called for #" << id << "(" << *(m_objects.value(id, NULL)) << ")";
     switch (role)
     {
     case Qt::DisplayRole:   //For standart text views
@@ -267,7 +267,7 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
             //Successfully casted
             //Set new data (or replace it)
             m_objects.insert(id, object);
-            qDebug() << "Data set #" << id << ", type: " << object->getType()
+            qDebug() << "Data set #" << id << ", type: " << object->getTypeName()
                      << ", items total: " << m_objects.size();
             emit dataChanged(index, index);
             return true;

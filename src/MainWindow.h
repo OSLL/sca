@@ -10,6 +10,7 @@
 #include <ui_mainwindow.h>
 class GraphScene;
 class GraphModel;
+class GraphTableProxyModel;
 
 class MainWindow : public QMainWindow
 {
@@ -20,6 +21,7 @@ private:
     GraphScene *m_scene;
     GraphModel *m_model;
     GraphFilter *m_filter;
+    GraphTableProxyModel *m_tableProxy;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

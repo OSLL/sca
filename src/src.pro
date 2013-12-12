@@ -63,7 +63,8 @@ SOURCES += \
     common/IScaObjectTextBlock.cpp \
     GraphFilter.cpp \
     widgets/FilterDialog.cpp \
-    visual/ObjectVisualCreator.cpp
+    visual/ObjectVisualCreator.cpp \
+    GraphTableProxyModel.cpp
 
 
 HEADERS += \
@@ -108,7 +109,8 @@ HEADERS += \
     GraphModel.h \
     GraphFilter.h \
     widgets/FilterDialog.h \
-    visual/ObjectVisualCreator.h
+    visual/ObjectVisualCreator.h \
+    GraphTableProxyModel.h
 
 FORMS += \
     mainwindow.ui \

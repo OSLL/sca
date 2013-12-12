@@ -73,6 +73,7 @@ public:
     virtual ~IScaObject();
 
     IScaObjectType getType() const;
+    QString getTypeName() const;
 
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
