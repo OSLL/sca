@@ -66,6 +66,8 @@ public:
     QFileInfo getFile() const;
     void setFile(const QFileInfo &file);
 
+    QString getContent() const;
+
     quint32 lineNumber() const;
     void setLineNumber(const quint32 &lineNumber);
 

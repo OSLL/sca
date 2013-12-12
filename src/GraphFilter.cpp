@@ -165,6 +165,11 @@ void GraphFilter::refreshRegExp()
     else
         pattern = pattern.arg(QString("*") + m_annotation + QString("*"));
 
+    if (m_content.isEmpty())
+        pattern = pattern.arg("*");
+    else
+        pattern = pattern.arg(QString("*") + m_content + QString("*"));
+
     m_regExp->setPattern(pattern);
 
     emit validRegExpState(m_regExp->isValid());
@@ -179,6 +184,12 @@ QString GraphFilter::getFileName() const
 void GraphFilter::setFileName(const QString &fileName)
 {
     m_fileName = fileName;
+    refreshRegExp();
+}
+
+void GraphFilter::setContent(const QString &content)
+{
+    m_content = content;
     refreshRegExp();
 }
 

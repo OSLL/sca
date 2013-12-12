@@ -92,8 +92,8 @@ const QString LOGO_PATH = ":logo/icons/logo.png";
 //[GraphFilter strings]
 const QString VALID_REGEXP_STATE = "RegExp: OK";
 const QString INVALID_REGEXP_STATE = "RegExp: NOT OK";
-const QString OBJECTINFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4";
-const QString DEFAULT_FILTER_REGEXP = OBJECTINFO_PATTERN.arg("*").arg("*").arg("*").arg("*");
+const QString OBJECTINFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4,Content:%5";
+const QString DEFAULT_FILTER_REGEXP = OBJECTINFO_PATTERN.arg("*").arg("*").arg("*").arg("*").arg("*");
 const QString GRAPH_FILTER_TITLE = "Advanced graph filter";
 const QString BOOL_CONDITIONS("OR;AND;NOT");
 //[End GraphFilter strings]

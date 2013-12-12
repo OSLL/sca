@@ -110,3 +110,14 @@ void IScaObjectBinaryBlock::setData(const QByteArray &block)
 {
     m_data = block;
 }
+
+QString IScaObjectBinaryBlock::getContent() const
+{
+    QString str;
+    for (int i = 0; i < m_data.length(); i++)
+    {
+        str += m_data.mid(i, 1).toHex() + " ";
+    }
+
+    return str;
+}

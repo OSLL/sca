@@ -45,7 +45,6 @@
 #include <QMenu>
 #include <QAction>
 #include <QFileSystemModel>
-#include <QSignalMapper>
 #include <QMessageBox>
 #include <QMimeData>
 
@@ -56,16 +55,28 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
     m_menu->connectActionByName(OPEN_IN_TEXT_VIEWER , this, SIGNAL(openFile()));
     m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
 
-    QSignalMapper *signalMapper = new QSignalMapper (this);
-    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, UTF8, signalMapper, SLOT(map()));
-    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, CP866, signalMapper, SLOT(map()));
-    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, ISO885915, signalMapper, SLOT(map()));
+    m_signalMapper = new QSignalMapper (this);
+    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, UTF8, m_signalMapper, SLOT(map()));
+    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, CP866, m_signalMapper, SLOT(map()));
+    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, ISO885915, m_signalMapper, SLOT(map()));
 
-    signalMapper->setMapping(m_menu->getActionByName(UTF8, OPEN_IN_TEXT_VIEWER_AS), UTF8);
-    signalMapper->setMapping(m_menu->getActionByName(CP866, OPEN_IN_TEXT_VIEWER_AS), CP866);
-    signalMapper->setMapping(m_menu->getActionByName(ISO885915, OPEN_IN_TEXT_VIEWER_AS), ISO885915);
+    m_signalMapper->setMapping(m_menu->getActionByName(UTF8, OPEN_IN_TEXT_VIEWER_AS), UTF8);
+    m_signalMapper->setMapping(m_menu->getActionByName(CP866, OPEN_IN_TEXT_VIEWER_AS), CP866);
+    m_signalMapper->setMapping(m_menu->getActionByName(ISO885915, OPEN_IN_TEXT_VIEWER_AS), ISO885915);
 
-    connect (signalMapper, SIGNAL(mapped(QString)), this, SIGNAL(openFileAs(QString))) ;
+    connect(m_signalMapper, SIGNAL(mapped(QString)), this, SIGNAL(openFileAs(QString))) ;
+}
+
+SourceBrowser::~SourceBrowser()
+{
+    if (m_menu != NULL)
+    {
+        delete m_menu;
+    }
+    if (m_signalMapper != NULL)
+    {
+        delete m_signalMapper;
+    }
 }
 
 void SourceBrowser::setMenu(SourceBrowserMenu *_menu)

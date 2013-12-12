@@ -71,6 +71,8 @@ public:
     QByteArray getData() const;
     void setData(const QByteArray &block);
 
+    QString getContent() const;
+
 private:
     quint32 m_length;
     quint32 m_offset;

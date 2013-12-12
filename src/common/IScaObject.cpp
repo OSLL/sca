@@ -97,6 +97,11 @@ void IScaObject::setFile(const QFileInfo &file)
     m_file = file;
 }
 
+QString IScaObject::getContent() const
+{
+    return QString("*");
+}
+
 void IScaObject::setLinks(const QList<quint32> &links)
 {
     m_links = links;
@@ -109,7 +114,8 @@ QString IScaObject::getInfo() const
             .arg(m_type)
             .arg(m_file.fileName())
             .arg(m_file.absoluteFilePath())
-            .arg(m_annotation);
+            .arg(m_annotation)
+            .arg(getContent());
 }
 
 QDebug operator<<(QDebug d, IScaObject &object)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>526</width>
-    <height>166</height>
+    <height>177</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -134,6 +134,24 @@
        </item>
       </layout>
      </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <widget class="QLabel" name="contentLabel">
+         <property name="text">
+          <string>Content</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="contentLineEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
     </layout>
    </item>
    <item>
@@ -151,7 +169,7 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item >
+     <item>
       <widget class="QLineEdit" name="regexpLineEdit">
        <property name="enabled">
         <bool>true</bool>

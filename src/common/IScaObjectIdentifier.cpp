@@ -76,6 +76,11 @@ void IScaObjectIdentifier::setFile(const QFileInfo &file)
     m_fileObject->setFile(file.filePath());
 }
 
+QString IScaObjectIdentifier::getContent() const
+{
+    return m_identifier;
+}
+
 QString IScaObjectIdentifier::getIdentifier() const
 {
     return m_identifier;

@@ -45,8 +45,8 @@
 Link::Link() :
     IScaObject(LINK),
     m_annotation(QString("")),
-    m_objectFrom(NULL),
-    m_objectTo(NULL)
+    m_objectFrom(0),
+    m_objectTo(0)
 {
 }
 

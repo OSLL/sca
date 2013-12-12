@@ -167,7 +167,11 @@ void MainWindow::on_advancedFilterButton_clicked()
         wid->move(QApplication::desktop()->screen()->rect().center()
                   - wid->rect().center());
     }
-    wid = new FilterDialog(m_filter, m_scene, this);
-    qDebug() << "Advanced filter called";
+    else
+    {
+        wid = new FilterDialog(m_filter, m_scene, this);
+        qDebug() << "Advanced filter called";
+    }
     wid->show();
+
 }

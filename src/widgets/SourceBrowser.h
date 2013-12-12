@@ -44,6 +44,7 @@
 #define _SourceBrowser_H_FFA4491B_B282_4A61_972A_1470A2944293_INCLUDED_
 
 #include <QTreeView>
+#include <QSignalMapper>
 
 #include "SourceBrowserMenu.h"
 
@@ -52,9 +53,11 @@ class SourceBrowser : public QTreeView
     Q_OBJECT
 public:
     explicit SourceBrowser(QWidget *parent = 0);
+    ~SourceBrowser();
     void setMenu(SourceBrowserMenu *_menu);
 private:
     SourceBrowserMenu *m_menu;
+    QSignalMapper *m_signalMapper;
 signals:
     void addToScene();
     void openBinaryFile();

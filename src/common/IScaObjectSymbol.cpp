@@ -95,6 +95,11 @@ void IScaObjectSymbol::setOffset(const quint32 &offset)
     m_offset = offset;
 }
 
+QString IScaObjectSymbol::getContent() const
+{
+    return QString(m_symbol);
+}
+
 
 
 

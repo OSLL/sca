@@ -62,6 +62,8 @@ public:
   QFileInfo getFile() const;
   void setFile(const QFileInfo &file);
 
+  QString getContent() const;
+
   QString getIdentifier() const;
   void setIdentifier(const QString &identifier);
 

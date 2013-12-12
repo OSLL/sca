@@ -47,19 +47,13 @@
 #include "../GraphFilter.h"
 #include "../GraphScene.h"
 #include <ui_FilterDialog.h>
+#include <QSignalMapper>
 
 class FilterDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    enum indexes{
-        FILENAMEINDEX = 0,
-        FILEPATHINDEX = 1,
-        TYPEINDEX = 2,
-        ANNOTATIONINDEX = 3
-    };
-
     explicit FilterDialog(GraphFilter *filter, GraphScene *scene, QWidget *parent = 0);
     ~FilterDialog();
 
@@ -67,6 +61,7 @@ private:
     GraphFilter *m_graphFilter;
     GraphScene *m_scene;
     Ui::FilterDialog *m_ui;
+    QSignalMapper *typeMapper;
 
 signals:
     void filterChanged();

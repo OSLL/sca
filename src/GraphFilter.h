@@ -90,6 +90,7 @@ public slots:
     void setObjType(const int &objType);
     void setFilePath(const QString &filePath);
     void setFileName(const QString &fileName);
+    void setContent(const QString &content);
 signals:
     void filterChanged();
     void validRegExpState(bool);
@@ -97,6 +98,7 @@ signals:
 private:
     QString m_fileName;
     QString m_filePath;
+    QString m_content;
     IScaObject::IScaObjectType m_objType;
     QString m_annotation;
     QRegExp *m_regExp;

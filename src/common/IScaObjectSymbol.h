@@ -69,6 +69,8 @@ public:
     quint32 getOffset() const;
     void setOffset(const quint32 &offset);
 
+    QString getContent() const;
+
 private:
     char m_symbol;
     quint32 m_offset;

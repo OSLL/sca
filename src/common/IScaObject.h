@@ -88,7 +88,8 @@ public:
 
     virtual QFileInfo getFile();
     virtual void setFile(const QFileInfo &file);
-;
+
+    virtual QString getContent() const;
 private:
     QString m_annotation;
 

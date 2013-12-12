@@ -108,3 +108,8 @@ void IScaObjectTextBlock::setText(const QString &value)
 {
     m_text = value;
 }
+
+QString IScaObjectTextBlock::getContent() const
+{
+    return m_text;
+}

@@ -88,6 +88,11 @@ void IScaObjectLine::setFile(const QFileInfo &file)
     m_fileObject->setFile(file.filePath());
 }
 
+QString IScaObjectLine::getContent() const
+{
+    return m_line;
+}
+
 quint32 IScaObjectLine::lineNumber() const
 {
     return m_lineNumber;

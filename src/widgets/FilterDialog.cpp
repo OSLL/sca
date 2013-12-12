@@ -69,13 +69,20 @@ FilterDialog::FilterDialog(GraphFilter *filter, GraphScene* scene, QWidget *pare
             m_graphFilter, SLOT(setFilePath(QString)));
     connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)),
             m_graphFilter, SLOT(setObjType(int)));
+    connect(m_ui->contentLineEdit, SIGNAL(textEdited(QString)),
+            m_graphFilter, SLOT(setContent(QString)));
+
     connect(m_ui->annotationLineEdit, SIGNAL(textEdited(QString)),
+            m_ui->regexpRefreshButton, SLOT(click()));
+    connect(m_ui->contentLineEdit, SIGNAL(textEdited(QString)),
             m_ui->regexpRefreshButton, SLOT(click()));
     connect(m_ui->fileNameLineEdit, SIGNAL(textEdited(QString)),
             m_ui->regexpRefreshButton, SLOT(click()));
     connect(m_ui->pathLineEdit, SIGNAL(textEdited(QString)),
             m_ui->regexpRefreshButton, SLOT(click()));
     connect(m_ui->typeComboBox, SIGNAL(currentIndexChanged(int)),
+            m_ui->regexpRefreshButton, SLOT(click()));
+    connect(m_ui->contentLineEdit, SIGNAL(textEdited(QString)),
             m_ui->regexpRefreshButton, SLOT(click()));
     //Connect most advanced filter
     connect(m_ui->regexpRefreshButton, SIGNAL(clicked()),
@@ -131,4 +138,9 @@ void FilterDialog::on_typeComboBox_currentIndexChanged(int index)
     m_ui->pathLineEdit->setEnabled(!isLink);
     //Allow to edit filename for non-dir&&non-link objects
     m_ui->fileNameLineEdit->setEnabled(!isLink && !isDir);
+
+    bool hasContent = index == IScaObject::IDENTIFIER || index == IScaObject::TEXTBLOCK || index == IScaObject::LINE
+                       || index == IScaObject::SYMBOL || index == IScaObject::BINARYBLOCK;
+
+    m_ui->contentLineEdit->setEnabled(hasContent);
 }

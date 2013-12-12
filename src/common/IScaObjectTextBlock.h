@@ -73,6 +73,8 @@ public:
 
     QString getText() const;
     void setText(const QString &value);
+
+    QString getContent() const;
 private:
     quint32 m_length;
     quint32 m_offset;
