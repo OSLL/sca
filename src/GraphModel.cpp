@@ -48,7 +48,7 @@
 #include "StringConstants.h"
 
 //ID = 0 for objects, which doesn't exist in model
-quint32 GraphModel::s_nextID = 1;
+quint32 GraphModel::s_nextID = 0;
 
 GraphModel::GraphModel(QObject *parent) :
     QAbstractListModel(parent)
@@ -71,7 +71,7 @@ quint32 GraphModel::connectObjects(quint32 source, quint32 dest)
     QModelIndex linkIndex = index(s_nextID);
     m_objects[source]->addLink(s_nextID);
     m_objects[dest]->addLink(s_nextID);
-    if (!setData(linkIndex, QVariant::fromValue(link), Qt::DecorationRole))
+    if (!setData(linkIndex, QVariant::fromValue(link), rawObjectRole))
     {
         qDebug() << "Couldn\'t set data in model.";
     }
@@ -94,7 +94,7 @@ quint32 GraphModel::addObject(const QMimeData *mimeData)
 quint32 GraphModel::addObject(IScaObject *object)
 {
     QModelIndex changedIndex = index(s_nextID);
-    setData(changedIndex, QVariant::fromValue(object), Qt::DecorationRole);
+    setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
 
     return s_nextID++;
 }
@@ -112,7 +112,7 @@ quint32 GraphModel::replaceObject(IScaObject *object, quint32 id)
     object->setLinks(links);    //Restore links
 
     QModelIndex changedIndex = index(id);
-    setData(changedIndex, QVariant::fromValue(object), Qt::DecorationRole);
+    setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
 
     return id;
 }
@@ -127,13 +127,13 @@ quint32 GraphModel::getId(IScaObject *object)
 QModelIndex GraphModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return createIndex(row, column, row);
+    return createIndex(row, column, m_objects.value(row, NULL));
 }
 
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
-    quintptr id = index.internalId();
-    if (index.internalId() <= 0)
+    int id = index.row();
+    if (index.row() < 0)
     {
         return QVariant();
     }
@@ -147,9 +147,9 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
     {
     case Qt::DisplayRole:   //For standart text views
         {
-            return QVariant(m_objects[id]->getAnnotation());
+            return QVariant(m_objects[id]->getInfo());
         }
-    case Qt::DecorationRole:    //For graphics representation return full object
+    case rawObjectRole:    //For graphics representation return full object
         {
             IScaObject *object = m_objects[id];
             if (object->getType() == IScaObject::LINK)
@@ -159,7 +159,7 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
             }
             return QVariant::fromValue(object);
         }
-    case Qt::ToolTipRole:
+    case highlightRole:
         {
             return QVariant(false);
         }
@@ -240,16 +240,16 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
     {
         return false;
     }
-    if (index.internalId() <= 0)
+    if (index.row() < 0)
     {
         return false;
     }
 
     switch (role)
     {
-    case Qt::DecorationRole:
+    case rawObjectRole:
         {
-            quint32 id = index.internalId();
+            int id = index.row();
             IScaObject *object = NULL;
 
             //Try casting to object or link, then add it

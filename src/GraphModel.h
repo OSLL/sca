@@ -57,6 +57,10 @@ class GraphModel: public QAbstractListModel
 {
     Q_OBJECT
 public:
+    enum roles{
+        rawObjectRole = Qt::UserRole,
+        highlightRole = Qt::UserRole + 1
+    };
     explicit GraphModel(QObject *parent = 0);
     ~GraphModel();
 
@@ -71,7 +75,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::DecorationRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = rawObjectRole);
 
     bool removeObject(quint32 id);
     bool removeObject(IScaObject *obj);

@@ -62,15 +62,14 @@ GraphFilter::~GraphFilter()
 
 QVariant GraphFilter::data(const QModelIndex &index, int role) const
 {
-    if(role == Qt::ToolTipRole)
+    if(role == GraphModel::highlightRole)
     {
         return QVariant(filterAcceptsId(index));
     }
-    else if (role == Qt::DecorationRole)
+    else
     {
         return sourceModel()->data(index, role);
     }
-    return QVariant();
 }
 
 bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
@@ -81,7 +80,7 @@ bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
         qDebug() << "This filter acceptebale only for GraphModel";
         return false;
     }
-    QVariant var = sourceModel()->data(index, Qt::DecorationRole);
+    QVariant var = sourceModel()->data(index, GraphModel::rawObjectRole);
     IScaObject *object = qvariant_cast<IScaObject *>(var);
     if(object == NULL)
     {
@@ -93,9 +92,9 @@ bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
 
     qDebug() << "Path:" << object->getFile().absoluteFilePath();
     if(acceptable)
-        qDebug() << "Object #" << index.internalId() << "acceptable for filter";
+        qDebug() << "Object #" << index.row() << "acceptable for filter";
     else
-        qDebug() << "Object #" << index.internalId() << "unacceptable for filter";
+        qDebug() << "Object #" << index.row() << "unacceptable for filter";
 
     return acceptable;
 }

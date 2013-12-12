@@ -187,7 +187,7 @@ void GraphScene::refreshLinkPos(quint32 linkId)
     }
     LinkVisual *link = static_cast<LinkVisual *>(m_objects.value(linkId, NULL));
     Q_ASSERT(link);
-    QVariant var = m_model->data(m_model->index(linkId, 0), Qt::DecorationRole);
+    QVariant var = m_model->data(m_model->index(linkId, 0), GraphModel::rawObjectRole);
     Link *objLink = qvariant_cast<Link *>(var);
 
     quint32 fromId = objLink->getObjectFrom(),
@@ -353,7 +353,7 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     QList<quint32> links = objectVis->getLinks();
 
     //Get new object
-    QVariant var = m_model->data(m_model->index(id, 0), Qt::DecorationRole);
+    QVariant var = m_model->data(m_model->index(id, 0), GraphModel::rawObjectRole);
     IScaObject *obj = qvariant_cast<IScaObject *>(var);
     Q_ASSERT(obj != NULL);
 
@@ -367,7 +367,7 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     delete objectVis;
 
     //Update for object filtering
-    QVariant filtered = m_model->data(m_model->index(id, 0), Qt::ToolTipRole);
+    QVariant filtered = m_model->data(m_model->index(id, 0), GraphModel::highlightRole);
     newObject->setFiltered(filtered.toBool());
 }
 
@@ -383,7 +383,7 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
         //qDebug() << "Removing #" << i << "from scene. Items left: " << m_objects.size();
         if (obj->getType() == ObjectVisual::LINK)
         {
-            QVariant var = m_model->data(m_model->index(i, 0), Qt::DecorationRole);
+            QVariant var = m_model->data(m_model->index(i, 0), GraphModel::rawObjectRole);
             Link *l = qvariant_cast<Link *>(var);
             Q_ASSERT(l != NULL);
             quint32 fromId = l->getObjectFrom(),
@@ -405,8 +405,8 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     //qDebug() << "Update #" << leftTop.internalId() << " to scene.";
 
     //Get object that changed
-    quint32 id = leftTop.internalId();
-    QVariant var = m_model->data(leftTop, Qt::DecorationRole);
+    quint32 id = leftTop.row();
+    QVariant var = m_model->data(leftTop, GraphModel::rawObjectRole);
     IScaObject *object = NULL;
     object = qvariant_cast<IScaObject *>(var);
 

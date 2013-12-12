@@ -81,7 +81,7 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
     m_temp = NULL;
     //Add object to model and get it's id + create it's visual representation
     m_tempId = m_model->addObject(event->mimeData());
-    if (m_tempId <= 0)
+    if (m_tempId < 0)
     {
         return;
     }
