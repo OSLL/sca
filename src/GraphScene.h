@@ -69,17 +69,10 @@ public:
     explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
     ~GraphScene();
 
-    IScaObjectFileVisual *addFileVisual(IScaObjectFile *object);
-    IScaObjectDirectoryVisual *addDirVisual(IScaObjectDirectory *object);
-    IScaObjectTextBlockVisual *addTextBlockVisual(IScaObjectTextBlock *object);
-    IScaObjectSymbolVisual *addSymbolVisual(IScaObjectSymbol *object);
-    IScaObjectLineVisual *addLineVisual(IScaObjectLine *object);
-    IScaObjectBinaryBlockVisual *addBinaryBlockVisual(IScaObjectBinaryBlock *object);
-    IScaObjectIdentifierVisual *addIdentifierVisual(IScaObjectIdentifier *object);
 
     Node *addNode(IScaObject *object);
     LinkVisual *addLinkVisual(Link *object);
-    ObjectVisual *addObjectVisual(IScaObject *object, int id);
+    ObjectVisual *addObjectVisual(IScaObject *object, quint32 id);
 
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();
@@ -91,6 +84,7 @@ public:
     void setModel(QAbstractItemModel *model);
 
     void refreshLinkPos(quint32 linkId);
+    void connectLink(IScaObject *object, quint32 id);
 private:
     QHash<quint32, ObjectVisual *> m_objects;
 

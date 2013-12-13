@@ -30,99 +30,49 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file IScaObject.cpp
- * \brief IScaObject implementation
+ * \file VisualObjectCreator.h
+ * \brief Header of VisualObjectCreator
+ * \todo create comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObject.h"
-#include "StringConstants.h"
-#include <QDebug>
 
-IScaObject::IScaObject(IScaObjectType type, QFileInfo file) :
-    m_type(type),
-    m_file(file)
+#ifndef _VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_
+#define _VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_
+#include "visual/ObjectVisual.h"
+#include "visual/IScaObjectBinaryBlockVisual.h"
+#include "visual/IScaObjectDirectoryVisual.h"
+#include "visual/IScaObjectFileVisual.h"
+#include "visual/IScaObjectIdentifierVisual.h"
+#include "visual/IScaObjectLineVisual.h"
+#include "visual/IScaObjectSymbolVisual.h"
+#include "visual/IScaObjectTextBlockVisual.h"
+#include "visual/LinkVisual.h"
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class ObjectVisualCreator
 {
-}
+public:
+    ObjectVisualCreator();
 
-IScaObject::~IScaObject()
-{
-}
+    ~ObjectVisualCreator();
 
-IScaObject::IScaObjectType IScaObject::getType() const
-{
-    return m_type;
-}
-
-QString IScaObject::getAnnotation() const
-{
-    return m_annotation;
-}
-
-void IScaObject::setAnnotation(const QString &annotation)
-{
-    m_annotation = annotation;
-}
-
-QList<quint32> IScaObject::getLinks() const
-{
-    return m_links;
-}
-
-void IScaObject::disconnectLink(quint32 link)
-{
-    int index = m_links.indexOf(link);
-    if (index != -1)
-    {
-        m_links.removeAt(index);
-    }
-}
-
-void IScaObject::addLink(quint32 link)
-{
-    m_links.append(link);
-}
-
-QFileInfo IScaObject::getFile()
-{
-    return m_file;
-}
-
-void IScaObject::setFile(const QFileInfo &file)
-{
-    m_file = file;
-}
-
-QString IScaObject::getContent() const
-{
-    return QString();
-}
-
-void IScaObject::setLinks(const QList<quint32> &links)
-{
-    m_links = links;
-}
-
-QString IScaObject::getInfo() const
-{
-    QString result(OBJECTINFO_PATTERN);
-    return  result
-            .arg(m_type)
-            .arg(m_file.fileName())
-            .arg(m_file.absoluteFilePath())
-            .arg(m_annotation)
-            .arg(getContent());
-}
-
-QDebug operator<<(QDebug d, IScaObject &object)
-{
-    d << "IScaObject(type=" << object.getType() << ";cons=" << object.getLinks().size()
-      << ";ann=" << object.getAnnotation() << ")";
-    return d;
-}
+    IScaObjectFileVisual *createFileVisual(IScaObject *object);
+    IScaObjectSymbolVisual *createSymbolVisual(IScaObject *object);
+    IScaObjectLineVisual *createLineVisual(IScaObject *object);
+    IScaObjectBinaryBlockVisual *createBinaryBlockVisual(IScaObject *object);
+    IScaObjectIdentifierVisual *createIdentifierVisual(IScaObject *object);
+    IScaObjectDirectoryVisual *createDirVisual(IScaObject *object);
+    IScaObjectTextBlockVisual *createTextBlockVisual(IScaObject *object);
+    LinkVisual *createLinkVisual(IScaObject *object);
+    ObjectVisual *createObjectVisual(IScaObject *object);
+private:
+}; // class VisualObjectCreator
 
 
+#endif //_VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_
