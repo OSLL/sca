@@ -51,6 +51,8 @@ IScaObjectSymbolVisual::IScaObjectSymbolVisual(IScaObjectSymbol *obj) :
                     DEFAULT_SYMBOL_VISUAL_WIDTH,
                     DEFAULT_SYMBOL_VISUAL_HEIGHT);
     setTitle(QString(symbol));
+
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectSymbolVisual::paint(QPainter *painter,

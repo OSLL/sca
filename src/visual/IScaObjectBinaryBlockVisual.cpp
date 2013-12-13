@@ -66,6 +66,8 @@ IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(IScaObjectBinaryBlock *
     }
 
     setTitle(str);
+
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectBinaryBlockVisual::paint(QPainter *painter,

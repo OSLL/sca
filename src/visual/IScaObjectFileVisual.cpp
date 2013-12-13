@@ -51,6 +51,8 @@ IScaObjectFileVisual::IScaObjectFileVisual(IScaObjectFile *obj) :
                     DEFAULT_FILE_VISUAL_WIDTH,
                     DEFAULT_FILE_VISUAL_HEIGHT);
     setTitle(fileInfo.fileName());
+
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectFileVisual::paint(QPainter *painter,

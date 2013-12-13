@@ -54,6 +54,8 @@ IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(IScaObjectDirectory *obj) :
         setTitle(fileInfo.absoluteFilePath().section('/', 0, 0));
     else
         setTitle(fileInfo.absoluteFilePath().section('/', -1));
+
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectDirectoryVisual::paint(QPainter *painter,

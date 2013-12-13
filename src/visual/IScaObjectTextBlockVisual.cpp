@@ -56,6 +56,8 @@ IScaObjectTextBlockVisual::IScaObjectTextBlockVisual(IScaObjectTextBlock *obj) :
         text = text.mid(0, MAX_TITLE_LENGTH) + "...";
     }
     setTitle(text);
+
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectTextBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

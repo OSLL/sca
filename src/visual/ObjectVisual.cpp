@@ -9,6 +9,7 @@ ObjectVisual::ObjectVisual(ObjectVisualType type, QGraphicsItem *parent):
 {
     setFlags(QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemIsSelectable);
+
 }
 
 ObjectVisual::~ObjectVisual()

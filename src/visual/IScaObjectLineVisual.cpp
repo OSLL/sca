@@ -53,6 +53,8 @@ IScaObjectLineVisual::IScaObjectLineVisual(IScaObjectLine *obj) :
 
     identifier = identifier.mid(0, MAX_TITLE_LENGTH);
     setTitle(identifier);
+
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectLineVisual::paint(QPainter *painter,

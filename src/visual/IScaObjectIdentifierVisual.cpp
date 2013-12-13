@@ -59,6 +59,8 @@ IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(IScaObjectIdentifier *obj
         }
         setTitle(identifier);
     }
+
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectIdentifierVisual::paint(QPainter *painter,
