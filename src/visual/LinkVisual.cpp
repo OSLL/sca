@@ -50,7 +50,7 @@
 #include <qmath.h>
 
 LinkVisual::LinkVisual(Link *obj) :
-    ObjectVisual(LINK),
+    ObjectVisual(obj, LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
     m_annotation(NULL),
@@ -69,7 +69,6 @@ LinkVisual::LinkVisual(Link *obj) :
 
     setAnnotation(annotation);
 
-    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 LinkVisual::~LinkVisual()

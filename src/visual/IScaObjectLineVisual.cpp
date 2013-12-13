@@ -43,7 +43,7 @@
 #include <QPainter>
 
 IScaObjectLineVisual::IScaObjectLineVisual(IScaObjectLine *obj) :
-    Node(DEFAULT_LINE_COLOR)
+    Node(DEFAULT_LINE_COLOR, obj)
 {
     QString identifier = obj->getLine();
     m_rect = QRectF(-DEFAULT_LINE_VISUAL_WIDTH / 2,
@@ -53,8 +53,6 @@ IScaObjectLineVisual::IScaObjectLineVisual(IScaObjectLine *obj) :
 
     identifier = identifier.mid(0, MAX_TITLE_LENGTH);
     setTitle(identifier);
-
-    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectLineVisual::paint(QPainter *painter,

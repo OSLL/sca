@@ -43,7 +43,7 @@
 #include <QPainter>
 
 IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(IScaObjectDirectory *obj) :
-    Node(DEFAULT_DIR_COLOR)
+    Node(DEFAULT_DIR_COLOR, obj)
 {
     m_rect = QRectF(-DEFAULT_DIR_VISUAL_WIDTH / 2,
                     -DEFAULT_DIR_VISUAL_HEIGHT / 2,
@@ -54,8 +54,6 @@ IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(IScaObjectDirectory *obj) :
         setTitle(fileInfo.absoluteFilePath().section('/', 0, 0));
     else
         setTitle(fileInfo.absoluteFilePath().section('/', -1));
-
-    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 void IScaObjectDirectoryVisual::paint(QPainter *painter,

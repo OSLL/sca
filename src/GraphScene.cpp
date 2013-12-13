@@ -81,7 +81,7 @@ GraphScene::~GraphScene()
 Node *GraphScene::addNode(IScaObject *object)
 {
     Q_UNUSED(object);
-    Node *node = new Node(DEFAULT_NODE_COLOR);
+    Node *node = new Node(DEFAULT_NODE_COLOR, object);
 
     addItem(node);
     return node;

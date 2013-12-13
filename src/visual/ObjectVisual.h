@@ -14,7 +14,7 @@ public:
         LINK,
         COMMENT
     };
-    ObjectVisual(ObjectVisualType type = OBJECT, QGraphicsItem *parent = 0);
+    ObjectVisual(IScaObject *obj, ObjectVisualType type = OBJECT, QGraphicsItem *parent = 0);
     ~ObjectVisual();
 
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);

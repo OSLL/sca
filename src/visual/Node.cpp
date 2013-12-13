@@ -50,8 +50,8 @@
 #include <QTextDocument>
 #include "GraphScene.h"
 
-Node::Node(QColor standardColor) :
-    ObjectVisual(NODE),
+Node::Node(QColor standardColor, IScaObject *obj) :
+    ObjectVisual(obj, NODE),
     m_title(NULL),
     m_standardColor(standardColor),
     m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,

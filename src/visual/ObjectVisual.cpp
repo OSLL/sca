@@ -2,7 +2,7 @@
 #include "GraphScene.h"
 #include <QDebug>
 
-ObjectVisual::ObjectVisual(ObjectVisualType type, QGraphicsItem *parent):
+ObjectVisual::ObjectVisual(IScaObject *obj, ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),
     m_type(type),
     m_filtered(false)
@@ -10,6 +10,7 @@ ObjectVisual::ObjectVisual(ObjectVisualType type, QGraphicsItem *parent):
     setFlags(QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemIsSelectable);
 
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 ObjectVisual::~ObjectVisual()
