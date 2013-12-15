@@ -40,14 +40,13 @@
  * ---------------------------------------------------------------- */
 
 #include "GraphTableProxyModel.h"
+#include "NumericalConstants.h"
 #include <QDebug>
 
 GraphTableProxyModel::GraphTableProxyModel(QAbstractItemModel *source, QObject *parent) :
     QAbstractProxyModel(parent)
 {
     setSourceModel(source);
-    connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            this, SLOT(updateMap(QModelIndex, QModelIndex)));
 }
 
 GraphTableProxyModel::~GraphTableProxyModel()
@@ -57,7 +56,9 @@ GraphTableProxyModel::~GraphTableProxyModel()
 
 int GraphTableProxyModel::rowCount(const QModelIndex &parent) const
 {
-    return sourceModel()->rowCount(parent);
+    int size = m_idMap.size();
+    qDebug() << "TableProxy rowCount = " << size;
+    return size;
 }
 
 int GraphTableProxyModel::columnCount(const QModelIndex &parent) const
@@ -68,15 +69,21 @@ int GraphTableProxyModel::columnCount(const QModelIndex &parent) const
 
 QModelIndex GraphTableProxyModel::index(int row, int column, const QModelIndex &parent) const
 {
+    if (row < 0 || row > rowCount(parent))
+    {
+        qDebug() << "Wrong index requested in proxyTableModel";
+        return QModelIndex();
+    }
     QModelIndex ind = sourceModel()->index(m_idMap[row], column, parent);
-    QVariant var = sourceModel()->data(ind, GraphModel::rawObjectRole);
+    QVariant var = sourceModel()->data(ind, rawObjectRole);
     IScaObject *object = qvariant_cast<IScaObject *>(var);
+    qDebug() << "Index of #" << row << "requested in proxyTableModel";
     return createIndex(row, column, object);
 }
 
 QModelIndex GraphTableProxyModel::mapFromSource(const QModelIndex &sourceIndex) const
 {
-    int row = m_idMap.key(sourceIndex.row());
+    int row = m_idMap.key(sourceIndex.row(), -1);
     int column = sourceIndex.column();
     return index(row, column, sourceIndex.parent());
 }
@@ -90,10 +97,11 @@ QModelIndex GraphTableProxyModel::mapToSource(const QModelIndex &proxyIndex) con
 
 QVariant GraphTableProxyModel::data(const QModelIndex &proxyIndex, int role) const
 {
+    qDebug() << "TableModel (" << proxyIndex.row() << ";" << proxyIndex.column() << ")";
     if (m_idMap.isEmpty())
         return QVariant();
     int row = proxyIndex.row();
-    if (row < 0 || row > rowCount(proxyIndex.parent()))
+    if (row < 0 || row >= rowCount())
     {
         return QVariant();
     }
@@ -110,11 +118,12 @@ QVariant GraphTableProxyModel::data(const QModelIndex &proxyIndex, int role) con
     case Qt::DisplayRole:
         {
             QVariant var = sourceModel()->data(mapToSource(proxyIndex),
-                                               GraphModel::rawObjectRole);
+                                               rawObjectRole);
             IScaObject *obj = qvariant_cast<IScaObject *>(var);
             if (obj == NULL)
             {
-                qDebug() << "Cant cast object in GraphTableProxyModel";;
+                qDebug() << "Cant cast object in GraphTableProxyModel";
+                return QVariant();
             }
             switch (proxyIndex.column())
             {
@@ -144,16 +153,23 @@ QModelIndex GraphTableProxyModel::parent(const QModelIndex &child) const
     return QModelIndex();
 }
 
-void GraphTableProxyModel::updateMap(QModelIndex from, QModelIndex to)
+void GraphTableProxyModel::updateMap(QModelIndex sourceStart, QModelIndex sourceEnd)
 {
-    int startRow = from.row();
-    int endRow = to.row();
-    for (int row = startRow; row < endRow; row++)
+    // TODO (LeoSko) Make it recognise what happened and dont recreate everything
+    m_idMap.clear();
+    QVariant var = sourceModel()->data(sourceStart, objectIdListRole);
+    QList<int> list = qvariant_cast< QList<int> >(var);
+    qDebug() << "refreshing TableProxy to " << list.size() << " rows";
+    int i = 0;
+    foreach(int id, list)
     {
-        if (!m_idMap.contains(row))
+        if (sourceModel()->data(sourceStart, highlightRole).toBool())
         {
-            //TODO (LeoSko) Stopped here
+            m_idMap.insert(i++, id);
         }
     }
+    QModelIndex from = index(0, 0),
+                to = index(rowCount(), columnCount());
+    emit dataChanged(from, to);
 }
 

@@ -27,15 +27,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Create and setup model and filter
     m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT, this);
-    m_model = new GraphModel(this);
-    m_filter = new GraphFilter(this);
-    m_tableProxy = new GraphTableProxyModel(m_filter, this);
-    m_filter->setSourceModel(m_model);
-
     m_ui->graphViewer->setScene(m_scene);
+
+    m_model = new GraphModel(this);
     m_ui->graphViewer->setModel(m_model);
+
+    m_filter = new GraphFilter(m_model, this);
     m_scene->setModel(m_filter);
+
+    m_tableProxy = new GraphTableProxyModel(m_filter, this);
     m_ui->tableView->setModel(m_tableProxy);
+
+    connect(m_filter, SIGNAL(filterChanged()), m_scene, SLOT(refreshAll()));
+    connect(m_filter, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            m_tableProxy, SLOT(updateMap(QModelIndex,QModelIndex)));
 
     //Set up file model
     m_fileModel = new QFileSystemModel(this);
@@ -54,7 +59,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(m_filter, SIGNAL(filterChanged()), m_scene, SLOT(refreshAll()));
     //Connect customContextMenus
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));

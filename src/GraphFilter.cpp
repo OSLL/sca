@@ -45,7 +45,7 @@
 #include "common/IScaObject.h"
 #include "StringConstants.h"
 
-GraphFilter::GraphFilter(QObject *parent):
+GraphFilter::GraphFilter(QAbstractItemModel *source, QObject *parent):
     QSortFilterProxyModel(parent),
     m_fileName(QString("")),
     m_filePath(QString("")),
@@ -53,6 +53,9 @@ GraphFilter::GraphFilter(QObject *parent):
     m_annotation(QString("")),
     m_regExp(new QRegExp(DEFAULT_FILTER_REGEXP, Qt::CaseInsensitive, QRegExp::Wildcard))
 {
+    setSourceModel(source);
+    connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
 }
 
 GraphFilter::~GraphFilter()
@@ -62,7 +65,7 @@ GraphFilter::~GraphFilter()
 
 QVariant GraphFilter::data(const QModelIndex &index, int role) const
 {
-    if(role == GraphModel::highlightRole)
+    if(role == highlightRole)
     {
         return QVariant(filterAcceptsId(index));
     }
@@ -75,14 +78,14 @@ QVariant GraphFilter::data(const QModelIndex &index, int role) const
 bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
 {
     GraphModel *model = static_cast<GraphModel *>(sourceModel());
-    if(model == NULL)
+    if (model == NULL)
     {
-        qDebug() << "This filter acceptebale only for GraphModel";
+        qDebug() << "This filter acceptable only for GraphModel";
         return false;
     }
-    QVariant var = sourceModel()->data(index, GraphModel::rawObjectRole);
+    QVariant var = sourceModel()->data(index, rawObjectRole);
     IScaObject *object = qvariant_cast<IScaObject *>(var);
-    if(object == NULL)
+    if (object == NULL)
     {
         qDebug() << "Can't get object";
         return false;
@@ -91,7 +94,7 @@ bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
     bool acceptable = checkRegExp(object);
 
     qDebug() << "Path:" << object->getFile().absoluteFilePath();
-    if(acceptable)
+    if (acceptable)
         qDebug() << "Object #" << index.row() << "acceptable for filter";
     else
         qDebug() << "Object #" << index.row() << "unacceptable for filter";
@@ -106,7 +109,7 @@ QModelIndex GraphFilter::index(int row, int column, const QModelIndex &parent) c
 
 bool GraphFilter::checkRegExp(IScaObject *object) const
 {
-    //If filter didn't change from default, nothing matches
+    // If filter didn't change from default, nothing matches
     // TODO (LeoSko) this condition is bad on perfomance,
     // somehow maybe move it to check once a refresh needed
     if (m_regExp->pattern() == DEFAULT_FILTER_REGEXP)

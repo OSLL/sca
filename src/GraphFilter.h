@@ -53,15 +53,8 @@
 class GraphFilter: public QSortFilterProxyModel
 {
     Q_OBJECT
-
 public:
-    enum boolOperation{
-        OR,
-        AND,
-        NOT
-    };
-
-    GraphFilter(QObject *parent = 0);
+    explicit GraphFilter(QAbstractItemModel *source, QObject *parent = 0);
     ~GraphFilter();
 
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;

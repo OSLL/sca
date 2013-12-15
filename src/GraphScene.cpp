@@ -42,6 +42,7 @@
 #include "GraphScene.h"
 #include "common/ScaObjectConverter.h"
 #include "StringConstants.h"
+#include "NumericalConstants.h"
 #include "GraphModel.h"
 #include <QDebug>
 #include <QInputDialog>
@@ -179,7 +180,7 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
-void GraphScene::refreshLinkPos(quint32 linkId)
+void GraphScene::refreshLinkPos(int linkId)
 {
     if (!m_objects.contains(linkId))
     {
@@ -187,10 +188,10 @@ void GraphScene::refreshLinkPos(quint32 linkId)
     }
     LinkVisual *link = static_cast<LinkVisual *>(m_objects.value(linkId, NULL));
     Q_ASSERT(link);
-    QVariant var = m_model->data(m_model->index(linkId, 0), GraphModel::rawObjectRole);
+    QVariant var = m_model->data(m_model->index(linkId, 0), rawObjectRole);
     Link *objLink = qvariant_cast<Link *>(var);
 
-    quint32 fromId = objLink->getObjectFrom(),
+    int fromId = objLink->getObjectFrom(),
             toId = objLink->getObjectTo();
     // TODO (LeoSko) It really seems we don't have nice interface there, right?
     Node    *from = static_cast<Node *>(m_objects.value(fromId, NULL)),
@@ -200,9 +201,9 @@ void GraphScene::refreshLinkPos(quint32 linkId)
 
 void GraphScene::refreshAll()
 {
-    //qDebug() << "Refresh all visual objects";
+    qDebug() << "Refresh all visual objects";
     QList<QModelIndex> indeces;
-    foreach(quint32 id, m_objects.keys())
+    foreach(int id, m_objects.keys())
     {
         //qDebug() << "index #" << id;
         indeces.append(m_model->index(id, 0));
@@ -214,7 +215,7 @@ void GraphScene::refreshAll()
     }
 }
 
-ObjectVisual *GraphScene::getObjectById(quint32 id)
+ObjectVisual *GraphScene::getObjectById(int id)
 {
     return m_objects.value(id, NULL);
 }
@@ -292,8 +293,8 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         {
             Link *link = static_cast<Link *>(object);
             Q_ASSERT(link != NULL);
-            quint32 sourceId = link->getObjectFrom();
-            quint32 destinId = link->getObjectTo();
+            int sourceId = link->getObjectFrom();
+            int destinId = link->getObjectTo();
             Node *sourceNode = static_cast<Node *>(m_objects.value(sourceId, NULL));
             Node *destinNode = static_cast<Node *>(m_objects.value(destinId, NULL));
             visObject = addLinkVisual(link);
@@ -314,7 +315,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     return visObject;
 }
 
-quint32 GraphScene::getObjectId(ObjectVisual *object)
+int GraphScene::getObjectId(ObjectVisual *object)
 {
     return m_objects.key(object);
 }
@@ -350,10 +351,10 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
 
     //We re-create object, saving some old parameters of it
     QPointF pos = objectVis->pos();
-    QList<quint32> links = objectVis->getLinks();
+    QList<int> links = objectVis->getLinks();
 
     //Get new object
-    QVariant var = m_model->data(m_model->index(id, 0), GraphModel::rawObjectRole);
+    QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
     IScaObject *obj = qvariant_cast<IScaObject *>(var);
     Q_ASSERT(obj != NULL);
 
@@ -367,7 +368,7 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     delete objectVis;
 
     //Update for object filtering
-    QVariant filtered = m_model->data(m_model->index(id, 0), GraphModel::highlightRole);
+    QVariant filtered = m_model->data(m_model->index(id, 0), highlightRole);
     newObject->setFiltered(filtered.toBool());
 }
 
@@ -383,10 +384,10 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
         //qDebug() << "Removing #" << i << "from scene. Items left: " << m_objects.size();
         if (obj->getType() == ObjectVisual::LINK)
         {
-            QVariant var = m_model->data(m_model->index(i, 0), GraphModel::rawObjectRole);
+            QVariant var = m_model->data(m_model->index(i, 0), rawObjectRole);
             Link *l = qvariant_cast<Link *>(var);
             Q_ASSERT(l != NULL);
-            quint32 fromId = l->getObjectFrom(),
+            int fromId = l->getObjectFrom(),
                     toId = l->getObjectTo();
             Node *from = static_cast<Node *>(m_objects[fromId]);
             Node *to = static_cast<Node *>(m_objects[toId]);
@@ -405,8 +406,8 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     qDebug() << "Update #" << leftTop.row() << " to scene.";
 
     //Get object that changed
-    quint32 id = leftTop.row();
-    QVariant var = m_model->data(leftTop, GraphModel::rawObjectRole);
+    int id = leftTop.row();
+    QVariant var = m_model->data(leftTop, rawObjectRole);
     IScaObject *object = NULL;
     object = qvariant_cast<IScaObject *>(var);
 

@@ -98,17 +98,17 @@ void IScaObject::setAnnotation(const QString &annotation)
     m_annotation = annotation;
 }
 
-QList<quint32> IScaObject::getLinks() const
+QList<int> IScaObject::getLinks() const
 {
     return m_links;
 }
 
-void IScaObject::disconnectLink(quint32 link)
+void IScaObject::disconnectLink(int link)
 {
     m_links.removeOne(link);
 }
 
-void IScaObject::addLink(quint32 link)
+void IScaObject::addLink(int link)
 {
     m_links.append(link);
 }
@@ -128,7 +128,7 @@ QString IScaObject::getContent() const
     return QString("*");
 }
 
-void IScaObject::setLinks(const QList<quint32> &links)
+void IScaObject::setLinks(const QList<int> &links)
 {
     m_links = links;
 }

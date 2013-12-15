@@ -57,6 +57,7 @@
 #include "ScaMIMEDataProcessor.h"
 #include "GraphModel.h"
 #include "GraphFilter.h"
+#include "../NumericalConstants.h"
 
 GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent),
@@ -104,8 +105,11 @@ void GraphView::dragMoveEvent(QDragMoveEvent *event)
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
 {
     Q_UNUSED(event);
-    //We went out of scene, delete created item
-    m_model->removeObject(m_tempId);
+    if (m_tempId >= 0)
+    {
+        //We went out of scene, delete created item
+        m_model->removeObject(m_tempId);
+    }
 }
 
 void GraphView::dropEvent(QDropEvent *event)
@@ -182,8 +186,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     if (nodes.size() == 1)
     {
         Node *node = nodes.at(0);
-        quint32 id = scene()->getObjectId(node);
-        QVariant var = m_model->data(m_model->index(id), GraphModel::rawObjectRole);
+        int id = scene()->getObjectId(node);
+        QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
         IScaObject *obj = qvariant_cast<IScaObject *>(var);
         toText->setEnabled(conv.canConvert(obj, IScaObject::TEXTBLOCK));
         toIdentifier->setEnabled(conv.canConvert(obj, IScaObject::IDENTIFIER));
@@ -211,8 +215,8 @@ void GraphView::ShowContextMenu(const QPoint &pos)
             src = links.at(0),
             dest = links.at(1);
         }
-        quint32 srcId = scene()->getObjectId(src);
-        quint32 destId = scene()->getObjectId(dest);
+        int srcId = scene()->getObjectId(src);
+        int destId = scene()->getObjectId(dest);
         m_model->connectObjects(srcId, destId);
         return;
     }
@@ -254,7 +258,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
     else if (action == editAnnotation)
     {
-        quint32 id = scene()->getObjectId(links.at(0));
+        int id = scene()->getObjectId(links.at(0));
         editLinkAnnotation(id);
     }
 }
@@ -270,8 +274,8 @@ void GraphView::keyPressEvent(QKeyEvent *event)
         {
             Node *src = items.at(0);
             Node *dest = items.at(1);
-            quint32 srcId = scene()->getObjectId(src);
-            quint32 destId = scene()->getObjectId(dest);
+            int srcId = scene()->getObjectId(src);
+            int destId = scene()->getObjectId(dest);
             m_model->connectObjects(srcId, destId);
         }
     }
@@ -371,7 +375,7 @@ void GraphView::setScene(GraphScene *graphScene)
     graphScene->setModel(m_model);
 }
 
-void GraphView::editLinkAnnotation(quint32 id)
+void GraphView::editLinkAnnotation(int id)
 {
     m_model->editLinkAnnotation(id);
 }

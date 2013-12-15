@@ -50,7 +50,7 @@ Link::Link() :
 {
 }
 
-Link::Link(quint32 objectFrom, quint32 objectTo) :
+Link::Link(int objectFrom, int objectTo) :
     IScaObject(LINK),
     m_annotation(QString("")),
     m_objectFrom(objectFrom),
@@ -62,12 +62,12 @@ Link::~Link()
 {
 }
 
-quint32 Link::getObjectTo() const
+int Link::getObjectTo() const
 {
     return m_objectTo;
 }
 
-void Link::setObjectTo(quint32 objectTo)
+void Link::setObjectTo(int objectTo)
 {
     m_objectTo = objectTo;
 }
@@ -89,12 +89,12 @@ QDebug operator<<(QDebug d, Link &link)
     return d;
 }
 
-quint32 Link::getObjectFrom() const
+int Link::getObjectFrom() const
 {
     return m_objectFrom;
 }
 
-void Link::setObjectFrom(quint32 objectFrom)
+void Link::setObjectFrom(int objectFrom)
 {
     m_objectFrom = objectFrom;
 }

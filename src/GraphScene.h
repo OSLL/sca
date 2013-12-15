@@ -84,15 +84,15 @@ public:
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();
 
-    ObjectVisual *getObjectById(quint32 id);
-    quint32 getObjectId(ObjectVisual *object);
+    ObjectVisual *getObjectById(int id);
+    int getObjectId(ObjectVisual *object);
 
     QAbstractItemModel *getModel() const;
     void setModel(QAbstractItemModel *model);
 
-    void refreshLinkPos(quint32 linkId);
+    void refreshLinkPos(int linkId);
 private:
-    QHash<quint32, ObjectVisual *> m_objects;
+    QHash<int, ObjectVisual *> m_objects;
 
     QPointF m_posToAdd;
     QAbstractItemModel *m_model;

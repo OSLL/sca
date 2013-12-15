@@ -23,17 +23,17 @@ public:
     void setType(const ObjectVisualType &type);
     GraphScene *scene() const;
 
-    void addLink(quint32 linkId);
-    void disconnectLink(quint32 linkId);
+    void addLink(int linkId);
+    void disconnectLink(int linkId);
 
-    QList<quint32> getLinks() const;
-    void setLinks(const QList<quint32> &links);
+    QList<int> getLinks() const;
+    void setLinks(const QList<int> &links);
 
     void setFiltered(bool filtered);
 
     friend QDebug operator<<(QDebug d, ObjectVisual &node);
 protected:
-    QList<quint32> m_links;
+    QList<int> m_links;
     ObjectVisualType m_type;
     bool m_filtered;
 };
