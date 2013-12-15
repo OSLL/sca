@@ -67,7 +67,7 @@ public:
 
     void exportToImage(const QString path);
 
-    void editLinkAnnotation(quint32 id);
+    void editLinkAnnotation(int id);
     GraphModel *getModel() const;
     void setModel(GraphModel *model);
     void setScene(GraphScene *graphScene);

@@ -85,5 +85,9 @@ const QBrush FILTER_BRUSH((Qt::red));
 const int DEFAULT_IMAGE_WIDTH = 800;
 const int DEFAULT_IMAGE_HEIGHT = 600;
 
-
+enum GraphModelRole{
+    rawObjectRole = Qt::UserRole,
+    highlightRole = Qt::UserRole + 1,
+    objectIdListRole = Qt::UserRole + 2
+};
 #endif //_NumericalConstants_H_B55D9E18_0180_4F9B_B243_BC6FD77B58FD_INCLUDED_

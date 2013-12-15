@@ -74,8 +74,8 @@ public:
     QString getContent() const;
 
 private:
-    quint32 m_length;
-    quint32 m_offset;
+    int m_length;
+    int m_offset;
     QByteArray m_data;
     IScaObjectFile *m_fileObject;
 

@@ -78,13 +78,13 @@ public:
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
 
-    QList<quint32> getLinks() const;
-    void setLinks(const QList<quint32> &links);
+    QList<int> getLinks() const;
+    void setLinks(const QList<int> &links);
 
     QString getInfo(const QString &pattern = OBJECT_INFO_PATTERN) const;
 
-    void disconnectLink(quint32 link);
-    void addLink(quint32 link);
+    void disconnectLink(int link);
+    void addLink(int link);
 
     friend QDebug operator<<(QDebug d, IScaObject &node);
 
@@ -96,7 +96,7 @@ private:
     QString m_annotation;
 
 protected:
-    QList<quint32> m_links;
+    QList<int> m_links;
     IScaObjectType m_type;
     QFileInfo m_file;
 

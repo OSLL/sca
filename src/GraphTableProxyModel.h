@@ -52,18 +52,18 @@ class GraphTableProxyModel : public QAbstractProxyModel
 {
     Q_OBJECT
 public:
-    GraphTableProxyModel(QAbstractItemModel *source, QObject *parent);
+    explicit GraphTableProxyModel(QAbstractItemModel *source, QObject *parent);
     ~GraphTableProxyModel();
 
-    int rowCount(const QModelIndex &parent) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
     QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
     QVariant data(const QModelIndex &proxyIndex, int role) const;
     QModelIndex parent(const QModelIndex &child) const;
 private:
-    QMap<quint32, quint32> m_idMap;
+    QMap<int, int> m_idMap;
 
 public slots:
     void updateMap(QModelIndex from, QModelIndex to);

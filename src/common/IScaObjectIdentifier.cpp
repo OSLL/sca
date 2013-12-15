@@ -90,12 +90,12 @@ void IScaObjectIdentifier::setIdentifier(const QString &identifier)
 {
     m_identifier = identifier;
 }
-quint32 IScaObjectIdentifier::getOffset() const
+int IScaObjectIdentifier::getOffset() const
 {
     return m_offset;
 }
 
-void IScaObjectIdentifier::setOffset(const quint32 &offset)
+void IScaObjectIdentifier::setOffset(const int &offset)
 {
     m_offset = offset;
 }

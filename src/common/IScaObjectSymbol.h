@@ -66,14 +66,14 @@ public:
     char getSymbol() const;
     void setSymbol(char symbol);
 
-    quint32 getOffset() const;
-    void setOffset(const quint32 &offset);
+    int getOffset() const;
+    void setOffset(const int &offset);
 
     QString getContent() const;
 
 private:
     char m_symbol;
-    quint32 m_offset;
+    int m_offset;
     IScaObjectFile *m_fileObject;
 
 }; // class IScaObjectSymbol

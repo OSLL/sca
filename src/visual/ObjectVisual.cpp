@@ -17,7 +17,7 @@ ObjectVisual::~ObjectVisual()
 {
 }
 
-void ObjectVisual::disconnectLink(quint32 linkId)
+void ObjectVisual::disconnectLink(int linkId)
 {
     if (m_links.removeOne(linkId))
     {
@@ -34,7 +34,7 @@ QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, cons
     switch(change)
     {
     case ItemPositionChange:
-        foreach (quint32 linkId, m_links)
+        foreach (int linkId, m_links)
         {
             scene()->refreshLinkPos(linkId);
         }
@@ -47,19 +47,19 @@ QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, cons
     return QGraphicsItem::itemChange(change, value);
 }
 
-void ObjectVisual::addLink(quint32 linkId)
+void ObjectVisual::addLink(int linkId)
 {
     qDebug() << "Appending link #" << linkId;
     m_links.append(linkId);
     scene()->refreshLinkPos(linkId);
 }
 
-QList<quint32> ObjectVisual::getLinks() const
+QList<int> ObjectVisual::getLinks() const
 {
     return m_links;
 }
 
-void ObjectVisual::setLinks(const QList<quint32> &links)
+void ObjectVisual::setLinks(const QList<int> &links)
 {
     m_links = links;
 }

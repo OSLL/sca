@@ -49,52 +49,51 @@
  */
 
 #include "common/IScaObject.h"
+#include "NumericalConstants.h"
 #include <QAbstractListModel>
 #include <QMimeData>
+#include <QList>
 class Link;
 
 class GraphModel: public QAbstractListModel
 {
     Q_OBJECT
 public:
-    enum roles{
-        rawObjectRole = Qt::UserRole,
-        highlightRole = Qt::UserRole + 1
-    };
     explicit GraphModel(QObject *parent = 0);
     ~GraphModel();
 
     int addObject(const QMimeData *mimeData);
     int addObject(IScaObject *object);
-    quint32 replaceObject(IScaObject *object, quint32 id);
-    quint32 getId(IScaObject *object);
-    QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
+    int replaceObject(IScaObject *object, int id);
+    int getId(IScaObject *object);
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
-    bool removeRow(quint32 id, const QModelIndex &parent = QModelIndex());
+    bool removeRow(int id, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = rawObjectRole);
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
 
-    bool removeObject(quint32 id);
+    bool removeObject(int id);
     bool removeObject(IScaObject *obj);
 
-    bool freeLink(quint32 link);
+    bool freeLink(int link);
 
-    bool convert(quint32 id, IScaObject::IScaObjectType toType);
+    bool convert(int id, IScaObject::IScaObjectType toType);
 
-    quint32 connectObjects(quint32 id1, quint32 id2);
+    int connectObjects(int id1, int id2);
 
-    void addLinkTo(IScaObject *obj, quint32 link);
-    void editLinkAnnotation(quint32 id);
+    void addLinkTo(IScaObject *obj, int link);
+    void editLinkAnnotation(int id);
 
-    void setAnnotation(quint32 id, QString annotation);
+    void setAnnotation(int id, QString annotation);
 
 private:
-    static quint32 s_nextID;
-    QHash<quint32, IScaObject *> m_objects;
+    static int s_nextID;
+    QHash<int, IScaObject *> m_objects;
 }; // class GraphModel
 
+Q_DECLARE_METATYPE( QList<int> )
 
 #endif //_GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_
