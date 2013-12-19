@@ -91,5 +91,5 @@ enum GraphModelRole{
     objectIdListRole = Qt::UserRole + 2
 };
 
-const int GRAPH_TABLE_PROXY_COLUMN_COUNT = 4;
+const int GRAPH_TABLE_PROXY_COLUMN_COUNT = 5;
 #endif //_NumericalConstants_H_B55D9E18_0180_4F9B_B243_BC6FD77B58FD_INCLUDED_

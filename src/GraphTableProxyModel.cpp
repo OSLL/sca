@@ -107,6 +107,8 @@ QVariant GraphTableProxyModel::data(const QModelIndex &index, int role) const
                 return QVariant(obj->getFile().absoluteFilePath());
             case 3:
                 return QVariant(obj->getAnnotation());
+            case 4:
+                return QVariant(obj->getContent());
             default:
                 return QVariant();
             }
