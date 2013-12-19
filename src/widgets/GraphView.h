@@ -71,6 +71,7 @@ public:
     GraphModel *getModel() const;
     void setModel(GraphModel *model);
     void setScene(GraphScene *graphScene);
+
 private:
     //This is used for drag-n-drop technology
     Node *m_temp;
@@ -80,6 +81,7 @@ private:
 
 public slots:
     void ShowContextMenu(const QPoint &pos);
+    void moveTo(const QModelIndex &index);
 
 protected:
     void mousePressEvent(QMouseEvent *event);

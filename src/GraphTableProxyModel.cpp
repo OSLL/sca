@@ -129,13 +129,29 @@ bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &par
     if (!list.isEmpty())
     {
         int i = 0;
-        beginInsertRows(QModelIndex(), 0, list.size() - 1);
         foreach (int id, list)
         {
-            qDebug() << "[ProxyTableModel]: " << i << "->" << id;
-            m_idMap[i++] = id;
+            //Check if it matches filter
+            if (m_source->data(m_source->index(id, 0), highlightRole).toBool())
+            {
+                qDebug() << "[ProxyTableModel]: " << i << "->" << id;
+                beginInsertRows(QModelIndex(), i, i);
+                m_idMap[i++] = id;
+                endInsertRows();
+            }
         }
-        endInsertRows();
+        //Check if nothing matches filter, then show all
+        if (m_idMap.isEmpty())
+        {
+            qDebug() << "[ProxyTableModel]: nothing matched filter.";
+            foreach (int id, list)
+            {
+                qDebug() << "[ProxyTableModel]: " << i << "->" << id;
+                beginInsertRows(QModelIndex(), i, i);
+                m_idMap[i++] = id;
+                endInsertRows();
+            }
+        }
     }
     return true;
 }

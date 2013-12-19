@@ -263,6 +263,41 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     }
 }
 
+void GraphView::moveTo(const QModelIndex &index)
+{
+    QAbstractItemModel *model = scene()->getModel();
+    QVariant var = model->data(QModelIndex(), objectIdListRole);
+    QList<int> list = qvariant_cast<QList<int> >(var);
+    QMap<int, int> idMap;
+    int i = 0;
+    if (!list.isEmpty())
+    {
+        foreach(int id, list)
+        {
+            if (model->data(model->index(id, 0), highlightRole).toBool())
+            {
+                //qDebug() << "[GraphView]: " << i << "->" << id;
+                idMap[i++] = id;
+            }
+        }
+        if (idMap.isEmpty())
+        {
+            //qDebug() << "[GraphView]: no items filtered";
+            foreach(int id, list)
+            {
+                idMap[i++] = id;
+            }
+        }
+    }
+
+    int modelRow = idMap[index.row()];
+    ObjectVisual *obj = scene()->getObjectById(modelRow);
+    if (obj != NULL)
+    {
+        centerOn(obj);
+    }
+}
+
 void GraphView::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())

@@ -43,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
             m_tableProxy, SLOT(updateMap()));
     connect(m_filter, SIGNAL(rowsRemoved(QModelIndex, int, int)),
             m_tableProxy, SLOT(updateMap()));
+    connect(m_ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
+            m_ui->graphViewer, SLOT(moveTo(QModelIndex)));
+    connect(m_filter, SIGNAL(filterChanged()),
+            m_tableProxy, SLOT(updateMap()));
 
     //Set up file model
     m_fileModel = new QFileSystemModel(this);
