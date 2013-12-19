@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,40 +30,49 @@
  */
 
 /*! ---------------------------------------------------------------
- *
- * \file IScaObjectSymbolVisual.cpp
- * \brief IScaObjectSymbolVisual implementation
+ * \file VisualObjectCreator.h
+ * \brief Header of VisualObjectCreator
+ * \todo create comment here
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+
+#ifndef _VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_
+#define _VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_
+#include "ObjectVisual.h"
+#include "IScaObjectBinaryBlockVisual.h"
+#include "IScaObjectDirectoryVisual.h"
+#include "IScaObjectFileVisual.h"
+#include "IScaObjectIdentifierVisual.h"
+#include "IScaObjectLineVisual.h"
 #include "IScaObjectSymbolVisual.h"
-#include <QPainter>
-
-IScaObjectSymbolVisual::IScaObjectSymbolVisual(IScaObjectSymbol *obj) :
-    Node(DEFAULT_SYMBOL_COLOR, obj)
+#include "IScaObjectTextBlockVisual.h"
+#include "LinkVisual.h"
+/*!
+ * Class description. May use HTML formatting
+ *
+ */
+class ObjectVisualCreator
 {
-    char symbol = obj->getSymbol();
-    m_rect = QRectF(-DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
-                    -DEFAULT_SYMBOL_VISUAL_HEIGHT / 2,
-                    DEFAULT_SYMBOL_VISUAL_WIDTH,
-                    DEFAULT_SYMBOL_VISUAL_HEIGHT);
-    setTitle(QString(symbol));
-}
+public:
+    ObjectVisualCreator();
 
-void IScaObjectSymbolVisual::paint(QPainter *painter,
-                                   const QStyleOptionGraphicsItem *option,
-                                   QWidget *widget)
-{
-    painter->setBrush(brush());
-    painter->setPen(pen());
-    painter->drawEllipse(m_rect);
-    Node::paint(painter, option, widget);
-}
+    ~ObjectVisualCreator();
 
-IScaObjectSymbolVisual::~IScaObjectSymbolVisual()
-{
+    IScaObjectFileVisual *createFileVisual(IScaObject *object);
+    IScaObjectSymbolVisual *createSymbolVisual(IScaObject *object);
+    IScaObjectLineVisual *createLineVisual(IScaObject *object);
+    IScaObjectBinaryBlockVisual *createBinaryBlockVisual(IScaObject *object);
+    IScaObjectIdentifierVisual *createIdentifierVisual(IScaObject *object);
+    IScaObjectDirectoryVisual *createDirVisual(IScaObject *object);
+    IScaObjectTextBlockVisual *createTextBlockVisual(IScaObject *object);
+    LinkVisual *createLinkVisual(IScaObject *object);
+    ObjectVisual *createObjectVisual(IScaObject *object);
+private:
+}; // class VisualObjectCreator
 
-}
+
+#endif //_VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_

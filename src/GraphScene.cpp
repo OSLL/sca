@@ -44,6 +44,7 @@
 #include "StringConstants.h"
 #include "NumericalConstants.h"
 #include "GraphModel.h"
+#include "visual/ObjectVisualCreator.h"
 #include <QDebug>
 #include <QInputDialog>
 #include <QVariant>
@@ -78,76 +79,13 @@ GraphScene::~GraphScene()
     }
 }
 
-IScaObjectFileVisual *GraphScene::addFileVisual(IScaObjectFile *object)
-{
-    IScaObjectFileVisual *node = new IScaObjectFileVisual(object);
-    addItem(node);
-    return node;
-}
-
-IScaObjectSymbolVisual *GraphScene::addSymbolVisual(IScaObjectSymbol *object)
-{
-    IScaObjectSymbolVisual *node = new IScaObjectSymbolVisual(object);
-
-    addItem(node);
-    return node;
-}
-
-IScaObjectLineVisual *GraphScene::addLineVisual(IScaObjectLine *object)
-{
-    IScaObjectLineVisual *node = new IScaObjectLineVisual(object);
-
-    addItem(node);
-    return node;
-}
-
-IScaObjectBinaryBlockVisual *GraphScene::addBinaryBlockVisual(IScaObjectBinaryBlock *object)
-{
-    IScaObjectBinaryBlockVisual *node = new IScaObjectBinaryBlockVisual(object);
-
-    addItem(node);
-    return node;
-}
-
-IScaObjectIdentifierVisual *GraphScene::addIdentifierVisual(IScaObjectIdentifier *object)
-{
-    IScaObjectIdentifierVisual *node = new IScaObjectIdentifierVisual(object);
-
-    addItem(node);
-    return node;
-}
-
-IScaObjectDirectoryVisual *GraphScene::addDirVisual(IScaObjectDirectory *object)
-{
-    IScaObjectDirectoryVisual *node = new IScaObjectDirectoryVisual(object);
-
-    addItem(node);
-    return node;
-}
-
-IScaObjectTextBlockVisual *GraphScene::addTextBlockVisual(IScaObjectTextBlock *object)
-{
-    IScaObjectTextBlockVisual *node = new IScaObjectTextBlockVisual(object);
-
-    addItem(node);
-    return node;
-}
-
 Node *GraphScene::addNode(IScaObject *object)
 {
     Q_UNUSED(object);
-    Node *node = new Node(DEFAULT_NODE_COLOR);
+    Node *node = new Node(DEFAULT_NODE_COLOR, object);
 
     addItem(node);
     return node;
-}
-
-LinkVisual *GraphScene::addLinkVisual(Link *object)
-{
-    LinkVisual *link = new LinkVisual(object);
-
-    addItem(link);
-    return link;
 }
 
 QList<Node *> GraphScene::selectedNodes()
@@ -195,8 +133,21 @@ void GraphScene::refreshLinkPos(int linkId)
             toId = objLink->getObjectTo();
     // TODO (LeoSko) It really seems we don't have nice interface there, right?
     Node    *from = static_cast<Node *>(m_objects.value(fromId, NULL)),
-            *to = static_cast<Node *>(m_objects.value(toId, NULL));
+            *to   = static_cast<Node *>(m_objects.value(toId, NULL));
     link->refreshGeometry(from->pos(), to->pos());
+}
+
+void GraphScene::connectLink(IScaObject *object, int linkId)
+{
+        Link *link = static_cast<Link *>(object);
+        int sourceId = link->getObjectFrom();
+        int destinId = link->getObjectTo();
+        Node *sourceNode = static_cast<Node *>(m_objects.value(sourceId, NULL));
+        Node *destinNode = static_cast<Node *>(m_objects.value(destinId, NULL));
+        sourceNode->addLink(linkId);
+        destinNode->addLink(linkId);
+
+        refreshLinkPos(linkId);
 }
 
 void GraphScene::refreshAll()
@@ -211,7 +162,7 @@ void GraphScene::refreshAll()
 
     foreach (QModelIndex index, indeces)
     {
-       updateObjects(index, index);
+        updateObjects(index, index);
     }
 }
 
@@ -220,98 +171,27 @@ ObjectVisual *GraphScene::getObjectById(int id)
     return m_objects.value(id, NULL);
 }
 
-ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
+ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, quint32 id)
 {
     if (m_objects.contains(id))
     {
         qDebug() << "Scene already contains object #" << id;
         return NULL;
     }
-    IScaObject::IScaObjectType type = object->getType();
-    ObjectVisual *visObject = NULL;
-    //qDebug() << "Adding #" << id << "-" << type << " to scene.";
 
-    switch(type)
+    ObjectVisual *visObject = NULL;
+    ObjectVisualCreator creator;
+    visObject = creator.createObjectVisual(object);
+
+    addItem(visObject);
+    visObject->setPos(m_posToAdd);
+    m_objects.insert(id, visObject);
+
+    if(visObject->getType() == ObjectVisual::LINK)
     {
-    case IScaObject::FILE:
-        {
-            IScaObjectFile *fileObject = static_cast<IScaObjectFile *>(object);
-            visObject = addFileVisual(fileObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-    case IScaObject::DIRECTORY:
-        {
-            IScaObjectDirectory *dirObject = static_cast<IScaObjectDirectory *>(object);
-            visObject = addDirVisual(dirObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-    case IScaObject::TEXTBLOCK:
-        {
-            IScaObjectTextBlock *textObject = static_cast<IScaObjectTextBlock *>(object);
-            visObject = addTextBlockVisual(textObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-    case IScaObject::BINARYBLOCK:
-        {
-            IScaObjectBinaryBlock *binaryObject = static_cast<IScaObjectBinaryBlock *>(object);
-            visObject = addBinaryBlockVisual(binaryObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-    case IScaObject::LINE:
-        {
-            IScaObjectLine *lineObject = static_cast<IScaObjectLine *>(object);
-            visObject = addLineVisual(lineObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-    case IScaObject::IDENTIFIER:
-        {
-            IScaObjectIdentifier *identObject = static_cast<IScaObjectIdentifier *>(object);
-            visObject = addIdentifierVisual(identObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-    case IScaObject::SYMBOL:
-        {
-            IScaObjectSymbol *symbolObject = static_cast<IScaObjectSymbol *>(object);
-            visObject = addSymbolVisual(symbolObject);
-            visObject->setPos(m_posToAdd);
-            m_objects.insert(id, visObject);
-            break;
-        }
-    case IScaObject::LINK:
-        {
-            Link *link = static_cast<Link *>(object);
-            Q_ASSERT(link != NULL);
-            int sourceId = link->getObjectFrom();
-            int destinId = link->getObjectTo();
-            Node *sourceNode = static_cast<Node *>(m_objects.value(sourceId, NULL));
-            Node *destinNode = static_cast<Node *>(m_objects.value(destinId, NULL));
-            visObject = addLinkVisual(link);
-            qDebug() << sourceNode << destinNode << visObject;
-            Q_ASSERT(visObject != NULL && sourceNode != NULL && destinNode != NULL);
-            m_objects.insert(id, visObject);
-            sourceNode->addLink(id);
-            destinNode->addLink(id);
-            break;
-        }
-    default:
-        {
-            qDebug() << "Unknown type of object trying to add on scene.";
-            break;
-        }
+        connectLink(object, id);
     }
-    //qDebug() << "Successfully added object to scene.";
+
     return visObject;
 }
 

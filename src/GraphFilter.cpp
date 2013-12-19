@@ -145,7 +145,7 @@ void GraphFilter::setRegExpPattern(const QString &pattern)
 
 void GraphFilter::refreshRegExp()
 {
-    QString pattern = OBJECTINFO_PATTERN;
+    QString pattern = OBJECT_INFO_PATTERN;
 
     //Set object type filter
     if (m_objType == IScaObject::OBJECT)

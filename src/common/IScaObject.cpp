@@ -40,7 +40,6 @@
  * ---------------------------------------------------------------- */
 
 #include "common/IScaObject.h"
-#include "StringConstants.h"
 #include <QDebug>
 
 IScaObject::IScaObject(IScaObjectType type, QFileInfo file) :
@@ -125,7 +124,7 @@ void IScaObject::setFile(const QFileInfo &file)
 
 QString IScaObject::getContent() const
 {
-    return QString("*");
+    return QString();
 }
 
 void IScaObject::setLinks(const QList<int> &links)
@@ -133,10 +132,9 @@ void IScaObject::setLinks(const QList<int> &links)
     m_links = links;
 }
 
-QString IScaObject::getInfo() const
+QString IScaObject::getInfo(const QString &pattern) const
 {
-    QString result(OBJECTINFO_PATTERN);
-    return  result
+    return  pattern
             .arg(m_type)
             .arg(m_file.fileName())
             .arg(m_file.absoluteFilePath())

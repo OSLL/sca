@@ -1,6 +1,6 @@
 /*! ---------------------------------------------------------------
  * \file StringConstats.h
- * \brief File of string constats
+ * /brief File of string constats
  * \todo add comment here
  *
  * File description
@@ -103,10 +103,19 @@ const QString LOGO_PATH = ":logo/icons/logo.png";
 //[GraphFilter strings]
 const QString VALID_REGEXP_STATE = "RegExp: OK";
 const QString INVALID_REGEXP_STATE = "RegExp: NOT OK";
-const QString OBJECTINFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4,Content:%5";
-const QString DEFAULT_FILTER_REGEXP = OBJECTINFO_PATTERN.arg("*").arg("*").arg("*").arg("*").arg("*");
+const QString OBJECT_INFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4,Content:%5";
+const QString DEFAULT_FILTER_REGEXP = OBJECT_INFO_PATTERN.arg("*").arg("*").arg("*").arg("*").arg("*");
 const QString GRAPH_FILTER_TITLE = "Advanced graph filter";
 const QString BOOL_CONDITIONS("OR;AND;NOT");
 //[End GraphFilter strings]
+
+//[ObjectVisual tooltip strings]
+const QString OBJECT_TOOLTIP_PATTERN =  QString("Type: %1 <br />")
+                                        + QString("Filename: %2 <br />")
+                                        + QString("Path: %3 <br />")
+                                        + QString("Annotation: %4 <br />")
+                                        + QString("Content: %5");
+//[End ObjectVisual tooltip strings]
+
 
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

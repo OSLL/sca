@@ -40,6 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "visual/LinkVisual.h"
+#include "StringConstants.h"
 
 #include <QBrush>
 #include <QPen>
@@ -49,7 +50,7 @@
 #include <qmath.h>
 
 LinkVisual::LinkVisual(Link *obj) :
-    ObjectVisual(LINK),
+    ObjectVisual(obj, LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
     m_annotation(NULL),
@@ -67,6 +68,7 @@ LinkVisual::LinkVisual(Link *obj) :
     m_destinRadius = 5;
 
     setAnnotation(annotation);
+
 }
 
 LinkVisual::~LinkVisual()
