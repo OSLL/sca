@@ -43,7 +43,7 @@
 #define _IScaObjectSymbolVisual_H_555B0FF6_D632_4828_B7C2_053F73FE4C89_INCLUDED_
 
 #include "Node.h"
-#include "common/IScaObjectSymbol.h"
+#include "../common/IScaObjectSymbol.h"
 
 /*!
  * Class description. May use HTML formatting

@@ -48,7 +48,7 @@
  * Class description. May use HTML formatting
  *
  */
-class GraphTableProxyModel : public QAbstractProxyModel
+class GraphTableProxyModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -57,16 +57,14 @@ public:
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
-    QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
-    QVariant data(const QModelIndex &proxyIndex, int role) const;
-    QModelIndex parent(const QModelIndex &child) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    bool insertRows(int row = 0, int count = 0, const QModelIndex &parent = QModelIndex());
 private:
     QMap<int, int> m_idMap;
-
+    QAbstractItemModel *m_source;
 public slots:
-    void updateMap(QModelIndex from, QModelIndex to);
+    void updateMap();
+    void removeRows(QModelIndex parent, int begin, int end);
 }; // class GraphTableProxyModel
 
 

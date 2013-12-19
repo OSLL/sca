@@ -45,7 +45,7 @@
 
 #include "ObjectVisual.h"
 #include "visual/Node.h"
-#include "common/Link.h"
+#include "../common/Link.h"
 
 /*!
  * Class description. May use HTML formatting

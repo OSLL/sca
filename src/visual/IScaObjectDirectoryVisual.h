@@ -43,7 +43,7 @@
 #define _IScaObjectDirectoryVisual_H_6523A4C7_F3E6_4099_9DDC_CF5C5F83A687_INCLUDED_
 
 #include "Node.h"
-#include "common/IScaObjectDirectory.h"
+#include "../common/IScaObjectDirectory.h"
 
 /*!
  * Class description. May use HTML formatting

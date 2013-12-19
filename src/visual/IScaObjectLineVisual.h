@@ -43,7 +43,7 @@
 #define _IScaObjectLineVisual_H_C7C3EBBC_5DB2_400A_B8D0_DFA33AC3A0A7_INCLUDED_
 
 #include "Node.h"
-#include "common/IScaObjectLine.h"
+#include "../common/IScaObjectLine.h"
 
 /*!
  * Class description. May use HTML formatting

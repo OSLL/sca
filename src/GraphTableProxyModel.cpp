@@ -42,11 +42,15 @@
 #include "GraphTableProxyModel.h"
 #include "NumericalConstants.h"
 #include <QDebug>
+#include <QInputDialog>
+#include <QVariant>
+#include "common/IScaObject.h"
+#include "common/Link.h"
 
 GraphTableProxyModel::GraphTableProxyModel(QAbstractItemModel *source, QObject *parent) :
-    QAbstractProxyModel(parent)
+    QAbstractTableModel(parent),
+    m_source(source)
 {
-    setSourceModel(source);
 }
 
 GraphTableProxyModel::~GraphTableProxyModel()
@@ -56,76 +60,44 @@ GraphTableProxyModel::~GraphTableProxyModel()
 
 int GraphTableProxyModel::rowCount(const QModelIndex &parent) const
 {
-    int size = m_idMap.size();
-    qDebug() << "TableProxy rowCount = " << size;
-    return size;
+    Q_UNUSED(parent);
+    return m_idMap.size();
 }
 
 int GraphTableProxyModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    return 4;
+    return GRAPH_TABLE_PROXY_COLUMN_COUNT;
 }
 
-QModelIndex GraphTableProxyModel::index(int row, int column, const QModelIndex &parent) const
+QVariant GraphTableProxyModel::data(const QModelIndex &index, int role) const
 {
-    if (row < 0 || row > rowCount(parent))
-    {
-        qDebug() << "Wrong index requested in proxyTableModel";
-        return QModelIndex();
-    }
-    QModelIndex ind = sourceModel()->index(m_idMap[row], column, parent);
-    QVariant var = sourceModel()->data(ind, rawObjectRole);
-    IScaObject *object = qvariant_cast<IScaObject *>(var);
-    qDebug() << "Index of #" << row << "requested in proxyTableModel";
-    return createIndex(row, column, object);
-}
-
-QModelIndex GraphTableProxyModel::mapFromSource(const QModelIndex &sourceIndex) const
-{
-    int row = m_idMap.key(sourceIndex.row(), -1);
-    int column = sourceIndex.column();
-    return index(row, column, sourceIndex.parent());
-}
-
-QModelIndex GraphTableProxyModel::mapToSource(const QModelIndex &proxyIndex) const
-{
-    int row = proxyIndex.row();
-    int column = proxyIndex.column();
-    return sourceModel()->index(m_idMap[row], column, proxyIndex.parent());
-}
-
-QVariant GraphTableProxyModel::data(const QModelIndex &proxyIndex, int role) const
-{
-    qDebug() << "TableModel (" << proxyIndex.row() << ";" << proxyIndex.column() << ")";
-    if (m_idMap.isEmpty())
-        return QVariant();
-    int row = proxyIndex.row();
-    if (row < 0 || row >= rowCount())
+    //qDebug() << "[ProxyTableModel]: data(" << index.row() << ";" << role << ")";
+    if (!index.isValid())
     {
         return QVariant();
     }
-    if (!proxyIndex.isValid())
-    {
-        return QVariant();
-    }
-    if (!m_idMap.contains(row))
-    {
-        return QVariant();
-    }
+    int row = index.row();
+    int column = index.column();
     switch (role)
     {
     case Qt::DisplayRole:
         {
-            QVariant var = sourceModel()->data(mapToSource(proxyIndex),
-                                               rawObjectRole);
-            IScaObject *obj = qvariant_cast<IScaObject *>(var);
+            QVariant var =
+                    m_source->data(m_source->index(m_idMap[row], column),
+                                   rawObjectRole);
+            IScaObject *obj = NULL;
+            obj = qvariant_cast<IScaObject *>(var);
             if (obj == NULL)
             {
-                qDebug() << "Cant cast object in GraphTableProxyModel";
-                return QVariant();
+                obj = qvariant_cast<Link *>(var);
+                if (obj == NULL)
+                {
+                    qDebug() << "[ProxyTableModel]: cant cast object";
+                    return QVariant();
+                }
             }
-            switch (proxyIndex.column())
+            switch (column)
             {
             case 0:
                 return QVariant(obj->getTypeName());
@@ -141,35 +113,45 @@ QVariant GraphTableProxyModel::data(const QModelIndex &proxyIndex, int role) con
 
             break;
         }
-    default:
-        return QVariant();
     }
+
     return QVariant();
 }
 
-QModelIndex GraphTableProxyModel::parent(const QModelIndex &child) const
+bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &parent)
 {
-    Q_UNUSED(child);
-    return QModelIndex();
-}
+    QVariant var = m_source->data(m_source->index(row, 0), objectIdListRole);
+    QList<int> list = qvariant_cast<QList<int> >(var);
+    qDebug() << "[ProxyTableModel]: update to " << list.size();
 
-void GraphTableProxyModel::updateMap(QModelIndex sourceStart, QModelIndex sourceEnd)
-{
-    // TODO (LeoSko) Make it recognise what happened and dont recreate everything
-    m_idMap.clear();
-    QVariant var = sourceModel()->data(sourceStart, objectIdListRole);
-    QList<int> list = qvariant_cast< QList<int> >(var);
-    qDebug() << "refreshing TableProxy to " << list.size() << " rows";
-    int i = 0;
-    foreach(int id, list)
+    if (!list.isEmpty())
     {
-        if (sourceModel()->data(sourceStart, highlightRole).toBool())
+        int i = 0;
+        beginInsertRows(QModelIndex(), 0, list.size() - 1);
+        foreach (int id, list)
         {
-            m_idMap.insert(i++, id);
+            qDebug() << "[ProxyTableModel]: " << i << "->" << id;
+            m_idMap[i++] = id;
         }
+        endInsertRows();
     }
-    QModelIndex from = index(0, 0),
-                to = index(rowCount(), columnCount());
-    emit dataChanged(from, to);
+    return true;
 }
 
+void GraphTableProxyModel::updateMap()
+{
+    // TODO (LeoSko): right index missing when deleting element (no update available)
+    removeRows(QModelIndex(), 0, rowCount());
+    insertRows();
+}
+
+void GraphTableProxyModel::removeRows(QModelIndex parent, int begin, int end)
+{
+    if (!m_idMap.isEmpty())
+    {
+        beginRemoveRows(QModelIndex(), 0, m_idMap.size() - 1);
+        qDebug() << "[ProxyTableModel]: clearing from 0 to " << m_idMap.size() - 1;
+        m_idMap.clear();
+        endRemoveRows();
+    }
+}
