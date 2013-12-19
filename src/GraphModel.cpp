@@ -73,7 +73,7 @@ int GraphModel::connectObjects(int source, int dest)
     m_objects[dest]->addLink(s_nextID);
     if (!setData(linkIndex, QVariant::fromValue(link), rawObjectRole))
     {
-        qDebug() << "Couldn\'t set data in model.";
+        qDebug() << "[GraphModel]: Couldn\'t set data.";
     }
 
     return s_nextID++;
@@ -104,7 +104,7 @@ int GraphModel::replaceObject(IScaObject *object, int id)
     IScaObject *old = m_objects.value(id, NULL);
     if (old == NULL)
     {
-        qDebug() << "Object didn't exist before converting!";
+        qDebug() << "[GraphModel]: Object didn't exist before converting!";
     }
     QList<int> links = old->getLinks();  //Save links
     delete old;
@@ -133,14 +133,21 @@ QModelIndex GraphModel::index(int row, int column, const QModelIndex &parent) co
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
     int id = index.row();
-    qDebug() << "GraphModel Data called for #" << id;
+    qDebug() << "[GraphModel]: Data for #" << id;
+    if (role == objectIdListRole)
+    {
+        QList<int> list = m_objects.keys();
+        qDebug() << "[GraphModel]: listSize: " << list.size();
+        return QVariant::fromValue(list);
+    }
     if (id < 0)
     {
+        qDebug() << "[GraphModel]: wrong row";
         return QVariant();
     }
     if (!m_objects.contains(id))
     {
-        qDebug() << "Model doesn\'t have object #" << id;
+        qDebug() << "[GraphModel]: Don\'t have object #" << id;
         return QVariant();
     }
     switch (role)
@@ -163,10 +170,6 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
         {
             return QVariant(false);
         }
-    case objectIdListRole:
-        {
-            return QVariant::fromValue(m_objects.keys());
-        }
     default:
         {
             return QVariant();
@@ -186,12 +189,12 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
 
     if (object == NULL)
     {
-        qDebug() << "Object doesn\'t exist";
+        qDebug() << "[GraphModel]: Object doesn\'t exist";
         return false;
     }
 
     //Remove connections in model of that object first (recursively)
-    qDebug() << "Removing " << object->getLinks().size() << " links of #" << id << "first.";
+    qDebug() << "[GraphModel]: Removing " << object->getLinks().size() << " links of #" << id << "first.";
     foreach(int link, object->getLinks())
     {
         removeObject(link);
@@ -206,13 +209,13 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
     //Start removing object itself
     beginRemoveRows(parent, id, id);
 
-    //Remove it from memory
-    delete object;
     //Remove from container
     m_objects.remove(id);
+    //Remove it from memory
+    delete object;
 
     endRemoveRows();
-    qDebug() << "Removed #" << id << " from model. Items left: " << m_objects.size();
+    qDebug() << "[GraphModel]: Removed #" << id << ". Items left: " << m_objects.size();
 
     return true;
 }
@@ -233,7 +236,7 @@ bool GraphModel::removeRows(int row, int count, const QModelIndex &parent)
 int GraphModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    qDebug() << "Objects: " << m_objects.size();
+    qDebug() << "[GraphModel]: Objects: " << m_objects.size();
     return m_objects.size();
 }
 
@@ -262,7 +265,7 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
                 object = qvariant_cast<Link *>(value);
                 if (object == NULL)
                 {
-                    qDebug() << "Can\'t cast object while adding to model!";
+                    qDebug() << "[GraphModel]: Can\'t cast object while adding!";
                     return false;
                 }
             }
@@ -270,7 +273,7 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
             //Successfully casted
             //Set new data (or replace it)
             m_objects.insert(id, object);
-            qDebug() << "Data set #" << id << ", type: " << object->getTypeName()
+            qDebug() << "[GraphModel]: Data set #" << id << ", type: " << object->getTypeName()
                      << ", items total: " << m_objects.size();
             emit dataChanged(index, index);
             return true;
@@ -306,7 +309,7 @@ bool GraphModel::freeLink(int link)
     int source = l->getObjectFrom();
     int destin = l->getObjectTo();
 
-    qDebug() << "Freeing link #" << link << "("
+    qDebug() << "[GraphModel]: Freeing link #" << link << "("
              << source << ";" << destin << ")";
     if (!m_objects.contains(source) || !m_objects.contains(destin))
     {
@@ -323,7 +326,7 @@ bool GraphModel::convert(int id, IScaObject::IScaObjectType toType)
 {
     ScaObjectConverter *converter = new ScaObjectConverter();
 
-    qDebug() << "Converting #" << id << "from type"
+    qDebug() << "[GraphModel]: Converting #" << id << "from type"
              << m_objects[id]->getType() << "to type:" << toType;
     IScaObject *object = converter->convert(m_objects[id], toType);
     if(object == NULL)

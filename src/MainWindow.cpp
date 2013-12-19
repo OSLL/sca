@@ -40,7 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(m_filter, SIGNAL(filterChanged()), m_scene, SLOT(refreshAll()));
     connect(m_filter, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            m_tableProxy, SLOT(updateMap(QModelIndex,QModelIndex)));
+            m_tableProxy, SLOT(updateMap()));
+    connect(m_filter, SIGNAL(rowsRemoved(QModelIndex, int, int)),
+            m_tableProxy, SLOT(updateMap()));
 
     //Set up file model
     m_fileModel = new QFileSystemModel(this);

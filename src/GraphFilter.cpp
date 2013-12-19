@@ -56,6 +56,10 @@ GraphFilter::GraphFilter(QAbstractItemModel *source, QObject *parent):
     setSourceModel(source);
     connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+    connect(source, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+            this, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)));
+    connect(source, SIGNAL(rowsRemoved(QModelIndex, int, int)),
+            this, SIGNAL(rowsRemoved(QModelIndex, int, int)));
 }
 
 GraphFilter::~GraphFilter()
@@ -80,24 +84,24 @@ bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
     GraphModel *model = static_cast<GraphModel *>(sourceModel());
     if (model == NULL)
     {
-        qDebug() << "This filter acceptable only for GraphModel";
+        qDebug() << "[GraphFilter]: This filter acceptable only for GraphModel";
         return false;
     }
     QVariant var = sourceModel()->data(index, rawObjectRole);
     IScaObject *object = qvariant_cast<IScaObject *>(var);
     if (object == NULL)
     {
-        qDebug() << "Can't get object";
+        qDebug() << "[GraphFilter]: Can't get object";
         return false;
     }
 
     bool acceptable = checkRegExp(object);
 
-    qDebug() << "Path:" << object->getFile().absoluteFilePath();
+    qDebug() << "[GraphFilter]: Path:" << object->getFile().absoluteFilePath();
     if (acceptable)
-        qDebug() << "Object #" << index.row() << "acceptable for filter";
+        qDebug() << "[GraphFilter]: Object #" << index.row() << "acceptable";
     else
-        qDebug() << "Object #" << index.row() << "unacceptable for filter";
+        qDebug() << "[GraphFilter]: Object #" << index.row() << "unacceptable";
 
     return acceptable;
 }

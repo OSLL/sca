@@ -43,7 +43,7 @@
 #define _IScaObjectFileVisual_H_D6CF0404_8A5C_4B9A_ADDB_64D9CE870112_INCLUDED_
 
 #include "Node.h"
-#include "common/IScaObjectFile.h"
+#include "../common/IScaObjectFile.h"
 
 /*!
  * Class description. May use HTML formatting

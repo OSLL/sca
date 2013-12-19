@@ -2,7 +2,7 @@
 #define OBJECTVISUAL_H
 
 #include <QAbstractGraphicsShapeItem>
-#include "common/IScaObject.h"
+#include "../common/IScaObject.h"
 class GraphScene;
 
 class ObjectVisual : public QAbstractGraphicsShapeItem

@@ -43,7 +43,7 @@
 #ifndef _IScaObjectBinaryBlockVisual_H_DF0A8168_00F0_4FC9_A4E4_CE9272C45764_INCLUDED_
 #define _IScaObjectBinaryBlockVisual_H_DF0A8168_00F0_4FC9_A4E4_CE9272C45764_INCLUDED_
 #include "visual/Node.h"
-#include "common/IScaObjectBinaryBlock.h"
+#include "../common/IScaObjectBinaryBlock.h"
 /*!
  * Class description. May use HTML formatting
  *

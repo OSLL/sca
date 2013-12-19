@@ -43,7 +43,7 @@
 #define _IScaObjectTextBlockVisual_H_CF304BAB_7922_4297_B374_6D8031EFE75B_INCLUDED_
 
 #include "Node.h"
-#include "common/IScaObjectTextBlock.h"
+#include "../common/IScaObjectTextBlock.h"
 
 /*!
  * Class description. May use HTML formatting
