@@ -79,15 +79,6 @@ GraphScene::~GraphScene()
     }
 }
 
-Node *GraphScene::addNode(IScaObject *object)
-{
-    Q_UNUSED(object);
-    Node *node = new Node(DEFAULT_NODE_COLOR, object);
-
-    addItem(node);
-    return node;
-}
-
 QList<Node *> GraphScene::selectedNodes()
 {
     QList<Node *> nodes;
@@ -125,7 +116,7 @@ void GraphScene::refreshLinkPos(int linkId)
         return;
     }
     LinkVisual *link = static_cast<LinkVisual *>(m_objects.value(linkId, NULL));
-    Q_ASSERT(link);
+    Q_ASSERT(link != NULL);
     QVariant var = m_model->data(m_model->index(linkId, 0), rawObjectRole);
     Link *objLink = qvariant_cast<Link *>(var);
 
@@ -139,15 +130,15 @@ void GraphScene::refreshLinkPos(int linkId)
 
 void GraphScene::connectLink(IScaObject *object, int linkId)
 {
-        Link *link = static_cast<Link *>(object);
-        int sourceId = link->getObjectFrom();
-        int destinId = link->getObjectTo();
-        Node *sourceNode = static_cast<Node *>(m_objects.value(sourceId, NULL));
-        Node *destinNode = static_cast<Node *>(m_objects.value(destinId, NULL));
-        sourceNode->addLink(linkId);
-        destinNode->addLink(linkId);
+    Link *link = static_cast<Link *>(object);
+    int sourceId = link->getObjectFrom();
+    int destinId = link->getObjectTo();
+    Node *sourceNode = static_cast<Node *>(m_objects.value(sourceId, NULL));
+    Node *destinNode = static_cast<Node *>(m_objects.value(destinId, NULL));
+    sourceNode->addLink(linkId);
+    destinNode->addLink(linkId);
 
-        refreshLinkPos(linkId);
+    refreshLinkPos(linkId);
 }
 
 void GraphScene::refreshAll()
@@ -171,11 +162,11 @@ ObjectVisual *GraphScene::getObjectById(int id)
     return m_objects.value(id, NULL);
 }
 
-ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, quint32 id)
+ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
 {
     if (m_objects.contains(id))
     {
-        qDebug() << "Scene already contains object #" << id;
+        qDebug() << "[GraphScene]: Already contains object #" << id;
         return NULL;
     }
 
@@ -224,6 +215,9 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     {
         LinkVisual *link = static_cast<LinkVisual *>(m_objects[id]);
         link->setAnnotation(object->getAnnotation());
+        link->refreshToolTip(object);
+        QVariant filtered = m_model->data(m_model->index(id, 0), highlightRole);
+        link->setFiltered(filtered.toBool());
         return;
     }
     //Take it from scene

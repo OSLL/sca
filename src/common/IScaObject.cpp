@@ -94,6 +94,7 @@ QString IScaObject::getAnnotation() const
 
 void IScaObject::setAnnotation(const QString &annotation)
 {
+    qDebug() << "[IScaObject]: new annotation: " << annotation;
     m_annotation = annotation;
 }
 

@@ -9,8 +9,7 @@ ObjectVisual::ObjectVisual(IScaObject *obj, ObjectVisualType type, QGraphicsItem
 {
     setFlags(QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemIsSelectable);
-
-    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
+    refreshToolTip(obj);
 }
 
 ObjectVisual::~ObjectVisual()
@@ -27,6 +26,11 @@ void ObjectVisual::disconnectLink(int linkId)
     {
         qDebug() << "Tried to remove unexisting link from" << *this;
     }
+}
+
+void ObjectVisual::refreshToolTip(IScaObject *obj)
+{
+    setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
 QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
@@ -62,13 +66,6 @@ QList<int> ObjectVisual::getLinks() const
 void ObjectVisual::setLinks(const QList<int> &links)
 {
     m_links = links;
-}
-
-void ObjectVisual::setFiltered(bool filtered)
-{
-    m_filtered = filtered;
-    if(m_filtered)
-        setBrush(FILTER_BRUSH);
 }
 
 GraphScene *ObjectVisual::scene() const

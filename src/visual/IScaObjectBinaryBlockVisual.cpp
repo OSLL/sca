@@ -45,7 +45,7 @@
 #include <QDebug>
 
 IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(IScaObjectBinaryBlock *obj) :
-    Node(DEFAULT_BINARY_BLOCK_COLOR, obj)
+    Node(DEFAULT_BINARY_BLOCK_COLOR,FILTERED_BINARY_BLOCK_COLOR, obj)
 {
     m_rect = QRectF(-DEFAULT_BINARY_BLOCK_VISUAL_WIDTH / 2,
                     -DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT / 2,

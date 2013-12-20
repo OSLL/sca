@@ -69,10 +69,8 @@ public:
     explicit GraphScene(qreal x, qreal y, qreal width, qreal height, QObject *parent = 0);
     ~GraphScene();
 
-
-    Node *addNode(IScaObject *object);
     LinkVisual *addLinkVisual(Link *object);
-    ObjectVisual *addObjectVisual(IScaObject *object, quint32 id);
+    ObjectVisual *addObjectVisual(IScaObject *object, int id);
 
     QList<Node *> selectedNodes();
     QList<LinkVisual *> selectedLinks();

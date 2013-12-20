@@ -87,6 +87,8 @@ public:
     void setSource(const QPointF &source);
     void setDestin(const QPointF &destin);
 
+    void setFiltered(bool filtered);
+
 private:
     QLineF m_line;
     qreal m_sourceRadius;

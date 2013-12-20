@@ -26,10 +26,12 @@ public:
     void addLink(int linkId);
     void disconnectLink(int linkId);
 
+    void refreshToolTip(IScaObject *obj);
+
     QList<int> getLinks() const;
     void setLinks(const QList<int> &links);
 
-    void setFiltered(bool filtered);
+    virtual void setFiltered(bool filtered) = 0;
 
     friend QDebug operator<<(QDebug d, ObjectVisual &node);
 protected:

@@ -68,7 +68,6 @@ LinkVisual::LinkVisual(Link *obj) :
     m_destinRadius = 5;
 
     setAnnotation(annotation);
-
 }
 
 LinkVisual::~LinkVisual()
@@ -100,7 +99,14 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
         }
         else    //Now it is unselected
         {
-            setPen(DEFAULT_LINK_PEN);
+            if (m_filtered)
+            {
+                setPen(FILTERED_LINK_PEN);
+            }
+            else
+            {
+                setPen(DEFAULT_LINK_PEN);
+            }
         }
     }
     return ObjectVisual::itemChange(change, value);
@@ -208,14 +214,20 @@ QDebug operator<<(QDebug d, LinkVisual &edge)
 
 void LinkVisual::setSourceArrow(QGraphicsPolygonItem *arrow)
 {
-    delete m_sourceArrow;
+    if (m_sourceArrow != NULL)
+    {
+        delete m_sourceArrow;
+    }
     m_sourceArrow = arrow;
     m_sourceArrow->setParentItem(this);
 }
 
 void LinkVisual::setDestinArrow(QGraphicsPolygonItem *arrow)
 {
-    delete m_destinArrow;
+    if (m_destinArrow != NULL)
+    {
+        delete m_destinArrow;
+    }
     m_destinArrow = arrow;
     m_destinArrow->setParentItem(this);
 }
@@ -250,14 +262,19 @@ void LinkVisual::setDefaultArrows(bool left)
 
 void LinkVisual::removeSourceArrow()
 {
-    delete(m_sourceArrow);
+    if (m_sourceArrow != NULL)
+    {
+        delete m_sourceArrow;
+    }
     m_sourceArrow = NULL;
 }
 
 void LinkVisual::removeDestinArrow()
 {
-
-    delete(m_destinArrow);
+    if (m_destinArrow != NULL)
+    {
+        delete m_destinArrow;
+    }
     m_destinArrow = NULL;
 }
 
@@ -293,6 +310,20 @@ void LinkVisual::setSource(const QPointF &source)
 void LinkVisual::setDestin(const QPointF &destin)
 {
     m_destin = destin;
+}
+
+void LinkVisual::setFiltered(bool filtered)
+{
+    qDebug() << "[LinkVisual]: setFiltered(" << filtered << ")";
+    m_filtered = filtered;
+    if (filtered)
+    {
+        setPen(FILTERED_LINK_PEN);
+    }
+    else
+    {
+        setPen(DEFAULT_LINK_PEN);
+    }
 }
 
 void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)

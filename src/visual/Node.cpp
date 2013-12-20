@@ -50,14 +50,14 @@
 #include <QTextDocument>
 #include "GraphScene.h"
 
-Node::Node(QColor standardColor, IScaObject *obj) :
+Node::Node(QColor standardColor, QColor filterColor, IScaObject *obj) :
     ObjectVisual(obj, NODE),
     m_title(NULL),
     m_standardColor(standardColor),
     m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,
                             m_standardColor.green()* SELECTION_COLOR_DELTA,
                             m_standardColor.blue() * SELECTION_COLOR_DELTA)),
-    m_filterColor(Qt::red)
+    m_filterColor(filterColor)
 {
     setColor(m_standardColor);
     setCacheMode(DeviceCoordinateCache);
@@ -128,6 +128,19 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     }
 }
 
+void Node::setFiltered(bool filtered)
+{
+    m_filtered = filtered;
+    if (m_filtered)
+    {
+        setColor(m_filterColor);
+    }
+    else
+    {
+        setColor(m_standardColor);
+    }
+}
+
 QRectF Node::boundingRect() const
 {
     return m_rect;
@@ -153,7 +166,7 @@ QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
         }
         else
         {
-            if(m_filtered)
+            if (m_filtered)
             {
                 setColor(m_filterColor);
             }

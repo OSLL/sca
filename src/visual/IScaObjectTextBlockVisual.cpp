@@ -43,7 +43,7 @@
 #include <QPainter>
 
 IScaObjectTextBlockVisual::IScaObjectTextBlockVisual(IScaObjectTextBlock *obj) :
-    Node(DEFAULT_TEXT_BLOCK_COLOR, obj)
+    Node(DEFAULT_TEXT_BLOCK_COLOR, FILTERED_TEXT_BLOCK_COLOR, obj)
 {
     QString text = obj->getText();
     m_rect = QRectF(-DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,

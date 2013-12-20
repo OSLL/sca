@@ -82,6 +82,13 @@ void Link::setAnnotation(const QString &annotation)
     m_annotation = annotation;
 }
 
+QString Link::getContent() const
+{
+    return QString::number(m_objectFrom)
+            + QString("->")
+            + QString::number(m_objectTo);
+}
+
 QDebug operator<<(QDebug d, Link &link)
 {
     d << "Link(" << link.getObjectFrom() << ";" << link.getObjectTo() << ";ann="

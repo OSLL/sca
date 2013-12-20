@@ -65,6 +65,8 @@ public:
     QString getAnnotation() const;
     void setAnnotation(const QString &annotation);
 
+    QString getContent() const;
+
     friend QDebug operator<<(QDebug d, Link &link);
 
 private:

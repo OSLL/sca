@@ -57,7 +57,7 @@ class LinkVisual;
 class Node : public ObjectVisual
 {
 public:
-    explicit Node(QColor standardColor, IScaObject *obj);
+    explicit Node(QColor standardColor, QColor filterColor, IScaObject *obj);
     ~Node();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -75,6 +75,7 @@ public:
 
     QColor getColor() const;
     void setColor(const QColor &color);
+    void setFiltered(bool filtered);
 protected:
     QRectF m_rect;
     QGraphicsTextItem *m_title;

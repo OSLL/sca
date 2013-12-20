@@ -43,6 +43,7 @@
 #include "GraphFilter.h"
 #include "GraphModel.h"
 #include "common/IScaObject.h"
+#include "common/Link.h"
 #include "StringConstants.h"
 
 GraphFilter::GraphFilter(QAbstractItemModel *source, QObject *parent):
@@ -87,12 +88,17 @@ bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
         qDebug() << "[GraphFilter]: This filter acceptable only for GraphModel";
         return false;
     }
-    QVariant var = sourceModel()->data(index, rawObjectRole);
-    IScaObject *object = qvariant_cast<IScaObject *>(var);
+    QVariant var = model->data(index, rawObjectRole);
+    IScaObject *object = NULL;
+    object = qvariant_cast<IScaObject *>(var);
     if (object == NULL)
     {
-        qDebug() << "[GraphFilter]: Can't get object";
-        return false;
+        object = qvariant_cast<Link *>(var);
+        if (object == NULL)
+        {
+            qDebug() << "[GraphFilter]: Can't get object";
+            return false;
+        }
     }
 
     bool acceptable = checkRegExp(object);

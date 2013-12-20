@@ -43,7 +43,7 @@
 #include <QPainter>
 
 IScaObjectLineVisual::IScaObjectLineVisual(IScaObjectLine *obj) :
-    Node(DEFAULT_LINE_COLOR, obj)
+    Node(DEFAULT_LINE_COLOR, FILTERED_LINE_COLOR, obj)
 {
     QString identifier = obj->getLine();
     m_rect = QRectF(-DEFAULT_LINE_VISUAL_WIDTH / 2,
