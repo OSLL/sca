@@ -56,7 +56,10 @@ class IScaObjectIdentifier: public IScaObject
 {
 public:
   IScaObjectIdentifier();
-  IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier);
+  IScaObjectIdentifier(IScaObjectFile *file,
+                       int offset,
+                       int endOffset,
+                       QString identifier);
   ~IScaObjectIdentifier();
 
   QFileInfo getFile() const;
@@ -70,8 +73,12 @@ public:
   int getOffset() const;
   void setOffset(const int &offset);
 
+  int getEndOffset() const;
+  void setEndOffset(int endOffset);
+
 private:
   int m_offset;
+  int m_endOffset;
   QString m_identifier;
   IScaObjectFile *m_fileObject;
 }; // class IScaObjectIdintifier

@@ -60,8 +60,11 @@ ObjectCreator::~ObjectCreator()
 
 }
 
-IScaObject *ObjectCreator::createObject(int type, int offset, int length, QString path,
-                                        QString text, QByteArray data, QString annotation)
+IScaObject *ObjectCreator::createObject(int type, int line,
+                                        int offset, int endoffset,
+                                        int length, QString path,
+                                        QString text, QByteArray data,
+                                        QString annotation)
 {
 
     IScaObjectFile *objFile = new IScaObjectFile(QFileInfo(path));
@@ -79,7 +82,7 @@ IScaObject *ObjectCreator::createObject(int type, int offset, int length, QStrin
 
         case IScaObject::IDENTIFIER:
         {
-            IScaObjectIdentifier *objIdent = new IScaObjectIdentifier(objFile, offset, text);
+            IScaObjectIdentifier *objIdent = new IScaObjectIdentifier(objFile, offset, endoffset, text);
             objIdent->setAnnotation(annotation);
 
             return objIdent;
@@ -98,7 +101,7 @@ IScaObject *ObjectCreator::createObject(int type, int offset, int length, QStrin
 
         case IScaObject::LINE:
         {
-            IScaObjectLine *objLine = new IScaObjectLine(objFile, offset, text);
+            IScaObjectLine *objLine = new IScaObjectLine(objFile, line, offset, endoffset, text);
             objLine->setAnnotation(annotation);
 
             return objLine;
@@ -107,7 +110,7 @@ IScaObject *ObjectCreator::createObject(int type, int offset, int length, QStrin
 
         case IScaObject::TEXTBLOCK:
         {
-            IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, length, text);
+            IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, endoffset, length, text);
             objBlock->setAnnotation(annotation);
 
             return objBlock;

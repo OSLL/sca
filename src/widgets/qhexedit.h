@@ -4,6 +4,14 @@
 #include <QtGui>
 #include <QMimeData>
 #include "qhexedit_p.h"
+#include "../common/IScaObject.h"
+#include "../common/IScaObjectFile.h"
+#include "../common/IScaObjectTextBlock.h"
+#include "../common/IScaObjectDirectory.h"
+#include "../common/IScaObjectSymbol.h"
+#include "../common/IScaObjectLine.h"
+#include "../common/IScaObjectIdentifier.h"
+#include "../common/IScaObjectBinaryBlock.h"
 
 /*LICENCE
  *GNU LESSER GENERAL PUBLIC LICENSE
@@ -662,7 +670,17 @@ public:
     */
     QString selectionToReadableString();
 
+    /*! Loads data from file
+     */
     void loadFromFile(const QString &path);
+
+    /*! Goes to objects (load may be needed)
+     */
+    void goToBinaryBlock(IScaObjectBinaryBlock *obj);
+    void goToTextBlock(IScaObjectTextBlock *obj);
+    void goToIdentifier(IScaObjectIdentifier *obj);
+    void goToSymbol(IScaObjectSymbol *obj);
+    void goToLine(IScaObjectLine *obj);
 
     /*! \cond docNever */
     void setAddressOffset(int offset);
@@ -715,6 +733,11 @@ public slots:
       \param mode true (show it), false (hide it).
       */
     void setHighlighting(bool mode);
+
+    /*! Goes to IScaObject if it is binaryBlock object
+      \param object pointer to object
+      */
+    void goToObject(IScaObject *obj);
 
     /*! Undoes the last operation. If there is no operation to undo, i.e.
       there is no undo step in the undo/redo history, nothing happens.

@@ -74,7 +74,9 @@ GraphSaver::GraphSaver(QString path)
     QString initNodeStr = "CREATE TABLE node_table ("
             "id integer PRIMARY KEY NOT NULL, "
             "type integer, "
+            "line integer,"
             "offset integer,"
+            "endoffset integer,"
             "length integer,"
             "path TEXT, "
             "text TEXT,"
@@ -109,7 +111,7 @@ GraphSaver::~GraphSaver()
 void GraphSaver::insertNode(IScaObject *object, int id)
 {
     const QString insertPattern = "INSERT INTO node_table "
-            "VALUES(:id, :type, :offset, :length,"
+            "VALUES(:id, :type, :line, :offset, :endoffset, :length,"
             ":path, :text, :data, :annotation);";
 
     m_query->prepare(insertPattern);
@@ -126,6 +128,7 @@ void GraphSaver::insertNode(IScaObject *object, int id)
     {
         IScaObjectTextBlock *textBlock = static_cast<IScaObjectTextBlock *>(object);
         m_query->bindValue(":offset", textBlock->getOffset());
+        m_query->bindValue(":endoffset", textBlock->getEndOffset());
         m_query->bindValue(":length", textBlock->getLength());
     }
         break;
@@ -133,6 +136,7 @@ void GraphSaver::insertNode(IScaObject *object, int id)
     case IScaObject::IDENTIFIER:
     {
         IScaObjectIdentifier *ident = static_cast<IScaObjectIdentifier *>(object);
+        m_query->bindValue(":endoffset", ident->getEndOffset());
         m_query->bindValue(":offset", ident->getOffset());
     }
         break;
@@ -140,7 +144,9 @@ void GraphSaver::insertNode(IScaObject *object, int id)
     case IScaObject::LINE:
     {
         IScaObjectLine *line = static_cast<IScaObjectLine *>(object);
-        m_query->bindValue(":offset", line->getLine());
+        m_query->bindValue(":line", line->getLineNumber());
+        m_query->bindValue(":offset", line->getOffset());
+        m_query->bindValue(":endoffset", line->getEndOffset());
     }
         break;
 

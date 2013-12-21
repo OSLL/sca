@@ -96,14 +96,16 @@ void GraphLoader::loadNodes()
     {
         int id             = m_query->value(rec.indexOf("id")).toInt();
         int type           = m_query->value(rec.indexOf("type")).toInt();
+        int line           = m_query->value(rec.indexOf("line")).toInt();
         int offset         = m_query->value(rec.indexOf("offset")).toInt();
+        int endoffset      = m_query->value(rec.indexOf("endoffset")).toInt();
         int length         = m_query->value(rec.indexOf("length")).toInt();
         QString path       = m_query->value(rec.indexOf("path")).toString();
         QString text       = m_query->value(rec.indexOf("text")).toString();
         QByteArray data    = m_query->value(rec.indexOf("data")).toByteArray();
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
 
-        IScaObject *object = creator.createObject(type, offset, length, path, text, data, annotation);
+        IScaObject *object = creator.createObject(type, line, offset, endoffset, length, path, text, data, annotation);
         m_model->addObject(object , id);
     }
 }

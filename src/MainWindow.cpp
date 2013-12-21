@@ -45,10 +45,20 @@ MainWindow::MainWindow(QWidget *parent) :
             m_tableProxy, SLOT(updateMap()));
     connect(m_filter, SIGNAL(rowsRemoved(QModelIndex, int, int)),
             m_tableProxy, SLOT(updateMap()));
-    connect(m_ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
-            m_ui->graphViewer, SLOT(moveTo(QModelIndex)));
     connect(m_filter, SIGNAL(filterChanged()),
             m_tableProxy, SLOT(updateMap()));
+    //Connect doubleClick on tableView to center on item in scene
+    connect(m_ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
+            m_ui->graphViewer, SLOT(moveTo(QModelIndex)));
+    //Connect going in widgets to object on doubleClicking it in scene
+    connect(m_ui->graphViewer, SIGNAL(goToObject(IScaObject*)),
+            m_ui->sourceBrowser, SLOT(goToObject(IScaObject*)));
+    connect(m_ui->graphViewer, SIGNAL(goToObject(IScaObject*)),
+            m_ui->textViewer, SLOT(goToObject(IScaObject*)));
+    connect(m_ui->graphViewer, SIGNAL(goToObject(IScaObject*)),
+            m_ui->hexEditor, SLOT(goToObject(IScaObject*)));
+    connect(m_ui->graphViewer, SIGNAL(goToObject(IScaObject*)),
+            this, SLOT(switchToObject(IScaObject*)));
 
     //Set up file model
     m_fileModel = new QFileSystemModel(this);
@@ -174,6 +184,55 @@ void MainWindow::openHelp()
 void MainWindow::refreshFilterLine(const QString &text)
 {
     m_ui->filterLine->setText(text);
+}
+
+void MainWindow::switchToObject(IScaObject *obj)
+{
+    switch (obj->getType())
+    {
+    case IScaObject::TEXTBLOCK:
+        {
+            m_ui->ViewsTabs->setCurrentIndex(0);
+            m_ui->textViewer->setFocus();
+            break;
+        }
+    case IScaObject::BINARYBLOCK:
+        {
+            m_ui->ViewsTabs->setCurrentIndex(1);
+            m_ui->hexEditor->setFocus();
+            break;
+        }
+    case IScaObject::DIRECTORY:
+        {
+            m_ui->sourceBrowser->setFocus();
+            break;
+        }
+    case IScaObject::FILE:
+        {
+            m_ui->sourceBrowser->setFocus();
+            break;
+        }
+    case IScaObject::IDENTIFIER:
+        {
+            m_ui->ViewsTabs->setCurrentIndex(0);
+            m_ui->textViewer->setFocus();
+            break;
+        }
+    case IScaObject::LINE:
+        {
+            m_ui->ViewsTabs->setCurrentIndex(0);
+            m_ui->textViewer->setFocus();
+            break;
+        }
+    case IScaObject::SYMBOL:
+        {
+            m_ui->ViewsTabs->setCurrentIndex(0);
+            m_ui->textViewer->setFocus();
+            break;
+        }
+    default:
+        break;
+    }
 }
 
 void MainWindow::loadTextFile(const QString &code)

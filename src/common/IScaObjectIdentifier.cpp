@@ -44,14 +44,16 @@
 IScaObjectIdentifier::IScaObjectIdentifier() :
     IScaObject(IDENTIFIER),
     m_offset(0),
+    m_endOffset(0),
     m_identifier(QString("")),
     m_fileObject(NULL)
 {
 }
 
-IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, unsigned int offset, QString identifier) :
+IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, int offset, int endOffset, QString identifier) :
     IScaObject(IDENTIFIER),
     m_offset(offset),
+    m_endOffset(endOffset),
     m_identifier(identifier),
     m_fileObject(file)
 {
@@ -90,6 +92,7 @@ void IScaObjectIdentifier::setIdentifier(const QString &identifier)
 {
     m_identifier = identifier;
 }
+
 int IScaObjectIdentifier::getOffset() const
 {
     return m_offset;
@@ -99,3 +102,13 @@ void IScaObjectIdentifier::setOffset(const int &offset)
 {
     m_offset = offset;
 }
+int IScaObjectIdentifier::getEndOffset() const
+{
+    return m_endOffset;
+}
+
+void IScaObjectIdentifier::setEndOffset(int endOffset)
+{
+    m_endOffset = endOffset;
+}
+

@@ -5,6 +5,14 @@
 #include "NumericalConstants.h"
 #include "StringConstants.h"
 #include <QDrag>
+#include "../common/IScaObject.h"
+#include "../common/IScaObjectFile.h"
+#include "../common/IScaObjectTextBlock.h"
+#include "../common/IScaObjectDirectory.h"
+#include "../common/IScaObjectSymbol.h"
+#include "../common/IScaObjectLine.h"
+#include "../common/IScaObjectIdentifier.h"
+#include "../common/IScaObjectBinaryBlock.h"
 /*LICENCE
  *GNU LESSER GENERAL PUBLIC LICENSE
      Version 2.1, February 1999
@@ -801,6 +809,56 @@ QString QHexEditPrivate::toRedableString()
 QString QHexEditPrivate::selectionToReadableString()
 {
     return _xData.toRedableString(getSelectionBegin(), getSelectionEnd());
+}
+
+void QHexEditPrivate::goToBinaryBlock(IScaObjectBinaryBlock *obj)
+{
+    setCursorPos(obj->getOffset());
+    int offset = obj->getOffset() * 2;
+    int endOffset = offset + obj->getLength() * 2;
+    resetSelection(offset);
+    setSelection(endOffset);
+    ensureVisible();
+}
+
+void QHexEditPrivate::goToTextBlock(IScaObjectTextBlock *obj)
+{
+    setCursorPos(obj->getOffset());
+    int offset = obj->getOffset() * 2;
+    int endOffset = offset + obj->getLength() * 2;
+    resetSelection(offset);
+    setSelection(endOffset);
+    ensureVisible();
+}
+
+void QHexEditPrivate::goToIdentifier(IScaObjectIdentifier *obj)
+{
+    setCursorPos(obj->getOffset());
+    int offset = obj->getOffset() * 2;
+    int endOffset = obj->getEndOffset() * 2;
+    resetSelection(offset);
+    setSelection(endOffset);
+    ensureVisible();
+}
+
+void QHexEditPrivate::goToSymbol(IScaObjectSymbol *obj)
+{
+    setCursorPos(obj->getOffset());
+    int offset = obj->getOffset() * 2;
+    int endOffset = offset + 2;
+    resetSelection(offset);
+    setSelection(endOffset);
+    ensureVisible();
+}
+
+void QHexEditPrivate::goToLine(IScaObjectLine *obj)
+{
+    setCursorPos(obj->getOffset());
+    int offset = obj->getOffset() * 2;
+    int endOffset = obj->getEndOffset() * 2;
+    resetSelection(offset);
+    setSelection(endOffset);
+    ensureVisible();
 }
 
 void QHexEditPrivate::keyPressEvent(QKeyEvent *event)

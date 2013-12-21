@@ -84,6 +84,7 @@ public slots:
     void moveTo(const QModelIndex &index);
 
 protected:
+    void mouseDoubleClickEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void dragEnterEvent(QDragEnterEvent* event);
@@ -92,6 +93,8 @@ protected:
     void dragLeaveEvent(QDragLeaveEvent *event = 0, bool = false);
     void dropEvent(QDropEvent * event);
     void keyPressEvent(QKeyEvent *event);
+signals:
+    void goToObject(IScaObject *);
 }; // class GraphView
 
 

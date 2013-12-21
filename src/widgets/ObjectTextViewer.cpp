@@ -50,9 +50,17 @@
 #include <QObjectUserData>
 #include <QDragLeaveEvent>
 #include <QFileInfo>
-#include "FileLoader.h"
-#include "NumericalConstants.h"
-#include "StringConstants.h"
+#include "../common/IScaObject.h"
+#include "../common/IScaObjectFile.h"
+#include "../common/IScaObjectTextBlock.h"
+#include "../common/IScaObjectDirectory.h"
+#include "../common/IScaObjectSymbol.h"
+#include "../common/IScaObjectLine.h"
+#include "../common/IScaObjectIdentifier.h"
+#include "../common/IScaObjectBinaryBlock.h"
+#include "../FileLoader.h"
+#include "../NumericalConstants.h"
+#include "../StringConstants.h"
 
 ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
     QTextEdit(parent), m_currentPath("")
@@ -60,6 +68,72 @@ ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
     setReadOnly(true);
     QFontMetrics metrics(currentFont());
     setTabStopWidth(4 * metrics.width(' '));
+}
+
+void ObjectTextViewer::goToTextBlock(IScaObjectTextBlock *object)
+{
+    int start = object->getOffset();
+    int end = object->getEndOffset();
+    QTextCursor cur = textCursor();
+    cur.clearSelection();
+    qDebug() << "[ObjectTextViewer]: moving to pos: " << start << end;
+    cur.setPosition(start, QTextCursor::MoveAnchor);
+    cur.setPosition(end, QTextCursor::KeepAnchor);
+    setTextCursor(cur);
+    ensureCursorVisible();
+}
+
+void ObjectTextViewer::goToSymbol(IScaObjectSymbol *object)
+{
+    int start = object->getOffset();
+    int end = start + 1;
+    QTextCursor cur = textCursor();
+    cur.clearSelection();
+    qDebug() << "[ObjectTextViewer]: moving to pos: " << start << end;
+    cur.setPosition(start, QTextCursor::MoveAnchor);
+    cur.setPosition(end, QTextCursor::KeepAnchor);
+    setTextCursor(cur);
+    ensureCursorVisible();
+}
+
+void ObjectTextViewer::goToIdentiifier(IScaObjectIdentifier *object)
+{
+    //Same logics as in goToTextBlock()
+    int start = object->getOffset();
+    int end = object->getEndOffset();
+    QTextCursor cur = textCursor();
+    cur.clearSelection();
+    qDebug() << "[ObjectTextViewer]: moving to pos: " << start << end;
+    cur.setPosition(start, QTextCursor::MoveAnchor);
+    cur.setPosition(end, QTextCursor::KeepAnchor);
+    setTextCursor(cur);
+    ensureCursorVisible();
+}
+
+void ObjectTextViewer::goToLine(IScaObjectLine *line)
+{
+    int lineNumber = line->getLineNumber();
+    QTextCursor cursor = textCursor();
+    cursor.clearSelection();
+    cursor.setPosition(0, QTextCursor::MoveAnchor);
+    qDebug() << "[ObjectTextViewer]: moving to line: " << lineNumber;
+    cursor.movePosition(QTextCursor::Down, QTextCursor::MoveAnchor, lineNumber-1);
+    cursor.select(QTextCursor::LineUnderCursor);
+    setTextCursor(cursor);
+    ensureCursorVisible();
+}
+
+void ObjectTextViewer::goToBinaryBlock(IScaObjectBinaryBlock *object)
+{
+    int start = object->getOffset();
+    int end = start + object->getLength();
+    QTextCursor cur = textCursor();
+    cur.clearSelection();
+    qDebug() << "[ObjectTextViewer]: moving to pos: " << start << end;
+    cur.setPosition(start, QTextCursor::MoveAnchor);
+    cur.setPosition(end, QTextCursor::KeepAnchor);
+    setTextCursor(cur);
+    ensureCursorVisible();
 }
 
 QString ObjectTextViewer::getCurrentPath() const
@@ -133,6 +207,65 @@ void ObjectTextViewer::loadFromFile(const QString &path, const QString &code)
     fLoader->deleteLater();
 }
 
+void ObjectTextViewer::goToObject(IScaObject *object)
+{
+    QString newPath = object->getFile().absoluteFilePath();
+    if (newPath != m_currentPath)
+    {
+        loadFromFile(newPath);
+    }
+    switch (object->getType())
+    {
+    case IScaObject::FILE:
+        {
+            break;
+        }
+    case IScaObject::DIRECTORY:
+        {
+            break;
+        }
+    case IScaObject::TEXTBLOCK:
+        {
+            IScaObjectTextBlock *obj = static_cast<IScaObjectTextBlock *>(object);
+            goToTextBlock(obj);
+            break;
+        }
+    case IScaObject::BINARYBLOCK:
+        {
+            IScaObjectBinaryBlock *obj = static_cast<IScaObjectBinaryBlock *>(object);
+            goToBinaryBlock(obj);
+            break;
+        }
+    case IScaObject::LINE:
+        {
+            IScaObjectLine *obj = static_cast<IScaObjectLine *>(object);
+            goToLine(obj);
+            break;
+        }
+    case IScaObject::IDENTIFIER:
+        {
+            IScaObjectIdentifier *obj = static_cast<IScaObjectIdentifier *>(object);
+            goToIdentiifier(obj);
+            break;
+        }
+    case IScaObject::SYMBOL:
+        {
+            IScaObjectSymbol *obj = static_cast<IScaObjectSymbol *>(object);
+            goToSymbol(obj);
+            break;
+        }
+    case IScaObject::LINK:
+        {
+            break;
+        }
+    default:
+        {
+            qDebug() << "[ObjectTextViewer]: unknown type to go to.";
+            break;
+        }
+    }
+}
+
 QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
 {
     QMimeData *mime = new QMimeData();
@@ -143,9 +276,10 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     urls.push_back(QUrl::fromLocalFile(getCurrentPath()));
     mime->setUrls(urls);
     mime->setText(cursor.selectedText());
-    mime->setProperty("position", cursor.position());
+    mime->setProperty("position", cursor.selectionStart());
     mime->setProperty("length", cursor.selectionEnd() - cursor.selectionStart());
     mime->setProperty("posInLine", cursor.positionInBlock());
+    mime->setProperty("endOffset", cursor.selectionEnd());
 
     int line = currentLineNumber();
     mime->setProperty("line", line);
@@ -154,7 +288,7 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     qDebug() << "Line: " << currentLineNumber();
     qDebug() << "Symbols: " << symbolsInCurrentLine();
     qDebug() << "Position in line: " << cursor.positionInBlock();
-    qDebug() << "Pos: " << cursor.position();
+    qDebug() << "Pos: " << cursor.selectionStart();
     qDebug() << "Lenght: " << cursor.selectionEnd() - cursor.selectionStart();
     return mime;
 }

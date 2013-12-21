@@ -51,11 +51,15 @@ IScaObjectTextBlock::IScaObjectTextBlock() :
 {
 }
 
-IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file, unsigned int offset,
-                                         unsigned int length, const QString &text) :
+IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file,
+                                         unsigned int offset,
+                                         unsigned int endOffset,
+                                         unsigned int length,
+                                         const QString &text) :
     IScaObject(TEXTBLOCK),
     m_length(length),
     m_offset(offset),
+    m_endOffset(endOffset),
     m_text(text),
     m_fileObject(file)
 {
@@ -112,4 +116,14 @@ void IScaObjectTextBlock::setText(const QString &value)
 QString IScaObjectTextBlock::getContent() const
 {
     return m_text;
+}
+
+int IScaObjectTextBlock::getEndOffset() const
+{
+    return m_endOffset;
+}
+
+void IScaObjectTextBlock::setEndOffset(int endOffset)
+{
+    m_endOffset = endOffset;
 }

@@ -508,6 +508,12 @@ That's all there is to it!/*/
 
 #include <QtGui>
 #include "xbytearray.h"
+class IScaObject;
+class IScaObjectTextBlock;
+class IScaObjectLine;
+class IScaObjectSymbol;
+class IScaObjectIdentifier;
+class IScaObjectBinaryBlock;
 
 class QHexEditPrivate : public QWidget
 {
@@ -565,6 +571,11 @@ public:
     QString toRedableString();
     QString selectionToReadableString();
 
+    void goToBinaryBlock(IScaObjectBinaryBlock *obj);
+    void goToTextBlock(IScaObjectTextBlock *obj);
+    void goToIdentifier(IScaObjectIdentifier *obj);
+    void goToSymbol(IScaObjectSymbol *obj);
+    void goToLine(IScaObjectLine *obj);
 
     QString getCurrentPath() const;
     void setCurrentPath(const QString &currentPath);

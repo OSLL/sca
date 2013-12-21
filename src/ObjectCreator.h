@@ -52,7 +52,7 @@ public:
     ~ObjectCreator();
     
 
-    IScaObject *createObject(int type, int offset, int length, QString path,
+    IScaObject *createObject(int type, int line, int offset, int endoffset, int length, QString path,
                              QString text, QByteArray data, QString annotation);
 private:
 

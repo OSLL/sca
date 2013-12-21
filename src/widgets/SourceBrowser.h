@@ -47,6 +47,7 @@
 #include <QSignalMapper>
 
 #include "SourceBrowserMenu.h"
+class IScaObject;
 
 class SourceBrowser : public QTreeView
 {
@@ -65,6 +66,7 @@ signals:
     void openFileAs(const QString &);
 public slots:
     void ShowContextMenu(const QPoint &pos);
+    void goToObject(IScaObject *object);
 protected:
 };
 
