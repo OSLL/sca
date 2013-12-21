@@ -84,6 +84,7 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
     int posInLine  = m_data->property("posInLine").toInt();
     int line       = m_data->property("line").toInt();
     int lineLength = m_data->property("lineLength").toInt();
+    int endOffset  = m_data->property("endOffset").toInt();
 
     IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
 
@@ -109,11 +110,13 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
         if (lineLength == length
                 && (posInLine == 0 || posInLine == lineLength))
         {
-            IScaObjectLine *objLine = new IScaObjectLine(objFile, line, m_data->text());
+            IScaObjectLine *objLine = new IScaObjectLine(objFile, line, offset,
+                                                         endOffset, m_data->text());
             return objLine;
         }
 
-        IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, length, m_data->text());
+        IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, endOffset,
+                                                                length, m_data->text());
         return objBlock;
     }
 

@@ -35,6 +35,7 @@ public slots:
     void exportToImage();
     void openHelp();
     void refreshFilterLine(const QString &text);
+    void switchToObject(IScaObject *);
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
     void on_advancedFilterButton_clicked();

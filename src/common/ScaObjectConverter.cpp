@@ -136,10 +136,11 @@ IScaObject *ScaObjectConverter::convert(IScaObject *obj, IScaObject::IScaObjectT
 IScaObjectTextBlock *ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel)
 {
     IScaObjectFile *file = new IScaObjectFile(obj->getFile());
-    unsigned int offset = obj->getOffset();
+    int offset = obj->getOffset();
+    int endOffset = obj->getEndOffset();
     QString text = obj->getIdentifier();
 
-    IScaObjectTextBlock *textBlock = new IScaObjectTextBlock(file, offset, text.size(), text);
+    IScaObjectTextBlock *textBlock = new IScaObjectTextBlock(file, offset, endOffset, text.size(), text);
     if (autoDel)
     {
         delete obj;
@@ -150,10 +151,11 @@ IScaObjectTextBlock *ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectI
 IScaObjectIdentifier *ScaObjectConverter::makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel)
 {
     IScaObjectFile *file = new IScaObjectFile(obj->getFile());
-    unsigned int offset = obj->getOffset();
+    int offset = obj->getOffset();
+    int endOffset = obj->getEndOffset();
     QString text = obj->getText();
 
-    IScaObjectIdentifier *identifier = new IScaObjectIdentifier(file, offset, text);
+    IScaObjectIdentifier *identifier = new IScaObjectIdentifier(file, offset, endOffset, text);
     if (autoDel)
     {
         delete obj;

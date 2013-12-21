@@ -298,6 +298,27 @@ void GraphView::moveTo(const QModelIndex &index)
     }
 }
 
+void GraphView::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    ObjectVisual *visObject = NULL;
+    visObject = static_cast<ObjectVisual *>(itemAt(event->pos()));
+    if (visObject == NULL)
+    {
+        QGraphicsView::mouseDoubleClickEvent(event);
+        return;
+    }
+    if (visObject->getType() == ObjectVisual::LINK)
+    {
+        //No logics to go with if it is link
+        return;
+    }
+    qDebug() << "[GraphView]: got object to go to";
+    int id = scene()->getObjectId(visObject);
+    QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
+    IScaObject *object = qvariant_cast<IScaObject *>(var);
+    emit goToObject(object);
+}
+
 void GraphView::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())

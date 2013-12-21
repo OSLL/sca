@@ -59,7 +59,9 @@ class IScaObjectTextBlock: public IScaObject
 public:
     IScaObjectTextBlock();
     IScaObjectTextBlock(IScaObjectFile *file, unsigned int offset,
-                        unsigned int length, const QString &text = QString(""));
+                        unsigned int endOffset,
+                        unsigned int length,
+                        const QString &text = QString(""));
     ~IScaObjectTextBlock();
 
     unsigned int getOffset() const;
@@ -75,9 +77,13 @@ public:
     void setText(const QString &value);
 
     QString getContent() const;
+    int getEndOffset() const;
+    void setEndOffset(int endOffset);
+
 private:
     int m_length;
     int m_offset;
+    int m_endOffset;
     QString m_text;
     IScaObjectFile *m_fileObject;
 

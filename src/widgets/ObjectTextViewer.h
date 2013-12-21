@@ -50,6 +50,12 @@
 
 #include <QTextEdit>
 #include "StringConstants.h"
+class IScaObject;
+class IScaObjectTextBlock;
+class IScaObjectLine;
+class IScaObjectSymbol;
+class IScaObjectIdentifier;
+class IScaObjectBinaryBlock;
 class QDrag;
 
 class ObjectTextViewer : public QTextEdit
@@ -57,6 +63,12 @@ class ObjectTextViewer : public QTextEdit
     Q_OBJECT
 public:
     explicit ObjectTextViewer(QWidget *parent = 0);
+
+    void goToTextBlock(IScaObjectTextBlock *object);
+    void goToSymbol(IScaObjectSymbol *object);
+    void goToIdentiifier(IScaObjectIdentifier *object);
+    void goToLine(IScaObjectLine *line);
+    void goToBinaryBlock(IScaObjectBinaryBlock *object);
     
     QString getCurrentPath() const;
     void setCurrentPath(const QString &value);
@@ -71,7 +83,7 @@ public:
 signals:
     
 public slots:
-
+    void goToObject(IScaObject *object);
 protected:
     QMimeData *createMimeDataFromSelection() const;
     void dragEnterEvent(QDragEnterEvent *event);

@@ -585,11 +585,36 @@ void QHexEdit::loadFromFile(const QString &path)
 
     QByteArray arr;
     fLoader->loadToByteArray(arr);
+    setCursorPosition(0);
     setData(arr);
     setCurrentPath(fileInf.filePath());
     fLoader->deleteLater();
 }
 
+void QHexEdit::goToBinaryBlock(IScaObjectBinaryBlock *obj)
+{
+    qHexEdit_p->goToBinaryBlock(obj);
+}
+
+void QHexEdit::goToTextBlock(IScaObjectTextBlock *obj)
+{
+    qHexEdit_p->goToTextBlock(obj);
+}
+
+void QHexEdit::goToIdentifier(IScaObjectIdentifier *obj)
+{
+    qHexEdit_p->goToIdentifier(obj);
+}
+
+void QHexEdit::goToSymbol(IScaObjectSymbol *obj)
+{
+    qHexEdit_p->goToSymbol(obj);
+}
+
+void QHexEdit::goToLine(IScaObjectLine *obj)
+{
+    qHexEdit_p->goToLine(obj);
+}
 
 void QHexEdit::setAddressArea(bool addressArea)
 {
@@ -619,6 +644,67 @@ void QHexEdit::setAsciiArea(bool asciiArea)
 void QHexEdit::setHighlighting(bool mode)
 {
     qHexEdit_p->setHighlighting(mode);
+}
+
+void QHexEdit::goToObject(IScaObject *object)
+{
+    QString newPath = object->getFile().absoluteFilePath();
+    if (newPath != getCurrentPath() && !newPath.isEmpty())
+    {
+        loadFromFile(newPath);
+    }
+    IScaObject::IScaObjectType type = object->getType();
+    switch (type)
+    {
+
+    case IScaObject::FILE:
+        {
+            break;
+        }
+    case IScaObject::DIRECTORY:
+        {
+            break;
+        }
+    case IScaObject::TEXTBLOCK:
+        {
+            IScaObjectTextBlock *obj = static_cast<IScaObjectTextBlock *>(object);
+            goToTextBlock(obj);
+            break;
+        }
+    case IScaObject::BINARYBLOCK:
+        {
+            IScaObjectBinaryBlock *obj = static_cast<IScaObjectBinaryBlock *>(object);
+            goToBinaryBlock(obj);
+            break;
+        }
+    case IScaObject::LINE:
+        {
+            IScaObjectLine *obj = static_cast<IScaObjectLine *>(object);
+            goToLine(obj);
+            break;
+        }
+    case IScaObject::IDENTIFIER:
+        {
+            IScaObjectIdentifier *obj = static_cast<IScaObjectIdentifier *>(object);
+            goToIdentifier(obj);
+            break;
+        }
+    case IScaObject::SYMBOL:
+        {
+            IScaObjectSymbol *obj = static_cast<IScaObjectSymbol *>(object);
+            goToSymbol(obj);
+            break;
+        }
+    case IScaObject::LINK:
+        {
+            break;
+        }
+    default:
+        {
+            qDebug() << "[ObjectTextViewer]: unknown type to go to.";
+            break;
+        }
+    }
 }
 
 void QHexEdit::setAddressOffset(int offset)

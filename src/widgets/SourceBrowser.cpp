@@ -40,6 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "SourceBrowser.h"
+#include "common/IScaObject.h"
 #include <QTextDocument>
 #include <QFile>
 #include <QMenu>
@@ -111,5 +112,18 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
     {
         return;
     }
+}
+
+void SourceBrowser::goToObject(IScaObject *object)
+{
+    QString path = object->getFile().absoluteFilePath();
+    if (path.isEmpty())
+    {
+        return;
+    }
+    QFileSystemModel *m = static_cast<QFileSystemModel *>(model());
+    QModelIndex index = m->index(path);
+    scrollTo(index, QAbstractItemView::PositionAtCenter);
+    selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
