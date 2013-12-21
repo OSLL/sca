@@ -63,9 +63,9 @@ const QString ISO885915 = "ISO-8859-15";
 const QString DEFAULT_ENCODING = UTF8;
 const QString APPLICATION_VERSION = "0.1";
 const QString APPLICATION_AUTORS = QString("Kirill Krinkin\n") +
-                                   QString("Mark Zaslavskiy\n") +
-                                   QString("Leonid Skorospelov\n") +
-                                   QString("Nikita Razdobreev");
+        QString("Mark Zaslavskiy\n") +
+        QString("Leonid Skorospelov\n") +
+        QString("Nikita Razdobreev");
 const QString APPLICATION_NAME = "Source Code Analyzer";
 const QString APPLICATION_COPYRIGHT = "\xA9 Open Source & Linux Lab, 2013";
 const QString MAINWINDOW_TITLE = APPLICATION_NAME;
@@ -109,13 +109,13 @@ const QString GRAPH_FILTER_TITLE = "Advanced graph filter";
 const QString BOOL_CONDITIONS("OR;AND;NOT");
 //[End GraphFilter strings]
 
-//[ObjectVisual tooltip strings]
+//[Object info patterns strings]
 const QString OBJECT_TOOLTIP_PATTERN =  QString("Type: %1 <br />")
-                                        + QString("Filename: %2 <br />")
-                                        + QString("Path: %3 <br />")
-                                        + QString("Annotation: %4 <br />")
-                                        + QString("Content: %5");
-//[End ObjectVisual tooltip strings]
+                                    + QString("Filename: %2 <br />")
+                                    + QString("Path: %3 <br />")
+                                    + QString("Annotation: %4 <br />")
+                                    + QString("Content: %5");
+//[End Object info patterns strings]
 
 
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

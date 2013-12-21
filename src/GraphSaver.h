@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphModel.h
- * \brief Header of GraphModel
+ * \file GraphSaver.h
+ * \brief Header of GraphSaver
  * \todo add comment here
  *
  * File description
@@ -40,60 +40,35 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_
-#define _GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_
+#ifndef _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
+#define _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
+#include <QtSql/qsqldatabase.h>
+#include <QtSql/QSqlQuery>
 
+#include "common/IScaObject.h"
+#include "common/Link.h"
+#include "GraphModel.h"
+#include "GraphScene.h"
 /*!
  * Class description. May use HTML formatting
  *
  */
-
-#include "common/IScaObject.h"
-#include "NumericalConstants.h"
-#include <QAbstractListModel>
-#include <QMimeData>
-#include <QList>
-class Link;
-
-class GraphModel: public QAbstractListModel
+class GraphSaver
 {
-    Q_OBJECT
 public:
-    explicit GraphModel(QObject *parent = 0);
-    ~GraphModel();
+  GraphSaver(QString path);
+  ~GraphSaver();
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    bool removeRow(int id, const QModelIndex &parent = QModelIndex());
-    bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+  void insertNode(IScaObject *object, int id);
 
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
-
-    bool removeObject(int id);
-    bool removeObject(IScaObject *obj);
-
-    int addObject(const QMimeData *mimeData);
-    int addObject(IScaObject *object, int id = -1);
-    int replaceObject(IScaObject *object, int id);
-    int getId(IScaObject *object);
-
-    int connectObjects(int id1, int id2, int id = -1, QString annotation = QString());
-    bool freeLink(int link);
-    void addLinkTo(IScaObject *obj, int link);
-
-    bool convert(int id, IScaObject::IScaObjectType toType);
-
-    void editLinkAnnotation(int id);
-    void setAnnotation(int id, QString annotation);
-
-    void clear();
+  void insertLink(Link *link, int id);
+  void saveModel(GraphModel *model);
+  void saveScene(GraphScene *scene);
+  void insertNodeVisual(Node *node, int id);
 private:
-    static int s_nextID;
-    QHash<int, IScaObject *> m_objects;
-}; // class GraphModel
+  QSqlDatabase m_db;
+  QSqlQuery *m_query;
+}; // class GraphSaver
+  
 
-Q_DECLARE_METATYPE( QList<int> )
-
-#endif //_GraphModel_H_3675081C_AE2A_4F25_9543_C8883BE13A08_INCLUDED_
+#endif //_GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_

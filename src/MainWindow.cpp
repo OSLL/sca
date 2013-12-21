@@ -17,6 +17,8 @@
 #include "widgets/FilterDialog.h"
 #include "GraphFilter.h"
 #include "GraphTableProxyModel.h"
+#include "GraphSaver.h"
+#include "GraphLoader.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
@@ -139,6 +141,25 @@ void MainWindow::exportToImage()
     path += ".png";
 
     m_ui->graphViewer->exportToImage(path);
+}
+
+void MainWindow::saveToFile()
+{
+    QString path = QFileDialog::getSaveFileName(this, tr("Save"), QDir::homePath(),
+                                                tr("GM (*gm)"));
+    path += ".gm";
+
+    GraphSaver saver(path);
+    saver.saveModel(m_model);
+    saver.saveScene(m_scene);
+}
+
+void MainWindow::openFile()
+{
+    QString path = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
+                                                tr("GM (*gm)"));
+    GraphLoader loader;
+    loader.loadGraph(path, m_model, m_scene);
 }
 
 void MainWindow::openHelp()

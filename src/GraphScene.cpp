@@ -141,6 +141,11 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     refreshLinkPos(linkId);
 }
 
+QList<int> GraphScene::getIds()
+{
+    return m_objects.keys();
+}
+
 void GraphScene::refreshAll()
 {
     qDebug() << "Refresh all visual objects";

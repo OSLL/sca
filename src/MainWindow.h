@@ -33,6 +33,8 @@ public slots:
     void loadBinaryFile();
     void openAbout();
     void exportToImage();
+    void saveToFile();
+    void openFile();
     void openHelp();
     void refreshFilterLine(const QString &text);
 private slots:

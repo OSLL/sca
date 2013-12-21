@@ -58,25 +58,34 @@ GraphModel::GraphModel(QObject *parent) :
 
 GraphModel::~GraphModel()
 {
-    foreach(IScaObject *obj, m_objects)
-    {
-        removeRow(getId(obj));
-    }
+    clear();
 }
 
-int GraphModel::connectObjects(int source, int dest)
+int GraphModel::connectObjects(int source, int dest, int id, QString annotation)
 {
     //qDebug() << "Connecting " << source << " to " << dest;
+    int objectId = 0;
+    if(id < 0 || m_objects.contains(id))
+    {
+        objectId = s_nextID;
+    }
+    else
+    {
+        objectId = id;
+    }
+
     Link *link = new Link(source, dest);
-    QModelIndex linkIndex = index(s_nextID, 0);
-    m_objects[source]->addLink(s_nextID);
-    m_objects[dest]->addLink(s_nextID);
+    QModelIndex linkIndex = index(objectId, 0);
+    m_objects[source]->addLink(objectId);
+    m_objects[dest]->addLink(objectId);
+
+    link->setAnnotation(annotation);
     if (!setData(linkIndex, QVariant::fromValue(link), rawObjectRole))
     {
         qDebug() << "[GraphModel]: Couldn\'t set data.";
     }
 
-    return s_nextID++;
+    return objectId++;
 }
 
 int GraphModel::addObject(const QMimeData *mimeData)
@@ -91,9 +100,17 @@ int GraphModel::addObject(const QMimeData *mimeData)
     return addObject(object);
 }
 
-int GraphModel::addObject(IScaObject *object)
+int GraphModel::addObject(IScaObject *object, int id)
 {
-    QModelIndex changedIndex = index(s_nextID, 0);
+    QModelIndex changedIndex;
+    if(id < 0 || m_objects.contains(id))
+    {
+        changedIndex = index(s_nextID, 0);
+    }
+    else
+    {
+        changedIndex = index(id, 0);
+    }
     setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
 
     return s_nextID++;
@@ -365,4 +382,12 @@ void GraphModel::setAnnotation(int id, QString annotation)
     m_objects[id]->setAnnotation(annotation);
     QModelIndex ind = index(id, 0);
     emit dataChanged(ind, ind);
+}
+
+void GraphModel::clear()
+{
+    foreach(IScaObject *obj, m_objects)
+    {
+        removeRow(getId(obj));
+    }
 }
