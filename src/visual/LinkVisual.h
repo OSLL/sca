@@ -91,8 +91,6 @@ public:
 
 private:
     QLineF m_line;
-    qreal m_sourceRadius;
-    qreal m_destinRadius;
     QGraphicsPolygonItem *m_sourceArrow;
     QGraphicsPolygonItem *m_destinArrow;
     QGraphicsTextItem *m_annotation;

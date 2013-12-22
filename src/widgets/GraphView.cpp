@@ -506,5 +506,15 @@ void GraphView::mousePressEvent(QMouseEvent *event)
 
 void GraphView::mouseMoveEvent(QMouseEvent *event)
 {
+    QGraphicsItem *item = NULL;
+    item = itemAt(event->pos());
+    if (item != NULL)
+    {
+        setCursor(Qt::OpenHandCursor);
+    }
+    else
+    {
+        setCursor(Qt::ArrowCursor);
+    }
     QGraphicsView::mouseMoveEvent(event);
 }

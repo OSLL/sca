@@ -63,10 +63,6 @@ LinkVisual::LinkVisual(Link *obj) :
     setAcceptedMouseButtons(0);
     setZValue(-1);
     setPen(DEFAULT_LINK_PEN);
-
-    m_sourceRadius = 5;
-    m_destinRadius = 5;
-
     setAnnotation(annotation);
 }
 
@@ -129,19 +125,7 @@ void LinkVisual::refreshGeometry(QPointF from, QPointF to)
 
     QLineF line(begin, end);
 
-    QPointF sourceOffset((line.dx() * m_sourceRadius) / line.length(),
-                         (line.dy() * m_sourceRadius) / line.length());
-    QPointF destinOffset((line.dx() * m_destinRadius) / line.length(),
-                         (line.dy() * m_destinRadius) / line.length());
-
-    if (line.length() > MIN_LINK_LENGTH)
-    {
-        begin = line.p1() + sourceOffset;
-        end = line.p2() - destinOffset;
-    }
-
     qreal angle = -line.angle();
-
 
     if (m_sourceArrow != NULL)
     {
@@ -157,8 +141,6 @@ void LinkVisual::refreshGeometry(QPointF from, QPointF to)
         m_destinArrow->setRotation(angle - 90);
     }
 
-
-    line = QLineF(begin, end);
     setLine(line);
 }
 
@@ -235,12 +217,12 @@ void LinkVisual::setDestinArrow(QGraphicsPolygonItem *arrow)
 void LinkVisual::setDefaultArrows(bool left)
 {
     QVector<QPoint> points;
-    points.append(QPoint(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
-    points.append(QPoint(0, DEFAULT_ARROW_HEIGHT/2));
-    points.append(QPoint(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
+    points.append(QPoint(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT));
+    points.append(QPoint(0, 0));
+    points.append(QPoint(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT));
 
     bool sourceSet = m_source.x() > m_destin.x();
-    if(left)
+    if (left)
     {
         sourceSet = !sourceSet;
     }
@@ -249,7 +231,6 @@ void LinkVisual::setDefaultArrows(bool left)
     {
         m_sourceArrow = new QGraphicsPolygonItem(QPolygon(points), this);
         m_sourceArrow->setPen(DEFAULT_LINK_PEN);
-
     }
     else if(m_destinArrow == NULL)
     {

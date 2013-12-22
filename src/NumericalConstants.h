@@ -77,17 +77,17 @@ const int DEFAULT_SYMBOL_VISUAL_HEIGHT = 15;
 
 const int MAX_TITLE_LENGTH = 15;
 
-const int DEFAULT_ARROW_WIDTH  = 15;
-const int DEFAULT_ARROW_HEIGHT = 15;
+const int DEFAULT_ARROW_WIDTH  = 7;
+const int DEFAULT_ARROW_HEIGHT = 7;
 
-const int DEFAULT_LINK_WIDTH = 5;
-const int LINE_SELECTION_DELTA = 5;
+const int DEFAULT_LINK_WIDTH = 3;
+const int LINE_SELECTION_DELTA = 15;
 
-const qreal MIN_LINK_LENGTH = 45;
+const qreal MIN_LINK_LENGTH = 15;
 
-const QPen DEFAULT_LINK_PEN(QBrush(Qt::black), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-const QPen SELECTED_LINK_PEN(QBrush(QColor(80,80,80)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
-const QPen FILTERED_LINK_PEN(QBrush(QColor(155, 0, 186)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin);
+const QPen DEFAULT_LINK_PEN(QBrush(Qt::black), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
+const QPen SELECTED_LINK_PEN(QBrush(QColor(80,80,80)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
+const QPen FILTERED_LINK_PEN(QBrush(QColor(155, 0, 186)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
 
 //Default export image size
 const int DEFAULT_IMAGE_WIDTH = 800;

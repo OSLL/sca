@@ -121,11 +121,70 @@ void GraphScene::refreshLinkPos(int linkId)
     Link *objLink = qvariant_cast<Link *>(var);
 
     int fromId = objLink->getObjectFrom(),
-            toId = objLink->getObjectTo();
+        toId   = objLink->getObjectTo();
     // TODO (LeoSko) It really seems we don't have nice interface there, right?
     Node    *from = static_cast<Node *>(m_objects.value(fromId, NULL)),
             *to   = static_cast<Node *>(m_objects.value(toId, NULL));
-    link->refreshGeometry(from->pos(), to->pos());
+    QPointF fromPos = from->pos(),
+            toPos = to->pos();
+    //We create simple "polygon" out of two points to easy use
+    QPolygonF linePolygon;
+    linePolygon << fromPos << toPos;
+    //We get matrixes of items to later translate
+    //polygons to their local coordinates.
+    QMatrix fromMatrix = from->matrix().translate(fromPos.x(), fromPos.y()),
+            toMatrix = to->matrix().translate(toPos.x(), toPos.y());
+    //We get polygons of objects
+    QPolygonF fromPolygon = from->shape().toFillPolygon(fromMatrix),
+             toPolygon = to->shape().toFillPolygon(toMatrix);
+    //We find intersection between them and line
+    QPolygonF fromIntersected = fromPolygon.intersected(linePolygon),
+             toIntersected = toPolygon.intersected(linePolygon);
+    QPointF start, end;
+    // TODO (LeoSko) somehow it crashes when you dont check if they are on one line
+    // (horizontally or vertically, intersection appears to be empty)
+    // so we customly set start and end points in that case
+    if (!fromIntersected.isEmpty() || !toIntersected.isEmpty())
+    {
+        start = fromIntersected[1];
+        end = toIntersected[0];
+    }
+    else
+    {
+        //qDebug() << "[GraphScene]: they are empty";
+        if (toPos.x() == fromPos.x())
+        {
+            if (toPos.y() > fromPos.y())
+            {
+                start = QPointF(fromPos.x(), fromPos.y() + from->boundingRect().height() / 2);
+                end = QPointF(toPos.x(), toPos.y() - to->boundingRect().height() / 2);
+            }
+            else
+            {
+                start = QPointF(fromPos.x(), fromPos.y() - from->boundingRect().height() / 2);
+                end = QPointF(toPos.x(), toPos.y() + to->boundingRect().height() / 2);
+            }
+        }
+        else if (toPos.y() == fromPos.y())
+        {
+            if (toPos.x() > fromPos.x())
+            {
+                start = QPointF(fromPos.x() + from->boundingRect().width() / 2, fromPos.y());
+                end = QPointF(toPos.x() - to->boundingRect().width() / 2, toPos.y());
+            }
+            else
+            {
+                start = QPointF(fromPos.x() - from->boundingRect().width() / 2, fromPos.y());
+                end = QPointF(toPos.y() + to->boundingRect().width() / 2, toPos.y());
+            }
+        }
+        else
+        {
+            qDebug() << "[GraphScene]: some weird thing happening counting line path!";
+            return;
+        }
+    }
+    link->refreshGeometry(start, end);
 }
 
 void GraphScene::connectLink(IScaObject *object, int linkId)
