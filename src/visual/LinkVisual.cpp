@@ -53,7 +53,6 @@ LinkVisual::LinkVisual(Link *obj) :
     ObjectVisual(obj, LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
-    m_annotation(NULL),
     m_source(QPointF(0, 0)),
     m_destin(QPointF(0, 0))
 {
@@ -259,15 +258,6 @@ void LinkVisual::removeDestinArrow()
     m_destinArrow = NULL;
 }
 
-void LinkVisual::deleteAnnotation()
-{
-    if (m_annotation != NULL)
-    {
-        delete m_annotation;
-        m_annotation = NULL;
-    }
-}
-
 QPointF LinkVisual::getSource()
 {
     return m_source;
@@ -276,11 +266,6 @@ QPointF LinkVisual::getSource()
 QPointF LinkVisual::getDestin()
 {
     return m_destin;
-}
-
-QGraphicsTextItem *LinkVisual::getAnnotation() const
-{
-    return m_annotation;
 }
 
 void LinkVisual::setSource(const QPointF &source)
@@ -305,22 +290,4 @@ void LinkVisual::setFiltered(bool filtered)
     {
         setPen(DEFAULT_LINK_PEN);
     }
-}
-
-void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)
-{
-    m_annotation = annotation;
-}
-
-void LinkVisual::setAnnotation(const QString &str)
-{
-    deleteAnnotation();
-    QGraphicsTextItem *new_ann = new QGraphicsTextItem(this);
-    qreal dx = new_ann->boundingRect().center().x(),
-            dy = new_ann->boundingRect().center().y()/2;
-    new_ann->moveBy(-dx, dy);
-    m_annotation = new_ann;
-
-    QString htmlStr("<div style='background-color:#FFFFF0;'>" + str + "</div>");
-    m_annotation->setHtml(htmlStr);
 }

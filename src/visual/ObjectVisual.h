@@ -28,6 +28,12 @@ public:
 
     void refreshToolTip(IScaObject *obj);
 
+    void deleteAnnotation();
+    void setAnnotation(QGraphicsTextItem *annotation);
+    void setAnnotation(const QString &str);
+    QString getAnnotationText() const;
+    QGraphicsTextItem *getAnnotation() const;
+
     QList<int> getLinks() const;
     void setLinks(const QList<int> &links);
 
@@ -38,6 +44,7 @@ protected:
     QList<int> m_links;
     ObjectVisualType m_type;
     bool m_filtered;
+    QGraphicsTextItem *m_annotation;
 };
 
 #endif // OBJECTVISUAL_H

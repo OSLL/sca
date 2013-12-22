@@ -343,9 +343,9 @@ void GraphModel::addLinkTo(IScaObject *obj, int link)
     obj->addLink(link);
 }
 
-void GraphModel::editLinkAnnotation(int id)
+void GraphModel::editAnnotation(int id)
 {
-    if (id <= 0 || !m_objects.contains(id))
+    if (id < 0 || !m_objects.contains(id))
         return;
     bool ok = false;
     QString new_annotation =

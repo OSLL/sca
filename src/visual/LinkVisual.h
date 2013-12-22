@@ -76,14 +76,8 @@ public:
     void removeSourceArrow();
     void removeDestinArrow();
 
-    void deleteAnnotation();
-    void setAnnotation(QGraphicsTextItem *annotation);
-    void setAnnotation(const QString &str);
-    QString getAnnotationText() const;
-
     QPointF getSource();
     QPointF getDestin();
-    QGraphicsTextItem *getAnnotation() const;
     void setSource(const QPointF &source);
     void setDestin(const QPointF &destin);
 
@@ -93,7 +87,6 @@ private:
     QLineF m_line;
     QGraphicsPolygonItem *m_sourceArrow;
     QGraphicsPolygonItem *m_destinArrow;
-    QGraphicsTextItem *m_annotation;
 
     QPointF m_source;
     QPointF m_destin;

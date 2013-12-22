@@ -85,7 +85,7 @@ public:
     int connectObjects(int id1, int id2);
 
     void addLinkTo(IScaObject *obj, int link);
-    void editLinkAnnotation(int id);
+    void editAnnotation(int id);
 
     void setAnnotation(int id, QString annotation);
 

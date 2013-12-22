@@ -109,6 +109,21 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
+QList<ObjectVisual *> GraphScene::selectedObjects()
+{
+    QList<ObjectVisual *> objects;
+    foreach(QGraphicsItem *item, selectedItems())
+    {
+        ObjectVisual *link = NULL;
+        link = dynamic_cast<ObjectVisual *>(item);
+        if (link != NULL)
+        {
+            objects.push_back(link);
+        }
+    }
+    return objects;
+}
+
 void GraphScene::refreshLinkPos(int linkId)
 {
     if (!m_objects.contains(linkId))
@@ -295,6 +310,7 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     ObjectVisual *newObject = addObjectVisual(obj, id);
     newObject->setPos(pos);
     newObject->setLinks(links);
+    newObject->setAnnotation(object->getAnnotation());
 
     //Remove old one
     removeItem(objectVis);

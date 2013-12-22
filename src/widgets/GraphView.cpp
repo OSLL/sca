@@ -57,6 +57,7 @@
 #include "ScaMIMEDataProcessor.h"
 #include "GraphModel.h"
 #include "GraphFilter.h"
+#include "../visual/ObjectVisual.h"
 #include "../NumericalConstants.h"
 
 GraphView::GraphView(QWidget *parent) :
@@ -127,7 +128,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Get what is selected
     QList<Node *> nodes = scene()->selectedNodes();
     QList<LinkVisual *> links = scene()->selectedLinks();
-    QList<QGraphicsItem *> items = scene()->selectedItems();
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
 
     ScaObjectConverter conv;
 
@@ -138,15 +139,15 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     QAction *conAct = m_menu->getActionByName(CONNECT_NODES);
     QAction *setLeftArrow = m_menu->getActionByName(LEFT_ARROW);
     QAction *setRightArrow = m_menu->getActionByName(RIGHT_ARROW);
-    QAction *editAnnotation = m_menu->getActionByName(EDIT_ANNOTATION);
+    QAction *editAnnotationAct = m_menu->getActionByName(EDIT_ANNOTATION);
 
     //#Setting up menu#//
     //Reset to defaults
     m_menu->resetToDefault();
     //Setting connection available only if 2 nodes or links selected
     conAct->setEnabled(nodes.size() == 2 || links.size() == 2);
-    //Editing annotation only if there is only one link under selection
-    editAnnotation->setEnabled(links.size() == 1);
+    //Editing annotation only if there is only one object under selection
+    editAnnotationAct->setEnabled(objects.size() == 1);
 
     if (!links.isEmpty() || !nodes.isEmpty())
     {
@@ -180,7 +181,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
 
 
     //Allow deleting only if something selected
-    del->setEnabled(!items.isEmpty());
+    del->setEnabled(!objects.isEmpty());
 
     //Converting available for proper types
     if (nodes.size() == 1)
@@ -240,7 +241,6 @@ void GraphView::ShowContextMenu(const QPoint &pos)
         {
             m_model->removeObject(scene()->getObjectId(node));
         }
-
     }
     else if (action == setLeftArrow)
     {
@@ -256,10 +256,10 @@ void GraphView::ShowContextMenu(const QPoint &pos)
         else
             links.at(0)->removeDestinArrow();
     }
-    else if (action == editAnnotation)
+    else if (action == editAnnotationAct)
     {
-        int id = scene()->getObjectId(links.at(0));
-        editLinkAnnotation(id);
+        int id = scene()->getObjectId(objects.at(0));
+        editAnnotation(id);
     }
 }
 
@@ -431,9 +431,9 @@ void GraphView::setScene(GraphScene *graphScene)
     graphScene->setModel(m_model);
 }
 
-void GraphView::editLinkAnnotation(int id)
+void GraphView::editAnnotation(int id)
 {
-    m_model->editLinkAnnotation(id);
+    m_model->editAnnotation(id);
 }
 
 void GraphView::mousePressEvent(QMouseEvent *event)
