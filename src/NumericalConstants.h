@@ -77,8 +77,8 @@ const int DEFAULT_SYMBOL_VISUAL_HEIGHT = 15;
 
 const int MAX_TITLE_LENGTH = 15;
 
-const int DEFAULT_ARROW_WIDTH  = 7;
-const int DEFAULT_ARROW_HEIGHT = 7;
+const int DEFAULT_ARROW_WIDTH  = 5;
+const int DEFAULT_ARROW_HEIGHT = 8;
 
 const int DEFAULT_LINK_WIDTH = 3;
 const int LINE_SELECTION_DELTA = 15;

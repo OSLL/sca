@@ -66,11 +66,11 @@ public:
 
     friend QDebug operator<< (QDebug d, LinkVisual &edge);
 
-    QGraphicsPolygonItem *getSourceArrow();
-    QGraphicsPolygonItem *getDestinArrow();
+    QGraphicsPathItem *getSourceArrow();
+    QGraphicsPathItem *getDestinArrow();
 
-    void setSourceArrow(QGraphicsPolygonItem *arrow);
-    void setDestinArrow(QGraphicsPolygonItem *arrow);
+    void setSourceArrow(QGraphicsPathItem *arrow);
+    void setDestinArrow(QGraphicsPathItem *arrow);
     void setDefaultArrows(bool left);
 
     void removeSourceArrow();
@@ -85,8 +85,8 @@ public:
 
 private:
     QLineF m_line;
-    QGraphicsPolygonItem *m_sourceArrow;
-    QGraphicsPolygonItem *m_destinArrow;
+    QGraphicsPathItem *m_sourceArrow;
+    QGraphicsPathItem *m_destinArrow;
 
     QPointF m_source;
     QPointF m_destin;
