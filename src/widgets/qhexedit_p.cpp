@@ -1164,7 +1164,6 @@ void QHexEditPrivate::mouseMoveEvent(QMouseEvent * event)
         setCursorPos(actPos);
         setSelection(actPos);
     }
-
 }
 
 void QHexEditPrivate::mousePressEvent(QMouseEvent * event)
@@ -1172,7 +1171,7 @@ void QHexEditPrivate::mousePressEvent(QMouseEvent * event)
     _blink = false;
     update();
     int cPos = cursorPos(event->pos());
-    if(cPos/2 > getSelectionBegin() && cPos/2 < getSelectionEnd()
+    if(cPos/2 >= getSelectionBegin() && cPos/2 <= getSelectionEnd()
             && (getSelectionBegin() != getSelectionEnd()))
     {
         _draggingOut = true;
