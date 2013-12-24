@@ -359,11 +359,29 @@ void GraphView::keyPressEvent(QKeyEvent *event)
     {
     case Qt::Key_C:
         {
-            QList<Node *> items = scene()->selectedNodes();
-            if(items.size() == 2)
+            QList<Node  *> nodes = scene()->selectedNodes();
+            QList<ObjectVisual *> items = scene()->selectedObjects();
+            QList<LinkVisual *> links = scene()->selectedLinks();
+            if (nodes.size() == 2)
             {
-                Node *src = items.at(0);
-                Node *dest = items.at(1);
+                ObjectVisual *src = nodes.at(0);
+                ObjectVisual *dest = nodes.at(1);
+                int srcId = scene()->getObjectId(src);
+                int destId = scene()->getObjectId(dest);
+                m_model->connectObjects(srcId, destId);
+            }
+            else if (links.size() == 2)
+            {
+                ObjectVisual *src = links.at(0);
+                ObjectVisual *dest = links.at(1);
+                int srcId = scene()->getObjectId(src);
+                int destId = scene()->getObjectId(dest);
+                m_model->connectObjects(srcId, destId);
+            }
+            else if (items.size() == 2)
+            {
+                ObjectVisual *src = items.at(0);
+                ObjectVisual *dest = items.at(1);
                 int srcId = scene()->getObjectId(src);
                 int destId = scene()->getObjectId(dest);
                 m_model->connectObjects(srcId, destId);

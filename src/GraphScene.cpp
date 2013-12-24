@@ -143,15 +143,36 @@ void GraphScene::refreshLinkPos(int linkId)
                  *to   = getObjectById(toId);
     QPointF fromPos = from->pos(),
             toPos = to->pos();
-    //Check if connection is link-link
-    if (from->getType() == ObjectVisual::LINK
-        && to->getType() == ObjectVisual::LINK)
-    {
-        link->refreshGeometry(fromPos, toPos);
-    }
     //We create simple "polygon" out of two points to easy use
     QPolygonF linePolygon;
     linePolygon << fromPos << toPos;
+    //Check if connection is link-link
+    if (from->getType() == ObjectVisual::LINK)
+    {
+        if (to->getType() == ObjectVisual::LINK)
+        {
+            link->refreshGeometry(fromPos, toPos);
+            return;
+        }
+        else
+        {
+            //"From" is a link, "to" is not
+            QMatrix toMatrix = to->matrix().translate(toPos.x(), toPos.y());
+            QPolygonF toPolygon = to->shape().toFillPolygon(toMatrix);
+            QPolygonF toIntersected = toPolygon.intersected(linePolygon);
+            link->refreshGeometry(fromPos, toIntersected[0]);
+            return;
+        }
+    }
+    else if (to->getType() == ObjectVisual::LINK)
+    {
+        //PreCond: (from->getType != ObjectVisual::LINK)
+        QMatrix fromMatrix = from->matrix().translate(fromPos.x(), fromPos.y());
+        QPolygonF fromPolygon = from->shape().toFillPolygon(fromMatrix);
+        QPolygonF fromIntersected = fromPolygon.intersected(linePolygon);
+        link->refreshGeometry(fromIntersected[1], toPos);
+        return;
+    }
 
     //We get matrixes of items to later translate
     //polygons to their local coordinates.
