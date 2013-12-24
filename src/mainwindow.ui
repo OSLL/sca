@@ -80,7 +80,7 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="GraphView" name="graphViewer">
@@ -112,7 +112,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QTableView" name="tableView">
+      <widget class="TableView" name="tableView">
        <property name="horizontalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
@@ -224,6 +224,11 @@
    <extends>QTabWidget</extends>
    <header>widgets/ViewsTabWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TableView</class>
+   <extends>QTableView</extends>
+   <header>widgets/tableview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

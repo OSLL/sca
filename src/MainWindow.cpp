@@ -38,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_tableProxy = new GraphTableProxyModel(m_filter, this);
     m_ui->tableView->setModel(m_tableProxy);
-
+    m_ui->tableView->horizontalHeader()->setMovable(true);
+    m_ui->tableView->setGridStyle(Qt::SolidLine);
     connect(m_filter, SIGNAL(filterChanged()), m_scene, SLOT(refreshAll()));
     connect(m_filter, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             m_tableProxy, SLOT(updateMap()));
@@ -75,8 +76,14 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
+    QHeaderView *header = m_ui->tableView->horizontalHeader();
+    header->setContextMenuPolicy(Qt::CustomContextMenu);
 
     //Connect customContextMenus
+    connect(header, SIGNAL(customContextMenuRequested(QPoint)),
+            m_ui->tableView, SLOT(ShowContextMenu(QPoint)));
+    connect(m_ui->tableView, SIGNAL(customContextMenuRequested(QPoint)),
+            m_ui->tableView, SLOT(ShowContextMenu(QPoint)));
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));
     connect(m_ui->graphViewer, SIGNAL(customContextMenuRequested(QPoint)),
