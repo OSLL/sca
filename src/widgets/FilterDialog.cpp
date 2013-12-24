@@ -144,3 +144,20 @@ void FilterDialog::on_typeComboBox_currentIndexChanged(int index)
 
     m_ui->contentLineEdit->setEnabled(hasContent);
 }
+void FilterDialog::on_contentLineEdit_textEdited(const QString &arg1)
+{
+    QString text = arg1;
+    //Check if we edit binary code
+    if (m_ui->typeComboBox->currentIndex() == 7)
+    {
+        //Erase spaces
+        text.replace(" ", "");
+        //Fill in each 3rd place a space
+        int lengthBefore = text.length() - 1;
+        for (int i = lengthBefore / 2; i > 0; i--)
+        {
+            text.insert(i*2, " ");
+        }
+    }
+    m_ui->contentLineEdit->setText(text);
+}

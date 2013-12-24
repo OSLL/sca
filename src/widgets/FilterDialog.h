@@ -75,6 +75,7 @@ private slots:
     void refreshRegExp();
     void on_regexpCheckBox_stateChanged(int arg1);
     void on_typeComboBox_currentIndexChanged(int index);
+    void on_contentLineEdit_textEdited(const QString &arg1);
 };
 
 #endif // FILTERDIALOG_H
