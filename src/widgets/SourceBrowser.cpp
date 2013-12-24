@@ -55,6 +55,7 @@ SourceBrowser::SourceBrowser(QWidget *parent) :
     m_menu = new SourceBrowserMenu(this);
     m_menu->connectActionByName(OPEN_IN_TEXT_VIEWER , this, SIGNAL(openFile()));
     m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
+    m_menu->connectActionByName(ANNOTATE_OBJECT, this, SIGNAL(annotate()));
 
     m_signalMapper = new QSignalMapper (this);
     m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, UTF8, m_signalMapper, SLOT(map()));
@@ -98,11 +99,14 @@ void SourceBrowser::ShowContextMenu(const QPoint &pos)
         QAction *openText = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER);
         QAction *openAsText = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER_AS);
         QAction *openBinary = m_menu->getActionByName(OPEN_IN_BINARY_VIEWER);
+        QAction *annotate = m_menu->getActionByName(ANNOTATE_OBJECT);
         QFileInfo currentFile = fileModel->fileInfo(this->currentIndex());
         //Enable only if it is file
         openText->setEnabled(currentFile.isFile());
         openAsText->setEnabled(currentFile.isFile());
         openBinary->setEnabled(currentFile.isFile());
+        //Annotate everything only if something selected
+        annotate->setEnabled(currentIndex().isValid());
     }
 
     //Show menu and process input

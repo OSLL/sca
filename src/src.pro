@@ -67,7 +67,9 @@ SOURCES += \
     GraphTableProxyModel.cpp \
     GraphSaver.cpp \
     GraphLoader.cpp \
-    ObjectCreator.cpp
+    ObjectCreator.cpp \
+    common/SCAFileSystemModel.cpp \
+    widgets/TableView.cpp
 
 
 HEADERS += \
@@ -116,7 +118,9 @@ HEADERS += \
     GraphTableProxyModel.h \
     GraphSaver.h \
     GraphLoader.h \
-    ObjectCreator.h
+    ObjectCreator.h \
+    common/SCAFileSystemModel.h \
+    widgets/TableView.h
 
 FORMS += \
     mainwindow.ui \

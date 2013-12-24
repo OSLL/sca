@@ -53,7 +53,6 @@ LinkVisual::LinkVisual(Link *obj) :
     ObjectVisual(obj, LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
-    m_annotation(NULL),
     m_source(QPointF(0, 0)),
     m_destin(QPointF(0, 0))
 {
@@ -63,10 +62,6 @@ LinkVisual::LinkVisual(Link *obj) :
     setAcceptedMouseButtons(0);
     setZValue(-1);
     setPen(DEFAULT_LINK_PEN);
-
-    m_sourceRadius = 5;
-    m_destinRadius = 5;
-
     setAnnotation(annotation);
 }
 
@@ -129,19 +124,7 @@ void LinkVisual::refreshGeometry(QPointF from, QPointF to)
 
     QLineF line(begin, end);
 
-    QPointF sourceOffset((line.dx() * m_sourceRadius) / line.length(),
-                         (line.dy() * m_sourceRadius) / line.length());
-    QPointF destinOffset((line.dx() * m_destinRadius) / line.length(),
-                         (line.dy() * m_destinRadius) / line.length());
-
-    if (line.length() > MIN_LINK_LENGTH)
-    {
-        begin = line.p1() + sourceOffset;
-        end = line.p2() - destinOffset;
-    }
-
     qreal angle = -line.angle();
-
 
     if (m_sourceArrow != NULL)
     {
@@ -157,8 +140,6 @@ void LinkVisual::refreshGeometry(QPointF from, QPointF to)
         m_destinArrow->setRotation(angle - 90);
     }
 
-
-    line = QLineF(begin, end);
     setLine(line);
 }
 
@@ -195,12 +176,12 @@ void LinkVisual::setLine(const QLineF &line)
     m_line = line;
 }
 
-QGraphicsPolygonItem *LinkVisual::getSourceArrow()
+QGraphicsPathItem *LinkVisual::getSourceArrow()
 {
     return m_sourceArrow;
 }
 
-QGraphicsPolygonItem *LinkVisual::getDestinArrow()
+QGraphicsPathItem *LinkVisual::getDestinArrow()
 {
     return m_destinArrow;
 }
@@ -212,7 +193,7 @@ QDebug operator<<(QDebug d, LinkVisual &edge)
     return d;
 }
 
-void LinkVisual::setSourceArrow(QGraphicsPolygonItem *arrow)
+void LinkVisual::setSourceArrow(QGraphicsPathItem *arrow)
 {
     if (m_sourceArrow != NULL)
     {
@@ -222,7 +203,7 @@ void LinkVisual::setSourceArrow(QGraphicsPolygonItem *arrow)
     m_sourceArrow->setParentItem(this);
 }
 
-void LinkVisual::setDestinArrow(QGraphicsPolygonItem *arrow)
+void LinkVisual::setDestinArrow(QGraphicsPathItem *arrow)
 {
     if (m_destinArrow != NULL)
     {
@@ -234,19 +215,19 @@ void LinkVisual::setDestinArrow(QGraphicsPolygonItem *arrow)
 
 void LinkVisual::setDefaultArrows(bool source, bool destin)
 {
-    QVector<QPoint> points;
-    points.append(QPoint(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
-    points.append(QPoint(0, DEFAULT_ARROW_HEIGHT/2));
-    points.append(QPoint(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
+    QPainterPath path;
+    path.moveTo(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+    path.lineTo(0,0);
+    path.lineTo(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
 
     if(source)
     {
-        m_sourceArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_sourceArrow = new QGraphicsPathItem(path, this);
         m_sourceArrow->setPen(DEFAULT_LINK_PEN);
     }
     if(destin)
     {
-        m_destinArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_destinArrow = new QGraphicsPathItem(path, this);
         m_destinArrow->setPen(DEFAULT_LINK_PEN);
     }
 
@@ -255,26 +236,25 @@ void LinkVisual::setDefaultArrows(bool source, bool destin)
 
 void LinkVisual::setDefaultArrows(bool left)
 {
-    QVector<QPoint> points;
-    points.append(QPoint(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
-    points.append(QPoint(0, DEFAULT_ARROW_HEIGHT/2));
-    points.append(QPoint(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
+    QPainterPath path;
+    path.moveTo(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+    path.lineTo(0,0);
+    path.lineTo(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
 
     bool sourceSet = m_source.x() > m_destin.x();
-    if(left)
+    if (left)
     {
         sourceSet = !sourceSet;
     }
 
     if (sourceSet && (m_sourceArrow == NULL))
     {
-        m_sourceArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_sourceArrow = new QGraphicsPathItem(path, this);
         m_sourceArrow->setPen(DEFAULT_LINK_PEN);
-
     }
     else if(m_destinArrow == NULL)
     {
-        m_destinArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_destinArrow = new QGraphicsPathItem(path, this);
         m_destinArrow->setPen(DEFAULT_LINK_PEN);
     }
 
@@ -299,15 +279,6 @@ void LinkVisual::removeDestinArrow()
     m_destinArrow = NULL;
 }
 
-void LinkVisual::deleteAnnotation()
-{
-    if (m_annotation != NULL)
-    {
-        delete m_annotation;
-        m_annotation = NULL;
-    }
-}
-
 QPointF LinkVisual::getSource()
 {
     return m_source;
@@ -316,11 +287,6 @@ QPointF LinkVisual::getSource()
 QPointF LinkVisual::getDestin()
 {
     return m_destin;
-}
-
-QGraphicsTextItem *LinkVisual::getAnnotation() const
-{
-    return m_annotation;
 }
 
 void LinkVisual::setSource(const QPointF &source)
@@ -345,22 +311,4 @@ void LinkVisual::setFiltered(bool filtered)
     {
         setPen(DEFAULT_LINK_PEN);
     }
-}
-
-void LinkVisual::setAnnotation(QGraphicsTextItem *annotation)
-{
-    m_annotation = annotation;
-}
-
-void LinkVisual::setAnnotation(const QString &str)
-{
-    deleteAnnotation();
-    QGraphicsTextItem *new_ann = new QGraphicsTextItem(this);
-    qreal dx = new_ann->boundingRect().center().x(),
-            dy = new_ann->boundingRect().center().y()/2;
-    new_ann->moveBy(-dx, dy);
-    m_annotation = new_ann;
-
-    QString htmlStr("<div style='background-color:#FFFFF0;'>" + str + "</div>");
-    m_annotation->setHtml(htmlStr);
 }

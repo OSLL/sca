@@ -30,43 +30,71 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphTableProxyModel.h
- * \brief Header of GraphTableProxyModel
- * \todo add comment here
+ *
+ * \file TableView.cpp
+ * \brief TableView implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "TableView.h"
+#include "../StringConstants.h"
+#include <QDebug>
 
-#ifndef _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#define _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#include <QAbstractProxyModel>
-#include <GraphModel.h>
-/*!
- * Class description. May use HTML formatting
- *
- */
-class GraphTableProxyModel : public QAbstractTableModel
+TableView::TableView(QWidget *parent) :
+    QTableView(parent)
 {
-    Q_OBJECT
-public:
-    explicit GraphTableProxyModel(QAbstractItemModel *source, QObject *parent);
-    ~GraphTableProxyModel();
+    m_headerMenu = new ContextMenu(this);
+    m_headerMenu->addNewMenuEntry(OBJECT_TYPE)->setCheckable(true);
+    m_headerMenu->addNewMenuEntry(OBJECT_NAME)->setCheckable(true);
+    m_headerMenu->addNewMenuEntry(OBJECT_PATH)->setCheckable(true);
+    m_headerMenu->addNewMenuEntry(OBJECT_ANNOTATION)->setCheckable(true);
+    m_headerMenu->addNewMenuEntry(OBJECT_CONTENT)->setCheckable(true);
+}
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    bool insertRows(int row = 0, int count = 0, const QModelIndex &parent = QModelIndex());
-private:
-    QMap<int, int> m_idMap;
-    QAbstractItemModel *m_source;
-public slots:
-    void updateMap();
-    void removeRows(QModelIndex parent, int begin, int end);
-}; // class GraphTableProxyModel
+TableView::~TableView()
+{
 
+}
 
-#endif //_GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
+void TableView::ShowContextMenu(const QPoint &pos)
+{
+    QList<QAction *> acts = m_headerMenu->actions();
+    int enabled = 0;
+    for (int i = 0; i < acts.size(); i++)
+    {
+        acts.at(i)->setEnabled(true);
+        acts.at(i)->setChecked(!this->isColumnHidden(i));
+        enabled += !isColumnHidden(i);
+    }
+    //If we have one column left disable disabling of last column
+    if (enabled == 1)
+    {
+        foreach(QAction *act, acts)
+        {
+            if (act->isChecked())
+            {
+                act->setEnabled(false);
+                break;
+            }
+        }
+    }
+    QAction *act = m_headerMenu->exec(mapToGlobal(pos));
+    int i = acts.indexOf(act);
+    if (i != -1)
+    {
+        qDebug() << "[TableView]: Found proper action, #" << i;
+        acts[i]->toggle();
+        bool newState = acts[i]->isChecked();
+        if (newState == true)
+        {
+            hideColumn(i);
+        }
+        else
+        {
+            showColumn(i);
+        }
+    }
+}

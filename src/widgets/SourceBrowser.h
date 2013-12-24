@@ -64,6 +64,7 @@ signals:
     void openBinaryFile();
     void openFile();
     void openFileAs(const QString &);
+    void annotate();
 public slots:
     void ShowContextMenu(const QPoint &pos);
     void goToObject(IScaObject *object);

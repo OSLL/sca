@@ -109,6 +109,21 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
+QList<ObjectVisual *> GraphScene::selectedObjects()
+{
+    QList<ObjectVisual *> objects;
+    foreach(QGraphicsItem *item, selectedItems())
+    {
+        ObjectVisual *link = NULL;
+        link = dynamic_cast<ObjectVisual *>(item);
+        if (link != NULL)
+        {
+            objects.push_back(link);
+        }
+    }
+    return objects;
+}
+
 void GraphScene::refreshLinkPos(int linkId)
 {
     if (!m_objects.contains(linkId))
@@ -117,15 +132,104 @@ void GraphScene::refreshLinkPos(int linkId)
     }
     LinkVisual *link = static_cast<LinkVisual *>(m_objects.value(linkId, NULL));
     Q_ASSERT(link != NULL);
-    QVariant var = m_model->data(m_model->index(linkId, 0), rawObjectRole);
+    QModelIndex index = m_model->index(linkId, 0);
+    QVariant var = m_model->data(index, rawObjectRole);
     Link *objLink = qvariant_cast<Link *>(var);
 
     int fromId = objLink->getObjectFrom(),
-            toId = objLink->getObjectTo();
+        toId   = objLink->getObjectTo();
     // TODO (LeoSko) It really seems we don't have nice interface there, right?
-    Node    *from = static_cast<Node *>(m_objects.value(fromId, NULL)),
-            *to   = static_cast<Node *>(m_objects.value(toId, NULL));
-    link->refreshGeometry(from->pos(), to->pos());
+    ObjectVisual *from = getObjectById(fromId),
+                 *to   = getObjectById(toId);
+    QPointF fromPos = from->pos(),
+            toPos = to->pos();
+    //We create simple "polygon" out of two points to easy use
+    QPolygonF linePolygon;
+    linePolygon << fromPos << toPos;
+    //Check if connection is link-link
+    if (from->getType() == ObjectVisual::LINK)
+    {
+        if (to->getType() == ObjectVisual::LINK)
+        {
+            link->refreshGeometry(fromPos, toPos);
+            return;
+        }
+        else
+        {
+            //"From" is a link, "to" is not
+            QMatrix toMatrix = to->matrix().translate(toPos.x(), toPos.y());
+            QPolygonF toPolygon = to->shape().toFillPolygon(toMatrix);
+            QPolygonF toIntersected = toPolygon.intersected(linePolygon);
+            link->refreshGeometry(fromPos, toIntersected[0]);
+            return;
+        }
+    }
+    else if (to->getType() == ObjectVisual::LINK)
+    {
+        //PreCond: (from->getType != ObjectVisual::LINK)
+        QMatrix fromMatrix = from->matrix().translate(fromPos.x(), fromPos.y());
+        QPolygonF fromPolygon = from->shape().toFillPolygon(fromMatrix);
+        QPolygonF fromIntersected = fromPolygon.intersected(linePolygon);
+        link->refreshGeometry(fromIntersected[1], toPos);
+        return;
+    }
+
+    //We get matrixes of items to later translate
+    //polygons to their local coordinates.
+    QMatrix fromMatrix = from->matrix().translate(fromPos.x(), fromPos.y()),
+            toMatrix = to->matrix().translate(toPos.x(), toPos.y());
+    //We get polygons of objects
+    QPolygonF fromPolygon = from->shape().toFillPolygon(fromMatrix),
+             toPolygon = to->shape().toFillPolygon(toMatrix);
+    //We find intersection between them and line
+    QPolygonF fromIntersected = fromPolygon.intersected(linePolygon),
+             toIntersected = toPolygon.intersected(linePolygon);
+
+    QPointF start, end;
+    // TODO (LeoSko) somehow it crashes when you dont check if they are on one line
+    // (horizontally or vertically, intersection appears to be empty)
+    // so we customly set start and end points in that case
+    if (!fromIntersected.isEmpty() || !toIntersected.isEmpty())
+    {
+        start = fromIntersected[1];
+        end = toIntersected[0];
+    }
+    else
+    {
+        //qDebug() << "[GraphScene]: they are empty";
+        if (toPos.x() == fromPos.x())
+        {
+            if (toPos.y() > fromPos.y())
+            {
+                start = QPointF(fromPos.x(), fromPos.y() + from->boundingRect().height() / 2);
+                end = QPointF(toPos.x(), toPos.y() - to->boundingRect().height() / 2);
+            }
+            else
+            {
+                start = QPointF(fromPos.x(), fromPos.y() - from->boundingRect().height() / 2);
+                end = QPointF(toPos.x(), toPos.y() + to->boundingRect().height() / 2);
+            }
+        }
+        else if (toPos.y() == fromPos.y())
+        {
+            if (toPos.x() > fromPos.x())
+            {
+                start = QPointF(fromPos.x() + from->boundingRect().width() / 2, fromPos.y());
+                end = QPointF(toPos.x() - to->boundingRect().width() / 2, toPos.y());
+            }
+            else
+            {
+                start = QPointF(fromPos.x() - from->boundingRect().width() / 2, fromPos.y());
+                end = QPointF(toPos.y() + to->boundingRect().width() / 2, toPos.y());
+            }
+        }
+        else
+        {
+            qDebug() << "[GraphScene]: some weird thing happening counting line path!";
+            return;
+        }
+    }
+    link->refreshGeometry(start, end);
 }
 
 void GraphScene::connectLink(IScaObject *object, int linkId)
@@ -133,10 +237,10 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     Link *link = static_cast<Link *>(object);
     int sourceId = link->getObjectFrom();
     int destinId = link->getObjectTo();
-    Node *sourceNode = static_cast<Node *>(m_objects.value(sourceId, NULL));
-    Node *destinNode = static_cast<Node *>(m_objects.value(destinId, NULL));
-    sourceNode->addLink(linkId);
-    destinNode->addLink(linkId);
+    ObjectVisual *source = static_cast<ObjectVisual *>(m_objects.value(sourceId, NULL));
+    ObjectVisual *destin = static_cast<ObjectVisual *>(m_objects.value(destinId, NULL));
+    source->addLink(linkId);
+    destin->addLink(linkId);
 
     refreshLinkPos(linkId);
 }
@@ -148,7 +252,7 @@ QList<int> GraphScene::getIds()
 
 void GraphScene::refreshAll()
 {
-    qDebug() << "Refresh all visual objects";
+    qDebug() << "[GraphScene]: Refresh all visual objects";
     QList<QModelIndex> indeces;
     foreach(int id, m_objects.keys())
     {
@@ -180,6 +284,9 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     visObject = creator.createObjectVisual(object);
 
     addItem(visObject);
+    QModelIndex index = m_model->index(id, 0);
+    bool filtered = m_model->data(index, highlightRole).toBool();
+    visObject->setFiltered(filtered);
     visObject->setPos(m_posToAdd);
     m_objects.insert(id, visObject);
 
@@ -225,15 +332,27 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
         link->setFiltered(filtered.toBool());
         return;
     }
+    QModelIndex index = m_model->index(id, 0);
+    bool isShown = m_model->data(index, isShownRole).toBool();
     //Take it from scene
     ObjectVisual *objectVis = m_objects.take(id);
 
     //We re-create object, saving some old parameters of it
     QPointF pos = objectVis->pos();
     QList<int> links = objectVis->getLinks();
+    QString annotation = object->getAnnotation();
 
-    //Get new object
-    QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
+    //Remove old one
+    removeItem(objectVis);
+    delete objectVis;
+    //If is shouldnt be shown we just removed it
+    if (!isShown)
+    {
+        return;
+    }
+
+    //Get new object in case it should be shown
+    QVariant var = m_model->data(index, rawObjectRole);
     IScaObject *obj = qvariant_cast<IScaObject *>(var);
     Q_ASSERT(obj != NULL);
 
@@ -241,29 +360,30 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     ObjectVisual *newObject = addObjectVisual(obj, id);
     newObject->setPos(pos);
     newObject->setLinks(links);
-
-    //Remove old one
-    removeItem(objectVis);
-    delete objectVis;
+    newObject->setAnnotation(annotation);
 
     //Update for object filtering
-    QVariant filtered = m_model->data(m_model->index(id, 0), highlightRole);
+    QVariant filtered = m_model->data(index, highlightRole);
     newObject->setFiltered(filtered.toBool());
 }
 
 void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 {
     Q_UNUSED(parent);
-    //qDebug() << "Removing objects from scene.";
     for (int i = first; i <= last; i++)
     {
         ObjectVisual *obj = m_objects.take(i);
+        if (obj == NULL)
+        {
+            return;
+        }
         int linksCount = obj->getLinks().size();
         Q_ASSERT(linksCount == 0);
-        //qDebug() << "Removing #" << i << "from scene. Items left: " << m_objects.size();
+        qDebug() << "[GraphScene]: Removing #" << i;
         if (obj->getType() == ObjectVisual::LINK)
         {
-            QVariant var = m_model->data(m_model->index(i, 0), rawObjectRole);
+            QModelIndex index = m_model->index(i, 0);
+            QVariant var = m_model->data(index, rawObjectRole);
             Link *l = qvariant_cast<Link *>(var);
             Q_ASSERT(l != NULL);
             int fromId = l->getObjectFrom(),
@@ -282,7 +402,8 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
     Q_UNUSED(rightBottom);
-    qDebug() << "Update #" << leftTop.row() << " to scene.";
+    //Check if need this update
+    qDebug() << "[GraphScene]: Update #" << leftTop.row();
 
     //Get object that changed
     int id = leftTop.row();
@@ -299,12 +420,12 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     {
         if (m_objects.contains(id))
         {
-            //Object no longer exists, but it was there, so delete it
+            //Object no longer exists, but it was there,
+            //or should not be shown, so delete it
             removeObject(leftTop, id, id);
         }
         return;
     }
-
     //Maybe it is already on scene?
     ObjectVisual *visObject = getObjectById(id);
 

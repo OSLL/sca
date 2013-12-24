@@ -44,6 +44,7 @@
 #include "common/Link.h"
 #include <QDebug>
 #include <QInputDialog>
+#include <QUrl>
 #include "common/ScaObjectConverter.h"
 #include "StringConstants.h"
 
@@ -74,6 +75,7 @@ int GraphModel::connectObjects(int source, int dest, int id, QString annotation)
         objectId = id;
     }
 
+    qDebug() << "[GraphModel]: Connecting " << source << " to " << dest;
     Link *link = new Link(source, dest);
     QModelIndex linkIndex = index(objectId, 0);
     m_objects[source]->addLink(objectId);
@@ -84,9 +86,47 @@ int GraphModel::connectObjects(int source, int dest, int id, QString annotation)
     {
         qDebug() << "[GraphModel]: Couldn\'t set data.";
     }
+    setData(linkIndex, QVariant(true), isShownRole);
 
     s_nextID = (id > s_nextID) ? id + 1 : s_nextID + 1;
     return objectId;
+}
+
+int GraphModel::getObjectIdByPath(const QString &path)
+{
+    QList<int> ids = m_objects.keys();
+    for(int i = 0; i < ids.size(); i++)
+    {
+        if (m_objects[i]->getFile().absoluteFilePath() == path)
+        {
+            return ids[i];
+        }
+    }
+    return -1;
+}
+
+QString GraphModel::getAnnotationByPath(const QString &path)
+{
+    foreach(IScaObject *object, m_objects)
+    {
+        if (object->getFile().absoluteFilePath() == path)
+        {
+            return object->getAnnotation();
+        }
+    }
+    return QString("");
+}
+
+IScaObject *GraphModel::getObjectByPath(const QString &path)
+{
+    foreach(IScaObject *object, m_objects)
+    {
+        if (object->getFile().absoluteFilePath() == path)
+        {
+            return object;
+        }
+    }
+    return NULL;
 }
 
 int GraphModel::addObject(const QMimeData *mimeData)
@@ -97,27 +137,31 @@ int GraphModel::addObject(const QMimeData *mimeData)
     }
 
     ScaMIMEDataProcessor processor(mimeData);
-    IScaObject *object = processor.makeObject();
-    return addObject(object);
+    IScaObject *objectFromData = processor.makeObject();
+
+    //If we add object out of MIMEData, then show it
+    //(-1) - we add object with generic id
+    return addObject(objectFromData, -1, true);
 }
 
-int GraphModel::addObject(IScaObject *object, int id)
+int GraphModel::addObject(IScaObject *object, int id, bool isShown)
 {
     QModelIndex changedIndex;
     if(id < 0)
     {
         changedIndex = index(s_nextID, 0);
+        setData(changedIndex, QVariant(isShown), isShownRole);
         setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
         return s_nextID++;
     }
     else
     {
         changedIndex = index(id, 0);
+        setData(changedIndex, QVariant(isShown), isShownRole);
         setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
         s_nextID  = (id > s_nextID) ? (id + 1): s_nextID;
         return id;
     }
-
 }
 
 int GraphModel::replaceObject(IScaObject *object, int id)
@@ -125,12 +169,8 @@ int GraphModel::replaceObject(IScaObject *object, int id)
     IScaObject *old = m_objects.value(id, NULL);
     if (old == NULL)
     {
-        qDebug() << "[GraphModel]: Object didn't exist before converting!";
+        qDebug() << "[GraphModel]: Object didn't exist before replacing!";
     }
-    QList<int> links = old->getLinks();  //Save links
-    delete old;
-    m_objects[id] = NULL;
-    object->setLinks(links);    //Restore links
 
     QModelIndex changedIndex = index(id, 0);
     setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
@@ -176,6 +216,10 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
     case Qt::DisplayRole:   //For standart text views
         {
             return QVariant(m_objects[id]->getInfo());
+        }
+    case isShownRole:
+        {
+            return QVariant(m_isShown.value(id, false));
         }
     case rawObjectRole:    //For graphics representation return full object
         {
@@ -232,6 +276,7 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
 
     //Remove from container
     m_objects.remove(id);
+    m_isShown.remove(id);
     //Remove it from memory
     delete object;
 
@@ -272,11 +317,11 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
         return false;
     }
 
+    int id = index.row();
     switch (role)
     {
     case rawObjectRole:
         {
-            int id = index.row();
             IScaObject *object = NULL;
 
             //Try casting to object or link, then add it
@@ -284,18 +329,27 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
             if (object == NULL)
             {
                 object = qvariant_cast<Link *>(value);
-                if (object == NULL)
-                {
-                    qDebug() << "[GraphModel]: Can\'t cast object while adding!";
-                    return false;
-                }
-            }
 
+            }
+            if (object == NULL)
+            {
+                qDebug() << "[GraphModel]: Can\'t cast object while adding!";
+                return false;
+            }
             //Successfully casted
             //Set new data (or replace it)
             m_objects.insert(id, object);
-            qDebug() << "[GraphModel]: Data set #" << id << ", type: " << object->getTypeName()
+            qDebug() << "[GraphModel]: Data set #" << id
+                     << ", type: " << object->getTypeName()
                      << ", items total: " << m_objects.size();
+            emit dataChanged(index, index);
+            return true;
+        }
+    case isShownRole:
+        {
+            m_isShown[id] = value.toBool();
+            qDebug() << "[GraphModel]: " << (value.toBool()?"Showing":"Hiding")
+                     << " #" << id;
             emit dataChanged(index, index);
             return true;
         }
@@ -345,11 +399,11 @@ bool GraphModel::freeLink(int link)
 
 bool GraphModel::convert(int id, IScaObject::IScaObjectType toType)
 {
-    ScaObjectConverter *converter = new ScaObjectConverter();
+    ScaObjectConverter converter;
 
     qDebug() << "[GraphModel]: Converting #" << id << "from type"
              << m_objects[id]->getType() << "to type:" << toType;
-    IScaObject *object = converter->convert(m_objects[id], toType);
+    IScaObject *object = converter.convert(m_objects[id], toType);
     if(object == NULL)
     {
         return false;
@@ -364,10 +418,10 @@ void GraphModel::addLinkTo(IScaObject *obj, int link)
     obj->addLink(link);
 }
 
-void GraphModel::editLinkAnnotation(int id)
+bool GraphModel::editAnnotation(int id)
 {
-    if (id <= 0 || !m_objects.contains(id))
-        return;
+    if (id < 0 || !m_objects.contains(id))
+        return false;
     bool ok = false;
     QString new_annotation =
             QInputDialog::getText(NULL, EDIT_ANNOTATION,
@@ -379,11 +433,21 @@ void GraphModel::editLinkAnnotation(int id)
     {
         setAnnotation(id, new_annotation);
     }
+    return ok;
 }
 
 void GraphModel::setAnnotation(int id, QString annotation)
 {
-    m_objects[id]->setAnnotation(annotation);
+    bool showed = m_isShown.value(id, false);
+    if (annotation.isEmpty()
+        && (showed == false))
+    {
+        removeObject(id);
+    }
+    else
+    {
+        m_objects[id]->setAnnotation(annotation);
+    }
     QModelIndex ind = index(id, 0);
     emit dataChanged(ind, ind);
 }

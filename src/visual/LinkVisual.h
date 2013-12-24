@@ -66,25 +66,19 @@ public:
 
     friend QDebug operator<< (QDebug d, LinkVisual &edge);
 
-    QGraphicsPolygonItem *getSourceArrow();
-    QGraphicsPolygonItem *getDestinArrow();
+    QGraphicsPathItem *getSourceArrow();
+    QGraphicsPathItem *getDestinArrow();
 
-    void setSourceArrow(QGraphicsPolygonItem *arrow);
-    void setDestinArrow(QGraphicsPolygonItem *arrow);
+    void setSourceArrow(QGraphicsPathItem *arrow);
+    void setDestinArrow(QGraphicsPathItem *arrow);
     void setDefaultArrows(bool left);
     void setDefaultArrows(bool source, bool destin);
 
     void removeSourceArrow();
     void removeDestinArrow();
 
-    void deleteAnnotation();
-    void setAnnotation(QGraphicsTextItem *annotation);
-    void setAnnotation(const QString &str);
-    QString getAnnotationText() const;
-
     QPointF getSource();
     QPointF getDestin();
-    QGraphicsTextItem *getAnnotation() const;
     void setSource(const QPointF &source);
     void setDestin(const QPointF &destin);
 
@@ -92,11 +86,8 @@ public:
 
 private:
     QLineF m_line;
-    qreal m_sourceRadius;
-    qreal m_destinRadius;
-    QGraphicsPolygonItem *m_sourceArrow;
-    QGraphicsPolygonItem *m_destinArrow;
-    QGraphicsTextItem *m_annotation;
+    QGraphicsPathItem *m_sourceArrow;
+    QGraphicsPathItem *m_destinArrow;
 
     QPointF m_source;
     QPointF m_destin;

@@ -30,8 +30,8 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphTableProxyModel.h
- * \brief Header of GraphTableProxyModel
+ * \file TableView.h
+ * \brief Header of TableView
  * \todo add comment here
  *
  * File description
@@ -39,34 +39,31 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include <QTableView>
+#include "ContextMenu.h"
 
-#ifndef _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#define _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#include <QAbstractProxyModel>
-#include <GraphModel.h>
+#ifndef _TableView_H_638CD187_2A14_4F08_8B4A_7AA1A05B8813_INCLUDED_
+#define _TableView_H_638CD187_2A14_4F08_8B4A_7AA1A05B8813_INCLUDED_
+
 /*!
  * Class description. May use HTML formatting
  *
  */
-class GraphTableProxyModel : public QAbstractTableModel
+class TableView : public QTableView
 {
     Q_OBJECT
 public:
-    explicit GraphTableProxyModel(QAbstractItemModel *source, QObject *parent);
-    ~GraphTableProxyModel();
+    explicit TableView(QWidget *parent = 0);
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    bool insertRows(int row = 0, int count = 0, const QModelIndex &parent = QModelIndex());
+    ~TableView();
+
 private:
-    QMap<int, int> m_idMap;
-    QAbstractItemModel *m_source;
+    ContextMenu *m_headerMenu;
 public slots:
-    void updateMap();
-    void removeRows(QModelIndex parent, int begin, int end);
-}; // class GraphTableProxyModel
+    void ShowContextMenu(const QPoint &pos);
+
+}; // class TableView
 
 
-#endif //_GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
+#endif //_TableView_H_638CD187_2A14_4F08_8B4A_7AA1A05B8813_INCLUDED_
+

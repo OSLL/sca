@@ -44,6 +44,7 @@
 SourceBrowserMenu::SourceBrowserMenu(QWidget *parent) :
     ContextMenu(parent)
 {
+    addNewMenuEntry(ANNOTATE_OBJECT);
     addNewMenuEntry(OPEN_IN_TEXT_VIEWER);
     m_openTextAs = addMenu(OPEN_IN_TEXT_VIEWER_AS);
     addNewMenuEntry(OPEN_IN_BINARY_VIEWER);

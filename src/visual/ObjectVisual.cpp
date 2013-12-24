@@ -5,7 +5,8 @@
 ObjectVisual::ObjectVisual(IScaObject *obj, ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),
     m_type(type),
-    m_filtered(false)
+    m_filtered(false),
+    m_annotation(NULL)
 {
     setFlags(QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemIsSelectable);
@@ -14,6 +15,46 @@ ObjectVisual::ObjectVisual(IScaObject *obj, ObjectVisualType type, QGraphicsItem
 
 ObjectVisual::~ObjectVisual()
 {
+}
+
+void ObjectVisual::deleteAnnotation()
+{
+    if (m_annotation != NULL)
+    {
+        delete m_annotation;
+        m_annotation = NULL;
+    }
+}
+
+QGraphicsTextItem *ObjectVisual::getAnnotation() const
+{
+    return m_annotation;
+}
+
+void ObjectVisual::setAnnotation(QGraphicsTextItem *annotation)
+{
+    m_annotation = annotation;
+}
+
+void ObjectVisual::setAnnotation(const QString &str)
+{
+    deleteAnnotation();
+    QGraphicsTextItem *new_ann = new QGraphicsTextItem(this);
+
+    QString htmlStr("<div style='background-color:#FFFFF0;'>" + str + "</div>");
+    new_ann->setHtml(htmlStr);
+
+    qreal dx = new_ann->boundingRect().center().x(),
+          dy = - new_ann->boundingRect().height() - boundingRect().height() / 2;
+    if (m_type != LINK)
+    {
+        new_ann->moveBy(-dx, dy);
+    }
+    else
+    {
+        new_ann->moveBy(-dx, 0);
+    }
+    m_annotation = new_ann;
 }
 
 void ObjectVisual::disconnectLink(int linkId)

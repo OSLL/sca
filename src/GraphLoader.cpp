@@ -107,7 +107,7 @@ void GraphLoader::loadNodes()
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
 
         IScaObject *object = creator.createObject(type, line, offset, endoffset, length, path, text, data, annotation);
-        m_model->addObject(object , id);
+        m_model->addObject(object , id, true);
     }
 }
 

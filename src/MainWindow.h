@@ -11,13 +11,14 @@
 class GraphScene;
 class GraphModel;
 class GraphTableProxyModel;
+class SCAFileSystemModel;
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:
     Ui::MainWindow *m_ui;
-    QFileSystemModel *m_fileModel;
+    SCAFileSystemModel *m_fileModel;
     GraphScene *m_scene;
     GraphModel *m_model;
     GraphFilter *m_filter;
@@ -38,6 +39,7 @@ public slots:
     void openHelp();
     void refreshFilterLine(const QString &text);
     void switchToObject(IScaObject *);
+    void annotateNoGraphObject();
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
     void on_advancedFilterButton_clicked();

@@ -112,7 +112,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QTableView" name="tableView">
+      <widget class="TableView" name="tableView">
        <property name="horizontalScrollBarPolicy">
         <enum>Qt::ScrollBarAlwaysOff</enum>
        </property>
@@ -236,6 +236,11 @@
    <extends>QTabWidget</extends>
    <header>widgets/ViewsTabWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>TableView</class>
+   <extends>QTableView</extends>
+   <header>widgets/TableView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
