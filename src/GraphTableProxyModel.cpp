@@ -58,6 +58,39 @@ GraphTableProxyModel::~GraphTableProxyModel()
 
 }
 
+QVariant GraphTableProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        switch (section)
+        {
+        case 0:
+            return QVariant(OBJECT_TYPE);
+        case 1:
+            return QVariant(OBJECT_NAME);
+        case 2:
+            return QVariant(OBJECT_PATH);
+        case 3:
+            return QVariant(OBJECT_ANNOTATION);
+        case 4:
+            return QVariant(OBJECT_CONTENT);
+        default:
+            return QVariant("");
+        }
+    }
+    else
+    {
+        if (role == Qt::DisplayRole)
+        {
+            return QVariant(m_idMap[section]);
+        }
+        else
+        {
+            return QVariant();
+        }
+    }
+}
+
 int GraphTableProxyModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
@@ -131,8 +164,11 @@ bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &par
         int i = 0;
         foreach (int id, list)
         {
-            //Check if it matches filter
-            if (m_source->data(m_source->index(id, 0), highlightRole).toBool())
+            QModelIndex index = m_source->index(id, 0);
+            bool filtered = m_source->data(index, highlightRole).toBool(),
+                 isShown =  m_source->data(index, isShownRole).toBool();
+            //Check if it matches filter and should be shown
+            if (filtered && isShown)
             {
                 qDebug() << "[ProxyTableModel]: " << i << "->" << id;
                 beginInsertRows(QModelIndex(), i, i);
@@ -146,6 +182,13 @@ bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &par
             qDebug() << "[ProxyTableModel]: nothing matched filter.";
             foreach (int id, list)
             {
+                QModelIndex index = m_source->index(id, 0);
+                bool isShown = m_source->data(index, isShownRole).toBool();
+                if (!isShown)
+                {
+                    //It shouldnt be shown anyway, skip it
+                    continue;
+                }
                 qDebug() << "[ProxyTableModel]: " << i << "->" << id;
                 beginInsertRows(QModelIndex(), i, i);
                 m_idMap[i++] = id;

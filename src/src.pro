@@ -64,7 +64,8 @@ SOURCES += \
     GraphFilter.cpp \
     widgets/FilterDialog.cpp \
     visual/ObjectVisualCreator.cpp \
-    GraphTableProxyModel.cpp
+    GraphTableProxyModel.cpp \
+    common/SCAFileSystemModel.cpp
 
 
 HEADERS += \
@@ -110,7 +111,8 @@ HEADERS += \
     GraphFilter.h \
     widgets/FilterDialog.h \
     visual/ObjectVisualCreator.h \
-    GraphTableProxyModel.h
+    GraphTableProxyModel.h \
+    common/SCAFileSystemModel.h
 
 FORMS += \
     mainwindow.ui \

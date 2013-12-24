@@ -30,43 +30,40 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphTableProxyModel.h
- * \brief Header of GraphTableProxyModel
+ * \file SCAFileSystemModel.h
+ * \brief Header of SCAFileSystemModel
  * \todo add comment here
  *
- * File description
+ * QFileSystemModel subclass to provide additional column for annotations
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "QFileSystemModel"
+#include "../GraphModel.h"
+#include "../GraphFilter.h"
 
-#ifndef _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#define _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#include <QAbstractProxyModel>
-#include <GraphModel.h>
+#ifndef _SCAFileSystemModel_H_6AC5502B_905E_4593_BFE2_5ABACC15BFEE_INCLUDED_
+#define _SCAFileSystemModel_H_6AC5502B_905E_4593_BFE2_5ABACC15BFEE_INCLUDED_
+
 /*!
  * Class description. May use HTML formatting
  *
  */
-class GraphTableProxyModel : public QAbstractTableModel
+class SCAFileSystemModel : public QFileSystemModel
 {
-    Q_OBJECT
 public:
-    explicit GraphTableProxyModel(QAbstractItemModel *source, QObject *parent);
-    ~GraphTableProxyModel();
+    explicit SCAFileSystemModel(GraphModel *model, QObject *object = NULL);
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
-    bool insertRows(int row = 0, int count = 0, const QModelIndex &parent = QModelIndex());
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    ~SCAFileSystemModel();
 private:
-    QMap<int, int> m_idMap;
-    QAbstractItemModel *m_source;
-public slots:
-    void updateMap();
-    void removeRows(QModelIndex parent, int begin, int end);
-}; // class GraphTableProxyModel
+    GraphModel *m_graphModel;
+}; // class SCAFileSystemModel
 
 
-#endif //_GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
+#endif //_SCAFileSystemModel_H_6AC5502B_905E_4593_BFE2_5ABACC15BFEE_INCLUDED_
+

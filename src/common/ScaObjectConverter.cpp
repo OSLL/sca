@@ -139,8 +139,10 @@ IScaObjectTextBlock *ScaObjectConverter::makeTextBlockFromIdentifier(IScaObjectI
     int offset = obj->getOffset();
     int endOffset = obj->getEndOffset();
     QString text = obj->getIdentifier();
+    QList<int> links = obj->getLinks();
 
     IScaObjectTextBlock *textBlock = new IScaObjectTextBlock(file, offset, endOffset, text.size(), text);
+    textBlock->setLinks(links);
     if (autoDel)
     {
         delete obj;
@@ -154,8 +156,10 @@ IScaObjectIdentifier *ScaObjectConverter::makeIdentifierFromBlock(IScaObjectText
     int offset = obj->getOffset();
     int endOffset = obj->getEndOffset();
     QString text = obj->getText();
+    QList<int> links = obj->getLinks();
 
     IScaObjectIdentifier *identifier = new IScaObjectIdentifier(file, offset, endOffset, text);
+    identifier->setLinks(links);
     if (autoDel)
     {
         delete obj;

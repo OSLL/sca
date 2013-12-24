@@ -96,7 +96,8 @@ const int DEFAULT_IMAGE_HEIGHT = 600;
 enum GraphModelRole{
     rawObjectRole = Qt::UserRole,
     highlightRole = Qt::UserRole + 1,
-    objectIdListRole = Qt::UserRole + 2
+    objectIdListRole = Qt::UserRole + 2,
+    isShownRole = Qt::UserRole + 3
 };
 
 const int GRAPH_TABLE_PROXY_COLUMN_COUNT = 5;

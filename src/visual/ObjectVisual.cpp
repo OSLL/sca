@@ -6,7 +6,7 @@ ObjectVisual::ObjectVisual(IScaObject *obj, ObjectVisualType type, QGraphicsItem
     QAbstractGraphicsShapeItem(parent),
     m_type(type),
     m_filtered(false),
-  m_annotation(NULL)
+    m_annotation(NULL)
 {
     setFlags(QGraphicsItem::ItemIsMovable |
              QGraphicsItem::ItemIsSelectable);

@@ -63,7 +63,7 @@ public:
     ~GraphModel();
 
     int addObject(const QMimeData *mimeData);
-    int addObject(IScaObject *object);
+    int addObject(IScaObject *object, bool isShown = false);
     int replaceObject(IScaObject *object, int id);
     int getId(IScaObject *object);
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
@@ -84,14 +84,17 @@ public:
 
     int connectObjects(int id1, int id2);
 
+    int getObjectIdByPath(const QString &path);
+    QString getAnnotationByPath(const QString &path);
+    IScaObject *getObjectByPath(const QString &path);
+
     void addLinkTo(IScaObject *obj, int link);
-    void editAnnotation(int id);
-
+    bool editAnnotation(int id);
     void setAnnotation(int id, QString annotation);
-
 private:
     static int s_nextID;
     QHash<int, IScaObject *> m_objects;
+    QMap<int, bool> m_isShown;
 }; // class GraphModel
 
 Q_DECLARE_METATYPE( QList<int> )

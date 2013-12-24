@@ -24,6 +24,7 @@ const QString OPEN_IN_TEXT_VIEWER = "Open in Text Viewer";
 const QString OPEN_IN_TEXT_VIEWER_AS = "Open in Text Viewer As";
 const QString OPEN_IN_BINARY_VIEWER = "Open in Binary Viewer";
 const QString ADD_TO_SCENE = "Add to scene";
+const QString ANNOTATE_OBJECT = "Edit annotation";
 //[End common menu strings]
 
 //[Error messages]
@@ -42,7 +43,7 @@ const QString ERROR_OPENING_FILE_MSG = "Error opening %1";
 //[End error messages]
 
 //[GraphView context menu strings]
-const QString CONNECT_NODES = "Connect nodes";
+const QString CONNECT_OBJECTS = "Connect";
 const QString TO_TEXT_BLOCK = "Set as text block";
 const QString TO_IDENTIFIER = "Set as identifier";
 const QString TO_BINARY_BLOCK = "Set as binary block";
@@ -52,6 +53,14 @@ const QString RIGHT_ARROW = "Right arrow";
 const QString EDIT_ANNOTATION = "Edit annotation";
 const QString EDIT_ANNOTATION_LABEL = "Enter annotation: ";
 //[End GraphView's strings]
+
+//[Header data strings]
+const QString OBJECT_TYPE = "Type";
+const QString OBJECT_PATH = "Path";
+const QString OBJECT_NAME = "Filename";
+const QString OBJECT_CONTENT = "Content";
+const QString OBJECT_ANNOTATION = "Annotation";
+//[End header data strings]
 
 //[Encoding list]
 const QString UTF8 = "UTF-8";
@@ -116,6 +125,5 @@ const QString OBJECT_TOOLTIP_PATTERN =  QString("Type: %1 <br />")
                                         + QString("Annotation: %4 <br />")
                                         + QString("Content: %5");
 //[End ObjectVisual tooltip strings]
-
 
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

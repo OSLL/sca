@@ -30,43 +30,67 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphTableProxyModel.h
- * \brief Header of GraphTableProxyModel
- * \todo add comment here
+ *
+ * \file SCAFileSystemModel.cpp
+ * \brief SCAFileSystemModel implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "SCAFileSystemModel.h"
 
-#ifndef _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#define _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
-#include <QAbstractProxyModel>
-#include <GraphModel.h>
-/*!
- * Class description. May use HTML formatting
- *
- */
-class GraphTableProxyModel : public QAbstractTableModel
+SCAFileSystemModel::SCAFileSystemModel(GraphModel *model, QObject *parent) :
+    QFileSystemModel(parent),
+    m_graphModel(model)
 {
-    Q_OBJECT
-public:
-    explicit GraphTableProxyModel(QAbstractItemModel *source, QObject *parent);
-    ~GraphTableProxyModel();
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
-    bool insertRows(int row = 0, int count = 0, const QModelIndex &parent = QModelIndex());
-private:
-    QMap<int, int> m_idMap;
-    QAbstractItemModel *m_source;
-public slots:
-    void updateMap();
-    void removeRows(QModelIndex parent, int begin, int end);
-}; // class GraphTableProxyModel
+}
 
+QVariant SCAFileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (section == 4
+        && orientation == Qt::Horizontal
+        && role == Qt::DisplayRole)
+    {
+        return QVariant(OBJECT_ANNOTATION);
+    }
+    else
+    {
+        return QFileSystemModel::headerData(section, orientation, role);
+    }
+}
 
-#endif //_GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
+QVariant SCAFileSystemModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+    if (role == Qt::DisplayRole && index.column() == 4)
+        return m_graphModel->getAnnotationByPath(filePath(index));
+    else
+        return QFileSystemModel::data(index, role);
+}
+
+int SCAFileSystemModel::columnCount(const QModelIndex &parent) const
+{
+    return (parent.column() > 0) ? 0 : 5;
+}
+
+Qt::ItemFlags SCAFileSystemModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+    {
+        return 0;
+    }
+    if (index.column() == 4)
+    {
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    }
+    return QFileSystemModel::flags(index);
+}
+
+SCAFileSystemModel::~SCAFileSystemModel()
+{
+
+}
