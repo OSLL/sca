@@ -232,6 +232,27 @@ void LinkVisual::setDestinArrow(QGraphicsPolygonItem *arrow)
     m_destinArrow->setParentItem(this);
 }
 
+void LinkVisual::setDefaultArrows(bool source, bool destin)
+{
+    QVector<QPoint> points;
+    points.append(QPoint(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
+    points.append(QPoint(0, DEFAULT_ARROW_HEIGHT/2));
+    points.append(QPoint(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT/2));
+
+    if(source)
+    {
+        m_sourceArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_sourceArrow->setPen(DEFAULT_LINK_PEN);
+    }
+    if(destin)
+    {
+        m_destinArrow = new QGraphicsPolygonItem(QPolygon(points), this);
+        m_destinArrow->setPen(DEFAULT_LINK_PEN);
+    }
+
+    refreshGeometry(m_source, m_destin);
+}
+
 void LinkVisual::setDefaultArrows(bool left)
 {
     QVector<QPoint> points;

@@ -80,6 +80,7 @@ void GraphLoader::loadGraph(QString path, GraphModel *model, GraphScene *scene)
     loadNodes();
     loadNodesVisual();
     loadLinks();
+    loadLinksVisual();
 }
 
 void GraphLoader::loadNodes()
@@ -146,5 +147,25 @@ void GraphLoader::loadNodesVisual()
 
         Node *node = static_cast<Node *>(m_scene->getObjectById(id));
         node->setPos(QPointF(posX, posY));
+    }
+}
+
+void GraphLoader::loadLinksVisual()
+{
+    if(!m_query->exec("SELECT * FROM linkVisual_table"))
+    {
+        qDebug() << m_query->lastError().text();
+    }
+
+    QSqlRecord rec = m_query->record();
+
+    while (m_query->next())
+    {
+        int id     = m_query->value(rec.indexOf("id")).toInt();
+        bool hasDestinArrow = m_query->value(rec.indexOf("sourceArrow")).toBool();
+        bool hasSourceArrow = m_query->value(rec.indexOf("destinArrow")).toBool();
+
+        LinkVisual *link = static_cast<LinkVisual *>(m_scene->getObjectById(id));
+        link->setDefaultArrows(hasDestinArrow, hasSourceArrow);
     }
 }

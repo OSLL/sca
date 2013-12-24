@@ -85,15 +85,8 @@ int GraphModel::connectObjects(int source, int dest, int id, QString annotation)
         qDebug() << "[GraphModel]: Couldn\'t set data.";
     }
 
-    if(id < 0)
-    {
-        return s_nextID++;
-    }
-    else
-    {
-        objectId = id;
-        return s_nextID;
-    }
+    s_nextID = (id > s_nextID) ? id + 1 : s_nextID + 1;
+    return objectId;
 }
 
 int GraphModel::addObject(const QMimeData *mimeData)
@@ -121,7 +114,8 @@ int GraphModel::addObject(IScaObject *object, int id)
     {
         changedIndex = index(id, 0);
         setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
-        return s_nextID++;
+        s_nextID  = (id > s_nextID) ? (id + 1): s_nextID;
+        return id;
     }
 
 }
@@ -400,4 +394,5 @@ void GraphModel::clear()
     {
         removeRow(getId(obj));
     }
+    s_nextID = 0;
 }

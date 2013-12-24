@@ -72,6 +72,7 @@ public:
     void setSourceArrow(QGraphicsPolygonItem *arrow);
     void setDestinArrow(QGraphicsPolygonItem *arrow);
     void setDefaultArrows(bool left);
+    void setDefaultArrows(bool source, bool destin);
 
     void removeSourceArrow();
     void removeDestinArrow();

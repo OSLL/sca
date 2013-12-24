@@ -60,6 +60,7 @@ public:
     void loadGraph(QString path, GraphModel *model, GraphScene *scene);
     void loadNodesVisual();
     void loadLinks();
+    void loadLinksVisual();
 private:
     QSqlDatabase m_db;
     QSqlQuery *m_query;

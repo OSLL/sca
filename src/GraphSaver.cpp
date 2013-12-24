@@ -72,7 +72,7 @@ GraphSaver::GraphSaver(QString path)
 
     m_query = new QSqlQuery(m_db);
     QString initNodeStr = "CREATE TABLE node_table ("
-            "id integer PRIMARY KEY NOT NULL, "
+            "id integer PRIMARY KEY, "
             "type integer, "
             "line integer,"
             "offset integer,"
@@ -84,18 +84,26 @@ GraphSaver::GraphSaver(QString path)
             "annotation TEXT"
             ");";
     QString initLinkStr = "CREATE TABLE link_table ("
-            "id integer PRIMARY KEY NOT NULL, "
+            "id integer PRIMARY KEY, "
             "source integer, "
             "destin integer, "
             "annotation TEXT"
             ");";
     QString initNodeVisualStr = "CREATE TABLE nodeVisual_table ("
-            "id integer PRIMARY KEY NOT NULL, "
+            "id integer PRIMARY KEY, "
             "posX real, "
             "posY real "
             ");";
+    QString initLinkVisualStr = "CREATE TABLE linkVisual_table ("
+            "id integer PRIMARY KEY, "
+            "sourceArrow BOOLEAN, "
+            "destinArrow BOOLEAN"
+            ");";
 
-    if(!m_query->exec(initNodeStr) || !m_query->exec(initLinkStr) || !m_query->exec(initNodeVisualStr))
+    if(!m_query->exec(initNodeStr)
+            || !m_query->exec(initLinkStr)
+            || !m_query->exec(initNodeVisualStr)
+            || !m_query->exec(initLinkVisualStr))
     {
         qDebug() << m_query->lastError().databaseText();
     }
@@ -180,6 +188,7 @@ void GraphSaver::insertLink(Link *link, int id)
             +QString("VALUES(:id, :source, :destin, :annotation);");
     m_query->prepare(insertPattern);
     m_query->bindValue(":id", id);
+    qDebug() << "[GraphSaver]: Save connection:" << link->getObjectFrom() << "->" << link->getObjectTo();
     m_query->bindValue(":source", link->getObjectFrom());
     m_query->bindValue(":destin", link->getObjectTo());
     m_query->bindValue(":annotation", link->getAnnotation());
@@ -191,6 +200,9 @@ void GraphSaver::insertLink(Link *link, int id)
 
 void GraphSaver::saveModel(GraphModel *model)
 {
+    if(!m_db.isOpen())
+        return;
+
     QVariant var = model->data(model->index(0, 0), objectIdListRole);
     QList<int> ids = qvariant_cast<QList<int> >(var);
 
@@ -213,6 +225,9 @@ void GraphSaver::saveModel(GraphModel *model)
 
 void GraphSaver::saveScene(GraphScene *scene)
 {
+    if(!m_db.isOpen())
+        return;
+
     QList<int> ids = scene->getIds();
     foreach (int id, ids)
     {
@@ -223,6 +238,11 @@ void GraphSaver::saveScene(GraphScene *scene)
             Node *node = static_cast<Node *>(object);
             insertNodeVisual(node, id);
         }
+        else if(object->getType() == ObjectVisual::LINK)
+        {
+            LinkVisual *link = static_cast<LinkVisual *>(object);
+            insertLinkVisual(link, id);
+        }
     }
 
 }
@@ -230,8 +250,8 @@ void GraphSaver::saveScene(GraphScene *scene)
 
 void GraphSaver::insertNodeVisual(Node *node, int id)
 {
-    const QString insertPattern = QString("INSERT INTO nodeVisual_table ")
-            +QString("VALUES(:id, :posX, :posY);");
+    const QString insertPattern = "INSERT INTO nodeVisual_table "
+            "VALUES(:id, :posX, :posY);";
     m_query->prepare(insertPattern);
 
     QPointF pos = node->pos();
@@ -242,4 +262,24 @@ void GraphSaver::insertNodeVisual(Node *node, int id)
     if(!m_query->exec())
     {
         qDebug() << "Error:" <<  m_query->lastError().text();
-    }}
+    }
+}
+
+void GraphSaver::insertLinkVisual(LinkVisual *link, int id)
+{
+    const QString insertPattern = "INSERT INTO linkVisual_table "
+            "VALUES(:id, :sourceArrow, :destinArrow);";
+    m_query->prepare(insertPattern);
+
+    bool hasSourceArrow = (link->getSourceArrow() != NULL);
+    bool hasDestinArrow = (link->getDestinArrow() != NULL);
+
+    m_query->bindValue(":id", id);
+    m_query->bindValue(":sourceArrow", hasSourceArrow);
+    m_query->bindValue(":destinArrow", hasDestinArrow);
+
+    if(!m_query->exec())
+    {
+        qDebug() << "Error:" <<  m_query->lastError().text();
+    }
+}

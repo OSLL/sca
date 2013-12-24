@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,46 +30,40 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphSaver.h
- * \brief Header of GraphSaver
+ * \file SCAFileSystemModel.h
+ * \brief Header of SCAFileSystemModel
  * \todo add comment here
  *
- * File description
+ * QFileSystemModel subclass to provide additional column for annotations
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "QFileSystemModel"
+#include "../GraphModel.h"
+#include "../GraphFilter.h"
 
-#ifndef _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
-#define _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
-#include <QtSql/qsqldatabase.h>
-#include <QtSql/QSqlQuery>
+#ifndef _SCAFileSystemModel_H_6AC5502B_905E_4593_BFE2_5ABACC15BFEE_INCLUDED_
+#define _SCAFileSystemModel_H_6AC5502B_905E_4593_BFE2_5ABACC15BFEE_INCLUDED_
 
-#include "common/IScaObject.h"
-#include "common/Link.h"
-#include "GraphModel.h"
-#include "GraphScene.h"
 /*!
  * Class description. May use HTML formatting
  *
  */
-class GraphSaver
+class SCAFileSystemModel : public QFileSystemModel
 {
 public:
-  GraphSaver(QString path);
-  ~GraphSaver();
+    explicit SCAFileSystemModel(GraphModel *model, QObject *object = NULL);
 
-  void insertNode(IScaObject *object, int id);
-
-  void insertLink(Link *link, int id);
-  void saveModel(GraphModel *model);
-  void saveScene(GraphScene *scene);
-  void insertNodeVisual(Node *node, int id);
-  void insertLinkVisual(LinkVisual *link, int id);
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    QVariant data(const QModelIndex &index, int role) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    ~SCAFileSystemModel();
 private:
-  QSqlDatabase m_db;
-  QSqlQuery *m_query;
-}; // class GraphSaver
-  
+    GraphModel *m_graphModel;
+}; // class SCAFileSystemModel
 
-#endif //_GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
+
+#endif //_SCAFileSystemModel_H_6AC5502B_905E_4593_BFE2_5ABACC15BFEE_INCLUDED_
+

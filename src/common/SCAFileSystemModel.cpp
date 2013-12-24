@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,46 +30,67 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file GraphSaver.h
- * \brief Header of GraphSaver
- * \todo add comment here
+ *
+ * \file SCAFileSystemModel.cpp
+ * \brief SCAFileSystemModel implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "SCAFileSystemModel.h"
 
-#ifndef _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
-#define _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
-#include <QtSql/qsqldatabase.h>
-#include <QtSql/QSqlQuery>
-
-#include "common/IScaObject.h"
-#include "common/Link.h"
-#include "GraphModel.h"
-#include "GraphScene.h"
-/*!
- * Class description. May use HTML formatting
- *
- */
-class GraphSaver
+SCAFileSystemModel::SCAFileSystemModel(GraphModel *model, QObject *parent) :
+    QFileSystemModel(parent),
+    m_graphModel(model)
 {
-public:
-  GraphSaver(QString path);
-  ~GraphSaver();
 
-  void insertNode(IScaObject *object, int id);
+}
 
-  void insertLink(Link *link, int id);
-  void saveModel(GraphModel *model);
-  void saveScene(GraphScene *scene);
-  void insertNodeVisual(Node *node, int id);
-  void insertLinkVisual(LinkVisual *link, int id);
-private:
-  QSqlDatabase m_db;
-  QSqlQuery *m_query;
-}; // class GraphSaver
-  
+QVariant SCAFileSystemModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (section == 4
+        && orientation == Qt::Horizontal
+        && role == Qt::DisplayRole)
+    {
+        return QVariant(OBJECT_ANNOTATION);
+    }
+    else
+    {
+        return QFileSystemModel::headerData(section, orientation, role);
+    }
+}
 
-#endif //_GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
+QVariant SCAFileSystemModel::data(const QModelIndex &index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+    if (role == Qt::DisplayRole && index.column() == 4)
+        return m_graphModel->getAnnotationByPath(filePath(index));
+    else
+        return QFileSystemModel::data(index, role);
+}
+
+int SCAFileSystemModel::columnCount(const QModelIndex &parent) const
+{
+    return (parent.column() > 0) ? 0 : 5;
+}
+
+Qt::ItemFlags SCAFileSystemModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+    {
+        return 0;
+    }
+    if (index.column() == 4)
+    {
+        return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    }
+    return QFileSystemModel::flags(index);
+}
+
+SCAFileSystemModel::~SCAFileSystemModel()
+{
+
+}

@@ -157,7 +157,8 @@ void MainWindow::saveToFile()
 {
     QString path = QFileDialog::getSaveFileName(this, tr("Save"), QDir::homePath(),
                                                 tr("GM (*gm)"));
-    path += ".gm";
+    if(QFileInfo(path).suffix() == QString())
+        path += ".gm";
 
     GraphSaver saver(path);
     saver.saveModel(m_model);
