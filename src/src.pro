@@ -17,7 +17,7 @@ win32: RC_FILE = resources/win_icon.rc
 OBJECTS_DIR = .obj
 MOC_DIR = .moc
 
-QT += core gui declarative
+QT += core gui declarative sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -65,6 +65,9 @@ SOURCES += \
     widgets/FilterDialog.cpp \
     visual/ObjectVisualCreator.cpp \
     GraphTableProxyModel.cpp \
+    GraphSaver.cpp \
+    GraphLoader.cpp \
+    ObjectCreator.cpp \
     common/SCAFileSystemModel.cpp \
     widgets/TableView.cpp
 
@@ -113,6 +116,9 @@ HEADERS += \
     widgets/FilterDialog.h \
     visual/ObjectVisualCreator.h \
     GraphTableProxyModel.h \
+    GraphSaver.h \
+    GraphLoader.h \
+    ObjectCreator.h \
     common/SCAFileSystemModel.h \
     widgets/TableView.h
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2013    exzo0mex@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,69 +30,46 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file LinkVisual.h
- * \brief Header of LinkVisual
- * \todo Fix disconnectingFrom(Node *)
- * \todo Fix changeNode(Node *oldNode, Node *newNode)
- * \todo Fix setAnnotation(QString &)
+ * \file GraphSaver.h
+ * \brief Header of GraphSaver
+ * \todo add comment here
+ *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#ifndef _LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
-#define _LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
 
-#include "ObjectVisual.h"
-#include "visual/Node.h"
-#include "../common/Link.h"
+#ifndef _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
+#define _GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_
+#include <QtSql/qsqldatabase.h>
+#include <QtSql/QSqlQuery>
 
+#include "common/IScaObject.h"
+#include "common/Link.h"
+#include "GraphModel.h"
+#include "GraphScene.h"
 /*!
  * Class description. May use HTML formatting
  *
  */
-class LinkVisual : public ObjectVisual
+class GraphSaver
 {
 public:
-    LinkVisual(Link *obj);
-    ~LinkVisual();
+  GraphSaver(QString path);
+  ~GraphSaver();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
-    void refreshGeometry(QPointF from, QPointF to);
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-    void setLine(const QLineF &line);
+  void insertNode(IScaObject *object, int id);
 
-    friend QDebug operator<< (QDebug d, LinkVisual &edge);
-
-    QGraphicsPathItem *getSourceArrow();
-    QGraphicsPathItem *getDestinArrow();
-
-    void setSourceArrow(QGraphicsPathItem *arrow);
-    void setDestinArrow(QGraphicsPathItem *arrow);
-    void setDefaultArrows(bool left);
-    void setDefaultArrows(bool source, bool destin);
-
-    void removeSourceArrow();
-    void removeDestinArrow();
-
-    QPointF getSource();
-    QPointF getDestin();
-    void setSource(const QPointF &source);
-    void setDestin(const QPointF &destin);
-
-    void setFiltered(bool filtered);
-
+  void insertLink(Link *link, int id);
+  void saveModel(GraphModel *model);
+  void saveScene(GraphScene *scene);
+  void insertNodeVisual(Node *node, int id);
+  void insertLinkVisual(LinkVisual *link, int id);
 private:
-    QLineF m_line;
-    QGraphicsPathItem *m_sourceArrow;
-    QGraphicsPathItem *m_destinArrow;
+  QSqlDatabase m_db;
+  QSqlQuery *m_query;
+}; // class GraphSaver
+  
 
-    QPointF m_source;
-    QPointF m_destin;
-}; // class LinkVisual
-
-
-#endif //_LinkVisual_H_3810BBA1_46FC_4CF9_95DB_5C510A604AA0_INCLUDED_
-
+#endif //_GraphSaver_H_C2B0903A_DBC5_42FE_B319_4E6BD96D140F_INCLUDED_

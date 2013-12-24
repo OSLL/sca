@@ -62,10 +62,6 @@ public:
     explicit GraphModel(QObject *parent = 0);
     ~GraphModel();
 
-    int addObject(const QMimeData *mimeData);
-    int addObject(IScaObject *object, bool isShown = false);
-    int replaceObject(IScaObject *object, int id);
-    int getId(IScaObject *object);
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
@@ -78,11 +74,19 @@ public:
     bool removeObject(int id);
     bool removeObject(IScaObject *obj);
 
+    int addObject(const QMimeData *mimeData);
+    int addObject(IScaObject *object, int id = -1,  bool isShown = false);
+    int replaceObject(IScaObject *object, int id);
+    int getId(IScaObject *object);
+
+    int connectObjects(int id1, int id2, int id = -1, QString annotation = QString());
     bool freeLink(int link);
 
     bool convert(int id, IScaObject::IScaObjectType toType);
 
-    int connectObjects(int id1, int id2);
+    void editLinkAnnotation(int id);
+
+    void clear();
 
     int getObjectIdByPath(const QString &path);
     QString getAnnotationByPath(const QString &path);

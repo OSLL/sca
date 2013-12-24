@@ -59,26 +59,37 @@ GraphModel::GraphModel(QObject *parent) :
 
 GraphModel::~GraphModel()
 {
-    foreach(IScaObject *obj, m_objects)
-    {
-        removeRow(getId(obj));
-    }
+    clear();
 }
 
-int GraphModel::connectObjects(int source, int dest)
+int GraphModel::connectObjects(int source, int dest, int id, QString annotation)
 {
+    //qDebug() << "Connecting " << source << " to " << dest;
+    int objectId = 0;
+    if(id < 0 || m_objects.contains(id))
+    {
+        objectId = s_nextID;
+    }
+    else
+    {
+        objectId = id;
+    }
+
     qDebug() << "[GraphModel]: Connecting " << source << " to " << dest;
     Link *link = new Link(source, dest);
-    QModelIndex linkIndex = index(s_nextID, 0);
-    m_objects[source]->addLink(s_nextID);
-    m_objects[dest]->addLink(s_nextID);
+    QModelIndex linkIndex = index(objectId, 0);
+    m_objects[source]->addLink(objectId);
+    m_objects[dest]->addLink(objectId);
+
+    link->setAnnotation(annotation);
     if (!setData(linkIndex, QVariant::fromValue(link), rawObjectRole))
     {
         qDebug() << "[GraphModel]: Couldn\'t set data.";
     }
     setData(linkIndex, QVariant(true), isShownRole);
 
-    return s_nextID++;
+    s_nextID = (id > s_nextID) ? id + 1 : s_nextID + 1;
+    return objectId;
 }
 
 int GraphModel::getObjectIdByPath(const QString &path)
@@ -129,16 +140,28 @@ int GraphModel::addObject(const QMimeData *mimeData)
     IScaObject *objectFromData = processor.makeObject();
 
     //If we add object out of MIMEData, then show it
-    return addObject(objectFromData, true);
+    //(-1) - we add object with generic id
+    return addObject(objectFromData, -1, true);
 }
 
-int GraphModel::addObject(IScaObject *object, bool shown)
+int GraphModel::addObject(IScaObject *object, int id, bool isShown)
 {
-    QModelIndex changedIndex = index(s_nextID, 0);
-    setData(changedIndex, QVariant(shown), isShownRole);
-    setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
-
-    return s_nextID++;
+    QModelIndex changedIndex;
+    if(id < 0)
+    {
+        changedIndex = index(s_nextID, 0);
+        setData(changedIndex, QVariant(isShown), isShownRole);
+        setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
+        return s_nextID++;
+    }
+    else
+    {
+        changedIndex = index(id, 0);
+        setData(changedIndex, QVariant(isShown), isShownRole);
+        setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
+        s_nextID  = (id > s_nextID) ? (id + 1): s_nextID;
+        return id;
+    }
 }
 
 int GraphModel::replaceObject(IScaObject *object, int id)
@@ -427,4 +450,13 @@ void GraphModel::setAnnotation(int id, QString annotation)
     }
     QModelIndex ind = index(id, 0);
     emit dataChanged(ind, ind);
+}
+
+void GraphModel::clear()
+{
+    foreach(IScaObject *obj, m_objects)
+    {
+        removeRow(getId(obj));
+    }
+    s_nextID = 0;
 }

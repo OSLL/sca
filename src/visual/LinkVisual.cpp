@@ -213,6 +213,27 @@ void LinkVisual::setDestinArrow(QGraphicsPathItem *arrow)
     m_destinArrow->setParentItem(this);
 }
 
+void LinkVisual::setDefaultArrows(bool source, bool destin)
+{
+    QPainterPath path;
+    path.moveTo(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+    path.lineTo(0,0);
+    path.lineTo(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+
+    if(source)
+    {
+        m_sourceArrow = new QGraphicsPathItem(path, this);
+        m_sourceArrow->setPen(DEFAULT_LINK_PEN);
+    }
+    if(destin)
+    {
+        m_destinArrow = new QGraphicsPathItem(path, this);
+        m_destinArrow->setPen(DEFAULT_LINK_PEN);
+    }
+
+    refreshGeometry(m_source, m_destin);
+}
+
 void LinkVisual::setDefaultArrows(bool left)
 {
     QPainterPath path;
