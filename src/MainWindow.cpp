@@ -167,6 +167,10 @@ void MainWindow::saveToFile()
 {
     QString path = QFileDialog::getSaveFileName(this, tr("Save"), QDir::homePath(),
                                                 tr("GM (*gm)"));
+    if (path.isEmpty())
+    {
+        return;
+    }
     if(QFileInfo(path).suffix() == QString())
         path += ".gm";
 
@@ -179,6 +183,10 @@ void MainWindow::openFile()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
                                                 tr("GM (*gm)"));
+    if (path.isEmpty())
+    {
+        return;
+    }
     GraphLoader loader;
     loader.loadGraph(path, m_model, m_scene);
 }
