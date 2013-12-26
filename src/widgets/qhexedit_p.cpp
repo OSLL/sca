@@ -520,6 +520,7 @@ QHexEditPrivate::QHexEditPrivate(QScrollArea *parent) : QWidget(parent)
 {
     _undoStack = new QUndoStack(this);
 
+    _draggingOut = false;
     _scrollArea = parent;
     setAddressWidth(4);
     setAddressOffset(0);
@@ -813,7 +814,7 @@ QString QHexEditPrivate::selectionToReadableString()
 
 void QHexEditPrivate::goToBinaryBlock(IScaObjectBinaryBlock *obj)
 {
-    setCursorPos(obj->getOffset());
+    setCursorPos(obj->getOffset() * 2);
     int offset = obj->getOffset() * 2;
     int endOffset = offset + obj->getLength() * 2;
     resetSelection(offset);

@@ -45,7 +45,7 @@ void ObjectVisual::setAnnotation(const QString &str)
     new_ann->setHtml(htmlStr);
 
     qreal dx = new_ann->boundingRect().center().x(),
-          dy = - new_ann->boundingRect().height() - boundingRect().height() / 2;
+          dy = -new_ann->boundingRect().height() - boundingRect().height() / 2;
     if (m_type != LINK)
     {
         new_ann->moveBy(-dx, dy);

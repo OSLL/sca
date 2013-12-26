@@ -105,10 +105,14 @@ IScaObjectTextBlockVisual *ObjectVisualCreator::createTextBlockVisual(IScaObject
 
 LinkVisual *ObjectVisualCreator::createLinkVisual(IScaObject *object)
 {
-    Link *link = static_cast<Link *>(object);
-    Q_ASSERT(link != NULL);
+    Link *link = NULL;
+    link = static_cast<Link *>(object);
+    if (link == NULL)
+    {
+        qDebug() << "[ObjectVisualCreater]: cant cast to Link";
+        return NULL;
+    }
     LinkVisual *linkVisual = new LinkVisual(link);
-
     return linkVisual;
 }
 
@@ -166,6 +170,7 @@ ObjectVisual *ObjectVisualCreator::createObjectVisual(IScaObject *object)
             break;
         }
     }
+    visObject->setAnnotation(object->getAnnotation());
     //qDebug() << "Successfully createed object to scene.";
     return visObject;
 }

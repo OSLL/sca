@@ -151,6 +151,7 @@ void GraphScene::refreshLinkPos(int linkId)
     {
         if (to->getType() == ObjectVisual::LINK)
         {
+
             link->refreshGeometry(fromPos, toPos);
             return;
         }
