@@ -104,8 +104,6 @@ void GraphLoader::loadGraph(GraphModel *model, GraphScene *scene)
 
 void GraphLoader::loadNodes()
 {
-
-
     if(!m_query->exec(SQL_SELECT_NODE_TYPE_TABLES))
     {
         qDebug() << "[GraphLoader]:" <<  m_query->lastError().text();
