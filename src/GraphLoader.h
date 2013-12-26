@@ -55,13 +55,19 @@ class GraphLoader
 {
 public:
     GraphLoader();
+    GraphLoader(const QString &path);
     ~GraphLoader();
+
+    void loadGraph(GraphModel *model, GraphScene *scene);
+    bool open(const QString &path);
+    void close();
+private:
+
     void loadNodes();
-    void loadGraph(QString path, GraphModel *model, GraphScene *scene);
     void loadNodesVisual();
     void loadLinks();
     void loadLinksVisual();
-private:
+
     QSqlDatabase m_db;
     QSqlQuery *m_query;
     GraphModel *m_model;

@@ -167,20 +167,27 @@ void MainWindow::saveToFile()
 {
     QString path = QFileDialog::getSaveFileName(this, tr("Save"), QDir::homePath(),
                                                 tr("GM (*gm)"));
+    if (path.isEmpty())
+    {
+        return;
+    }
     if(QFileInfo(path).suffix() == QString())
         path += ".gm";
 
     GraphSaver saver(path);
-    saver.saveModel(m_model);
-    saver.saveScene(m_scene);
+    saver.save(m_model, m_scene);
 }
 
 void MainWindow::openFile()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
                                                 tr("GM (*gm)"));
-    GraphLoader loader;
-    loader.loadGraph(path, m_model, m_scene);
+    if (path.isEmpty())
+    {
+        return;
+    }
+    GraphLoader loader(path);
+    loader.loadGraph(m_model, m_scene);
 }
 
 void MainWindow::openHelp()
@@ -309,5 +316,4 @@ void MainWindow::on_advancedFilterButton_clicked()
         qDebug() << "Advanced filter called";
     }
     wid->show();
-
 }

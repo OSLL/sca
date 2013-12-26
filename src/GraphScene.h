@@ -76,7 +76,7 @@ public:
     QList<LinkVisual *> selectedLinks();
     QList<ObjectVisual *> selectedObjects();
 
-    ObjectVisual *getObjectById(int id);
+    ObjectVisual *getObjectById(int id) const;
     int getObjectId(ObjectVisual *object);
 
     QAbstractItemModel *getModel() const;
@@ -85,7 +85,7 @@ public:
     void refreshLinkPos(int linkId);
     void connectLink(IScaObject *object, int id);
 
-    QList<int> getIds();
+    QList<int> getIds() const;
 private:
     QHash<int, ObjectVisual *> m_objects;
 

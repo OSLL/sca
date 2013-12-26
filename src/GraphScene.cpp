@@ -443,3 +443,4 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
         return;
     }
 }
+
