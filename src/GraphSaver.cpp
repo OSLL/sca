@@ -49,64 +49,16 @@
 #include "common/IScaObjectLine.h"
 #include "visual/ObjectVisual.h"
 #include "visual/Node.h"
+#include "StringConstants.h"
 
 #include <QDebug>
 #include <QMessageBox>
 #include <QtSql/QSqlError>
 #include <QObject>
 
-GraphSaver::GraphSaver(QString path)
+GraphSaver::GraphSaver(const QString &path)
 {
-    if(QFileInfo(path).exists())
-    {
-        QFile(path).remove();
-    }
-
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(path);
-
-    if (!m_db.open())
-    {
-        qDebug() << "Well smthing bad just happen";
-    }
-
-    m_query = new QSqlQuery(m_db);
-    QString initNodeStr = "CREATE TABLE node_table ("
-            "id integer PRIMARY KEY, "
-            "type integer, "
-            "line integer,"
-            "offset integer,"
-            "endoffset integer,"
-            "length integer,"
-            "path TEXT, "
-            "text TEXT,"
-            "data BLOB,"
-            "annotation TEXT"
-            ");";
-    QString initLinkStr = "CREATE TABLE link_table ("
-            "id integer PRIMARY KEY, "
-            "source integer, "
-            "destin integer, "
-            "annotation TEXT"
-            ");";
-    QString initNodeVisualStr = "CREATE TABLE nodeVisual_table ("
-            "id integer PRIMARY KEY, "
-            "posX real, "
-            "posY real "
-            ");";
-    QString initLinkVisualStr = "CREATE TABLE linkVisual_table ("
-            "id integer PRIMARY KEY, "
-            "sourceArrow BOOLEAN, "
-            "destinArrow BOOLEAN"
-            ");";
-
-    if(!m_query->exec(initNodeStr)
-            || !m_query->exec(initLinkStr)
-            || !m_query->exec(initNodeVisualStr)
-            || !m_query->exec(initLinkVisualStr))
-    {
-        qDebug() << m_query->lastError().databaseText();
-    }
+    open(path);
 }
 
 GraphSaver::~GraphSaver()
@@ -118,13 +70,17 @@ GraphSaver::~GraphSaver()
 
 void GraphSaver::insertNode(IScaObject *object, int id)
 {
-    const QString insertPattern = "INSERT INTO node_table "
-            "VALUES(:id, :type, :line, :offset, :endoffset, :length,"
-            ":path, :text, :data, :annotation);";
-
-    m_query->prepare(insertPattern);
+    m_query->prepare(SQL_INSERT_TYPE_PATTERN);
     m_query->bindValue(":id", id);
     m_query->bindValue(":type", object->getType());
+
+    if(!m_query->exec())
+    {
+        qDebug() << "[GraphSaver]: " <<  m_query->lastError().text();
+    }
+
+    m_query->prepare(SQL_INSERT_NODE_PATTERN);
+    m_query->bindValue(":id", id);
     m_query->bindValue(":path", object->getFile().filePath());
     m_query->bindValue(":text", object->getContent());
     m_query->bindValue(":annotation", object->getAnnotation());
@@ -178,15 +134,49 @@ void GraphSaver::insertNode(IScaObject *object, int id)
 
     if(!m_query->exec())
     {
-        qDebug() << "Error:" <<  m_query->lastError().text();
+        qDebug() << "[GraphSaver]: " <<  m_query->lastError().text();
     }
+}
+
+bool GraphSaver::open(const QString &path)
+{
+    if(QFileInfo(path).exists())
+    {
+        QFile(path).remove();
+    }
+
+    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName(path);
+
+    if (!m_db.open())
+    {
+        qDebug() << "[GraphSaver]: " << m_db.lastError().text();
+        return false;
+    }
+
+    m_query = new QSqlQuery(m_db);
+
+    return true;
+}
+
+bool GraphSaver::createTables()
+{
+    if(!m_query->exec(SQL_CREATE_NODE_TABLE)
+            || !m_query->exec(SQL_CREATE_LINK_TABLE)
+            || !m_query->exec(SQL_CREATE_NODEVISUAL_TABLE)
+            || !m_query->exec(SQL_CREATE_LINKVISUAL_TABLE)
+            || !m_query->exec(SQL_CREATE_TYPE_TABLE))
+    {
+        qDebug() << "[GraphSaver]: " << m_query->lastError().databaseText();
+        return false;
+    }
+
+    return true;
 }
 
 void GraphSaver::insertLink(Link *link, int id)
 {
-    const QString insertPattern = QString("INSERT INTO link_table ")
-            +QString("VALUES(:id, :source, :destin, :annotation);");
-    m_query->prepare(insertPattern);
+    m_query->prepare(SQL_INSERT_LINK_PATTERN);
     m_query->bindValue(":id", id);
     qDebug() << "[GraphSaver]: Save connection:" << link->getObjectFrom() << "->" << link->getObjectTo();
     m_query->bindValue(":source", link->getObjectFrom());
@@ -194,15 +184,26 @@ void GraphSaver::insertLink(Link *link, int id)
     m_query->bindValue(":annotation", link->getAnnotation());
     if(!m_query->exec())
     {
-        qDebug() << "Error:" <<  m_query->lastError().text();
-    }}
+        qDebug() << "[GraphSaver]: " <<  m_query->lastError().text();
+    }
+}
 
-
-void GraphSaver::saveModel(GraphModel *model)
+bool GraphSaver::save(const GraphModel *model, const GraphScene *scene)
 {
-    if(!m_db.isOpen())
-        return;
 
+    if(!m_db.isOpen())
+        return false;
+
+    createTables();
+    saveModel(model);
+    saveScene(scene);
+
+    return true;
+}
+
+
+void GraphSaver::saveModel(const GraphModel *model)
+{
     QVariant var = model->data(model->index(0, 0), objectIdListRole);
     QList<int> ids = qvariant_cast<QList<int> >(var);
 
@@ -223,15 +224,11 @@ void GraphSaver::saveModel(GraphModel *model)
     }
 }
 
-void GraphSaver::saveScene(GraphScene *scene)
+void GraphSaver::saveScene(const GraphScene *scene)
 {
-    if(!m_db.isOpen())
-        return;
-
     QList<int> ids = scene->getIds();
     foreach (int id, ids)
     {
-
         ObjectVisual *object = scene->getObjectById(id);
         if(object->getType() == ObjectVisual::NODE)
         {
@@ -250,9 +247,7 @@ void GraphSaver::saveScene(GraphScene *scene)
 
 void GraphSaver::insertNodeVisual(Node *node, int id)
 {
-    const QString insertPattern = "INSERT INTO nodeVisual_table "
-            "VALUES(:id, :posX, :posY);";
-    m_query->prepare(insertPattern);
+    m_query->prepare(SQL_INSERT_NODEVISUAL_PATTERN);
 
     QPointF pos = node->pos();
     m_query->bindValue(":posX", pos.x());
@@ -261,15 +256,13 @@ void GraphSaver::insertNodeVisual(Node *node, int id)
 
     if(!m_query->exec())
     {
-        qDebug() << "Error:" <<  m_query->lastError().text();
+        qDebug() << "[GraphSaver]: " <<  m_query->lastError().text();
     }
 }
 
 void GraphSaver::insertLinkVisual(LinkVisual *link, int id)
 {
-    const QString insertPattern = "INSERT INTO linkVisual_table "
-            "VALUES(:id, :sourceArrow, :destinArrow);";
-    m_query->prepare(insertPattern);
+    m_query->prepare(SQL_INSERT_LINKVISUAL_PATTERN);
 
     bool hasSourceArrow = (link->getSourceArrow() != NULL);
     bool hasDestinArrow = (link->getDestinArrow() != NULL);
@@ -280,6 +273,6 @@ void GraphSaver::insertLinkVisual(LinkVisual *link, int id)
 
     if(!m_query->exec())
     {
-        qDebug() << "Error:" <<  m_query->lastError().text();
+        qDebug() << "[GraphSaver]: " <<  m_query->lastError().text();
     }
 }

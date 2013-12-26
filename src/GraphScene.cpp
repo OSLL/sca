@@ -245,7 +245,7 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     refreshLinkPos(linkId);
 }
 
-QList<int> GraphScene::getIds()
+QList<int> GraphScene::getIds() const
 {
     return m_objects.keys();
 }
@@ -266,7 +266,7 @@ void GraphScene::refreshAll()
     }
 }
 
-ObjectVisual *GraphScene::getObjectById(int id)
+ObjectVisual *GraphScene::getObjectById(int id) const
 {
     return m_objects.value(id, NULL);
 }

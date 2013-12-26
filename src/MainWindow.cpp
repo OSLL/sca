@@ -175,8 +175,7 @@ void MainWindow::saveToFile()
         path += ".gm";
 
     GraphSaver saver(path);
-    saver.saveModel(m_model);
-    saver.saveScene(m_scene);
+    saver.save(m_model, m_scene);
 }
 
 void MainWindow::openFile()
@@ -187,8 +186,8 @@ void MainWindow::openFile()
     {
         return;
     }
-    GraphLoader loader;
-    loader.loadGraph(path, m_model, m_scene);
+    GraphLoader loader(path);
+    loader.loadGraph(m_model, m_scene);
 }
 
 void MainWindow::openHelp()
@@ -317,5 +316,4 @@ void MainWindow::on_advancedFilterButton_clicked()
         qDebug() << "Advanced filter called";
     }
     wid->show();
-
 }

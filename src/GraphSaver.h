@@ -56,14 +56,22 @@
 class GraphSaver
 {
 public:
-  GraphSaver(QString path);
+  GraphSaver(const QString &path);
   ~GraphSaver();
 
-  void insertNode(IScaObject *object, int id);
+  bool open(const QString &path);
+  bool save(const GraphModel *model, const GraphScene *scene);
+  void close();
 
+private:
+  bool createTables();
+
+  void saveModel(const GraphModel *model);
+  void saveScene(const GraphScene *scene);
+
+  void insertNode(IScaObject *object, int id);
   void insertLink(Link *link, int id);
-  void saveModel(GraphModel *model);
-  void saveScene(GraphScene *scene);
+
   void insertNodeVisual(Node *node, int id);
   void insertLinkVisual(LinkVisual *link, int id);
 private:

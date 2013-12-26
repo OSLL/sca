@@ -41,14 +41,22 @@
 
 #include "GraphLoader.h"
 #include "ObjectCreator.h"
+#include "StringConstants.h"
 
 #include <QDebug>
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlError>
 
+
+
 GraphLoader::GraphLoader()
 {
 
+}
+
+GraphLoader::GraphLoader(const QString &path)
+{
+    open(path);
 }
 
 GraphLoader::~GraphLoader()
@@ -58,25 +66,36 @@ GraphLoader::~GraphLoader()
     delete m_query;
 }
 
-void GraphLoader::loadGraph(QString path, GraphModel *model, GraphScene *scene)
+
+bool GraphLoader::open(const QString &path)
 {
+    m_db = QSqlDatabase::addDatabase("QSQLITE");
+    m_db.setDatabaseName(path);
+
+    if (!m_db.open())
+    {
+        qDebug() << "[GraphLoader]:" << m_db.lastError().text();
+        return false;
+    }
+    m_query = new QSqlQuery(m_db);
+
+    return true;
+}
+
+void GraphLoader::loadGraph(GraphModel *model, GraphScene *scene)
+{
+    if(!m_db.open())
+    {
+        qDebug() << "[GraphLoader]: Error: file does't open";
+        return;
+    }
+
     m_model = model;
     m_scene = scene;
 
     m_model->clear();
 
-    m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(path);
-    if (!m_db.open())
-    {
-        qDebug() << m_query->lastError().text();
-        return;
-    }
-
-    m_query = new QSqlQuery(m_db);
-
-    //don't change order
-    //Model must be loaded first
+    //don't change this order
     loadNodes();
     loadNodesVisual();
     loadLinks();
@@ -85,9 +104,11 @@ void GraphLoader::loadGraph(QString path, GraphModel *model, GraphScene *scene)
 
 void GraphLoader::loadNodes()
 {
-    if(!m_query->exec("SELECT * FROM node_table"))
+
+
+    if(!m_query->exec(SQL_SELECT_NODE_TYPE_TABLES))
     {
-        qDebug() << m_query->lastError().text();
+        qDebug() << "[GraphLoader]:" <<  m_query->lastError().text();
     }
 
     QSqlRecord rec = m_query->record();
@@ -113,9 +134,9 @@ void GraphLoader::loadNodes()
 
 void GraphLoader::loadLinks()
 {
-    if(!m_query->exec("SELECT * FROM link_table"))
+    if(!m_query->exec(SQL_SELECT_LINK_TABLE))
     {
-        qDebug() << m_query->lastError().text();
+        qDebug() << "[GraphLoader]:" << m_query->lastError().text();
     }
 
     QSqlRecord rec = m_query->record();
@@ -132,9 +153,9 @@ void GraphLoader::loadLinks()
 
 void GraphLoader::loadNodesVisual()
 {
-    if(!m_query->exec("SELECT * FROM nodeVisual_table"))
+    if(!m_query->exec(SQL_SELECT_NODEVISUAL_TABLE))
     {
-        qDebug() << m_query->lastError().text();
+        qDebug() << "[GraphLoader]:" << m_query->lastError().text();
     }
 
     QSqlRecord rec = m_query->record();
@@ -152,9 +173,9 @@ void GraphLoader::loadNodesVisual()
 
 void GraphLoader::loadLinksVisual()
 {
-    if(!m_query->exec("SELECT * FROM linkVisual_table"))
+    if(!m_query->exec(SQL_SELECT_LINKVISUAL_TABLE))
     {
-        qDebug() << m_query->lastError().text();
+        qDebug() << "[GraphLoader]:" << m_query->lastError().text();
     }
 
     QSqlRecord rec = m_query->record();

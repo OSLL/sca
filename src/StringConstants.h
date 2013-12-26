@@ -126,4 +126,86 @@ const QString OBJECT_TOOLTIP_PATTERN =  QString("Type: %1 <br />")
                                     + QString("Content: %5");
 //[End Object info patterns strings]
 
+//[GraphSaver create tables strings]
+const QString SQL_CREATE_NODE_TABLE = "CREATE TABLE node_table ("
+        "id integer PRIMARY KEY, "
+        "line integer,"
+        "offset integer,"
+        "endoffset integer,"
+        "length integer,"
+        "path TEXT, "
+        "text TEXT, "
+        "data BLOB, "
+        "annotation TEXT"
+        ");";
+const QString SQL_CREATE_LINK_TABLE = "CREATE TABLE link_table ("
+        "id integer PRIMARY KEY, "
+        "source integer, "
+        "destin integer, "
+        "annotation TEXT, "
+        "FOREIGN KEY(source) REFERENCES node_table(id), "
+        "FOREIGN KEY(destin) REFERENCES node_table(id) "
+        ");";
+const QString SQL_CREATE_NODEVISUAL_TABLE = "CREATE TABLE nodeVisual_table ("
+        "id integer PRIMARY KEY, "
+        "posX real, "
+        "posY real "
+        ");";
+const QString SQL_CREATE_LINKVISUAL_TABLE = "CREATE TABLE linkVisual_table ("
+        "id integer PRIMARY KEY, "
+        "sourceArrow BOOLEAN, "
+        "destinArrow BOOLEAN"
+        ");";
+const QString SQL_CREATE_TYPE_TABLE = "CREATE TABLE type_table ("
+        "id integer, "
+        "type integer, "
+        "FOREIGN KEY(id) REFERENCES node_table(id)"
+        ");";
+//[End GraphSaver create tables strings]
+
+//[GraphSaver insert strings]
+const QString SQL_INSERT_NODE_PATTERN = "INSERT INTO node_table VALUES("
+        ":id,"
+        ":line,"
+        ":offset,"
+        ":endoffset,"
+        ":length,"
+        ":path,"
+        ":text,"
+        ":data,"
+        ":annotation"
+        ");";
+const QString SQL_INSERT_LINK_PATTERN = "INSERT INTO link_table VALUES("
+        ":id,"
+        ":source,"
+        ":destin,"
+        ":annotation"
+        ");";
+const QString SQL_INSERT_NODEVISUAL_PATTERN = "INSERT INTO nodeVisual_table VALUES("
+        ":id,"
+        ":posX,"
+        ":posY"
+        ");";
+const QString SQL_INSERT_LINKVISUAL_PATTERN = "INSERT INTO linkVisual_table VALUES("
+        ":id,"
+        ":sourceArrow,"
+        ":destinArrow"
+        ");";
+const QString SQL_INSERT_TYPE_PATTERN = "INSERT INTO type_table VALUES("
+        ":id,"
+        ":type"
+        ");";
+//[End GraphSaver insert strings]
+
+//[GraphLoader select strings]
+const QString SQL_SELECT_NODE_TABLE       = "SELECT * FROM node_table";
+const QString SQL_SELECT_LINK_TABLE       = "SELECT * FROM link_table";
+const QString SQL_SELECT_NODEVISUAL_TABLE = "SELECT * FROM nodeVisual_table";
+const QString SQL_SELECT_LINKVISUAL_TABLE = "SELECT * FROM linkVisual_table";
+const QString SQL_SELECT_TYPE_TABLE       = "SELECT * FROM type_table";
+const QString SQL_SELECT_NODE_TYPE_TABLES = "SELECT * FROM node_table "
+        " INNER JOIN type_table ON node_table.id = type_table.id";
+//[GraphLoader select strings]
+
+
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_
