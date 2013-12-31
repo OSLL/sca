@@ -131,7 +131,10 @@ IScaObject *GraphModel::getObjectByPath(const QString &path)
 
 int GraphModel::addObject(const QMimeData *mimeData)
 {
-    if (!mimeData->hasUrls())
+    QString path = mimeData->property("fromPath").toString();
+    qDebug() << "[GraphModel]: path = " << path;
+    bool hasPath = (mimeData->hasUrls() || !path.isEmpty());
+    if (!hasPath)
     {
         return -1;
     }

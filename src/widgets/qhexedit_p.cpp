@@ -1340,10 +1340,7 @@ QMimeData *QHexEditPrivate::createMimeDataFromSelection()
     QByteArray data = _xData.data().mid(getSelectionBegin(), getSelectionEnd() - getSelectionBegin());
     mime->setData(BINARY_DATA, data);
 
-    QList<QUrl> urls;
-    urls.push_back(QUrl::fromLocalFile(getCurrentPath()));
-    mime->setUrls(urls);
-
+    mime->setProperty("fromPath", getCurrentPath());
     mime->setProperty("position", getSelectionBegin());
     mime->setProperty("length", getSelectionEnd() - getSelectionBegin());
 

@@ -81,7 +81,11 @@ GraphView::GraphView(GraphScene *scene, QWidget *parent) :
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
 {
     m_temp = NULL;
-    if (!event->mimeData()->hasUrls())
+    const QMimeData *mime = event->mimeData();
+    QString path = mime->property("fromPath").toString();
+    qDebug() << "[GraphView]: path = " << path;
+    bool hasPath = (mime->hasUrls() || !path.isEmpty());
+    if (!hasPath)
     {
         event->ignore();
         return;

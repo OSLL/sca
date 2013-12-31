@@ -58,7 +58,18 @@
 ScaMIMEDataProcessor::ScaMIMEDataProcessor(const QMimeData *mime) :
     m_data(mime)
 {
-    m_filePath = m_data->urls().at(0).toLocalFile();
+    QString path;
+    if (m_data->hasUrls())
+    {
+        path = m_data->urls().at(0).toLocalFile();
+    }
+    else
+    {
+        path = m_data->property("fromPath").toString();
+    }
+    qDebug() << "[ScaMIMEDataProcessor]: filePath - " << path;
+    Q_ASSERT(!path.isEmpty());
+    m_filePath = path;
     m_fileInfo.setFile(m_filePath);
 }
 
@@ -89,7 +100,7 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
     IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
 
     qDebug() << m_data->data(BINARY_DATA).mid(0, 1);
-    if(m_data->data(BINARY_DATA) != QByteArray())
+    if(!m_data->data(BINARY_DATA).isEmpty())
     {
         QByteArray byteArray = m_data->data(BINARY_DATA);
         IScaObjectBinaryBlock *objBinary = new IScaObjectBinaryBlock(objFile, offset, length, byteArray);
@@ -126,7 +137,7 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
     }
     if (m_fileInfo.isDir())   //IScaObjectDirectory
     {
-        delete(objFile);
+        delete objFile;
         IScaObjectDirectory *objDir = new IScaObjectDirectory(m_fileInfo);
         return objDir;
     }

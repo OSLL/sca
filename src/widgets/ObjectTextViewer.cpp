@@ -271,11 +271,8 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     QMimeData *mime = new QMimeData();
     QTextCursor cursor = textCursor();
 
-    mime->setText(textCursor().selectedText());
-    QList<QUrl> urls;
-    urls.push_back(QUrl::fromLocalFile(getCurrentPath()));
-    mime->setUrls(urls);
     mime->setText(cursor.selectedText());
+    mime->setProperty("fromPath", getCurrentPath());
     mime->setProperty("position", cursor.selectionStart());
     mime->setProperty("length", cursor.selectionEnd() - cursor.selectionStart());
     mime->setProperty("posInLine", cursor.positionInBlock());
@@ -285,11 +282,13 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     mime->setProperty("line", line);
     mime->setProperty("lineLength", symbolsInCurrentLine() - 1);
 
+    qDebug() << "FromPath: " << getCurrentPath();
     qDebug() << "Line: " << currentLineNumber();
     qDebug() << "Symbols: " << symbolsInCurrentLine();
     qDebug() << "Position in line: " << cursor.positionInBlock();
     qDebug() << "Pos: " << cursor.selectionStart();
     qDebug() << "Lenght: " << cursor.selectionEnd() - cursor.selectionStart();
+    qDebug() << "Text: " << cursor.selectedText();
     return mime;
 }
 
