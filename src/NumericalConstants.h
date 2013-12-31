@@ -16,6 +16,7 @@
 * ---------------------------------------------------------------- */
 #include <QColor>
 #include <QPen>
+#include <QTextStream>
 
 const qreal PI = 3.1415926;
 
