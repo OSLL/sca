@@ -40,6 +40,7 @@ const QString ERROR_TOO_LARGE_TEXT_FILE_MSG =
 
 const QString ERROR_OPENING_FILE_TITLE = "Can\'t open file.";
 const QString ERROR_OPENING_FILE_MSG = "Error opening %1";
+const QString LOG_PATTERN = "%1: %2\n";
 //[End error messages]
 
 //[GraphView context menu strings]
@@ -107,6 +108,7 @@ const QString ABOUT_TEXT =
 //[Files paths]
 const QString HELP_PATH = "/resources/sca_help.html";
 const QString LOGO_PATH = ":logo/icons/logo.png";
+const QString LOG_PATH = "log.txt";
 //[End files paths]
 
 //[GraphFilter strings]
