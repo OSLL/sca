@@ -110,6 +110,11 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(openAbout()));
     connect(m_ui->actionHelp, SIGNAL(triggered()),
             this, SLOT(openHelp()));
+    //Connect advancedFilterDialog Actions
+    connect(m_ui->advancedFilterButton, SIGNAL(clicked()),
+            this, SLOT(showAdvancedFilter()));
+    connect(m_ui->actionFilter, SIGNAL(triggered()),
+            this, SLOT(showAdvancedFilter()));
 }
 
 MainWindow::~MainWindow()
@@ -285,20 +290,7 @@ void MainWindow::annotateNoGraphObject()
     }
 }
 
-void MainWindow::loadTextFile(const QString &code)
-{
-    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
-    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
-    m_ui->textViewer->loadFromFile(fileInf.absoluteFilePath(), code);
-    m_ui->ViewsTabs->setCurrentIndex(0);
-}
-
-void MainWindow::on_filterLine_textChanged(const QString &arg1)
-{
-    m_filter->setFilePath(arg1);
-}
-
-void MainWindow::on_advancedFilterButton_clicked()
+void MainWindow::showAdvancedFilter()
 {
     FilterDialog *wid;
     QList<FilterDialog *> filters = findChildren<FilterDialog *>();
@@ -316,4 +308,17 @@ void MainWindow::on_advancedFilterButton_clicked()
         qDebug() << "Advanced filter called";
     }
     wid->show();
+}
+
+void MainWindow::loadTextFile(const QString &code)
+{
+    QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
+    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
+    m_ui->textViewer->loadFromFile(fileInf.absoluteFilePath(), code);
+    m_ui->ViewsTabs->setCurrentIndex(0);
+}
+
+void MainWindow::on_filterLine_textChanged(const QString &arg1)
+{
+    m_filter->setFilePath(arg1);
 }

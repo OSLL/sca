@@ -422,7 +422,6 @@ void GraphView::setMenu(GraphViewContextMenu *menu)
 
 void GraphView::exportToImage(const QString path)
 {
-
     QRectF renderZone = scene()->itemsBoundingRect();
     renderZone.adjust(-10, -10, 10, 10);
     const int width = renderZone.width();
@@ -431,7 +430,7 @@ void GraphView::exportToImage(const QString path)
     QImage img(width, height, QImage::Format_ARGB32_Premultiplied);
     img.fill(Qt::transparent);
     QPainter painter(&img);
-    scene()->render(&painter, QRectF(0, 0, width, height),renderZone);
+    scene()->render(&painter, QRectF(0, 0, width, height), renderZone);
     painter.end();
     img.save(path);
 }

@@ -40,9 +40,9 @@ public slots:
     void refreshFilterLine(const QString &text);
     void switchToObject(IScaObject *);
     void annotateNoGraphObject();
+    void showAdvancedFilter();
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
-    void on_advancedFilterButton_clicked();
 };
 
 #endif // MAINWINDOW_H

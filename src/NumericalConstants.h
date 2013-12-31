@@ -33,7 +33,7 @@ const int BYTES_PER_LINE = 16;
 const int DEFAULT_SCENE_WIDTH = 2000;
 const int DEFAULT_SCENE_HEIGHT = 1000;
 
-const double SELECTION_COLOR_DELTA = 0.5;
+const qreal SELECTION_COLOR_DELTA = 0.5;
 
 const QColor DEFAULT_NODE_COLOR(150, 150, 150);
 const QColor FILTERED_NODE_COLOR(Qt::red);

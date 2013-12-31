@@ -151,7 +151,7 @@ void GraphScene::refreshLinkPos(int linkId)
     {
         if (to->getType() == ObjectVisual::LINK)
         {
-
+            //So we just connect in mid-link to mid-link
             link->refreshGeometry(fromPos, toPos);
             return;
         }
@@ -161,8 +161,16 @@ void GraphScene::refreshLinkPos(int linkId)
             QMatrix toMatrix = to->matrix().translate(toPos.x(), toPos.y());
             QPolygonF toPolygon = to->shape().toFillPolygon(toMatrix);
             QPolygonF toIntersected = toPolygon.intersected(linePolygon);
-            link->refreshGeometry(fromPos, toIntersected[0]);
-            return;
+            if (toIntersected.size() > 0)
+            {
+                link->refreshGeometry(fromPos, toIntersected[0]);
+                return;
+            }
+            else
+            {
+                link->refreshGeometry(fromPos, toPos);
+                return;
+            }
         }
     }
     else if (to->getType() == ObjectVisual::LINK)
@@ -171,8 +179,16 @@ void GraphScene::refreshLinkPos(int linkId)
         QMatrix fromMatrix = from->matrix().translate(fromPos.x(), fromPos.y());
         QPolygonF fromPolygon = from->shape().toFillPolygon(fromMatrix);
         QPolygonF fromIntersected = fromPolygon.intersected(linePolygon);
-        link->refreshGeometry(fromIntersected[1], toPos);
-        return;
+        if (fromPolygon.size() > 1)
+        {
+            link->refreshGeometry(fromIntersected[1], toPos);
+            return;
+        }
+        else
+        {
+            link->refreshGeometry(fromPos, toPos);
+            return;
+        }
     }
 
     //We get matrixes of items to later translate
@@ -190,7 +206,7 @@ void GraphScene::refreshLinkPos(int linkId)
     // TODO (LeoSko) somehow it crashes when you dont check if they are on one line
     // (horizontally or vertically, intersection appears to be empty)
     // so we customly set start and end points in that case
-    if (!fromIntersected.isEmpty() || !toIntersected.isEmpty())
+    if (fromIntersected.size() > 1 || toIntersected.size() > 0)
     {
         start = fromIntersected[1];
         end = toIntersected[0];
