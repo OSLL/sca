@@ -130,6 +130,15 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->actionSourceTree, SLOT(setChecked(bool)));
     connect(m_ui->dockTableView, SIGNAL(visibilityChanged(bool)),
             m_ui->actionTableView, SLOT(setChecked(bool)));
+
+    connect(m_ui->actionTableView, SIGNAL(triggered()),
+            m_ui->dockTableView, SLOT(raise()));
+    connect(m_ui->actionSourceTree, SIGNAL(triggered()),
+            m_ui->dockFileBrowser, SLOT(raise()));
+    connect(m_ui->actionTextView, SIGNAL(triggered()),
+            m_ui->dockTextEditor, SLOT(raise()));
+    connect(m_ui->actionHexView, SIGNAL(triggered()),
+            m_ui->dockHexEditor, SLOT(raise()));
 }
 
 MainWindow::~MainWindow()
