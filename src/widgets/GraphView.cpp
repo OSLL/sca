@@ -432,7 +432,7 @@ void GraphView::exportToImage(const QString path)
     const int height = renderZone.height();
 
     QImage img(width, height, QImage::Format_ARGB32_Premultiplied);
-    img.fill(Qt::transparent);
+    img.fill(QColor(Qt::white).rgb());
     QPainter painter(&img);
     scene()->render(&painter, QRectF(0, 0, width, height), renderZone);
     painter.end();

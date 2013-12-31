@@ -166,9 +166,22 @@ void MainWindow::openAbout()
 
 void MainWindow::exportToImage()
 {
+    QString selectedFilter = tr("Png(*png)");
     QString path = QFileDialog::getSaveFileName(this, tr("Export to"), QDir::homePath(),
-                                                tr("PNG (*png)"));
-    path += ".png";
+                                                tr("PNG (*png);;JPEG (*jpg *jpeg);;BMP (*bmp)"),
+                                                &selectedFilter);
+    if (selectedFilter == tr("PNG (*png)"))
+    {
+        path += ".png";
+    }
+    if (selectedFilter == tr("JPEG (*jpg *jpeg)"))
+    {
+        path += ".jpg";
+    }
+    if (selectedFilter == tr("BMP (*bmp)"))
+    {
+        path += ".bmp";
+    }
 
     m_ui->graphViewer->exportToImage(path);
 }
