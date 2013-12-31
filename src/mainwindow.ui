@@ -153,8 +153,23 @@
     </property>
     <addaction name="actionFilter"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <widget class="QMenu" name="menuViews">
+     <property name="title">
+      <string>Views</string>
+     </property>
+     <addaction name="actionTable_View"/>
+     <addaction name="actionSource_tree"/>
+     <addaction name="actionFile_views"/>
+    </widget>
+    <addaction name="menuViews"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuView"/>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -218,6 +233,39 @@
   <action name="actionFilter">
    <property name="text">
     <string>Filter</string>
+   </property>
+  </action>
+  <action name="actionTable_View">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Table</string>
+   </property>
+  </action>
+  <action name="actionSource_tree">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Source tree</string>
+   </property>
+  </action>
+  <action name="actionFile_views">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>File views</string>
    </property>
   </action>
  </widget>

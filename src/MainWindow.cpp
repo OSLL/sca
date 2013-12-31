@@ -110,11 +110,16 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(openAbout()));
     connect(m_ui->actionHelp, SIGNAL(triggered()),
             this, SLOT(openHelp()));
-    //Connect advancedFilterDialog Actions
     connect(m_ui->advancedFilterButton, SIGNAL(clicked()),
             this, SLOT(showAdvancedFilter()));
     connect(m_ui->actionFilter, SIGNAL(triggered()),
             this, SLOT(showAdvancedFilter()));
+    connect(m_ui->actionTable_View, SIGNAL(toggled(bool)),
+            m_ui->tableView, SLOT(setShown(bool)));
+    connect(m_ui->actionSource_tree, SIGNAL(toggled(bool)),
+            m_ui->sourceBrowser, SLOT(setShown(bool)));
+    connect(m_ui->actionFile_views, SIGNAL(toggled(bool)),
+            m_ui->ViewsTabs, SLOT(setShown(bool)));
 }
 
 MainWindow::~MainWindow()
