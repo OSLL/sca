@@ -1,11 +1,14 @@
 // Comments go here TBD
 
-
-#include <QApplication>
-#include <QString>
 #ifdef WIN32
     #include <windows.h>
 #endif
+#ifdef __linux__
+    #include <iostream>
+#endif
+
+#include <QApplication>
+#include <QString>
 #include "StringConstants.h"
 #include "MainWindow.h"
 
@@ -41,6 +44,9 @@ void logToFile(QtMsgType type, const char *msg)
     logStream << str;
 #ifdef WIN32
     OutputDebugString(reinterpret_cast<const wchar_t *>(str.utf16()));
+#endif
+#ifdef __linux__
+    std::cerr << str.toStdString() << std::endl;
 #endif
     file.close();
 }
