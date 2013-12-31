@@ -29,7 +29,6 @@ public:
 signals:
     
 public slots:
-    void processFile();
     void loadTextFile(const QString &code = UTF8);
     void loadBinaryFile();
     void openAbout();

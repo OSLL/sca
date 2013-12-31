@@ -97,8 +97,6 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadTextFile(QString)));
     connect(m_ui->sourceBrowser, SIGNAL(openBinaryFile()),
             this, SLOT(loadBinaryFile()));
-    connect(m_ui->sourceBrowser, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(processFile()));
     connect(m_ui->sourceBrowser, SIGNAL(annotate()),
             this, SLOT(annotateNoGraphObject()));
     //MenuBar connections
@@ -114,12 +112,24 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(showAdvancedFilter()));
     connect(m_ui->actionFilter, SIGNAL(triggered()),
             this, SLOT(showAdvancedFilter()));
-    connect(m_ui->actionTable_View, SIGNAL(toggled(bool)),
-            m_ui->tableView, SLOT(setShown(bool)));
-    connect(m_ui->actionSource_tree, SIGNAL(toggled(bool)),
-            m_ui->sourceBrowser, SLOT(setShown(bool)));
-    connect(m_ui->actionFile_views, SIGNAL(toggled(bool)),
-            m_ui->ViewsTabs, SLOT(setShown(bool)));
+
+    connect(m_ui->actionTableView, SIGNAL(triggered(bool)),
+            m_ui->dockTableView, SLOT(setVisible(bool)));
+    connect(m_ui->actionSourceTree, SIGNAL(triggered(bool)),
+            m_ui->dockFileBrowser, SLOT(setVisible(bool)));
+    connect(m_ui->actionTextView, SIGNAL(triggered(bool)),
+            m_ui->dockTextEditor, SLOT(setVisible(bool)));
+    connect(m_ui->actionHexView, SIGNAL(triggered(bool)),
+            m_ui->dockHexEditor, SLOT(setVisible(bool)));
+
+    connect(m_ui->dockTextEditor, SIGNAL(visibilityChanged(bool)),
+            m_ui->actionTextView, SLOT(setChecked(bool)));
+    connect(m_ui->dockHexEditor, SIGNAL(visibilityChanged(bool)),
+            m_ui->actionHexView, SLOT(setChecked(bool)));
+    connect(m_ui->dockFileBrowser, SIGNAL(visibilityChanged(bool)),
+            m_ui->actionSourceTree, SLOT(setChecked(bool)));
+    connect(m_ui->dockTableView, SIGNAL(visibilityChanged(bool)),
+            m_ui->actionTableView, SLOT(setChecked(bool)));
 }
 
 MainWindow::~MainWindow()
@@ -134,25 +144,11 @@ MainWindow::~MainWindow()
         delete m_filter;
 }
 
-void MainWindow::processFile()
-{
-    switch(m_ui->ViewsTabs->currentIndex())
-    {
-    case 0: //Text view
-        loadTextFile();
-        break;
-    case 1: //Binary view
-        loadBinaryFile();
-        break;
-    }
-}
-
 void MainWindow::loadBinaryFile()
 {
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
     QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
     m_ui->hexEditor->loadFromFile(fileInf.absoluteFilePath());
-    m_ui->ViewsTabs->setCurrentIndex(1);
 }
 
 void MainWindow::openAbout()
@@ -233,13 +229,11 @@ void MainWindow::switchToObject(IScaObject *obj)
     {
     case IScaObject::TEXTBLOCK:
         {
-            m_ui->ViewsTabs->setCurrentIndex(0);
             m_ui->textViewer->setFocus();
             break;
         }
     case IScaObject::BINARYBLOCK:
         {
-            m_ui->ViewsTabs->setCurrentIndex(1);
             m_ui->hexEditor->setFocus();
             break;
         }
@@ -255,19 +249,16 @@ void MainWindow::switchToObject(IScaObject *obj)
         }
     case IScaObject::IDENTIFIER:
         {
-            m_ui->ViewsTabs->setCurrentIndex(0);
             m_ui->textViewer->setFocus();
             break;
         }
     case IScaObject::LINE:
         {
-            m_ui->ViewsTabs->setCurrentIndex(0);
             m_ui->textViewer->setFocus();
             break;
         }
     case IScaObject::SYMBOL:
         {
-            m_ui->ViewsTabs->setCurrentIndex(0);
             m_ui->textViewer->setFocus();
             break;
         }
@@ -333,7 +324,6 @@ void MainWindow::loadTextFile(const QString &code)
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
     QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
     m_ui->textViewer->loadFromFile(fileInf.absoluteFilePath(), code);
-    m_ui->ViewsTabs->setCurrentIndex(0);
 }
 
 void MainWindow::on_filterLine_textChanged(const QString &arg1)

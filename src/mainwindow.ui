@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>767</width>
-    <height>397</height>
+    <height>524</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,108 +16,36 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="QSplitter" name="splitter">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="SourceBrowser" name="sourceBrowser">
-       <property name="dragEnabled">
-        <bool>true</bool>
-       </property>
-       <property name="dragDropMode">
-        <enum>QAbstractItemView::DragOnly</enum>
-       </property>
-      </widget>
-      <widget class="ViewsTabWidget" name="ViewsTabs">
-       <property name="acceptDrops">
-        <bool>true</bool>
-       </property>
-       <property name="tabPosition">
-        <enum>QTabWidget::North</enum>
-       </property>
-       <property name="tabShape">
-        <enum>QTabWidget::Rounded</enum>
-       </property>
-       <property name="currentIndex">
-        <number>1</number>
-       </property>
-       <property name="elideMode">
-        <enum>Qt::ElideNone</enum>
-       </property>
-       <property name="movable">
-        <bool>false</bool>
-       </property>
-       <widget class="QWidget" name="TextViewTab">
-        <attribute name="title">
-         <string>Text</string>
-        </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
-            <widget class="ObjectTextViewer" name="textViewer"/>
-           </item>
-          </layout>
-         </item>
-        </layout>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <item>
+       <widget class="GraphView" name="graphViewer">
+        <property name="dragMode">
+         <enum>QGraphicsView::RubberBandDrag</enum>
+        </property>
        </widget>
-       <widget class="QWidget" name="BinaryViewTab">
-        <attribute name="title">
-         <string>Binary</string>
-        </attribute>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="0" column="0">
-            <widget class="QHexEdit" name="hexEditor" native="true">
-             <property name="acceptDrops">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout">
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="GraphView" name="graphViewer">
-          <property name="dragMode">
-           <enum>QGraphicsView::RubberBandDrag</enum>
+         <widget class="QLabel" name="filterLabel">
+          <property name="text">
+           <string>Filter by path:</string>
           </property>
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QLabel" name="filterLabel">
-            <property name="text">
-             <string>Filter by path:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="filterLine"/>
-          </item>
-          <item>
-           <widget class="QToolButton" name="advancedFilterButton">
-            <property name="text">
-             <string>...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QLineEdit" name="filterLine"/>
+        </item>
+        <item>
+         <widget class="QToolButton" name="advancedFilterButton">
+          <property name="text">
+           <string>...</string>
+          </property>
+         </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="TableView" name="tableView">
-       <property name="horizontalScrollBarPolicy">
-        <enum>Qt::ScrollBarAlwaysOff</enum>
-       </property>
-      </widget>
-     </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -127,7 +55,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -161,9 +89,10 @@
      <property name="title">
       <string>Views</string>
      </property>
-     <addaction name="actionTable_View"/>
-     <addaction name="actionSource_tree"/>
-     <addaction name="actionFile_views"/>
+     <addaction name="actionTableView"/>
+     <addaction name="actionSourceTree"/>
+     <addaction name="actionTextView"/>
+     <addaction name="actionHexView"/>
     </widget>
     <addaction name="menuViews"/>
    </widget>
@@ -173,6 +102,90 @@
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockFileBrowser">
+   <property name="windowTitle">
+    <string>File browser</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_12">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="SourceBrowser" name="sourceBrowser">
+       <property name="dragEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragOnly</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockTableView">
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string notr="true">Table view</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_15">
+    <layout class="QGridLayout" name="gridLayout_6">
+     <item row="0" column="0">
+      <widget class="TableView" name="tableView">
+       <property name="horizontalScrollBarPolicy">
+        <enum>Qt::ScrollBarAlwaysOff</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockHexEditor">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="windowTitle">
+    <string>Hex viewer</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QHexEdit" name="hexEditor" native="true">
+       <property name="acceptDrops">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="dockTextEditor">
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle">
+    <string>Text viewer</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_2">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="ObjectTextViewer" name="textViewer"/>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionOpenInTextViewer">
    <property name="text">
     <string>Open in Text Viewer</string>
@@ -235,7 +248,7 @@
     <string>Filter</string>
    </property>
   </action>
-  <action name="actionTable_View">
+  <action name="actionTableView">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -246,7 +259,7 @@
     <string>Table</string>
    </property>
   </action>
-  <action name="actionSource_tree">
+  <action name="actionSourceTree">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -257,7 +270,7 @@
     <string>Source tree</string>
    </property>
   </action>
-  <action name="actionFile_views">
+  <action name="actionTextView">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -265,7 +278,18 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>File views</string>
+    <string>Text view</string>
+   </property>
+  </action>
+  <action name="actionHexView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hex view</string>
    </property>
   </action>
  </widget>
@@ -290,12 +314,6 @@
    <class>SourceBrowser</class>
    <extends>QTreeView</extends>
    <header>widgets/SourceBrowser.h</header>
-  </customwidget>
-  <customwidget>
-   <class>ViewsTabWidget</class>
-   <extends>QTabWidget</extends>
-   <header>widgets/ViewsTabWidget.h</header>
-   <container>1</container>
   </customwidget>
   <customwidget>
    <class>TableView</class>
