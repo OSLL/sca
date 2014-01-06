@@ -253,6 +253,11 @@ void GraphSaver::insertNodeVisual(Node *node, int id)
     m_query->bindValue(":posX", pos.x());
     m_query->bindValue(":posY", pos.y());
     m_query->bindValue(":id", id);
+    m_query->bindValue(":colorR", node->getStandardColor().red());
+    m_query->bindValue(":colorG", node->getStandardColor().green());
+    m_query->bindValue(":colorB", node->getStandardColor().blue());
+    m_query->bindValue(":width", node->getRect().width());
+    m_query->bindValue(":height", node->getRect().height());
 
     if(!m_query->exec())
     {
@@ -270,6 +275,9 @@ void GraphSaver::insertLinkVisual(LinkVisual *link, int id)
     m_query->bindValue(":id", id);
     m_query->bindValue(":sourceArrow", hasSourceArrow);
     m_query->bindValue(":destinArrow", hasDestinArrow);
+    m_query->bindValue(":colorR", link->getStandardColor().red());
+    m_query->bindValue(":colorG", link->getStandardColor().green());
+    m_query->bindValue(":colorB", link->getStandardColor().blue());
 
     if(!m_query->exec())
     {

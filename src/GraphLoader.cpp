@@ -125,6 +125,7 @@ void GraphLoader::loadNodes()
         QByteArray data    = m_query->value(rec.indexOf("data")).toByteArray();
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
 
+
         IScaObject *object = creator.createObject(type, line, offset, endoffset, length, path, text, data, annotation);
         m_model->addObject(object , id, true);
     }
@@ -163,9 +164,17 @@ void GraphLoader::loadNodesVisual()
         int id     = m_query->value(rec.indexOf("id")).toInt();
         qreal posX = m_query->value(rec.indexOf("posX")).toReal();
         qreal posY = m_query->value(rec.indexOf("posY")).toReal();
+        int height = m_query->value(rec.indexOf("height")).toInt();
+        int width  = m_query->value(rec.indexOf("width")).toInt();
+        int red    = m_query->value(rec.indexOf("colorR")).toInt();
+        int green  = m_query->value(rec.indexOf("colorG")).toInt();
+        int blue   = m_query->value(rec.indexOf("colorB")).toInt();
 
         Node *node = static_cast<Node *>(m_scene->getObjectById(id));
         node->setPos(QPointF(posX, posY));
+        node->setStandardColor(QColor(red, green, blue));
+        node->setSize(QSize(width, height));
+        node->setSelected(false);
     }
 }
 
@@ -183,8 +192,13 @@ void GraphLoader::loadLinksVisual()
         int id     = m_query->value(rec.indexOf("id")).toInt();
         bool hasDestinArrow = m_query->value(rec.indexOf("sourceArrow")).toBool();
         bool hasSourceArrow = m_query->value(rec.indexOf("destinArrow")).toBool();
+        int red    = m_query->value(rec.indexOf("colorR")).toInt();
+        int green  = m_query->value(rec.indexOf("colorG")).toInt();
+        int blue   = m_query->value(rec.indexOf("colorB")).toInt();
 
         LinkVisual *link = static_cast<LinkVisual *>(m_scene->getObjectById(id));
         link->setDefaultArrows(hasDestinArrow, hasSourceArrow);
+        link->setStandardColor(QColor(red, green, blue));
+        link->setSelected(false);
     }
 }
