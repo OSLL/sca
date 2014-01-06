@@ -53,6 +53,9 @@ LinkVisual::LinkVisual(Link *obj) :
     ObjectVisual(obj, LINK),
     m_sourceArrow(NULL),
     m_destinArrow(NULL),
+    m_standardPen(DEFAULT_LINK_PEN),
+    m_selectionPen(SELECTED_LINK_PEN),
+    m_filterPen(FILTERED_LINK_PEN),
     m_source(QPointF(0, 0)),
     m_destin(QPointF(0, 0))
 {
@@ -61,7 +64,7 @@ LinkVisual::LinkVisual(Link *obj) :
              | QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(0);
     setZValue(-1);
-    setPen(DEFAULT_LINK_PEN);
+    setPen(m_standardPen);
     setAnnotation(annotation);
 }
 
@@ -90,17 +93,17 @@ QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const 
     {
         if (value == true)  //Now it is selected
         {
-            setPen(SELECTED_LINK_PEN);
+            setPen(m_selectionPen);
         }
         else    //Now it is unselected
         {
             if (m_filtered)
             {
-                setPen(FILTERED_LINK_PEN);
+                setPen(m_filterPen);
             }
             else
             {
-                setPen(DEFAULT_LINK_PEN);
+                setPen(m_standardPen);
             }
         }
     }
@@ -223,12 +226,12 @@ void LinkVisual::setDefaultArrows(bool source, bool destin)
     if(source)
     {
         m_sourceArrow = new QGraphicsPathItem(path, this);
-        m_sourceArrow->setPen(DEFAULT_LINK_PEN);
+        m_sourceArrow->setPen(m_standardPen);
     }
     if(destin)
     {
         m_destinArrow = new QGraphicsPathItem(path, this);
-        m_destinArrow->setPen(DEFAULT_LINK_PEN);
+        m_destinArrow->setPen(m_standardPen);
     }
 
     refreshGeometry(m_source, m_destin);
@@ -250,12 +253,12 @@ void LinkVisual::setDefaultArrows(bool left)
     if (sourceSet && (m_sourceArrow == NULL))
     {
         m_sourceArrow = new QGraphicsPathItem(path, this);
-        m_sourceArrow->setPen(DEFAULT_LINK_PEN);
+        m_sourceArrow->setPen(m_standardPen);
     }
     else if(m_destinArrow == NULL)
     {
         m_destinArrow = new QGraphicsPathItem(path, this);
-        m_destinArrow->setPen(DEFAULT_LINK_PEN);
+        m_destinArrow->setPen(m_standardPen);
     }
 
     refreshGeometry(m_source, m_destin);
@@ -305,10 +308,27 @@ void LinkVisual::setFiltered(bool filtered)
     m_filtered = filtered;
     if (filtered)
     {
-        setPen(FILTERED_LINK_PEN);
+        setPen(m_filterPen);
     }
     else
     {
-        setPen(DEFAULT_LINK_PEN);
+        setPen(m_standardPen);
     }
+}
+
+void LinkVisual::setStandardColor(const QColor &color)
+{
+    m_standardPen.setColor(color);
+    m_selectionPen = m_standardPen;
+    QColor col = m_selectionPen.color();
+    col.setBlue(col.blue() * 0.5);
+    col.setRed(col.red() * 0.5);
+    col.setGreen(col.green() * 0.5);
+    m_selectionPen.setColor(col);
+    setPen(m_selectionPen);
+}
+
+QColor LinkVisual::getStandardColor() const
+{
+    return m_standardPen.color();
 }

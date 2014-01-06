@@ -107,11 +107,13 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
         qDebug() << "[GraphView]: Unable to find new element in scene.";
     }
     m_temp->setSelected(true);
+    emit goToObject(m_tempId);
 }
 
 void GraphView::dragMoveEvent(QDragMoveEvent *event)
 {
     m_temp->setPos(mapToScene(event->pos()));
+    emit itemMoved(m_tempId);
 }
 
 void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
@@ -354,7 +356,10 @@ void GraphView::mouseDoubleClickEvent(QMouseEvent *event)
     int id = scene()->getObjectId(visObject);
     QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
     IScaObject *object = qvariant_cast<IScaObject *>(var);
-    emit goToObject(object);
+    if (object != NULL)
+    {
+        emit goToObject(object);
+    }
 }
 
 void GraphView::keyPressEvent(QKeyEvent *event)
@@ -495,28 +500,34 @@ void GraphView::mousePressEvent(QMouseEvent *event)
 {
     QGraphicsItem *item = NULL;
     item = itemAt(event->pos());
+    ObjectVisual *objVisual = NULL;
     //Selection logics goes here
     if (item != NULL)
     {
+        objVisual = static_cast<ObjectVisual *>(item);
+        if (m_temp != objVisual)
+        {
+            m_tempId = scene()->getObjectId(objVisual);
+            m_temp = objVisual;
+        }
         bool ctrlFlag = QApplication::keyboardModifiers().testFlag(Qt::ControlModifier);
         //nothing was selected->select under cursor
         if (scene()->selectedItems().isEmpty())
         {
             item->setSelected(true);
-            //If we click with Ctrl, go to object in other views
+            //If we click with Ctrl, also go to object in other views
+            //To much performance
             if (ctrlFlag)
             {
-                ObjectVisual *objVisual = NULL;
-                objVisual = static_cast<ObjectVisual *>(item);
                 if (objVisual != NULL)
                 {
-                    int id = scene()->getObjectId(objVisual);
-                    QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
+                    QVariant var = m_model->data(m_model->index(m_tempId, 0), rawObjectRole);
                     IScaObject *object = qvariant_cast<IScaObject *>(var);
                     emit goToObject(object);
                 }
                 return;
             }
+            emit goToObject(m_tempId);
         }
         else
         {
@@ -532,9 +543,11 @@ void GraphView::mousePressEvent(QMouseEvent *event)
                 {
                     return;
                 }
+                emit goToObject(m_tempId);
             }
             else
             {
+                emit goToObject(m_tempId);
                 //item under cursor is selected->we are happy about it
             }
         }
@@ -543,14 +556,11 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     {
         //no item under cursor->clear selection
         scene()->clearSelection();
+        emit goToObject(-1);
     }
 
     if (event->button() == Qt::RightButton)
     {
-        if (item != NULL)
-        {
-            item->setSelected(true);
-        }
         ShowContextMenu(event->pos());
         return;
     }
@@ -568,9 +578,16 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
 {
     QGraphicsItem *item = NULL;
     item = itemAt(event->pos());
-    if (item != NULL)
+    ObjectVisual *obj = NULL;
+    obj = static_cast<ObjectVisual *>(item);
+    if (obj != NULL)
     {
         setCursor(Qt::OpenHandCursor);
+        //Check if we are moving item
+        if (event->buttons() != Qt::NoButton)
+        {
+            emit itemMoved(m_tempId);
+        }
     }
     else
     {

@@ -21,6 +21,8 @@ public:
 
     ObjectVisualType getType() const;
     void setType(const ObjectVisualType &type);
+    virtual void setStandardColor(const QColor &color) = 0;
+    virtual QColor getStandardColor() const = 0;
     GraphScene *scene() const;
 
     void addLink(int linkId);

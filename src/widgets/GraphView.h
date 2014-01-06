@@ -74,7 +74,7 @@ public:
 
 private:
     //This is used for drag-n-drop technology
-    Node *m_temp;
+    ObjectVisual *m_temp;
     int m_tempId;
     GraphViewContextMenu *m_menu;
     GraphModel *m_model;
@@ -95,6 +95,8 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 signals:
     void goToObject(IScaObject *);
+    void goToObject(int id);
+    void itemMoved(int id);
 }; // class GraphView
 
 

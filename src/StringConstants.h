@@ -111,22 +111,22 @@ const QString LOGO_PATH = ":logo/icons/logo.png";
 const QString LOG_PATH = "log.txt";
 //[End files paths]
 
-//[GraphFilter strings]
-const QString VALID_REGEXP_STATE = "RegExp: OK";
-const QString INVALID_REGEXP_STATE = "RegExp: NOT OK";
-const QString OBJECT_INFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4,Content:%5";
-const QString DEFAULT_FILTER_REGEXP = OBJECT_INFO_PATTERN.arg("*").arg("*").arg("*").arg("*").arg("*");
-const QString GRAPH_FILTER_TITLE = "Advanced graph filter";
-const QString BOOL_CONDITIONS("OR;AND;NOT");
-//[End GraphFilter strings]
-
 //[Object info patterns strings]
 const QString OBJECT_TOOLTIP_PATTERN =  QString("Type: %1 <br />")
                                     + QString("Filename: %2 <br />")
                                     + QString("Path: %3 <br />")
                                     + QString("Annotation: %4 <br />")
                                     + QString("Content: %5");
+const QString OBJECT_INFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4,Content:%5";
 //[End Object info patterns strings]
+
+//[GraphFilter strings]
+const QString VALID_REGEXP_STATE = "RegExp: OK";
+const QString INVALID_REGEXP_STATE = "RegExp: NOT OK";
+const QString DEFAULT_FILTER_REGEXP = OBJECT_INFO_PATTERN.arg("*").arg("*").arg("*").arg("*").arg("*");
+const QString GRAPH_FILTER_TITLE = "Advanced graph filter";
+const QString BOOL_CONDITIONS("OR;AND;NOT");
+//[End GraphFilter strings]
 
 //[GraphSaver create tables strings]
 const QString SQL_CREATE_NODE_TABLE = "CREATE TABLE node_table ("
@@ -151,12 +151,20 @@ const QString SQL_CREATE_LINK_TABLE = "CREATE TABLE link_table ("
 const QString SQL_CREATE_NODEVISUAL_TABLE = "CREATE TABLE nodeVisual_table ("
         "id integer PRIMARY KEY, "
         "posX real, "
-        "posY real "
+        "posY real, "
+        "colorR integer, "
+        "colorG integer, "
+        "colorB integer, "
+        "width integer, "
+        "height integer "
         ");";
 const QString SQL_CREATE_LINKVISUAL_TABLE = "CREATE TABLE linkVisual_table ("
         "id integer PRIMARY KEY, "
         "sourceArrow BOOLEAN, "
-        "destinArrow BOOLEAN"
+        "destinArrow BOOLEAN, "
+        "colorR integer, "
+        "colorG integer, "
+        "colorB integer"
         ");";
 const QString SQL_CREATE_TYPE_TABLE = "CREATE TABLE type_table ("
         "id integer, "
@@ -186,12 +194,20 @@ const QString SQL_INSERT_LINK_PATTERN = "INSERT INTO link_table VALUES("
 const QString SQL_INSERT_NODEVISUAL_PATTERN = "INSERT INTO nodeVisual_table VALUES("
         ":id,"
         ":posX,"
-        ":posY"
+        ":posY,"
+        ":colorR,"
+        ":colorG,"
+        ":colorB,"
+        ":width,"
+        ":height"
         ");";
 const QString SQL_INSERT_LINKVISUAL_PATTERN = "INSERT INTO linkVisual_table VALUES("
         ":id,"
         ":sourceArrow,"
-        ":destinArrow"
+        ":destinArrow,"
+        ":colorR,"
+        ":colorG,"
+        ":colorB"
         ");";
 const QString SQL_INSERT_TYPE_PATTERN = "INSERT INTO type_table VALUES("
         ":id,"
@@ -209,5 +225,25 @@ const QString SQL_SELECT_NODE_TYPE_TABLES = "SELECT * FROM node_table "
         " INNER JOIN type_table ON node_table.id = type_table.id";
 //[GraphLoader select strings]
 
+//[Property browser string]
+const QString PROPERTY_TYPE         = "Type";
+const QString PROPERTY_FILEPATH     = "Path";
+const QString PROPERTY_ANNOTATION   = "Annotation";
+const QString PROPERTY_LENGTH       = "Length";
+const QString PROPERTY_OFFSET       = "Offset";
+const QString PROPERTY_DATA         = "Data";
+const QString PROPERTY_ENDOFFSET    = "End offset";
+const QString PROPERTY_TEXT         = "Text";
+const QString PROPERTY_IDENTIFIER   = "Identifier";
+const QString PROPERTY_SYMBOL       = "Symbol";
+const QString PROPERTY_LINE_NUMBER  = "Line number";
+const QString PROPERTY_LINE         = "Line";
+const QString PROPERTY_POSITION_X   = "Position X";
+const QString PROPERTY_POSITION_Y   = "Position Y";
+const QString PROPERTY_COLOR        = "Color";
+const QString PROPERTY_SIZE         = "Size";
+const QString PROPERTY_OBJECT_FROM  = "Object #1";
+const QString PROPERTY_OBJECT_TO    = "Object #2";
+//[End property browser strings]
 
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

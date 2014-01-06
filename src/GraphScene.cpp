@@ -317,7 +317,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
 
 int GraphScene::getObjectId(ObjectVisual *object)
 {
-    return m_objects.key(object);
+    return m_objects.key(object, -1);
 }
 
 QAbstractItemModel *GraphScene::getModel() const

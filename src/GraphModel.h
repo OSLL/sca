@@ -91,10 +91,12 @@ public:
     int getObjectIdByPath(const QString &path);
     QString getAnnotationByPath(const QString &path);
     IScaObject *getObjectByPath(const QString &path);
+    IScaObject *getObjectById(const int &id);
 
     void addLinkTo(IScaObject *obj, int link);
     bool editAnnotation(int id);
-    void setAnnotation(int id, QString annotation);
+    void setAnnotation(int id, const QString &annotation);
+    void setFilePath(int id, const QString &path);
 private:
     static int s_nextID;
     QHash<int, IScaObject *> m_objects;

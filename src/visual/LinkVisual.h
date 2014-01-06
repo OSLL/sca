@@ -84,11 +84,16 @@ public:
 
     void setFiltered(bool filtered);
 
+    void setStandardColor(const QColor &color);
+    QColor getStandardColor() const;
 private:
     QLineF m_line;
     QGraphicsPathItem *m_sourceArrow;
     QGraphicsPathItem *m_destinArrow;
 
+    QPen m_standardPen;
+    QPen m_selectionPen;
+    QPen m_filterPen;
     QPointF m_source;
     QPointF m_destin;
 }; // class LinkVisual

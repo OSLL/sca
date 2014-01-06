@@ -8,17 +8,18 @@
 #include <QPixmap>
 #include <QDesktopServices>
 
+#include "widgets/PropertyBrowser.h"
 #include "widgets/SourceBrowser.h"
-#include "FileLoader.h"
 #include "widgets/ObjectTextViewer.h"
+#include "widgets/FilterDialog.h"
+#include "FileLoader.h"
 #include "GraphScene.h"
 #include "GraphModel.h"
-#include "visual/LinkVisual.h"
-#include "widgets/FilterDialog.h"
 #include "GraphFilter.h"
 #include "GraphTableProxyModel.h"
 #include "GraphSaver.h"
 #include "GraphLoader.h"
+#include "visual/LinkVisual.h"
 #include "common/SCAFileSystemModel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -37,6 +38,12 @@ MainWindow::MainWindow(QWidget *parent) :
 
     m_filter = new GraphFilter(m_model, this);
     m_scene->setModel(m_filter);
+
+    m_propertyBrowser = new PropertyBrowser(m_model, m_scene,
+                                            m_ui->dockPropertyBrowser);
+    m_ui->dockPropertyBrowser->setWidget(m_propertyBrowser);
+    m_propertyBrowser->setModel(m_model);
+    m_propertyBrowser->setScene(m_scene);
 
     m_tableProxy = new GraphTableProxyModel(m_filter, this);
     m_ui->tableView->setModel(m_tableProxy);
@@ -61,6 +68,12 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->hexEditor, SLOT(goToObject(IScaObject*)));
     connect(m_ui->graphViewer, SIGNAL(goToObject(IScaObject*)),
             this, SLOT(switchToObject(IScaObject*)));
+
+    //Connects for propertyBrowser
+    connect(m_ui->graphViewer, SIGNAL(goToObject(int)),
+            m_propertyBrowser, SLOT(loadItem(int)));
+    connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
+            m_propertyBrowser, SLOT(itemMoved(int)));
 
     //Set up file model
     m_fileModel = new SCAFileSystemModel(m_model, this);
@@ -121,6 +134,8 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->dockTextEditor, SLOT(setVisible(bool)));
     connect(m_ui->actionHexView, SIGNAL(triggered(bool)),
             m_ui->dockHexEditor, SLOT(setVisible(bool)));
+    connect(m_ui->actionPropertyBrowser, SIGNAL(triggered(bool)),
+            m_ui->dockPropertyBrowser, SLOT(setVisible(bool)));
 
     connect(m_ui->dockTextEditor, SIGNAL(visibilityChanged(bool)),
             m_ui->actionTextView, SLOT(setChecked(bool)));
@@ -130,6 +145,8 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->actionSourceTree, SLOT(setChecked(bool)));
     connect(m_ui->dockTableView, SIGNAL(visibilityChanged(bool)),
             m_ui->actionTableView, SLOT(setChecked(bool)));
+    connect(m_ui->dockPropertyBrowser, SIGNAL(visibilityChanged(bool)),
+            m_ui->actionPropertyBrowser, SLOT(setChecked(bool)));
 
     connect(m_ui->actionTableView, SIGNAL(triggered()),
             m_ui->dockTableView, SLOT(raise()));
@@ -139,6 +156,9 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->dockTextEditor, SLOT(raise()));
     connect(m_ui->actionHexView, SIGNAL(triggered()),
             m_ui->dockHexEditor, SLOT(raise()));
+    connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
+            m_ui->dockPropertyBrowser, SLOT(raise()));
+
 }
 
 MainWindow::~MainWindow()

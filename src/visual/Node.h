@@ -66,6 +66,7 @@ public:
 
     QRectF getRect() const;
     void setRect(const QRectF &rect);
+    void setSize(const QSize &size);
 
     QGraphicsTextItem *getTitle() const;
     void setTitle(QGraphicsTextItem *title);
@@ -76,12 +77,13 @@ public:
     QColor getColor() const;
     void setColor(const QColor &color);
     void setFiltered(bool filtered);
+    void setStandardColor(const QColor &color);
+    QColor getStandardColor() const;
 protected:
     QRectF m_rect;
     QGraphicsTextItem *m_title;
     QColor m_standardColor;
     QColor m_selectionColor;
     QColor m_filterColor;
-
 }; // class Node
 #endif //_Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_

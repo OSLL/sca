@@ -23,6 +23,7 @@ private:
     GraphModel *m_model;
     GraphFilter *m_filter;
     GraphTableProxyModel *m_tableProxy;
+    PropertyBrowser *m_propertyBrowser;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();

@@ -129,6 +129,11 @@ IScaObject *GraphModel::getObjectByPath(const QString &path)
     return NULL;
 }
 
+IScaObject *GraphModel::getObjectById(const int &id)
+{
+    return m_objects.value(id, NULL);
+}
+
 int GraphModel::addObject(const QMimeData *mimeData)
 {
     QString path = mimeData->property("fromPath").toString();
@@ -197,7 +202,7 @@ QModelIndex GraphModel::index(int row, int column, const QModelIndex &parent) co
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
     int id = index.row();
-    qDebug() << "[GraphModel]: Data for #" << id;
+    //qDebug() << "[GraphModel]: Data for #" << id;
     if (role == objectIdListRole)
     {
         QList<int> list = m_objects.keys();
@@ -439,7 +444,7 @@ bool GraphModel::editAnnotation(int id)
     return ok;
 }
 
-void GraphModel::setAnnotation(int id, QString annotation)
+void GraphModel::setAnnotation(int id, const QString &annotation)
 {
     bool showed = m_isShown.value(id, false);
     if (annotation.isEmpty()
@@ -453,6 +458,14 @@ void GraphModel::setAnnotation(int id, QString annotation)
     }
     QModelIndex ind = index(id, 0);
     emit dataChanged(ind, ind);
+}
+
+void GraphModel::setFilePath(int id, const QString &path)
+{
+    if (!m_objects.contains(id))
+    {
+        m_objects[id]->setFile(QFileInfo(path));
+    }
 }
 
 void GraphModel::clear()

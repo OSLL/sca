@@ -1,6 +1,8 @@
 TEMPLATE = app
 TARGET = sca
 
+include(qtpropertybrowser/qtpropertybrowser.pri)
+
 target.path = /opt/extras.ubuntu.com/sca/
 
 icon.files = ../publishing_materials/icon_512.png
@@ -69,7 +71,8 @@ SOURCES += \
     GraphLoader.cpp \
     ObjectCreator.cpp \
     common/SCAFileSystemModel.cpp \
-    widgets/TableView.cpp
+    widgets/TableView.cpp \
+    widgets/PropertyBrowser.cpp
 
 
 HEADERS += \
@@ -120,7 +123,8 @@ HEADERS += \
     GraphLoader.h \
     ObjectCreator.h \
     common/SCAFileSystemModel.h \
-    widgets/TableView.h
+    widgets/TableView.h \
+    widgets/PropertyBrowser.h
 
 FORMS += \
     mainwindow.ui \
@@ -128,3 +132,6 @@ FORMS += \
 
 RESOURCES += \
     resources/resources.qrc
+
+OTHER_FILES += \
+    qtpropertybrowser/qtpropertybrowser.pri

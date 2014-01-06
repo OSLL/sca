@@ -52,19 +52,13 @@ IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(IScaObjectBinaryBlock *
                     DEFAULT_BINARY_BLOCK_VISUAL_WIDTH,
                     DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT);
 
-    QString str;
-    QByteArray data = obj->getData();
-    for (int i = 0; i < data.length(); i++)
+    QString str = obj->getReadableData();
+    if (str.length() >= MAX_TITLE_LENGTH - 1)
     {
-        str += data.mid(i, 1).toHex() + " ";
-        if (str.length() >= MAX_TITLE_LENGTH-1)
-        {
-                str += "...";
-                break;
-        }
-
+        //Remove from max_lenght to last symbol
+        str = str.remove(MAX_TITLE_LENGTH, str.length() - MAX_TITLE_LENGTH);
+        str += "...";
     }
-
     setTitle(str);
 }
 

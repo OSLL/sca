@@ -71,6 +71,8 @@ public:
     QByteArray getData() const;
     void setData(const QByteArray &block);
 
+    QString getReadableData() const;
+
     QString getContent() const;
 
 private:

@@ -82,6 +82,11 @@ void Node::setRect(const QRectF &rect)
     m_rect = rect;
 }
 
+void Node::setSize(const QSize &size)
+{
+    m_rect.setSize(size);
+}
+
 QGraphicsTextItem *Node::getTitle() const
 {
     return m_title;
@@ -139,6 +144,20 @@ void Node::setFiltered(bool filtered)
     {
         setColor(m_standardColor);
     }
+}
+
+void Node::setStandardColor(const QColor &color)
+{
+    m_standardColor = color;
+    m_selectionColor.setBlue(color.blue() * 0.5);
+    m_selectionColor.setGreen(color.green() * 0.5);
+    m_selectionColor.setRed(color.red() * 0.5);
+    setColor(m_selectionColor);
+}
+
+QColor Node::getStandardColor() const
+{
+    return m_standardColor;
 }
 
 QRectF Node::boundingRect() const

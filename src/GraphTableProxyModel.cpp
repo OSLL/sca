@@ -155,6 +155,8 @@ QVariant GraphTableProxyModel::data(const QModelIndex &index, int role) const
 
 bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &parent)
 {
+    Q_UNUSED(parent);
+    Q_UNUSED(count);
     QVariant var = m_source->data(m_source->index(row, 0), objectIdListRole);
     QList<int> list = qvariant_cast<QList<int> >(var);
     qDebug() << "[ProxyTableModel]: update to " << list.size();
@@ -208,6 +210,9 @@ void GraphTableProxyModel::updateMap()
 
 void GraphTableProxyModel::removeRows(QModelIndex parent, int begin, int end)
 {
+    Q_UNUSED(parent);
+    Q_UNUSED(begin);
+    Q_UNUSED(end);
     if (!m_idMap.isEmpty())
     {
         beginRemoveRows(QModelIndex(), 0, m_idMap.size() - 1);
