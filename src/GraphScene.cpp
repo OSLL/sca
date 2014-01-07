@@ -349,15 +349,19 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
         link->setFiltered(filtered.toBool());
         return;
     }
+    //Otherwise it should be VisualObject::NODE
     QModelIndex index = m_model->index(id, 0);
     bool isShown = m_model->data(index, isShownRole).toBool();
     //Take it from scene
     ObjectVisual *objectVis = m_objects.take(id);
+    Node *node = static_cast<Node *>(objectVis);
 
     //We re-create object, saving some old parameters of it
     QPointF pos = objectVis->pos();
     QList<int> links = objectVis->getLinks();
     QString annotation = object->getAnnotation();
+    QColor standardColor = node->getStandardColor();
+    QSize size = node->boundingRect().size().toSize();
 
     //Remove old one
     removeItem(objectVis);
@@ -378,6 +382,10 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     newObject->setPos(pos);
     newObject->setLinks(links);
     newObject->setAnnotation(annotation);
+    node = static_cast<Node *>(newObject);
+    node->setStandardColor(standardColor);
+    node->setSize(size);
+
 
     //Update for object filtering
     QVariant filtered = m_model->data(index, highlightRole);
