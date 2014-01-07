@@ -25,6 +25,9 @@ public:
     virtual QColor getStandardColor() const = 0;
     GraphScene *scene() const;
 
+    void setX(qreal x);
+    void setY(qreal y);
+
     void addLink(int linkId);
     void disconnectLink(int linkId);
 

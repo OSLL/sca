@@ -114,6 +114,24 @@ GraphScene *ObjectVisual::scene() const
     return static_cast<GraphScene *>(QGraphicsItem::scene());
 }
 
+void ObjectVisual::setX(qreal x)
+{
+    QAbstractGraphicsShapeItem::setX(x);
+    foreach (int linkId, m_links)
+    {
+        scene()->refreshLinkPos(linkId);
+    }
+}
+
+void ObjectVisual::setY(qreal y)
+{
+    QAbstractGraphicsShapeItem::setY(y);
+    foreach (int linkId, m_links)
+    {
+        scene()->refreshLinkPos(linkId);
+    }
+}
+
 ObjectVisual::ObjectVisualType ObjectVisual::getType() const
 {
     return m_type;

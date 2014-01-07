@@ -318,10 +318,12 @@ void PropertyBrowser::processLink(Link *object)
     property = m_stringManager->addProperty(PROPERTY_OBJECT_FROM);
     m_stringManager->setReadOnly(property, true);
     m_stringManager->setValue(property, from->getInfo());
+    addProperty(property, PROPERTY_OBJECT_FROM);
 
     property = m_stringManager->addProperty(PROPERTY_OBJECT_TO);
     m_stringManager->setReadOnly(property, true);
     m_stringManager->setValue(property, to->getInfo());
+    addProperty(property, PROPERTY_OBJECT_TO);
 }
 
 void PropertyBrowser::processVisualObject(ObjectVisual *object)
