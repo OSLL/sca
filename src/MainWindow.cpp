@@ -158,7 +158,6 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->dockHexEditor, SLOT(raise()));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
-
 }
 
 MainWindow::~MainWindow()

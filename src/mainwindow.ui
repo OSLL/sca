@@ -148,6 +148,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockHexEditor">
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <property name="floating">
     <bool>false</bool>
    </property>
@@ -170,6 +173,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockTextEditor">
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
