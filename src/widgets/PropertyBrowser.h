@@ -39,6 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include <QMap>
 #include "../qtpropertybrowser/qttreepropertybrowser.h"
 class IScaObject;
 class IScaObjectTextBlock;
