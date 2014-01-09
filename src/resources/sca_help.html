@@ -2,7 +2,7 @@
 <html>
 <head>
  	<meta charset="utf-8">
-<title>Source Code Analyzer v 0.1 User Guide </title>
+<title>Source Code Analyzer v 0.1.5 User Guide </title>
 	<style>
 	h1 {
 		font-family: 'Times New Roman', Times, serif;
@@ -10,7 +10,7 @@
 	} 
 	p {
 		font-family: Verdana, Arial, Helvetica, sans-serif; 
-		font-size: 11pt;
+                font-size: 11pt;
 	}
 	h2 {
 		font-family: 'Times New Roman', Times, serif;
@@ -27,60 +27,101 @@
 	</style>
 	</head> 
 <body>
-<h1>Source Code Analyzer v 0.1 User Guide</h1>
+<h1>Source Code Analyzer v 0.1.5 User Guide</h1>
 
 <a name="content"><h2>Content</h2></a>
 <ol>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#workplaces">Workplaces</a></li>
-<li><a href="#filebrowser">File browser</a></li>
-<li><a href="#currentview">Current view</a></li>
-	<ol type = "a">
+        <ol type = "a">
+        <li><a href="#filebrowser">File browser</a></li>
 	<li><a href="#textview">Text view</a></li>
 	<li><a href="#binaryview">Binary view</a></li>
 	<li><a href="#graphview">Graph view</a></li>
+        <li><a href="#tableview">Table view</a></li>
+        <li><a href="#propertybrowser">Property browser</a></li>
 	</ol>
+<li><a href="#annotating">Annotating objects</a></li>
 <li><a href="#objecttypes">Object types</a></li>
+<li><a href="#converting">Converting objects</a></li>
 <li><a href="#dragndrop">Drag’n’Drop</a></li>
+<li><a href="#export">Export to image</a></li>
+<li><a href="#filter">Filter objects</a></li>
+<li><a href="#dockwidgets">Customize views</a></li>
 <li><a href="#hotkeys">Hotkeys</a></li>
 <li><a href="#contacts">Contacts</a></li>
 </ol>
  
-<h2><a name="overview">Overview</a></h2>
+<h2><a href="#content">[up]</a><a name="overview">Overview</a></h2>
 <p>Source Code Analyzer (SCA) is a tool to maintain knowledge base around the sources and projects.</p>
 
-<p>SCA has two main workplaces:</p>
+<p>SCA has several <a href="#workplaces">workplaces</a> you can interact with:</p>
 
 <ol>
-	<li>File browser (on the left)</li>
-<li>Current view’s tab (on the right), which can be:</li>
-<ol type = "a">
+        <li><a href="#filebrowser">File browser</a></li>
 	<li><a href="#textview">Text view</a></li>
 	<li><a href="#binaryview">Binary view</a></li>
 	<li><a href="#graphview">Graph view</a></li>
-</ol>
+        <li><a href="#propertybrowser">Property browser</a></li>
 </ol>
 
-<h2><a name="workplaces">Workplaces</a></h2>
-<h3><a name="filebrowser">File browser</a></h3>
+<h2><a href="#content">[up]</a><a name="workplaces">Workplaces</a></h2>
+
+<h3><a href="#content">[up]</a><a name="filebrowser">File browser</a></h3>
 
 <p>You can use file browser as your usual tree-browser: expand folders, fold them etc.</p>
 
-<p>To use file: set current view to view which you want to use with file and double click file. As a default, for <a href="#textview">Text view</a> it opens file using UTF-8 encoding, but you can force it to open in different encoding by calling context menu on file, selecting “Open in Text viewer as” and then selecting your preferable encoding out of supported ones. File browser supports <a href="#dragndrop">drag’n’drop.</a></p>
+<p>To use file you can use context menu or just drag'n'drop file to view which you want to use.</p>
+<p>File browser also supports <a href="#annotating">annotating</a> directories and files without creating objects. Simply call context menu on file/directory and select "Edit annotation".</p>
+<p><b>NOTE:</b> As a default, for <a href="#textview">Text view</a> it opens file using UTF-8 encoding, but you can force it to open in different encoding by calling context menu on file, selecting “Open in Text viewer as” and then selecting your preferable encoding out of supported ones.</a></p>
 
-<h3><a name="currentview">Current view</a></h3>
+<h3><a href="#content">[up]</a><a name="textview">Text view</a></h3>
+<p>Text view provides viewing files in different encodings: UTF-8, CP-866, ISO-8859-15. </p>
+<p>It also supports <a href="#dragndrop">drag’n’drop</a>: just select any text and drag it to scene.</a></p>
 
-<h4><a name="textview">Text view</a></h4>
-<p>Text view provides viewing files in different encodings: UTF-8, CP-866, ISO-8859-15. It also supports <a href="#dragndrop">drag’n’drop.</a></p>
-
-<h4><a name="binaryview">Binary view</a></h4>
+<h3><a href="#content">[up]</a><a name="binaryview">Binary view</a></h3>
 <p>Binary view provides viewing files as a HEX-files as any usual hex-editor. On the left you can see current offset of line in the table, in the next column - bytes loaded and separated by spaces, on the right you can see their symbolic representation.</p>
+<p>To use binary view's drag'n'drop select bytes you want and drag them to scene</p>
 
-<h4><a name="graphview">Graph view</a></h4>
+<h3><a href="#content">[up]</a><a name="graphview">Graph view</a></h3>
 <p>Graph view is a workplace where you can <a href="#dragndrop">drag’n’drop.</a> object to.</p>
+<p>To select one object click on it, so it become highlighted. If you want to select multiple objects, you can hold Ctrl and invert selection of objects by clicking on them. Also, you can draw a rectangle to select multiple object. To do so, hold your left mouse button starting on any free place on graph, move your mouse (see the rectange on graph which selects objects), release the button when desired selection reached. Clicking on free place resets selection.</p>
+<p>You can call context menu of objects by right-clicking on them. Menu's entries are: connect (creates link between objects), delete, converting entries, <a href="#objecttypes">link</a>'s arrows entries, <a href="#annotating">edit annotation</a>.</p>
+<p>To see information about object click on it and use <a href="#propertybrowser">property browser</a>, or hold your mouse on object to see simple tooltip.</a>
 
-<h2><a name="objecttypes">Object types</a></h2>
-<p>The type of representation of different types of object here is fixed, but you can change the type on object here by right-clicking on it and selecting which type you would prefer to set to this object. Currently available conversions:</p>
+<h3><a href="#content">[up]</a><a name="tableview">Table view</a></h3>
+<p>Table view provides another view of objects, which is preferrably made to be used to go to <a href="#filter">filtered</a> objects by double-clicking on objects in graph. If filter is empty or nothing matches filter, table view shows all object of graph.</p>
+
+<h3><a href="#content">[up]</a><a name="propertybrowser">Property browser</a></h3>
+<p>Property browser provides seeing some fields of objects on graph.</p>
+<p>We do not recommend to edit objects' path, but you can do it you e.g. renamed file object linked to.</p>
+
+<h2><a href="#content">[up]</a><a name="annotating">Annotating</a></h2>
+<p>You can annotate any object on graph by right-clicking on it and selecting "Edit annotation" entry in menu. Annotation representation on graph supports HTML formatting.</p>
+<p>See also annotating directory/file in <a href="#filebrowse">file browser.</a></p>
+
+<h2><a href="#content">[up]</a><a name="objecttypes">Object types</a></h2>
+
+<h5>Directory/File</h5>
+<p>Simple directory of file dragged from <a href="#filebrowser">file browser</a>. Double click scrolls to it in file browser.</p>
+
+<h5>Text block</h5>
+<p>Text dragged from <a href=#textview">text view</a>. Double click scrolls to file in file browser + opens file in both text and binary views and selects it.</p>
+
+<h5>Identifier</h5>
+<p>Pretty much the same as text block, just has another default representation. Double click does same as text block.</p>
+
+<h5>Line</h5>
+<p>Same as text block, but contains the whole line of characters in file. Double click does same as text block.</p>
+
+<h5>Symbol</h5>
+<p>Simpler version of text block, which contains only one specific character. Double click does same as text block.</p>
+
+<h5>Binary block</h5>
+<p>Block of bytes dragged from <a href="#binaryview">binary view</a>. Double click does same as text block.</p>
+
+<h2><a href="#content">[up]</a><a name="converting">Converting objects</a></h2>
+<p>You can change the type on object by right-clicking in graph and selecting which type you would prefer to set to this object. Currently available conversions:</p>
 <table border = '1'>
 	<tr>
 		<td align='center'><h5>From</h5></td>
@@ -100,12 +141,23 @@
 </table>
 <p>Context menu also has an option “Connect nodes”, which would connect two objects on graph by link. To do this you should select any two nodes and then select “Connect nodes” in context menu or use hotkey <b>C</b>. To delete nodes or links select them and press <b>Delete</b> key.</p>
 
-<h2><a name="dragndrop">Drag’n’Drop</a></h2>
-<p>SCA’s interaction is mostly based on drag’n’drop technology. To add an object to graph you should hold your mouse on object you want to add and move the mouse to <a href="#graphview">Graph view</a> and when the object appears under your cursor release the mouse button. Graph View recognizes type of everything you drag from SCA’s views automatically, but you can change it. (see <a href="#objecttypes">Object types</a>)</p>
+<h2><a href="#content">[up]</a><a name="dragndrop">Drag’n’Drop</a></h2>
+<p>SCA’s interaction is mostly based on drag’n’drop technology. To add an object to graph you should hold your mouse on object you want to add and move the mouse to <a href="#graphview">Graph view</a> and when the object appears under your cursor release the mouse button. Graph View recognizes type of everything you drag from SCA’s views automatically, but you can change it. (see <a href="#converting">converting</a>)</p>
 
-<p>When you try to drag from text or binary view you will probably have Graph view covered, just drag firstly to it’s tab name without releasing mouse button, then on Graph view itself.</p>
+<h2><a href="#content">[up]</a><a name="export">Export graph to image</a></h2>
+<p>To export graph to image, select context menu File->Export ..., then select type of image, type in name of file and click "Save".</p>
 
-<h2><a name="hotkeys">Hotkeys</a></h2>
+<h2><a href="#content">[up]</a><a name="filter">Filtering objects</a></h2>
+<h5>Simple</h5>
+<p>The simplest way to filter objects on graph is to use field under the graph. This field filters object by their path. Filtered objects will always accept red color.</p>
+<h5>Advanced</h5>
+<p>To use advanced filter you can call it by context menu Edit->Filter or by clicking on button in the end of simple path-filter line.</p>
+<p>SCA uses regexes to recognise if object matches filter. If you don't know regexes you can use our simple choser of type/path/annotation/content for filter. If you know regexes, you can advance filter's regex manually by turning on "Custom RegExp" checkbox. To reset filter click "Reset". "Refresh" button on the right is supposed to refresh regex of filter if it was changed outside of that window. (e.g. in simple filter)</p>
+
+<h2><a href="#content">[up]</a><a name="dockwidgets">Customizing views.</a></h2>
+<p>You can customly place any view in any place on your screen (except <a href="#graphview">Graph view</a>). To do this, hold their titles and drag anywhere you want. You can also stick to each other inside main window. To addition, dragging one view to another merges them to one place and creates tab-switcher on the bottom of that place. To close view click X, to open it or to raise (for tabbed views), use menu Window->Views.</p>
+
+<h2><a href="#content">[up]</a><a name="hotkeys">Hotkeys</a></h2>
 <table border = '1'>
 	<tr>
 		<td align='center'><h5>Hotkey</h5></td>
@@ -115,7 +167,7 @@
 	<tr>
 		<td>C</td>
 		<td>Graph view</td>
-		<td>Connects two selected nodes on graph by creating link between them.</td>
+                <td>Connects two selected objects on graph by creating link between them.</td>
 	</tr>
 	<tr>
 		<td>Delete</td>
@@ -135,13 +187,13 @@
 	<tr>
 		<td>Right/Left arrow</td>
 		<td>File browser</td>
-		<td>Expands or collapses folders (or goes level deeper/shallower)</td>
+                <td>Expands or collapses folders (or goes level up/down)</td>
 	</tr>
 </table>
 
-<a name="contacts"><h3>Contacts</h3></a>
+<h3><a href="#content">[up]</a><a name="contacts">Contacts</a></h3>
 <p>Tracker: <a href="https://dev.osll.ru/projects/srcgraph">here</a></p>
 <p>Our reposirepository on GitHub: <a href="https://github.com/OSLL/sca">here</a></p>
-(c) Open Source & Linux Lab, 2013
+(c) Open Source & Linux Lab, 2013-2014
 </body>
 </html>
