@@ -1,3 +1,14 @@
+sca (0.1.5-0extras13.10.1) saucy; urgency=low
+
+  New features:
+  * Graph saving/restoring from file
+  * Graph filtration/search 
+  * User interface improved (floating views and property window were added)
+  * Graph/source tree annotating
+  * Help improved
+
+ -- Mark Zaslavskiy <mark.zaslavskiy@gmail.com>  Fri, 10 Jan 2014 11:16:43 +0400
+
 sca (0.1.4-0extras13.10.1) saucy; urgency=low
 
   * Initial release
