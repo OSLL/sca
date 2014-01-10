@@ -146,6 +146,9 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
             m_model->setData(index, QVariant(false), isShownRole);
         }
     }
+    scene()->update();
+    emit goToObject(m_tempId);
+    QGraphicsView::dragLeaveEvent(event);
 }
 
 void GraphView::dropEvent(QDropEvent *event)
@@ -154,6 +157,7 @@ void GraphView::dropEvent(QDropEvent *event)
     qDebug() << "[GraphView]: end of dragEvent - dropped";
     //We just save new item
     m_temp = NULL;
+    m_tempId = -1;
 }
 
 void GraphView::ShowContextMenu(const QPoint &pos)

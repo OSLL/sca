@@ -10,6 +10,9 @@
     <height>524</height>
    </rect>
   </property>
+  <property name="acceptDrops">
+   <bool>true</bool>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -104,6 +107,9 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockFileBrowser">
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>File browser</string>
    </property>
@@ -126,6 +132,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockTableView">
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <property name="features">
     <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
@@ -194,6 +203,9 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockPropertyBrowser">
+   <property name="acceptDrops">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
     <string>Property Browser</string>
    </property>
