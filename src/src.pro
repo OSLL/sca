@@ -2,6 +2,7 @@ TEMPLATE = app
 TARGET = sca
 
 include(qtpropertybrowser/qtpropertybrowser.pri)
+include (defines.pri)
 
 target.path = /opt/extras.ubuntu.com/sca/
 
@@ -10,7 +11,6 @@ icon.path = /opt/extras.ubuntu.com/sca/
 
 desktop_file.files = ../scripts/extras-sca.desktop
 desktop_file.path = /usr/share/applications/
-
 
 INSTALLS += target icon desktop_file
 
@@ -23,6 +23,7 @@ QT += core gui declarative sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+LIBS += -lsource-highlight-qt4
 
 SOURCES += \
     main.cpp \

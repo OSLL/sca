@@ -8,6 +8,10 @@
 #include <QPixmap>
 #include <QDesktopServices>
 
+#include <srchiliteqt/Qt4SyntaxHighlighter.h>
+#include <srchilite/versions.h>
+#include <srchilite/settings.h>
+
 #include "widgets/PropertyBrowser.h"
 #include "widgets/SourceBrowser.h"
 #include "widgets/ObjectTextViewer.h"
@@ -158,6 +162,13 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->dockHexEditor, SLOT(raise()));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
+
+    srchiliteqt::Qt4SyntaxHighlighter *highlighter =
+            new srchiliteqt::Qt4SyntaxHighlighter(0);
+
+    qDebug() << QFileInfo(QDir::homePath()+"/simple.lang").exists();
+    highlighter->init(QDir::homePath()+"/simple.lang");
+    highlighter->setDocument(m_ui->textViewer->document());
 }
 
 MainWindow::~MainWindow()
