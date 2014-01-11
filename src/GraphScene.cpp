@@ -237,7 +237,7 @@ void GraphScene::refreshLinkPos(int linkId)
             else
             {
                 start = QPointF(fromPos.x() - from->boundingRect().width() / 2, fromPos.y());
-                end = QPointF(toPos.y() + to->boundingRect().width() / 2, toPos.y());
+                end = QPointF(toPos.x() + to->boundingRect().width() / 2, toPos.y());
             }
         }
         else
