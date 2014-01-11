@@ -7,10 +7,7 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QDesktopServices>
-
-#include <srchiliteqt/Qt4SyntaxHighlighter.h>
-#include <srchilite/versions.h>
-#include <srchilite/settings.h>
+#include <QStringList>
 
 #include "widgets/PropertyBrowser.h"
 #include "widgets/SourceBrowser.h"
@@ -163,12 +160,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
 
-    srchiliteqt::Qt4SyntaxHighlighter *highlighter =
-            new srchiliteqt::Qt4SyntaxHighlighter(0);
-
-    qDebug() << QFileInfo(QDir::homePath()+"/simple.lang").exists();
-    highlighter->init(QDir::homePath()+"/simple.lang");
-    highlighter->setDocument(m_ui->textViewer->document());
+    highlighter = new srchiliteqt::Qt4SyntaxHighlighter(0);
+    highlighter->init("default.lang");
 }
 
 MainWindow::~MainWindow()
@@ -358,14 +351,45 @@ void MainWindow::showAdvancedFilter()
     wid->show();
 }
 
+void MainWindow::changeSyntax(QString langFile)
+{
+    highlighter->initHighlighter(langFile);
+}
+
 void MainWindow::loadTextFile(const QString &code)
 {
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
-    QFileInfo fileInf = m_fileModel->fileInfo(curIndex);
-    m_ui->textViewer->loadFromFile(fileInf.absoluteFilePath(), code);
+    QFileInfo fileInfo = m_fileModel->fileInfo(curIndex);
+    m_ui->textViewer->loadFromFile(fileInfo.absoluteFilePath(), code);
+    highlighter->setDocument(m_ui->textViewer->document());
+    highlighter->initFromFileName(fileInfo.absoluteFilePath());
 }
 
 void MainWindow::on_filterLine_textChanged(const QString &arg1)
 {
     m_filter->setFilePath(arg1);
 }
+
+
+//void MainWindow::createSyntaxList()
+//{
+//    QStringList langFilter("*.lang");
+//    QDir langsDir("./langs");
+//    QStringList syntaxFiles = langsDir.entryList(langFilter, QDir::Files);
+
+//    QMenu *syntaxMenu = new QMenu("Syntax", this);
+//    QActionGroup *syntaxActions = new QActionGroup(this);
+//    QSignalMapper *syntaxMapper  = new QSignalMapper(this);
+//    foreach(QString syntax, syntaxFiles)
+//    {
+//        QAction *action = new QAction(QFileInfo(syntax).baseName(), this);
+//        action->setCheckable(true);
+
+//        syntaxActions->addAction(action);
+//        syntaxMenu->addAction(action);
+
+//        if(QFileInfo(syntax).baseName() == "default")
+//            action->setChecked(true);
+//    }
+//    m_ui->menuView->addMenu(syntaxMenu);
+//}

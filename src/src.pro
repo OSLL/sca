@@ -2,7 +2,6 @@ TEMPLATE = app
 TARGET = sca
 
 include(qtpropertybrowser/qtpropertybrowser.pri)
-include (defines.pri)
 
 target.path = /opt/extras.ubuntu.com/sca/
 
@@ -11,6 +10,10 @@ icon.path = /opt/extras.ubuntu.com/sca/
 
 desktop_file.files = ../scripts/extras-sca.desktop
 desktop_file.path = /usr/share/applications/
+
+lang_files.files = ../syntax_highlight/langs
+lang_files.path = ./
+
 
 INSTALLS += target icon desktop_file
 
