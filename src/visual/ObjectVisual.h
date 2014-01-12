@@ -33,6 +33,9 @@ public:
 
     void refreshToolTip(IScaObject *obj);
 
+    bool isSelected() const;
+    void setSelected(bool arg);
+
     void deleteAnnotation();
     void setAnnotation(QGraphicsTextItem *annotation);
     void setAnnotation(const QString &str);
@@ -42,10 +45,14 @@ public:
     QList<int> getLinks() const;
     void setLinks(const QList<int> &links);
 
-    virtual void setFiltered(bool filtered) = 0;
+    bool isFiltered() const;
+    void setFiltered(bool filtered);
+
+    virtual void refreshColor() = 0;
 
     friend QDebug operator<<(QDebug d, ObjectVisual &node);
 protected:
+    bool m_selected;
     QList<int> m_links;
     ObjectVisualType m_type;
     bool m_filtered;

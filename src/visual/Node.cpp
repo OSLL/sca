@@ -133,12 +133,17 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     }
 }
 
-void Node::setFiltered(bool filtered)
+void Node::refreshColor()
 {
-    m_filtered = filtered;
-    if (m_filtered)
+    if (isFiltered())
     {
         setColor(m_filterColor);
+        return;
+    }
+    else if (isSelected())
+    {
+        setColor(m_selectionColor);
+        return;
     }
     else
     {
@@ -149,9 +154,7 @@ void Node::setFiltered(bool filtered)
 void Node::setStandardColor(const QColor &color)
 {
     m_standardColor = color;
-    m_selectionColor.setBlue(color.blue() * 0.5);
-    m_selectionColor.setGreen(color.green() * 0.5);
-    m_selectionColor.setRed(color.red() * 0.5);
+    m_selectionColor = m_standardColor.darker(150);
     setColor(m_selectionColor);
 }
 
@@ -177,26 +180,5 @@ void Node::setColor(const QColor &color)
 
 QVariant Node::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    switch (change) {
-    case ItemSelectedHasChanged:
-        if (value == true) //It is selected now
-        {
-            setColor(m_selectionColor);
-        }
-        else
-        {
-            if (m_filtered)
-            {
-                setColor(m_filterColor);
-            }
-            else
-            {
-                setColor(m_standardColor);
-            }
-        }
-    default:
-        break;
-    };
-
     return ObjectVisual::itemChange(change, value);
 }

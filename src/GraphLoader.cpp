@@ -124,10 +124,10 @@ void GraphLoader::loadNodes()
         QString text       = m_query->value(rec.indexOf("text")).toString();
         QByteArray data    = m_query->value(rec.indexOf("data")).toByteArray();
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
-
+        bool isShown       = m_query->value(rec.indexOf("shown")).toBool();
 
         IScaObject *object = creator.createObject(type, line, offset, endoffset, length, path, text, data, annotation);
-        m_model->addObject(object , id, true);
+        m_model->addObject(object , id, isShown);
     }
 }
 
@@ -174,6 +174,8 @@ void GraphLoader::loadNodesVisual()
         node->setPos(QPointF(posX, posY));
         node->setStandardColor(QColor(red, green, blue));
         node->setSize(QSize(width, height));
+        //Workaround for wrong selection after loading
+        node->setSelected(true);
         node->setSelected(false);
     }
 }
@@ -199,6 +201,8 @@ void GraphLoader::loadLinksVisual()
         LinkVisual *link = static_cast<LinkVisual *>(m_scene->getObjectById(id));
         link->setDefaultArrows(hasDestinArrow, hasSourceArrow);
         link->setStandardColor(QColor(red, green, blue));
+        //Workaround for wrong selection
+        link->setSelected(true);
         link->setSelected(false);
     }
 }

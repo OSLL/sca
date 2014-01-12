@@ -76,9 +76,9 @@ public:
 
     QColor getColor() const;
     void setColor(const QColor &color);
-    void setFiltered(bool filtered);
     void setStandardColor(const QColor &color);
     QColor getStandardColor() const;
+    void refreshColor();
 protected:
     QRectF m_rect;
     QGraphicsTextItem *m_title;

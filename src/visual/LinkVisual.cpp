@@ -62,10 +62,10 @@ LinkVisual::LinkVisual(Link *obj) :
     QString annotation = obj->getAnnotation();
     setFlags(QGraphicsItem::ItemIsSelectable
              | QGraphicsItem::ItemSendsGeometryChanges);
-    setAcceptedMouseButtons(0);
     setZValue(-1);
-    setPen(m_standardPen);
     setAnnotation(annotation);
+    setStandardColor(DEFAULT_LINK_PEN.color());
+    refreshColor();
 }
 
 LinkVisual::~LinkVisual()
@@ -89,24 +89,6 @@ void LinkVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
 
 QVariant LinkVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
-    if (change == QGraphicsItem::ItemSelectedChange)
-    {
-        if (value == true)  //Now it is selected
-        {
-            setPen(m_selectionPen);
-        }
-        else    //Now it is unselected
-        {
-            if (m_filtered)
-            {
-                setPen(m_filterPen);
-            }
-            else
-            {
-                setPen(m_standardPen);
-            }
-        }
-    }
     return ObjectVisual::itemChange(change, value);
 }
 
@@ -302,33 +284,53 @@ void LinkVisual::setDestin(const QPointF &destin)
     m_destin = destin;
 }
 
-void LinkVisual::setFiltered(bool filtered)
-{
-    qDebug() << "[LinkVisual]: setFiltered(" << filtered << ")";
-    m_filtered = filtered;
-    if (filtered)
-    {
-        setPen(m_filterPen);
-    }
-    else
-    {
-        setPen(m_standardPen);
-    }
-}
-
 void LinkVisual::setStandardColor(const QColor &color)
 {
     m_standardPen.setColor(color);
-    m_selectionPen = m_standardPen;
-    QColor col = m_selectionPen.color();
-    col.setBlue(col.blue() * 0.5);
-    col.setRed(col.red() * 0.5);
-    col.setGreen(col.green() * 0.5);
-    m_selectionPen.setColor(col);
-    setPen(m_selectionPen);
+    //We move our color spectrum half-way closer to white
+    int red = color.red() + (255 - color.red()) / 2,
+        green = color.green() + (255 - color.green()) / 2,
+        blue = color.blue() + (255 - color.blue()) / 2;
+    //Check if we are out of boundaries (just in case)
+    m_selectionPen.setColor(QColor(qMin(red, 255),
+                                   qMin(green, 255),
+                                   qMin(blue, 255)));
+    qDebug() << m_standardPen << m_selectionPen;
+    refreshColor();
 }
 
 QColor LinkVisual::getStandardColor() const
 {
     return m_standardPen.color();
+}
+
+void LinkVisual::setPen(const QPen &pen)
+{
+    ObjectVisual::setPen(pen);
+    if (m_sourceArrow != NULL)
+    {
+        m_sourceArrow->setPen(pen);
+    }
+    if (m_destinArrow != NULL)
+    {
+        m_destinArrow->setPen(pen);
+    }
+}
+
+void LinkVisual::refreshColor()
+{
+    if (isFiltered())
+    {
+        setPen(m_filterPen);
+        return;
+    }
+    else if (isSelected())
+    {
+        setPen(m_selectionPen);
+        return;
+    }
+    else
+    {
+        setPen(m_standardPen);
+    }
 }

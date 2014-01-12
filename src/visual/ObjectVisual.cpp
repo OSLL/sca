@@ -4,6 +4,7 @@
 
 ObjectVisual::ObjectVisual(IScaObject *obj, ObjectVisualType type, QGraphicsItem *parent):
     QAbstractGraphicsShapeItem(parent),
+    m_selected(false),
     m_type(type),
     m_filtered(false),
     m_annotation(NULL)
@@ -39,10 +40,14 @@ void ObjectVisual::setAnnotation(QGraphicsTextItem *annotation)
 void ObjectVisual::setAnnotation(const QString &str)
 {
     deleteAnnotation();
+    if (str.isEmpty())
+        return;
+
     QGraphicsTextItem *new_ann = new QGraphicsTextItem(this);
 
     QString htmlStr("<div style='background-color:#FFFFF0;'>" + str + "</div>");
     new_ann->setHtml(htmlStr);
+    new_ann->setZValue(-2);
 
     qreal dx = new_ann->boundingRect().center().x(),
           dy = -new_ann->boundingRect().height() - boundingRect().height() / 2;
@@ -55,6 +60,17 @@ void ObjectVisual::setAnnotation(const QString &str)
         new_ann->moveBy(-dx, 0);
     }
     m_annotation = new_ann;
+}
+
+bool ObjectVisual::isSelected() const
+{
+    return m_selected;
+}
+
+void ObjectVisual::setSelected(bool arg)
+{
+    m_selected = arg;
+    refreshColor();
 }
 
 void ObjectVisual::disconnectLink(int linkId)
@@ -74,6 +90,18 @@ void ObjectVisual::refreshToolTip(IScaObject *obj)
     setToolTip(obj->getInfo(OBJECT_TOOLTIP_PATTERN));
 }
 
+bool ObjectVisual::isFiltered() const
+{
+    return m_filtered;
+}
+
+void ObjectVisual::setFiltered(bool filtered)
+{
+    qDebug() << "[ObjectVisual]: setFiltered(" << filtered << ")";
+    m_filtered = filtered;
+    refreshColor();
+}
+
 QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     switch(change)
@@ -87,6 +115,11 @@ QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, cons
     default:
         {
             break;
+        }
+    case QGraphicsItem::ItemSelectedChange:
+        {
+            m_selected = value.toBool();
+            refreshColor();
         }
     }
     return QGraphicsItem::itemChange(change, value);
@@ -144,6 +177,8 @@ void ObjectVisual::setType(const ObjectVisualType &type)
 
 QDebug operator<<(QDebug d, ObjectVisual &node)
 {
-    d << "Node(type=" << node.getType() << ";cons=" << node.m_links.size() << ");";
+    d << "Node(type=" << node.getType()
+      << ";cons=" << node.m_links.size()
+      << ";(" << node.pos().x() << ";" << node.pos().y() << "));";
     return d;
 }

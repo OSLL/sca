@@ -69,7 +69,7 @@ private:
   void saveModel(const GraphModel *model);
   void saveScene(const GraphScene *scene);
 
-  void insertNode(IScaObject *object, int id);
+  void insertNode(IScaObject *object, int id, bool isShown = true);
   void insertLink(Link *link, int id);
 
   void insertNodeVisual(Node *node, int id);

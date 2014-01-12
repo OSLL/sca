@@ -68,7 +68,7 @@ GraphSaver::~GraphSaver()
     delete m_query;
 }
 
-void GraphSaver::insertNode(IScaObject *object, int id)
+void GraphSaver::insertNode(IScaObject *object, int id, bool isShown)
 {
     m_query->prepare(SQL_INSERT_TYPE_PATTERN);
     m_query->bindValue(":id", id);
@@ -84,6 +84,7 @@ void GraphSaver::insertNode(IScaObject *object, int id)
     m_query->bindValue(":path", object->getFile().filePath());
     m_query->bindValue(":text", object->getContent());
     m_query->bindValue(":annotation", object->getAnnotation());
+    m_query->bindValue(":shown", isShown);
 
     int type = object->getType();
     switch(type)
@@ -206,11 +207,14 @@ void GraphSaver::saveModel(const GraphModel *model)
 {
     QVariant var = model->data(model->index(0, 0), objectIdListRole);
     QList<int> ids = qvariant_cast<QList<int> >(var);
+    QModelIndex index;
+    IScaObject *object;
 
     foreach(int id, ids)
     {
-        QVariant var = model->data(model->index(id, 0), rawObjectRole);
-        IScaObject *object = qvariant_cast<IScaObject *>(var);
+        index = model->index(id, 0);
+        var = model->data(model->index(id, 0), rawObjectRole);
+        object = qvariant_cast<IScaObject *>(var);
 
         if(object == NULL)
         {
@@ -219,7 +223,9 @@ void GraphSaver::saveModel(const GraphModel *model)
         }
         else
         {
-            insertNode(object, id);
+            //Check if object is shown and save that state
+            var = model->data(index, isShownRole);
+            insertNode(object, id, var.toBool());
         }
     }
 }

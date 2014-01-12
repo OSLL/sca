@@ -520,7 +520,6 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         {
             item->setSelected(true);
             //If we click with Ctrl, also go to object in other views
-            //To much performance
             if (ctrlFlag)
             {
                 if (objVisual != NULL)
@@ -565,6 +564,10 @@ void GraphView::mousePressEvent(QMouseEvent *event)
 
     if (event->button() == Qt::RightButton)
     {
+        if (objVisual != NULL)
+        {
+            objVisual->setSelected(true);
+        }
         ShowContextMenu(event->pos());
         return;
     }
@@ -583,11 +586,12 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
     QGraphicsItem *item = NULL;
     item = itemAt(event->pos());
     ObjectVisual *obj = NULL;
-    obj = static_cast<ObjectVisual *>(item);
+    obj = dynamic_cast<ObjectVisual *>(item);
     if (obj != NULL)
     {
-        setCursor(Qt::OpenHandCursor);
-        //Check if we are moving item
+        setCursor(Qt::CrossCursor);
+        //qDebug() << "[GraphView]: on " << obj;
+        //Check if we are moving item so that we use some button
         if (event->buttons() != Qt::NoButton)
         {
             emit itemMoved(m_tempId);

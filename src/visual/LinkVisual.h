@@ -82,10 +82,11 @@ public:
     void setSource(const QPointF &source);
     void setDestin(const QPointF &destin);
 
-    void setFiltered(bool filtered);
-
     void setStandardColor(const QColor &color);
     QColor getStandardColor() const;
+
+    void setPen(const QPen &pen);
+    void refreshColor();
 private:
     QLineF m_line;
     QGraphicsPathItem *m_sourceArrow;

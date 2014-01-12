@@ -76,6 +76,8 @@ public:
     QList<LinkVisual *> selectedLinks();
     QList<ObjectVisual *> selectedObjects();
 
+    void clearSelection();
+
     ObjectVisual *getObjectById(int id) const;
     int getObjectId(ObjectVisual *object);
 

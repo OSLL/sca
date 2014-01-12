@@ -124,6 +124,15 @@ QList<ObjectVisual *> GraphScene::selectedObjects()
     return objects;
 }
 
+void GraphScene::clearSelection()
+{
+    foreach(ObjectVisual *object, m_objects)
+    {
+        object->setSelected(false);
+    }
+    QGraphicsScene::clearSelection();
+}
+
 void GraphScene::refreshLinkPos(int linkId)
 {
     if (!m_objects.contains(linkId))
@@ -385,7 +394,6 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     node = static_cast<Node *>(newObject);
     node->setStandardColor(standardColor);
     node->setSize(size);
-
 
     //Update for object filtering
     QVariant filtered = m_model->data(index, highlightRole);

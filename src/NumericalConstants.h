@@ -87,7 +87,7 @@ const int LINE_SELECTION_DELTA = 15;
 const qreal MIN_LINK_LENGTH = 15;
 
 const QPen DEFAULT_LINK_PEN(QBrush(Qt::black), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
-const QPen SELECTED_LINK_PEN(QBrush(QColor(80,80,80)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
+const QPen SELECTED_LINK_PEN(QBrush(QColor(Qt::black).lighter(150)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
 const QPen FILTERED_LINK_PEN(QBrush(QColor(155, 0, 186)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
 
 //Default export image size

@@ -190,19 +190,19 @@ void MainWindow::openAbout()
 
 void MainWindow::exportToImage()
 {
-    QString selectedFilter = tr("Png(*png)");
+    QString selectedFilter = tr("Png(*.png)");
     QString path = QFileDialog::getSaveFileName(this, tr("Export to"), QDir::homePath(),
-                                                tr("PNG (*png);;JPEG (*jpg *jpeg);;BMP (*bmp)"),
+                                                tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"),
                                                 &selectedFilter);
-    if (selectedFilter == tr("PNG (*png)"))
+    if (selectedFilter == tr("PNG (*.png)"))
     {
         path += ".png";
     }
-    if (selectedFilter == tr("JPEG (*jpg *jpeg)"))
+    if (selectedFilter == tr("JPEG (*.jpg *.jpeg)"))
     {
         path += ".jpg";
     }
-    if (selectedFilter == tr("BMP (*bmp)"))
+    if (selectedFilter == tr("BMP (*.bmp)"))
     {
         path += ".bmp";
     }
@@ -213,7 +213,7 @@ void MainWindow::exportToImage()
 void MainWindow::saveToFile()
 {
     QString path = QFileDialog::getSaveFileName(this, tr("Save"), QDir::homePath(),
-                                                tr("GM (*gm)"));
+                                                tr("GM (*.gm)"));
     if (path.isEmpty())
     {
         return;
@@ -228,13 +228,15 @@ void MainWindow::saveToFile()
 void MainWindow::openFile()
 {
     QString path = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
-                                                tr("GM (*gm)"));
+                                                tr("GM (*.gm)"));
     if (path.isEmpty())
     {
         return;
     }
     GraphLoader loader(path);
     loader.loadGraph(m_model, m_scene);
+    m_ui->sourceBrowser->reset();
+    m_ui->tableView->reset();
 }
 
 void MainWindow::openHelp()
@@ -342,7 +344,7 @@ void MainWindow::showAdvancedFilter()
     else
     {
         wid = new FilterDialog(m_filter, m_scene, this);
-        qDebug() << "Advanced filter called";
+        qDebug() << "[Main window]: Advanced filter called";
     }
     wid->show();
 }
