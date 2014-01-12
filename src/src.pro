@@ -139,3 +139,17 @@ RESOURCES += \
 
 OTHER_FILES += \
     qtpropertybrowser/qtpropertybrowser.pri
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../mingw/lib/ -lsource-highlight-qt4
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../mingw/lib/ -lsource-highlight-qt42d
+
+INCLUDEPATH += $$PWD/../../../mingw/include
+DEPENDPATH += $$PWD/../../../mingw/include
+
+
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../mingw/lib/ -lsource-highlight3
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../mingw/lib/ -lsource-highlight3d
+
+INCLUDEPATH += $$PWD/../../../mingw/include
+DEPENDPATH += $$PWD/../../../mingw/include

@@ -8,6 +8,10 @@
 #include <QPixmap>
 #include <QDesktopServices>
 #include <QStringList>
+#include <QDebug>
+#include <QTextCodec>
+
+#include <srchilite/settings.h>
 
 #include "widgets/PropertyBrowser.h"
 #include "widgets/SourceBrowser.h"
@@ -26,6 +30,8 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent), m_ui(new Ui::MainWindow)
 {
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("Windows-1251"));
+
     m_ui->setupUi(this);
 
     setWindowIcon(QIcon(LOGO_PATH));
@@ -160,8 +166,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
 
-    highlighter = new srchiliteqt::Qt4SyntaxHighlighter(0);
-    highlighter->init("default.lang");
+    QString dataFiles = QCoreApplication::applicationDirPath() + "/syntax_highlight";
+    if(QFileInfo(dataFiles).exists())
+    {
+        srchilite::Settings::setGlobalDataDir(dataFiles.toStdString());
+        highlighter = new srchiliteqt::Qt4SyntaxHighlighter(0);
+        highlighter->init("default.lang");
+    }
+
 }
 
 MainWindow::~MainWindow()
@@ -244,7 +256,7 @@ void MainWindow::openFile()
 void MainWindow::openHelp()
 {
     QString link = QApplication::applicationDirPath() +
-                   QString(HELP_PATH);
+            QString(HELP_PATH);
     QUrl url = QUrl::fromLocalFile(link);
     qDebug() << url;
     QDesktopServices::openUrl(url);
@@ -260,40 +272,40 @@ void MainWindow::switchToObject(IScaObject *obj)
     switch (obj->getType())
     {
     case IScaObject::TEXTBLOCK:
-        {
-            m_ui->textViewer->setFocus();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        break;
+    }
     case IScaObject::BINARYBLOCK:
-        {
-            m_ui->hexEditor->setFocus();
-            break;
-        }
+    {
+        m_ui->hexEditor->setFocus();
+        break;
+    }
     case IScaObject::DIRECTORY:
-        {
-            m_ui->sourceBrowser->setFocus();
-            break;
-        }
+    {
+        m_ui->sourceBrowser->setFocus();
+        break;
+    }
     case IScaObject::FILE:
-        {
-            m_ui->sourceBrowser->setFocus();
-            break;
-        }
+    {
+        m_ui->sourceBrowser->setFocus();
+        break;
+    }
     case IScaObject::IDENTIFIER:
-        {
-            m_ui->textViewer->setFocus();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        break;
+    }
     case IScaObject::LINE:
-        {
-            m_ui->textViewer->setFocus();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        break;
+    }
     case IScaObject::SYMBOL:
-        {
-            m_ui->textViewer->setFocus();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        break;
+    }
     default:
         break;
     }
