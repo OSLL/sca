@@ -50,6 +50,8 @@
 #include <QObjectUserData>
 #include <QDragLeaveEvent>
 #include <QFileInfo>
+#include <srchilite/settings.h>
+
 #include "../common/IScaObject.h"
 #include "../common/IScaObjectFile.h"
 #include "../common/IScaObjectTextBlock.h"
@@ -68,6 +70,15 @@ ObjectTextViewer::ObjectTextViewer(QWidget *parent) :
     setReadOnly(true);
     QFontMetrics metrics(currentFont());
     setTabStopWidth(4 * metrics.width(' '));
+
+#ifdef WIN32
+    QString SYNTAX_DATA_FILES = QCoreApplication::applicationDirPath() + "/syntax_highlight";
+    srchilite::Settings::setGlobalDataDir(SYNTAX_DATA_FILES.toStdString());
+#endif
+
+    highlighter = new srchiliteqt::Qt4SyntaxHighlighter(0);
+    highlighter->init("default.lang");
+    highlighter->setDocument(document());
 }
 
 void ObjectTextViewer::goToTextBlock(IScaObjectTextBlock *object)
@@ -200,6 +211,7 @@ void ObjectTextViewer::loadFromFile(const QString &path, const QString &code)
 
     fLoader->openFile(path);
 
+    highlighter->initFromFileName(path);
     fLoader->loadToTextDoc(document());
     setCurrentPath(path);
     setCurrentEncoding(code);

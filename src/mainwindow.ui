@@ -58,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -86,7 +86,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>Window</string>
+     <string>View</string>
     </property>
     <widget class="QMenu" name="menuViews">
      <property name="title">
@@ -335,6 +335,16 @@
    </property>
    <property name="text">
     <string>Property browser</string>
+   </property>
+  </action>
+  <action name="actionSyntax">
+   <property name="text">
+    <string>Syntax</string>
+   </property>
+  </action>
+  <action name="actionS">
+   <property name="text">
+    <string>s</string>
    </property>
   </action>
  </widget>

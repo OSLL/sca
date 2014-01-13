@@ -360,3 +360,26 @@ void MainWindow::on_filterLine_textChanged(const QString &arg1)
 {
     m_filter->setFilePath(arg1);
 }
+
+//void MainWindow::createSyntaxList()
+//{
+//    QStringList langFilter("*.lang");
+//    QDir langsDir("./langs");
+//    QStringList syntaxFiles = langsDir.entryList(langFilter, QDir::Files);
+
+//    QMenu *syntaxMenu = new QMenu("Syntax", this);
+//    QActionGroup *syntaxActions = new QActionGroup(this);
+//    QSignalMapper *syntaxMapper  = new QSignalMapper(this);
+//    foreach(QString syntax, syntaxFiles)
+//    {
+//        QAction *action = new QAction(QFileInfo(syntax).baseName(), this);
+//        action->setCheckable(true);
+
+//        syntaxActions->addAction(action);
+//        syntaxMenu->addAction(action);
+
+//        if(QFileInfo(syntax).baseName() == "default")
+//            action->setChecked(true);
+//    }
+//    m_ui->menuView->addMenu(syntaxMenu);
+//}
