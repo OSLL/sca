@@ -17,6 +17,7 @@
 * ---------------------------------------------------------------- */
 
 #include <QString>
+#include <QCoreApplication>
 #include "NumericalConstants.h"
 
 //[Common context menu strings]

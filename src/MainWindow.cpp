@@ -11,7 +11,6 @@
 #include <QDebug>
 #include <QTextCodec>
 
-#include <srchilite/settings.h>
 
 #include "widgets/PropertyBrowser.h"
 #include "widgets/SourceBrowser.h"
@@ -165,14 +164,6 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->dockHexEditor, SLOT(raise()));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
-
-    QString dataFiles = QCoreApplication::applicationDirPath() + "/syntax_highlight";
-    if(QFileInfo(dataFiles).exists())
-    {
-        srchilite::Settings::setGlobalDataDir(dataFiles.toStdString());
-        highlighter = new srchiliteqt::Qt4SyntaxHighlighter(0);
-        highlighter->init("default.lang");
-    }
 
 }
 
@@ -363,18 +354,11 @@ void MainWindow::showAdvancedFilter()
     wid->show();
 }
 
-void MainWindow::changeSyntax(QString langFile)
-{
-    highlighter->initHighlighter(langFile);
-}
-
 void MainWindow::loadTextFile(const QString &code)
 {
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
     QFileInfo fileInfo = m_fileModel->fileInfo(curIndex);
     m_ui->textViewer->loadFromFile(fileInfo.absoluteFilePath(), code);
-    highlighter->setDocument(m_ui->textViewer->document());
-    highlighter->initFromFileName(fileInfo.absoluteFilePath());
 }
 
 void MainWindow::on_filterLine_textChanged(const QString &arg1)

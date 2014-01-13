@@ -49,6 +49,9 @@
  */
 
 #include <QTextEdit>
+
+#include <srchiliteqt/Qt4SyntaxHighlighter.h>
+
 #include "StringConstants.h"
 class IScaObject;
 class IScaObjectTextBlock;
@@ -92,6 +95,8 @@ protected:
 private:
     QString m_currentPath;
     QString m_currentEncoding;
+
+    srchiliteqt::Qt4SyntaxHighlighter *highlighter;
 };
 
 #endif //_ObjectTextViewer_H_FD315731_667E_45A5_AA99_53E0B6BD49D1_INCLUDED_
