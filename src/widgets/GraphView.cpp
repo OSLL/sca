@@ -291,14 +291,14 @@ void GraphView::ShowContextMenu(const QPoint &pos)
         if (setLeftArrow->isChecked())
             links.at(0)->setDefaultArrows(true);
         else
-            links.at(0)->removeSourceArrow();
+            links.at(0)->removeLeftArrow();
     }
     else if (action == setRightArrow)
     {
         if (setRightArrow->isChecked())
             links.at(0)->setDefaultArrows(false);
         else
-            links.at(0)->removeDestinArrow();
+            links.at(0)->removeRightArrow();
     }
     else if (action == editAnnotationAct)
     {
@@ -508,7 +508,7 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     //Selection logics goes here
     if (item != NULL)
     {
-        objVisual = static_cast<ObjectVisual *>(item);
+        objVisual = dynamic_cast<ObjectVisual *>(item);
         if (m_temp != objVisual)
         {
             m_tempId = scene()->getObjectId(objVisual);
@@ -567,8 +567,8 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         if (objVisual != NULL)
         {
             objVisual->setSelected(true);
+            ShowContextMenu(event->pos());
         }
-        ShowContextMenu(event->pos());
         return;
     }
     QGraphicsView::mousePressEvent(event);

@@ -246,22 +246,32 @@ void LinkVisual::setDefaultArrows(bool left)
     refreshGeometry(m_source, m_destin);
 }
 
-void LinkVisual::removeSourceArrow()
+void LinkVisual::removeLeftArrow()
 {
-    if (m_sourceArrow != NULL)
+    if (m_source.x() < m_destin.x())
     {
         delete m_sourceArrow;
+        m_sourceArrow = NULL;
     }
-    m_sourceArrow = NULL;
-}
-
-void LinkVisual::removeDestinArrow()
-{
-    if (m_destinArrow != NULL)
+    else
     {
         delete m_destinArrow;
+        m_destinArrow = NULL;
     }
-    m_destinArrow = NULL;
+}
+
+void LinkVisual::removeRightArrow()
+{
+    if (m_source.x() > m_destin.x())
+    {
+        delete m_sourceArrow;
+        m_sourceArrow = NULL;
+    }
+    else
+    {
+        delete m_destinArrow;
+        m_destinArrow = NULL;
+    }
 }
 
 QPointF LinkVisual::getSource()

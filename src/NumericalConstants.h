@@ -22,7 +22,7 @@ const qreal PI = 3.1415926;
 
 //Alerts consts
 const long MAX_BINARY_FILE_SIZE = 50*1024*1024;
-const long MAX_TEXT_FILE_SIZE = 0.4*1024*1024;
+const long MAX_TEXT_FILE_SIZE = 50*1024*1024;
 
 //QHexEdit consts
 const int HEXCHARS_IN_LINE = 47;

@@ -16,7 +16,7 @@ INSTALLS += target icon desktop_file
 }
 
 win32 {
-lang_files.files = ($COPY_DIR) $$PWD/syntax_highlight
+lang_files.files = ($COPY_DIR) $$PWD/resources/syntax_highlight
 CONFIG(debug, debug|release): lang_files.path = $$OUT_PWD/debug/
 CONFIG(release, debug|release): lang_files.path = $$OUT_PWD/release/
 

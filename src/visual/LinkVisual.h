@@ -74,8 +74,8 @@ public:
     void setDefaultArrows(bool left);
     void setDefaultArrows(bool source, bool destin);
 
-    void removeSourceArrow();
-    void removeDestinArrow();
+    void removeLeftArrow();
+    void removeRightArrow();
 
     QPointF getSource();
     QPointF getDestin();

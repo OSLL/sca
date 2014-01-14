@@ -85,6 +85,8 @@ void Node::setRect(const QRectF &rect)
 void Node::setSize(const QSize &size)
 {
     m_rect.setSize(size);
+    m_rect.setX(-size.width()/2);
+    m_rect.setY(-size.height()/2);
 }
 
 QGraphicsTextItem *Node::getTitle() const
