@@ -372,6 +372,18 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     QColor standardColor = node->getStandardColor();
     QSize size = node->boundingRect().size().toSize();
 
+    //In case we didn't change standart color, but converted object, set new color
+    if (standardColor == DEFAULT_IDENTIFIER_COLOR
+        && object->getType() == IScaObject::TEXTBLOCK)
+    {
+        standardColor = DEFAULT_TEXT_BLOCK_COLOR;
+    }
+    if (standardColor == DEFAULT_TEXT_BLOCK_COLOR
+        && object->getType() == IScaObject::IDENTIFIER)
+    {
+        standardColor = DEFAULT_IDENTIFIER_COLOR;
+    }
+
     //Remove old one
     removeItem(objectVis);
     delete objectVis;
