@@ -215,7 +215,7 @@ void GraphScene::refreshLinkPos(int linkId)
     // TODO (LeoSko) somehow it crashes when you dont check if they are on one line
     // (horizontally or vertically, intersection appears to be empty)
     // so we customly set start and end points in that case
-    if (fromIntersected.size() > 1 || toIntersected.size() > 0)
+    if (fromIntersected.size() > 1 && toIntersected.size() > 0)
     {
         start = fromIntersected[1];
         end = toIntersected[0];

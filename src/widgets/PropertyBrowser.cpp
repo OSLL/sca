@@ -359,6 +359,9 @@ void PropertyBrowser::processVisualObject(ObjectVisual *object)
         Node *node = static_cast<Node *>(object);
         property = m_sizeManager->addProperty(PROPERTY_SIZE);
         m_sizeManager->setValue(property, node->boundingRect().size().toSize());
+        m_sizeManager->setRange(property,
+                                QSize(MIN_NODE_WIDTH, MIN_NODE_HEIGHT),
+                                QSize(MAX_NODE_WIDTH, MAX_NODE_HEIGHT));
         addProperty(property, PROPERTY_SIZE);
     }
 }

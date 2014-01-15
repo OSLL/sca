@@ -53,13 +53,9 @@
 Node::Node(QColor standardColor, QColor filterColor, IScaObject *obj) :
     ObjectVisual(obj, NODE),
     m_title(NULL),
-    m_standardColor(standardColor),
-    m_selectionColor(QColor(m_standardColor.red()  * SELECTION_COLOR_DELTA,
-                            m_standardColor.green()* SELECTION_COLOR_DELTA,
-                            m_standardColor.blue() * SELECTION_COLOR_DELTA)),
     m_filterColor(filterColor)
 {
-    setColor(m_standardColor);
+    setStandardColor(standardColor);
     setCacheMode(DeviceCoordinateCache);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsGeometryChanges);
     setZValue(1);
@@ -85,8 +81,11 @@ void Node::setRect(const QRectF &rect)
 void Node::setSize(const QSize &size)
 {
     m_rect.setSize(size);
-    m_rect.setX(-size.width()/2);
-    m_rect.setY(-size.height()/2);
+    if (m_title != NULL)
+    {
+        m_title->setY(m_rect.height() / 2 + m_title->boundingRect().height());
+    }
+    m_rect.moveTo(-size.width()/2, -size.height()/2);
 }
 
 QGraphicsTextItem *Node::getTitle() const

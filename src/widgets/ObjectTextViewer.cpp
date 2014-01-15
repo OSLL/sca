@@ -41,6 +41,7 @@
 
 
 #include "ObjectTextViewer.h"
+#include <QCoreApplication>
 #include <QDrag>
 #include <QMimeData>
 #include <QUrl>

@@ -72,7 +72,6 @@ LinkVisual::~LinkVisual()
 {
     delete m_sourceArrow;
     delete m_destinArrow;
-
     qDebug() << "Removing link";
 }
 
