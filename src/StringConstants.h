@@ -41,6 +41,8 @@ const QString ERROR_TOO_LARGE_TEXT_FILE_MSG =
 const QString ERROR_OPENING_FILE_TITLE = "Can\'t open file.";
 const QString ERROR_OPENING_FILE_MSG = "Error opening %1";
 const QString LOG_PATTERN = "%1: %2\n";
+const QString WARNING_LARGE_BINARY_FILE_TITLE = "Large binary file";
+const QString WARNING_LARGE_BINARY_FILE_TEXT = "File is too big to show, only first 15 MB are shown.";
 //[End error messages]
 
 //[GraphView context menu strings]

@@ -568,7 +568,7 @@ public:
     void undo();
     void redo();
 
-    QString toRedableString();
+    QString toReadableString();
     QString selectionToReadableString();
 
     void goToBinaryBlock(IScaObjectBinaryBlock *obj);

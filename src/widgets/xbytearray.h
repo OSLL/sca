@@ -507,13 +507,13 @@ Ty Coon, President of Vice
 That's all there is to it!/*/
 #include <QtCore>
 
-/*! XByteArray represents the content of QHexEcit.
+/*! XByteArray represents the content of QHexEdit.
 XByteArray comprehend the data itself and informations to store if it was
 changed. The QHexEdit component uses these informations to perform nice
 rendering of the data
 
 XByteArray also provides some functionality to insert, replace and remove
-single chars and QByteArras. Additionally some functions support rendering
+single chars and QByteArrays. Additionally some functions support rendering
 and converting to readable strings.
 */
 class XByteArray
@@ -548,7 +548,7 @@ public:
     QByteArray & replace(int index, int length, const QByteArray & ba);
 
     QChar asciiChar(int index);
-    QString toRedableString(int start=0, int end=-1);
+    QString toReadableString(int start=0, int end=-1);
 
 signals:
 
@@ -559,8 +559,8 @@ private:
     QByteArray _changedData;
 
     int _addressNumbers;                    // wanted width of address area
-    int _addressOffset;                     // will be added to the real addres inside bytearray
-    int _realAddressNumbers;                // real width of address area (can be greater then wanted width)
+    int _addressOffset;                     // will be added to the real address inside bytearray
+    int _realAddressNumbers;                // real width of address area (can be greater than wanted width)
     int _oldSize;                           // size of data
 };
 

@@ -641,7 +641,7 @@ QChar XByteArray::asciiChar(int index)
     return QChar(ch);
 }
 
-QString XByteArray::toRedableString(int start, int end)
+QString XByteArray::toReadableString(int start, int end)
 {
     int adrWidth = realAddressNumbers();
     if (_addressNumbers > adrWidth)

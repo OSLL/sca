@@ -801,15 +801,15 @@ void QHexEditPrivate::undo()
     update();
 }
 
-QString QHexEditPrivate::toRedableString()
+QString QHexEditPrivate::toReadableString()
 {
-    return _xData.toRedableString();
+    return _xData.toReadableString();
 }
 
 
 QString QHexEditPrivate::selectionToReadableString()
 {
-    return _xData.toRedableString(getSelectionBegin(), getSelectionEnd());
+    return _xData.toReadableString(getSelectionBegin(), getSelectionEnd());
 }
 
 void QHexEditPrivate::goToBinaryBlock(IScaObjectBinaryBlock *obj)
@@ -1181,6 +1181,7 @@ void QHexEditPrivate::mousePressEvent(QMouseEvent * event)
     {
         resetSelection(cPos);
         setCursorPos(cPos);
+        _draggingOut = false;
     }
 }
 
@@ -1465,8 +1466,8 @@ void QHexEditPrivate::adjust()
         _xPosHex = 0;
     _xPosAscii = _xPosHex + HEXCHARS_IN_LINE * _charWidth + GAP_HEX_ASCII;
 
-    // tell QAbstractScollbar, how big we are
-    setMinimumHeight(((_xData.size()/16 + 1) * _charHeight) + 5);
+    // tell QAbstractScrollbar, how big we are
+    setMinimumHeight(qMin(QWIDGETSIZE_MAX, ((_xData.size()/16 + 1) * _charHeight) + 5)-1);
     if(_asciiArea)
         setMinimumWidth(_xPosAscii + (BYTES_PER_LINE * _charWidth));
     else
@@ -1481,6 +1482,7 @@ void QHexEditPrivate::ensureVisible()
     // x-margin is 3 pixels, y-margin is half of charHeight
     _scrollArea->ensureVisible(_cursorX, _cursorY + _charHeight/2, 3, _charHeight/2 + 2);
 }
+
 QString QHexEditPrivate::getCurrentPath() const
 {
     return _currentPath;
@@ -1490,4 +1492,3 @@ void QHexEditPrivate::setCurrentPath(const QString &currentPath)
 {
     _currentPath = currentPath;
 }
-

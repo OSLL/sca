@@ -552,7 +552,7 @@ void QHexEdit::replace( int pos, int len, const QByteArray & after)
 
 QString QHexEdit::toReadableString()
 {
-    return qHexEdit_p->toRedableString();
+    return qHexEdit_p->toReadableString();
 }
 
 QString QHexEdit::selectionToReadableString()
@@ -570,6 +570,11 @@ void QHexEdit::loadFromFile(const QString &path)
                                  QString::number(fileInf.size())),
                              QMessageBox::Ok);
         return;
+    }
+    if (fileInf.size() > SCROLLED_BINARY_FILE_MAX_SIZE)
+    {
+        QMessageBox::warning(this, WARNING_LARGE_BINARY_FILE_TITLE,
+                             WARNING_LARGE_BINARY_FILE_TEXT);
     }
     //Check if the file has already been opened
     //or it is not file at all
