@@ -127,7 +127,7 @@ void GraphLoader::loadNodes()
         bool isShown       = m_query->value(rec.indexOf("shown")).toBool();
 
         IScaObject *object = creator.createObject(type, line, offset, endoffset, length, path, text, data, annotation);
-        m_model->addObject(object , id, isShown);
+        m_model->addObject(object, id, isShown);
     }
 }
 
@@ -171,6 +171,8 @@ void GraphLoader::loadNodesVisual()
         int blue   = m_query->value(rec.indexOf("colorB")).toInt();
 
         Node *node = static_cast<Node *>(m_scene->getObjectById(id));
+        if (node == NULL)
+            continue;
         node->setPos(QPointF(posX, posY));
         node->setStandardColor(QColor(red, green, blue));
         node->setSize(QSize(width, height));

@@ -63,7 +63,6 @@ GraphSaver::GraphSaver(const QString &path)
 
 GraphSaver::~GraphSaver()
 {
-    m_query->clear();
     m_db.close();
     delete m_query;
 }
@@ -212,6 +211,7 @@ void GraphSaver::saveModel(const GraphModel *model)
 
     foreach(int id, ids)
     {
+        object = NULL;
         index = model->index(id, 0);
         var = model->data(model->index(id, 0), rawObjectRole);
         object = qvariant_cast<IScaObject *>(var);

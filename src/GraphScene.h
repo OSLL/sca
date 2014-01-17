@@ -91,7 +91,6 @@ public:
 private:
     QHash<int, ObjectVisual *> m_objects;
 
-    QPointF m_posToAdd;
     QAbstractItemModel *m_model;
 signals:
 
@@ -100,6 +99,7 @@ public slots:
     void updateObjects(QModelIndex topLeft, QModelIndex rightBottom);
     void updateObjectVisual(IScaObject *object, int id);
     void removeObject(const QModelIndex & parent, int first, int last);
+    void clear();
 
 }; // class GraphScene
 

@@ -19,15 +19,27 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 private:
-    void createSyntaxList();
+    void createConnections();
+    void createFilterConnections();
+    void createTableViewConnections();
+    void createGraphViewConnections();
+    void createCustomContextMenuConnections();
+    void createSourceBrowserConnections();
+    void createMenuBarConnections();
+    void checkChanges();
+    void clearAll();
 
     Ui::MainWindow *m_ui;
-    SCAFileSystemModel *m_fileModel;
+    QString m_currentFilePath;
+    QString m_currentFileName;
     GraphScene *m_scene;
     GraphModel *m_model;
     GraphFilter *m_filter;
-    GraphTableProxyModel *m_tableProxy;
     PropertyBrowser *m_propertyBrowser;
+    GraphTableProxyModel *m_tableProxy;
+    SCAFileSystemModel *m_fileModel;
+    bool m_fileChanged;
+    bool m_fileIsOnDisk;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
@@ -40,12 +52,16 @@ public slots:
     void openAbout();
     void exportToImage();
     void saveToFile();
+    void newFile();
+    void saveFile();
     void openFile();
+    void setFileChanged(bool value = true);
     void openHelp();
     void refreshFilterLine(const QString &text);
     void switchToObject(IScaObject *);
     void annotateNoGraphObject();
     void showAdvancedFilter();
+    void close();
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
 };

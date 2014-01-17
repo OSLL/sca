@@ -58,8 +58,9 @@ int main(int c, char **v)
     QApplication app(c,v);
 
     MainWindow mw;
-    mw.setWindowTitle(MAINWINDOW_TITLE);
     mw.show();
+    mw.newFile();
 
-    return app.exec();
+    int res = app.exec();
+    return res;
 }

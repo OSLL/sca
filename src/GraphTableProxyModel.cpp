@@ -106,6 +106,10 @@ int GraphTableProxyModel::columnCount(const QModelIndex &parent) const
 QVariant GraphTableProxyModel::data(const QModelIndex &index, int role) const
 {
     //qDebug() << "[ProxyTableModel]: data(" << index.row() << ";" << role << ")";
+    if (role == objectIdListRole)
+    {
+        return QVariant::fromValue(m_idMap);
+    }
     if (!index.isValid())
     {
         return QVariant();

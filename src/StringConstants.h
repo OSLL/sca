@@ -71,14 +71,19 @@ const QString ISO885915 = "ISO-8859-15";
 
 //[Preferences]
 const QString DEFAULT_ENCODING = UTF8;
-const QString APPLICATION_VERSION = "0.1";
-const QString APPLICATION_AUTORS = QString("Kirill Krinkin\n") +
+const QString APPLICATION_VERSION = "0.1.5";
+const QString APPLICATION_AUTORS =
+        QString("Kirill Krinkin\n") +
         QString("Mark Zaslavskiy\n") +
         QString("Leonid Skorospelov\n") +
         QString("Nikita Razdobreev");
 const QString APPLICATION_NAME = "Source Code Analyzer";
 const QString APPLICATION_COPYRIGHT = "\xA9 Open Source & Linux Lab, 2013";
-const QString MAINWINDOW_TITLE = APPLICATION_NAME;
+const QString MAINWINDOW_TITLE = "%1 - " + APPLICATION_NAME;
+const QString DEFAULT_NEW_FILE_NAME = "New graph.gm";
+const QString SAVE_CHANGED_FILE_QUESTION_TITLE = "Save changes?";
+const QString SAVE_CHANGED_FILE_QUESTION_TEXT = "%1 has been changed. Do you want to save changes?";
+const QString FILE_SAVE_SUCCESSFUL = "File saved successfully.";
 //[End preferences]
 
 //[MIMEData]

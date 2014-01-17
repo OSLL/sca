@@ -23,32 +23,72 @@
 #include "common/SCAFileSystemModel.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent), m_ui(new Ui::MainWindow)
+    QMainWindow(parent), m_ui(new Ui::MainWindow),
+    m_currentFilePath(""),
+    m_currentFileName(DEFAULT_NEW_FILE_NAME),
+    m_scene(new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT, this)),
+    m_model(new GraphModel(this)),
+    m_filter(new GraphFilter(m_model, this)),
+    m_tableProxy(new GraphTableProxyModel(m_filter, this)),
+    m_fileModel(new SCAFileSystemModel(m_model, this)),
+    m_fileChanged(false),
+    m_fileIsOnDisk(false)
 {
     m_ui->setupUi(this);
-
     setWindowIcon(QIcon(LOGO_PATH));
 
-    //Create and setup model and filter
-    m_scene = new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT, this);
+    //Setup model and filter
     m_ui->graphViewer->setScene(m_scene);
-
-    m_model = new GraphModel(this);
     m_ui->graphViewer->setModel(m_model);
-
-    m_filter = new GraphFilter(m_model, this);
     m_scene->setModel(m_filter);
 
+    //We need to create propertyBrowser in-code due to it's virtual functions
+    //that are initialized only when we use 'new' operation and after m_ui->setupUi();.
     m_propertyBrowser = new PropertyBrowser(m_model, m_scene,
-                                            m_ui->dockPropertyBrowser);
+                                          m_ui->dockPropertyBrowser),
     m_ui->dockPropertyBrowser->setWidget(m_propertyBrowser);
-    m_propertyBrowser->setModel(m_model);
-    m_propertyBrowser->setScene(m_scene);
 
-    m_tableProxy = new GraphTableProxyModel(m_filter, this);
+    //Set up file model
+    m_fileModel->setRootPath("");
+    m_ui->sourceBrowser->setModel(m_fileModel);
+    m_ui->filterLine->setText("");
+
+    //Leave only "name"(zero) column in SourceBrowser and last "Annotation"
+    for (int i = 1; i < m_fileModel->columnCount() - 1; i++)
+    {
+        m_ui->sourceBrowser->hideColumn(i);
+    }
+
+    //Set some flags for widgets
+    m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
+    m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
+    m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    QHeaderView *header = m_ui->tableView->horizontalHeader();
     m_ui->tableView->setModel(m_tableProxy);
-    m_ui->tableView->horizontalHeader()->setMovable(true);
     m_ui->tableView->setGridStyle(Qt::SolidLine);
+    header->setMovable(true);
+    header->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    createConnections();
+}
+
+void MainWindow::createConnections()
+{
+    connect(m_filter, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(setFileChanged()));
+    connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
+            this, SLOT(setFileChanged()));
+    createFilterConnections();
+    createTableViewConnections();
+    createGraphViewConnections();
+    createSourceBrowserConnections();
+    createCustomContextMenuConnections();
+    createMenuBarConnections();
+}
+
+void MainWindow::createFilterConnections()
+{
     connect(m_filter, SIGNAL(filterChanged()), m_scene, SLOT(refreshAll()));
     connect(m_filter, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             m_tableProxy, SLOT(updateMap()));
@@ -56,9 +96,17 @@ MainWindow::MainWindow(QWidget *parent) :
             m_tableProxy, SLOT(updateMap()));
     connect(m_filter, SIGNAL(filterChanged()),
             m_tableProxy, SLOT(updateMap()));
+}
+
+void MainWindow::createTableViewConnections()
+{
     //Connect doubleClick on tableView to center on item in scene
     connect(m_ui->tableView, SIGNAL(doubleClicked(QModelIndex)),
             m_ui->graphViewer, SLOT(moveTo(QModelIndex)));
+}
+
+void MainWindow::createGraphViewConnections()
+{
     //Connect going in widgets to object on doubleClicking it in scene
     connect(m_ui->graphViewer, SIGNAL(goToObject(IScaObject*)),
             m_ui->sourceBrowser, SLOT(goToObject(IScaObject*)));
@@ -74,28 +122,12 @@ MainWindow::MainWindow(QWidget *parent) :
             m_propertyBrowser, SLOT(loadItem(int)));
     connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
             m_propertyBrowser, SLOT(itemMoved(int)));
+}
 
-    //Set up file model
-    m_fileModel = new SCAFileSystemModel(m_model, this);
-    m_fileModel->setRootPath("");
-    m_ui->sourceBrowser->setModel(m_fileModel);
-    m_ui->filterLine->setText("");
-
-    //Leave only "name"(zero) column in SourceBrowser and last "Annotation"
-    for (int i = 1; i < m_fileModel->columnCount() - 1; i++)
-    {
-        m_ui->sourceBrowser->hideColumn(i);
-    }
-
-    //Set some flags for widgets
-    m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
-    m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
-    m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
-    QHeaderView *header = m_ui->tableView->horizontalHeader();
-    header->setContextMenuPolicy(Qt::CustomContextMenu);
-
+void MainWindow::createCustomContextMenuConnections()
+{
     //Connect customContextMenus
-    connect(header, SIGNAL(customContextMenuRequested(QPoint)),
+    connect(m_ui->tableView->horizontalHeader(), SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->tableView, SLOT(ShowContextMenu(QPoint)));
     connect(m_ui->tableView, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->tableView, SLOT(ShowContextMenu(QPoint)));
@@ -103,6 +135,10 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));
     connect(m_ui->graphViewer, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->graphViewer, SLOT(ShowContextMenu(QPoint)));
+}
+
+void MainWindow::createSourceBrowserConnections()
+{
     //Connect clicking on file to opening it in textViewer
     connect(m_ui->sourceBrowser, SIGNAL(openFile()),
             this, SLOT(loadTextFile()));
@@ -112,6 +148,22 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(loadBinaryFile()));
     connect(m_ui->sourceBrowser, SIGNAL(annotate()),
             this, SLOT(annotateNoGraphObject()));
+}
+
+void MainWindow::createMenuBarConnections()
+{
+    //Connect file actions
+    connect(m_ui->actionNew, SIGNAL(triggered()),
+            this, SLOT(newFile()));
+    connect(m_ui->actionSave, SIGNAL(triggered()),
+            this, SLOT(saveFile()));
+    connect(m_ui->actionSaveAs, SIGNAL(triggered()),
+            this, SLOT(saveToFile()));
+    connect(m_ui->actionExport, SIGNAL(triggered()),
+            this, SLOT(exportToImage()));
+    connect(m_ui->actionOpen, SIGNAL(triggered()),
+            this, SLOT(openFile()));
+
     //MenuBar connections
     connect(m_ui->actionOpenInTextViewer, SIGNAL(triggered()),
             this, SLOT(loadTextFile()));
@@ -126,6 +178,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_ui->actionFilter, SIGNAL(triggered()),
             this, SLOT(showAdvancedFilter()));
 
+    //"Enabling" docks when needed
     connect(m_ui->actionTableView, SIGNAL(triggered(bool)),
             m_ui->dockTableView, SLOT(setVisible(bool)));
     connect(m_ui->actionSourceTree, SIGNAL(triggered(bool)),
@@ -137,6 +190,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered(bool)),
             m_ui->dockPropertyBrowser, SLOT(setVisible(bool)));
 
+    //"Checking" actions when docks are visible
     connect(m_ui->dockTextEditor, SIGNAL(visibilityChanged(bool)),
             m_ui->actionTextView, SLOT(setChecked(bool)));
     connect(m_ui->dockHexEditor, SIGNAL(visibilityChanged(bool)),
@@ -148,6 +202,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(m_ui->dockPropertyBrowser, SIGNAL(visibilityChanged(bool)),
             m_ui->actionPropertyBrowser, SLOT(setChecked(bool)));
 
+    //"Bug-fix" for raising dock when it is hidden when merged to another one
     connect(m_ui->actionTableView, SIGNAL(triggered()),
             m_ui->dockTableView, SLOT(raise()));
     connect(m_ui->actionSourceTree, SIGNAL(triggered()),
@@ -158,6 +213,37 @@ MainWindow::MainWindow(QWidget *parent) :
             m_ui->dockHexEditor, SLOT(raise()));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
+}
+
+void MainWindow::checkChanges()
+{
+    //Check if user wants to save changes
+    if (m_fileChanged)
+    {
+        int button =
+                QMessageBox::question(this, SAVE_CHANGED_FILE_QUESTION_TITLE,
+                              SAVE_CHANGED_FILE_QUESTION_TEXT.arg(m_currentFilePath),
+                              QMessageBox::Yes,
+                              QMessageBox::No,
+                              QMessageBox::Cancel);
+        if (button == QMessageBox::Yes)
+        {
+            saveFile();
+        }
+        else if (button == QMessageBox::Cancel)
+        {
+            return;
+        }
+    }
+}
+
+void MainWindow::clearAll()
+{
+    m_scene->clear();
+    m_model->clear();
+    m_filter->refreshRegExp();
+    m_propertyBrowser->clear();
+    m_tableProxy->updateMap();
 }
 
 MainWindow::~MainWindow()
@@ -218,25 +304,87 @@ void MainWindow::saveToFile()
     {
         return;
     }
-    if(QFileInfo(path).suffix() == QString())
+    QFileInfo fi(path);
+    if(fi.suffix() != QString("gm"))
         path += ".gm";
 
     GraphSaver saver(path);
     saver.save(m_model, m_scene);
+    m_fileIsOnDisk = true;
+    m_currentFileName = fi.fileName();
+    m_currentFilePath = path;
+    statusBar()->showMessage(FILE_SAVE_SUCCESSFUL, STATUS_BAR_FILE_SAVED_TIMEOUT);
+
+    setFileChanged(false);
+}
+
+void MainWindow::newFile()
+{
+    checkChanges();
+
+    clearAll();
+    m_currentFileName = DEFAULT_NEW_FILE_NAME;
+    m_currentFilePath = "";
+    setFileChanged(false);
+    m_fileIsOnDisk = false;
+}
+
+void MainWindow::saveFile()
+{
+    if (m_fileIsOnDisk)
+    {
+        GraphSaver saver(m_currentFilePath);
+        saver.save(m_model, m_scene);
+        setFileChanged(false);
+        statusBar()->showMessage(FILE_SAVE_SUCCESSFUL,
+                                 STATUS_BAR_FILE_SAVED_TIMEOUT);
+    }
+    else
+    {
+        saveToFile();
+    }
 }
 
 void MainWindow::openFile()
 {
+    checkChanges();
     QString path = QFileDialog::getOpenFileName(this, tr("Open"), QDir::homePath(),
                                                 tr("GM (*.gm)"));
     if (path.isEmpty())
     {
         return;
     }
+    clearAll();
     GraphLoader loader(path);
     loader.loadGraph(m_model, m_scene);
+
+    m_currentFilePath = path;
+    QFileInfo fi(path);
+    m_currentFileName = fi.fileName();
+    m_fileIsOnDisk = true;
     m_ui->sourceBrowser->reset();
     m_ui->tableView->reset();
+    setFileChanged(false);
+}
+
+void MainWindow::setFileChanged(bool value)
+{
+    m_fileChanged = value;
+    this->setWindowTitle(MAINWINDOW_TITLE.arg(m_currentFileName + (m_fileChanged?"*":"") ));
+    if (m_fileChanged)
+    {
+        disconnect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
+                   this, SLOT(setFileChanged()));
+        disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                   this, SLOT(setFileChanged()));
+    }
+    else
+    {
+        connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
+                this, SLOT(setFileChanged()), Qt::UniqueConnection);
+        connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                this, SLOT(setFileChanged()), Qt::UniqueConnection);
+    }
 }
 
 void MainWindow::openHelp()
@@ -260,36 +408,43 @@ void MainWindow::switchToObject(IScaObject *obj)
     case IScaObject::TEXTBLOCK:
         {
             m_ui->textViewer->setFocus();
+            m_ui->dockTextEditor->raise();
             break;
         }
     case IScaObject::BINARYBLOCK:
         {
             m_ui->hexEditor->setFocus();
+            m_ui->dockHexEditor->raise();
             break;
         }
     case IScaObject::DIRECTORY:
         {
             m_ui->sourceBrowser->setFocus();
+            m_ui->dockFileBrowser->raise();
             break;
         }
     case IScaObject::FILE:
         {
             m_ui->sourceBrowser->setFocus();
+            m_ui->dockFileBrowser->raise();
             break;
         }
     case IScaObject::IDENTIFIER:
         {
             m_ui->textViewer->setFocus();
+            m_ui->dockTextEditor->raise();
             break;
         }
     case IScaObject::LINE:
         {
             m_ui->textViewer->setFocus();
+            m_ui->dockTextEditor->raise();
             break;
         }
     case IScaObject::SYMBOL:
         {
             m_ui->textViewer->setFocus();
+            m_ui->dockTextEditor->raise();
             break;
         }
     default:
@@ -327,6 +482,7 @@ void MainWindow::annotateNoGraphObject()
         //User clicked cancel, delete object
         m_model->removeObject(id);
     }
+    setFileChanged(true);
 }
 
 void MainWindow::showAdvancedFilter()
@@ -349,6 +505,12 @@ void MainWindow::showAdvancedFilter()
     wid->show();
 }
 
+void MainWindow::close()
+{
+    checkChanges();
+    QMainWindow::close();
+}
+
 void MainWindow::loadTextFile(const QString &code)
 {
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
@@ -360,26 +522,3 @@ void MainWindow::on_filterLine_textChanged(const QString &arg1)
 {
     m_filter->setFilePath(arg1);
 }
-
-//void MainWindow::createSyntaxList()
-//{
-//    QStringList langFilter("*.lang");
-//    QDir langsDir("./langs");
-//    QStringList syntaxFiles = langsDir.entryList(langFilter, QDir::Files);
-
-//    QMenu *syntaxMenu = new QMenu("Syntax", this);
-//    QActionGroup *syntaxActions = new QActionGroup(this);
-//    QSignalMapper *syntaxMapper  = new QSignalMapper(this);
-//    foreach(QString syntax, syntaxFiles)
-//    {
-//        QAction *action = new QAction(QFileInfo(syntax).baseName(), this);
-//        action->setCheckable(true);
-
-//        syntaxActions->addAction(action);
-//        syntaxMenu->addAction(action);
-
-//        if(QFileInfo(syntax).baseName() == "default")
-//            action->setChecked(true);
-//    }
-//    m_ui->menuView->addMenu(syntaxMenu);
-//}

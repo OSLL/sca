@@ -45,6 +45,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QUrl>
+#include <QTableView>
 #include "widgets/GraphViewContextMenu.h"
 #include "common/IScaObjectFile.h"
 #include "common/IScaObjectTextBlock.h"
@@ -57,6 +58,7 @@
 #include "ScaMIMEDataProcessor.h"
 #include "GraphModel.h"
 #include "GraphFilter.h"
+#include "GraphTableProxyModel.h"
 #include "../visual/ObjectVisual.h"
 #include "../NumericalConstants.h"
 
@@ -309,35 +311,26 @@ void GraphView::ShowContextMenu(const QPoint &pos)
 
 void GraphView::moveTo(const QModelIndex &index)
 {
-    QAbstractItemModel *model = scene()->getModel();
-    QVariant var = model->data(QModelIndex(), objectIdListRole);
-    QList<int> list = qvariant_cast<QList<int> >(var);
-    QMap<int, int> idMap;
-    int i = 0;
-    if (!list.isEmpty())
+    QTableView *view = qobject_cast<QTableView *>(QObject::sender());
+    GraphTableProxyModel *tableProxy = static_cast<GraphTableProxyModel *>(view->model());
+    if (tableProxy == NULL)
     {
-        foreach(int id, list)
-        {
-            if (model->data(model->index(id, 0), highlightRole).toBool())
-            {
-                //qDebug() << "[GraphView]: " << i << "->" << id;
-                idMap[i++] = id;
-            }
-        }
-        if (idMap.isEmpty())
-        {
-            //qDebug() << "[GraphView]: no items filtered";
-            foreach(int id, list)
-            {
-                idMap[i++] = id;
-            }
-        }
+        qDebug() << "[GraphView]: can't cast sender of signal";
+        return;
+    }
+    QVariant var = tableProxy->data(QModelIndex(), objectIdListRole);
+    mapIntToInt idMap = qvariant_cast<mapIntToInt>(var);
+    foreach(int id, idMap)
+    {
+        qDebug() << "[GraphView]: (table, model):(" << id << "," << idMap[id] << ")";
     }
 
-    int modelRow = idMap[index.row()];
+    int modelRow = idMap.value(index.row(), -1);
     ObjectVisual *obj = scene()->getObjectById(modelRow);
     if (obj != NULL)
     {
+        qDebug() << "[GraphView]: moving to #" << modelRow <<
+                    "(tabled as#" << index.row() << ")=" << obj;
         centerOn(obj);
     }
 }

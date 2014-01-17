@@ -313,7 +313,6 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     QModelIndex index = m_model->index(id, 0);
     bool filtered = m_model->data(index, highlightRole).toBool();
     visObject->setFiltered(filtered);
-    visObject->setPos(m_posToAdd);
     m_objects.insert(id, visObject);
 
     if(visObject->getType() == ObjectVisual::LINK)
@@ -444,6 +443,16 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
     }
 }
 
+void GraphScene::clear()
+{
+    foreach(ObjectVisual *obj, m_objects)
+    {
+        delete obj;
+    }
+    m_objects.clear();
+    QGraphicsScene::clear();
+}
+
 void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
 {
     Q_UNUSED(rightBottom);
@@ -455,13 +464,14 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     QVariant var = m_model->data(leftTop, rawObjectRole);
     IScaObject *object = NULL;
     object = qvariant_cast<IScaObject *>(var);
+    bool isShown = m_model->data(leftTop, isShownRole).toBool();
 
     if (object == NULL)
     {
         object = qvariant_cast<Link *>(var);
     }
 
-    if (object == NULL)
+    if (object == NULL || !isShown)
     {
         if (m_objects.contains(id))
         {

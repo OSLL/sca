@@ -472,7 +472,9 @@ void GraphModel::clear()
 {
     foreach(IScaObject *obj, m_objects)
     {
-        removeRow(getId(obj));
+        delete obj;
     }
+    m_objects.clear();
+    m_isShown.clear();
     s_nextID = 0;
 }
