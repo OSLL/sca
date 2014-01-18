@@ -149,5 +149,3 @@ QDebug operator<<(QDebug d, IScaObject &object)
       << ";ann=" << object.getAnnotation() << ")";
     return d;
 }
-
-

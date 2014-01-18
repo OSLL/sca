@@ -187,7 +187,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Reset to defaults
     m_menu->resetToDefault();
     //Setting connection available only if 2 nodes or links selected
-    conAct->setEnabled(nodes.size() == 2 || links.size() == 2);
+    conAct->setEnabled(nodes.size() + links.size() == 2);
     //Editing annotation only if there is only one object under selection
     editAnnotationAct->setEnabled(objects.size() == 1);
 
@@ -257,10 +257,15 @@ void GraphView::ShowContextMenu(const QPoint &pos)
             src = nodes.at(0);
             dest = nodes.at(1);
         }
-        else
+        else if (links.size() == 2)
         {
             src = links.at(0),
             dest = links.at(1);
+        }
+        else
+        {
+            src = links.at(0);
+            dest = nodes.at(0);
         }
         int srcId = scene()->getObjectId(src);
         int destId = scene()->getObjectId(dest);
@@ -517,9 +522,12 @@ void GraphView::mousePressEvent(QMouseEvent *event)
             {
                 if (objVisual != NULL)
                 {
-                    QVariant var = m_model->data(m_model->index(m_tempId, 0), rawObjectRole);
-                    IScaObject *object = qvariant_cast<IScaObject *>(var);
-                    emit goToObject(object);
+                    IScaObject *object = m_model->getObjectById(m_tempId);
+                    if (object != NULL)
+                    {
+                        emit goToObject(object);
+                        emit goToObject(m_tempId);
+                    }
                 }
                 return;
             }
