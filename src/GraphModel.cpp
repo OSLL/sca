@@ -468,6 +468,11 @@ void GraphModel::setFilePath(int id, const QString &path)
     }
 }
 
+bool GraphModel::hasIndex(int row, int column, const QModelIndex &parent) const
+{
+    return m_objects.contains(row);
+}
+
 void GraphModel::clear()
 {
     foreach(IScaObject *obj, m_objects)

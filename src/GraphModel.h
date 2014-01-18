@@ -97,6 +97,8 @@ public:
     bool editAnnotation(int id);
     void setAnnotation(int id, const QString &annotation);
     void setFilePath(int id, const QString &path);
+
+    bool hasIndex(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
 private:
     static int s_nextID;
     QHash<int, IScaObject *> m_objects;

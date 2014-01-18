@@ -46,6 +46,7 @@
 #include <QDebug>
 #include <QtSql/QSqlRecord>
 #include <QtSql/QSqlError>
+#include <QQueue>
 
 
 
@@ -140,13 +141,42 @@ void GraphLoader::loadLinks()
 
     QSqlRecord rec = m_query->record();
 
+    QQueue<int> idsToLoadLater;
     while (m_query->next())
     {
         int id     = m_query->value(rec.indexOf("id")).toInt();
         int source = m_query->value(rec.indexOf("source")).toInt();
         int destin = m_query->value(rec.indexOf("destin")).toInt();
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
-        m_model->connectObjects(source, destin, id, annotation);
+
+        if (m_model->hasIndex(source) && m_model->hasIndex(destin))
+        {
+            m_model->connectObjects(source, destin, id, annotation);
+        }
+        else
+        {
+            idsToLoadLater.enqueue(m_query->at());
+        }
+    }
+
+    while (!idsToLoadLater.empty())
+    {
+        int pos = idsToLoadLater.dequeue();
+        m_query->seek(pos);
+
+        int id     = m_query->value(rec.indexOf("id")).toInt();
+        int source = m_query->value(rec.indexOf("source")).toInt();
+        int destin = m_query->value(rec.indexOf("destin")).toInt();
+        QString annotation = m_query->value(rec.indexOf("annotation")).toString();
+
+        if (m_model->hasIndex(source) && m_model->hasIndex(destin))
+        {
+            m_model->connectObjects(source, destin, id, annotation);
+        }
+        else
+        {
+            idsToLoadLater.enqueue(m_query->at());
+        }
     }
 }
 
