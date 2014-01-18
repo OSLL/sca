@@ -88,6 +88,9 @@ public:
     void setPen(const QPen &pen);
     void refreshColor();
 private:
+    void createSourceArrow();
+    void createDestinArrow();
+
     QLineF m_line;
     QGraphicsPathItem *m_sourceArrow;
     QGraphicsPathItem *m_destinArrow;

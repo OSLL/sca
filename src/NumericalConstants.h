@@ -35,6 +35,8 @@ const int BYTES_PER_LINE = 16;
 const int DEFAULT_SCENE_WIDTH = 2000;
 const int DEFAULT_SCENE_HEIGHT = 1000;
 
+const int CHANGE_LINK_CLICK_RADIUS = 10;
+
 const int MIN_NODE_WIDTH = 10;
 const int MIN_NODE_HEIGHT = MIN_NODE_WIDTH;
 const int MAX_NODE_WIDTH = 100;

@@ -65,7 +65,8 @@
 GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent),
     m_temp(NULL),
-    m_model(NULL)
+    m_model(NULL),
+    m_changingLinkMode(false)
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_menu = new GraphViewContextMenu(this);
@@ -74,7 +75,8 @@ GraphView::GraphView(QWidget *parent) :
 GraphView::GraphView(GraphScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent),
     m_temp(NULL),
-    m_model(NULL)
+    m_model(NULL),
+    m_changingLinkMode(false)
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     m_menu = new GraphViewContextMenu(this);
@@ -553,6 +555,7 @@ void GraphView::mousePressEvent(QMouseEvent *event)
             {
                 emit goToObject(m_tempId);
                 //item under cursor is selected->we are happy about it
+
             }
         }
     }
@@ -561,6 +564,29 @@ void GraphView::mousePressEvent(QMouseEvent *event)
         //no item under cursor->clear selection
         scene()->clearSelection();
         emit goToObject(-1);
+    }
+
+    //Process availability to change link's connection
+    if (objVisual != NULL)
+    {
+        if (objVisual->getType() == ObjectVisual::LINK)
+        {
+            LinkVisual *link = static_cast<LinkVisual *>(objVisual);
+            QPointF from = link->getSource(),
+                    to = link->getDestin();
+            QPointF eventPos = mapToScene(event->pos());
+            //Look at ends of link and check if we clicked close enough to move them
+            if ((from - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
+            {
+                m_changingLinkMode = true;
+                m_linkSetsNewSource = true;
+            }
+            if ((to - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
+            {
+                m_changingLinkMode = true;
+                m_linkSetsNewSource = false;
+            }
+        }
     }
 
     if (event->button() == Qt::RightButton)
@@ -588,9 +614,44 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
     item = itemAt(event->pos());
     ObjectVisual *obj = NULL;
     obj = dynamic_cast<ObjectVisual *>(item);
+    if (m_changingLinkMode == true)
+    {
+        //If we want to set new link to this item
+        LinkVisual *linkVis = static_cast<LinkVisual *>(m_temp);
+        if (linkVis != NULL)
+        {
+            if (m_linkSetsNewSource)
+            {
+                linkVis->setSource(mapToScene(event->pos()));
+            }
+            else
+            {
+                linkVis->setDestin(mapToScene(event->pos()));
+            }
+        }
+    }
     if (obj != NULL)
     {
-        setCursor(Qt::CrossCursor);
+        if (obj->getType() == ObjectVisual::LINK)
+        {
+            LinkVisual *link = static_cast<LinkVisual *>(obj);
+            QPointF from = link->getSource(),
+                    to = link->getDestin();
+            QPointF eventPos = mapToScene(event->pos());
+            if ((from - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS
+                || (to - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
+            {
+                setCursor(Qt::PointingHandCursor);
+            }
+            else
+            {
+                setCursor(Qt::CrossCursor);
+            }
+        }
+        else
+        {
+            setCursor(Qt::CrossCursor);
+        }
         //qDebug() << "[GraphView]: on " << obj;
         //Check if we are moving item so that we use some button
         if (event->buttons() != Qt::NoButton)
@@ -603,4 +664,53 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
         setCursor(Qt::ArrowCursor);
     }
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void GraphView::mouseReleaseEvent(QMouseEvent *event)
+{
+    if (m_changingLinkMode == true)
+    {
+        QGraphicsItem *item = NULL;
+        item = itemAt(event->pos());
+        ObjectVisual *obj = NULL;
+        obj = dynamic_cast<ObjectVisual *>(item);
+        //Check if we finish dragging on some item, which is not link itself
+        if (obj != NULL && obj != m_temp)
+        {
+            Link *currentLink = static_cast<Link *>(m_model->getObjectById(m_tempId));
+            int idAboutToBeLinked = scene()->getObjectId(obj);
+            IScaObject *newObj = m_model->getObjectById(idAboutToBeLinked);
+            if (m_linkSetsNewSource)
+            {
+                //Disconnect from old objects
+                int oldFromId = currentLink->getObjectFrom();
+                IScaObject *oldFrom = m_model->getObjectById(oldFromId);
+                ObjectVisual *oldConnectedObj = scene()->getObjectById(oldFromId);
+                oldFrom->disconnectLink(m_tempId);
+                oldConnectedObj->disconnectLink(m_tempId);
+                //Refresh link in link
+                currentLink->setObjectFrom(idAboutToBeLinked);
+            }
+            else
+            {
+                int oldToId = currentLink->getObjectTo();
+                IScaObject *oldTo = m_model->getObjectById(oldToId);
+                ObjectVisual *oldConnectedObj = scene()->getObjectById(oldToId);
+                oldTo->disconnectLink(m_tempId);
+                oldConnectedObj->disconnectLink(m_tempId);
+                currentLink->setObjectTo(idAboutToBeLinked);
+            }
+            scene()->getObjectById(idAboutToBeLinked)->addLink(m_tempId);
+            newObj->addLink(m_tempId);
+            //To simply emit other views of model that link has changed we 'replace' item with itself
+            m_model->replaceObject(currentLink, m_tempId);
+            emit goToObject(m_tempId);
+        }
+        else
+        {
+            scene()->refreshLinkPos(m_tempId);
+        }
+        m_changingLinkMode = false;
+    }
+    QGraphicsView::mouseReleaseEvent(event);
 }

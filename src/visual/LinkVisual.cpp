@@ -199,20 +199,13 @@ void LinkVisual::setDestinArrow(QGraphicsPathItem *arrow)
 
 void LinkVisual::setDefaultArrows(bool source, bool destin)
 {
-    QPainterPath path;
-    path.moveTo(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
-    path.lineTo(0,0);
-    path.lineTo(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
-
-    if(source)
+    if (source)
     {
-        m_sourceArrow = new QGraphicsPathItem(path, this);
-        m_sourceArrow->setPen(m_standardPen);
+        createSourceArrow();
     }
-    if(destin)
+    if (destin)
     {
-        m_destinArrow = new QGraphicsPathItem(path, this);
-        m_destinArrow->setPen(m_standardPen);
+        createDestinArrow();
     }
 
     refreshGeometry(m_source, m_destin);
@@ -220,11 +213,6 @@ void LinkVisual::setDefaultArrows(bool source, bool destin)
 
 void LinkVisual::setDefaultArrows(bool left)
 {
-    QPainterPath path;
-    path.moveTo(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
-    path.lineTo(0,0);
-    path.lineTo(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
-
     bool sourceSet = m_source.x() > m_destin.x();
     if (left)
     {
@@ -233,13 +221,11 @@ void LinkVisual::setDefaultArrows(bool left)
 
     if (sourceSet && (m_sourceArrow == NULL))
     {
-        m_sourceArrow = new QGraphicsPathItem(path, this);
-        m_sourceArrow->setPen(m_standardPen);
+        createSourceArrow();
     }
-    else if(m_destinArrow == NULL)
+    else if (m_destinArrow == NULL)
     {
-        m_destinArrow = new QGraphicsPathItem(path, this);
-        m_destinArrow->setPen(m_standardPen);
+        createDestinArrow();
     }
 
     refreshGeometry(m_source, m_destin);
@@ -286,11 +272,13 @@ QPointF LinkVisual::getDestin()
 void LinkVisual::setSource(const QPointF &source)
 {
     m_source = source;
+    refreshGeometry(m_source, m_destin);
 }
 
 void LinkVisual::setDestin(const QPointF &destin)
 {
     m_destin = destin;
+    refreshGeometry(m_source, m_destin);
 }
 
 void LinkVisual::setStandardColor(const QColor &color)
@@ -342,4 +330,32 @@ void LinkVisual::refreshColor()
     {
         setPen(m_standardPen);
     }
+}
+
+void LinkVisual::createSourceArrow()
+{
+    QPainterPath path;
+    path.moveTo(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+    path.lineTo(0,0);
+    path.lineTo(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+
+    m_sourceArrow = new QGraphicsPathItem(path, this);
+    m_sourceArrow->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    m_sourceArrow->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
+    m_sourceArrow->setPen(m_standardPen);
+    m_sourceArrow->setZValue(-2);
+}
+
+void LinkVisual::createDestinArrow()
+{
+    QPainterPath path;
+    path.moveTo(-DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+    path.lineTo(0,0);
+    path.lineTo(DEFAULT_ARROW_WIDTH/2, -DEFAULT_ARROW_HEIGHT);
+
+    m_destinArrow = new QGraphicsPathItem(path, this);
+    m_destinArrow->setFlag(QGraphicsItem::ItemIsSelectable, false);
+    m_destinArrow->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
+    m_destinArrow->setPen(m_standardPen);
+    m_destinArrow->setZValue(-2);
 }

@@ -78,6 +78,8 @@ private:
     int m_tempId;
     GraphViewContextMenu *m_menu;
     GraphModel *m_model;
+    bool m_changingLinkMode;
+    bool m_linkSetsNewSource;
 
 public slots:
     void ShowContextMenu(const QPoint &pos);
@@ -87,6 +89,7 @@ protected:
     void mouseDoubleClickEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void dragEnterEvent(QDragEnterEvent* event);
     void dragMoveEvent(QDragMoveEvent *event);
     void dragLeaveEvent(QDragLeaveEvent *event);
