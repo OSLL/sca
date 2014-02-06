@@ -66,7 +66,6 @@ IScaObject *ObjectCreator::createObject(int type, int line,
                                         QString text, QByteArray data,
                                         QString annotation)
 {
-
     IScaObjectFile *objFile = new IScaObjectFile(QFileInfo(path));
 
     switch(type)
@@ -136,5 +135,5 @@ IScaObject *ObjectCreator::createObject(int type, int line,
 
     }
 
-return new IScaObject();
+    return new IScaObject();
 }

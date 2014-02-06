@@ -40,7 +40,7 @@ private:
     SCAFileSystemModel *m_fileModel;
     bool m_fileChanged;
     bool m_fileIsOnDisk;
-
+    QProcess *process;
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -62,8 +62,10 @@ public slots:
     void annotateNoGraphObject();
     void showAdvancedFilter();
     void close();
+    void readProcessOutput();
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
+    void on_commandRunButtom_clicked();
 };
 
 #endif // MAINWINDOW_H

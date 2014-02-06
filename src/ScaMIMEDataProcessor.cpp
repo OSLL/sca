@@ -68,7 +68,7 @@ ScaMIMEDataProcessor::ScaMIMEDataProcessor(const QMimeData *mime) :
         path = m_data->property("fromPath").toString();
     }
     qDebug() << "[ScaMIMEDataProcessor]: filePath - " << path;
-    Q_ASSERT(!path.isEmpty());
+    //Q_ASSERT(!path.isEmpty());
     m_filePath = path;
     m_fileInfo.setFile(m_filePath);
 }

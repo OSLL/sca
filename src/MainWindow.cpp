@@ -32,7 +32,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_tableProxy(new GraphTableProxyModel(m_filter, this)),
     m_fileModel(new SCAFileSystemModel(m_model, this)),
     m_fileChanged(false),
-    m_fileIsOnDisk(false)
+    m_fileIsOnDisk(false),
+    process(new QProcess(this))
+
 {
     m_ui->setupUi(this);
     setWindowIcon(QIcon(LOGO_PATH));
@@ -189,6 +191,8 @@ void MainWindow::createMenuBarConnections()
             m_ui->dockHexEditor, SLOT(setVisible(bool)));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered(bool)),
             m_ui->dockPropertyBrowser, SLOT(setVisible(bool)));
+    connect(m_ui->actionTerminal, SIGNAL(triggered(bool)),
+            m_ui->dockProcess, SLOT(setVisible(bool)));
 
     //"Checking" actions when docks are visible
     connect(m_ui->dockTextEditor, SIGNAL(visibilityChanged(bool)),
@@ -201,6 +205,8 @@ void MainWindow::createMenuBarConnections()
             m_ui->actionTableView, SLOT(setChecked(bool)));
     connect(m_ui->dockPropertyBrowser, SIGNAL(visibilityChanged(bool)),
             m_ui->actionPropertyBrowser, SLOT(setChecked(bool)));
+    connect(m_ui->actionTerminal, SIGNAL(visibilityChanged(bool)),
+            m_ui->dockProcess, SLOT(setChecked(bool)));
 
     //"Bug-fix" for raising dock when it is hidden when merged to another one
     connect(m_ui->actionTableView, SIGNAL(triggered()),
@@ -213,6 +219,8 @@ void MainWindow::createMenuBarConnections()
             m_ui->dockHexEditor, SLOT(raise()));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
+    connect(m_ui->actionTerminal, SIGNAL(triggered()),
+            m_ui->dockProcess, SLOT(raise()));
 }
 
 void MainWindow::checkChanges()
@@ -511,6 +519,12 @@ void MainWindow::close()
     QMainWindow::close();
 }
 
+void MainWindow::readProcessOutput()
+{
+    QString processOut = process->readAllStandardOutput();
+    m_ui->processOutputEdit->append(processOut);
+}
+
 void MainWindow::loadTextFile(const QString &code)
 {
     QModelIndex curIndex = m_ui->sourceBrowser->currentIndex();
@@ -521,4 +535,11 @@ void MainWindow::loadTextFile(const QString &code)
 void MainWindow::on_filterLine_textChanged(const QString &arg1)
 {
     m_filter->setFilePath(arg1);
+}
+
+void MainWindow::on_commandRunButtom_clicked()
+{
+    qDebug() << "Runned:" << m_ui->commandLine->text();
+    process->start(m_ui->commandLine->text());
+    process->connect(process, SIGNAL(readyRead()),  this, SLOT(readProcessOutput()));
 }

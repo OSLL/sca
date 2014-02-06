@@ -88,14 +88,9 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
     const QMimeData *mime = event->mimeData();
     QString path = mime->property("fromPath").toString();
     qDebug() << "[GraphView]: path = " << path;
-    bool hasPath = (mime->hasUrls() || !path.isEmpty());
-    if (!hasPath)
-    {
-        event->ignore();
-        return;
-    }
     //Add object to model and get it's id + create it's visual representation
     m_tempId = m_model->addObject(event->mimeData());
+    qDebug() << "[GraphView]: temp_id = " << m_tempId;
     if (m_tempId < 0)
     {
         return;

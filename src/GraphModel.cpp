@@ -138,11 +138,6 @@ int GraphModel::addObject(const QMimeData *mimeData)
 {
     QString path = mimeData->property("fromPath").toString();
     qDebug() << "[GraphModel]: path = " << path;
-    bool hasPath = (mimeData->hasUrls() || !path.isEmpty());
-    if (!hasPath)
-    {
-        return -1;
-    }
 
     ScaMIMEDataProcessor processor(mimeData);
     IScaObject *objectFromData = processor.makeObject();
@@ -470,6 +465,8 @@ void GraphModel::setFilePath(int id, const QString &path)
 
 bool GraphModel::hasIndex(int row, int column, const QModelIndex &parent) const
 {
+    Q_UNUSED(column);
+    Q_UNUSED(parent);
     return m_objects.contains(row);
 }
 
