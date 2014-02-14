@@ -591,6 +591,7 @@ void QHexEdit::loadFromFile(const QString &path)
     QByteArray arr;
     fLoader->loadToByteArray(arr);
     setCursorPosition(0);
+    clearSelection();
     setData(arr);
     setCurrentPath(fileInf.filePath());
     fLoader->deleteLater();
@@ -727,6 +728,11 @@ void QHexEdit::setCursorPosition(int cursorPos)
     // cursorPos in QHexEditPrivate is the position of the textcoursor without
     // blanks, means bytePos*2
     qHexEdit_p->setCursorPos(cursorPos*2);
+}
+
+void QHexEdit::clearSelection()
+{
+    qHexEdit_p->clearSelection();
 }
 
 int QHexEdit::cursorPosition()

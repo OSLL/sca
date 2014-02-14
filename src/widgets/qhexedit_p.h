@@ -580,6 +580,7 @@ public:
     QString getCurrentPath() const;
     void setCurrentPath(const QString &currentPath);
 
+    void clearSelection();
 signals:
     void currentAddressChanged(int address);
     void currentSizeChanged(int size);

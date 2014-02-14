@@ -686,6 +686,7 @@ public:
     void setAddressOffset(int offset);
     int addressOffset();
     void setCursorPosition(int cusorPos);
+    void clearSelection();
     int cursorPosition();
     void setData(QByteArray const &data);
     QByteArray data();

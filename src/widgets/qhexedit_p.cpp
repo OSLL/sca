@@ -1492,3 +1492,10 @@ void QHexEditPrivate::setCurrentPath(const QString &currentPath)
 {
     _currentPath = currentPath;
 }
+
+void QHexEditPrivate::clearSelection()
+{
+    _selectionInit = 0;
+    _selectionBegin = 0;
+    _selectionEnd = 0;
+}
