@@ -83,7 +83,11 @@ void Node::setSize(const QSize &size)
     m_rect.setSize(size);
     if (m_title != NULL)
     {
-        m_title->setY(m_rect.height() / 2 + m_title->boundingRect().height());
+        m_title->setY(m_rect.height() / 2);
+    }
+    if (m_annotation != NULL)
+    {
+        m_annotation->setY(m_rect.height() / 2 + m_annotation->boundingRect().height());
     }
     m_rect.moveTo(-size.width()/2, -size.height()/2);
 }
@@ -112,6 +116,7 @@ void Node::setTitle(const QString &title)
     QString htmlTitle("<div style='background-color:#FFFFF0;'>" + title + "</div>");
     m_title = new QGraphicsTextItem(this);
     m_title->setHtml(htmlTitle);
+    m_title->setX(-m_title->boundingRect().width() / 2);
 }
 
 void Node::setTitle(QGraphicsTextItem *title)
@@ -126,12 +131,6 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
     Q_UNUSED(painter)
     Q_UNUSED(option)
     Q_UNUSED(widget)
-    if (m_title != NULL)
-    {
-        m_title->setPos(
-                    QPointF(-m_title->boundingRect().width()/2, 20)
-                    + QPointF(boundingRect().center()));
-    }
 }
 
 void Node::refreshColor()
