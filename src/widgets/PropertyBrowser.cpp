@@ -441,6 +441,10 @@ void PropertyBrowser::valueChanged(QtProperty *property, const QSize &value)
     if (id == PROPERTY_SIZE)
     {
         node->setSize(value);
+        foreach(int linkId, node->getLinks())
+        {
+            m_scene->refreshLinkPos(linkId);
+        }
     }
     m_scene->update();
 }
