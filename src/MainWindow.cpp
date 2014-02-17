@@ -205,8 +205,8 @@ void MainWindow::createMenuBarConnections()
             m_ui->actionTableView, SLOT(setChecked(bool)));
     connect(m_ui->dockPropertyBrowser, SIGNAL(visibilityChanged(bool)),
             m_ui->actionPropertyBrowser, SLOT(setChecked(bool)));
-    connect(m_ui->actionTerminal, SIGNAL(visibilityChanged(bool)),
-            m_ui->dockProcess, SLOT(setChecked(bool)));
+    connect(m_ui->dockProcess, SIGNAL(visibilityChanged(bool)),
+            m_ui->actionTerminal, SLOT(setChecked(bool)));
 
     //"Bug-fix" for raising dock when it is hidden when merged to another one
     connect(m_ui->actionTableView, SIGNAL(triggered()),
