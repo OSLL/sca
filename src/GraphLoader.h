@@ -56,7 +56,7 @@ class GraphLoader
 public:
     GraphLoader();
     GraphLoader(const QString &path);
-    ~GraphLoader();
+    virtual ~GraphLoader();
 
     void loadGraph(GraphModel *model, GraphScene *scene);
     bool open(const QString &path);

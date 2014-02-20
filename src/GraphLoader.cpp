@@ -63,10 +63,10 @@ GraphLoader::GraphLoader(const QString &path)
 GraphLoader::~GraphLoader()
 {
     m_query->clear();
+    m_db.removeDatabase("QSQLITE");
     m_db.close();
     delete m_query;
 }
-
 
 bool GraphLoader::open(const QString &path)
 {
@@ -87,7 +87,7 @@ void GraphLoader::loadGraph(GraphModel *model, GraphScene *scene)
 {
     if(!m_db.open())
     {
-        qDebug() << "[GraphLoader]: Error: file does't open";
+        qDebug() << "[GraphLoader]: Error: file isn't opened.";
         return;
     }
 

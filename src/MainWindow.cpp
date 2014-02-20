@@ -256,6 +256,7 @@ void MainWindow::clearAll()
 
 MainWindow::~MainWindow()
 {
+    checkChanges();
     if (m_scene != NULL)
         delete m_scene;
     if (m_fileModel != NULL)
@@ -316,8 +317,9 @@ void MainWindow::saveToFile()
     if(fi.suffix() != QString("gm"))
         path += ".gm";
 
-    GraphSaver saver(path);
-    saver.save(m_model, m_scene);
+    GraphSaver *saver = new GraphSaver(path);
+    saver->save(m_model, m_scene);
+    delete saver;
     m_fileIsOnDisk = true;
     m_currentFileName = fi.fileName();
     m_currentFilePath = path;
@@ -341,8 +343,9 @@ void MainWindow::saveFile()
 {
     if (m_fileIsOnDisk)
     {
-        GraphSaver saver(m_currentFilePath);
-        saver.save(m_model, m_scene);
+        GraphSaver *saver = new GraphSaver(m_currentFilePath);
+        saver->save(m_model, m_scene);
+        delete saver;
         setFileChanged(false);
         statusBar()->showMessage(FILE_SAVE_SUCCESSFUL,
                                  STATUS_BAR_FILE_SAVED_TIMEOUT);
@@ -363,8 +366,10 @@ void MainWindow::openFile()
         return;
     }
     clearAll();
-    GraphLoader loader(path);
-    loader.loadGraph(m_model, m_scene);
+
+    GraphLoader *loader = new GraphLoader(path);
+    loader->loadGraph(m_model, m_scene);
+    delete loader;
 
     m_currentFilePath = path;
     QFileInfo fi(path);
