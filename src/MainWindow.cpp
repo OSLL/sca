@@ -253,7 +253,10 @@ QMessageBox::StandardButton MainWindow::checkChanges()
         }
         return static_cast<QMessageBox::StandardButton>(button);
     }
-    return QMessageBox::Cancel;
+    else
+    {
+        return QMessageBox::NoButton;
+    }
 }
 
 void MainWindow::clearAll()
