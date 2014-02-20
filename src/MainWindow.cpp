@@ -75,6 +75,19 @@ MainWindow::MainWindow(QWidget *parent) :
     createConnections();
 }
 
+void MainWindow::closeEvent(QCloseEvent *ev)
+{
+    if (checkChanges() == QMessageBox::Cancel)
+    {
+        ev->ignore();
+        return;
+    }
+    else
+    {
+        QWidget::closeEvent(ev);
+    }
+}
+
 void MainWindow::createConnections()
 {
     connect(m_filter, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -223,7 +236,7 @@ void MainWindow::createMenuBarConnections()
             m_ui->dockProcess, SLOT(raise()));
 }
 
-void MainWindow::checkChanges()
+QMessageBox::StandardButton MainWindow::checkChanges()
 {
     //Check if user wants to save changes
     if (m_fileChanged)
@@ -238,11 +251,9 @@ void MainWindow::checkChanges()
         {
             saveFile();
         }
-        else if (button == QMessageBox::Cancel)
-        {
-            return;
-        }
+        return static_cast<QMessageBox::StandardButton>(button);
     }
+    return QMessageBox::Cancel;
 }
 
 void MainWindow::clearAll()
@@ -256,7 +267,6 @@ void MainWindow::clearAll()
 
 MainWindow::~MainWindow()
 {
-    checkChanges();
     if (m_scene != NULL)
         delete m_scene;
     if (m_fileModel != NULL)
@@ -516,12 +526,6 @@ void MainWindow::showAdvancedFilter()
         qDebug() << "[Main window]: Advanced filter called";
     }
     wid->show();
-}
-
-void MainWindow::close()
-{
-    checkChanges();
-    QMainWindow::close();
 }
 
 void MainWindow::readProcessOutput()
