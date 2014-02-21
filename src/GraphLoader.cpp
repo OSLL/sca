@@ -85,7 +85,7 @@ bool GraphLoader::open(const QString &path)
 
 void GraphLoader::loadGraph(GraphModel *model, GraphScene *scene)
 {
-    if(!m_db.open())
+    if(!m_db.isOpen())
     {
         qDebug() << "[GraphLoader]: Error: file does't open";
         return;

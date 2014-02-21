@@ -58,7 +58,7 @@
      <x>0</x>
      <y>0</y>
      <width>767</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -99,7 +99,6 @@
      <addaction name="actionTextView"/>
      <addaction name="actionHexView"/>
      <addaction name="actionPropertyBrowser"/>
-     <addaction name="actionTerminal"/>
     </widget>
     <addaction name="menuViews"/>
    </widget>
@@ -219,41 +218,6 @@
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
       <widget class="PropertyBrowser" name="propertyBrowser" native="true"/>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockProcess">
-   <property name="windowTitle">
-    <string>Terminal</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_4">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="ObjectTextViewer" name="processOutputEdit"/>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <widget class="QLineEdit" name="commandLine"/>
-       </item>
-       <item>
-        <widget class="QPushButton" name="commandRunButtom">
-         <property name="text">
-          <string>run</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>16</width>
-           <height>16</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
     </layout>
    </widget>

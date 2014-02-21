@@ -82,7 +82,8 @@ SOURCES += \
     ObjectCreator.cpp \
     common/SCAFileSystemModel.cpp \
     widgets/TableView.cpp \
-    widgets/PropertyBrowser.cpp
+    widgets/PropertyBrowser.cpp \
+    ProcessView.cpp
 
 
 HEADERS += \
@@ -136,7 +137,8 @@ HEADERS += \
     widgets/TableView.h \
     widgets/PropertyBrowser.h \
     ../syntax_highlight/extreme_comment3.lang \
-    ../syntax_highlight/extreme_comment4.lang
+    ../syntax_highlight/extreme_comment4.lang \
+    ProcessView.h
 
 FORMS += \
     mainwindow.ui \

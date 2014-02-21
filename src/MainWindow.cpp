@@ -7,11 +7,13 @@
 #include <QDebug>
 #include <QPixmap>
 #include <QDesktopServices>
+#include <QGridLayout>
 
 #include "widgets/PropertyBrowser.h"
 #include "widgets/SourceBrowser.h"
 #include "widgets/ObjectTextViewer.h"
 #include "widgets/FilterDialog.h"
+#include "ProcessView.h"
 #include "FileLoader.h"
 #include "GraphScene.h"
 #include "GraphModel.h"
@@ -73,6 +75,10 @@ MainWindow::MainWindow(QWidget *parent) :
     header->setContextMenuPolicy(Qt::CustomContextMenu);
 
     createConnections();
+
+    runCommand("echo dom");
+     runCommand("echo dom");
+      runCommand("echo dom");
 }
 
 void MainWindow::createConnections()
@@ -191,8 +197,6 @@ void MainWindow::createMenuBarConnections()
             m_ui->dockHexEditor, SLOT(setVisible(bool)));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered(bool)),
             m_ui->dockPropertyBrowser, SLOT(setVisible(bool)));
-    connect(m_ui->actionTerminal, SIGNAL(triggered(bool)),
-            m_ui->dockProcess, SLOT(setVisible(bool)));
 
     //"Checking" actions when docks are visible
     connect(m_ui->dockTextEditor, SIGNAL(visibilityChanged(bool)),
@@ -205,8 +209,6 @@ void MainWindow::createMenuBarConnections()
             m_ui->actionTableView, SLOT(setChecked(bool)));
     connect(m_ui->dockPropertyBrowser, SIGNAL(visibilityChanged(bool)),
             m_ui->actionPropertyBrowser, SLOT(setChecked(bool)));
-    connect(m_ui->dockProcess, SIGNAL(visibilityChanged(bool)),
-            m_ui->actionTerminal, SLOT(setChecked(bool)));
 
     //"Bug-fix" for raising dock when it is hidden when merged to another one
     connect(m_ui->actionTableView, SIGNAL(triggered()),
@@ -219,8 +221,6 @@ void MainWindow::createMenuBarConnections()
             m_ui->dockHexEditor, SLOT(raise()));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
-    connect(m_ui->actionTerminal, SIGNAL(triggered()),
-            m_ui->dockProcess, SLOT(raise()));
 }
 
 void MainWindow::checkChanges()
@@ -519,10 +519,19 @@ void MainWindow::close()
     QMainWindow::close();
 }
 
-void MainWindow::readProcessOutput()
+void MainWindow::runCommand(const QString &command)
 {
-    QString processOut = process->readAllStandardOutput();
-    m_ui->processOutputEdit->append(processOut);
+    QDockWidget *dock = new QDockWidget(this);
+    ProcessView *processView = new ProcessView(dock);
+
+    QGridLayout *layout = new QGridLayout(dock);
+    layout->addWidget(processView, 0, 0);
+    QWidget *newWidget = new QWidget(this);
+    newWidget->setLayout(layout);
+
+    dock->setWidget(newWidget);
+    processView->execute(command);
+    addDockWidget(Qt::RightDockWidgetArea, dock);
 }
 
 void MainWindow::loadTextFile(const QString &code)
@@ -535,11 +544,4 @@ void MainWindow::loadTextFile(const QString &code)
 void MainWindow::on_filterLine_textChanged(const QString &arg1)
 {
     m_filter->setFilePath(arg1);
-}
-
-void MainWindow::on_commandRunButtom_clicked()
-{
-    qDebug() << "Runned:" << m_ui->commandLine->text();
-    process->start(m_ui->commandLine->text());
-    process->connect(process, SIGNAL(readyRead()),  this, SLOT(readProcessOutput()));
 }

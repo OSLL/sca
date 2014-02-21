@@ -62,10 +62,9 @@ public slots:
     void annotateNoGraphObject();
     void showAdvancedFilter();
     void close();
-    void readProcessOutput();
+    void runCommand(const QString &command);
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
-    void on_commandRunButtom_clicked();
 };
 
 #endif // MAINWINDOW_H
