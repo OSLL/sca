@@ -63,6 +63,8 @@ GraphSaver::GraphSaver(const QString &path)
 
 GraphSaver::~GraphSaver()
 {
+    m_query->clear();
+    m_db.removeDatabase("QSQLITE");
     m_db.close();
     delete m_query;
 }

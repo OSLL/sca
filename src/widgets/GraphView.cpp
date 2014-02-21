@@ -564,22 +564,25 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     //Process availability to change link's connection
     if (objVisual != NULL)
     {
-        if (objVisual->getType() == ObjectVisual::LINK)
+        if (event->button() == Qt::LeftButton)
         {
-            LinkVisual *link = static_cast<LinkVisual *>(objVisual);
-            QPointF from = link->getSource(),
-                    to = link->getDestin();
-            QPointF eventPos = mapToScene(event->pos());
-            //Look at ends of link and check if we clicked close enough to move them
-            if ((from - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
+            if (objVisual->getType() == ObjectVisual::LINK)
             {
-                m_changingLinkMode = true;
-                m_linkSetsNewSource = true;
-            }
-            if ((to - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
-            {
-                m_changingLinkMode = true;
-                m_linkSetsNewSource = false;
+                LinkVisual *link = static_cast<LinkVisual *>(objVisual);
+                QPointF from = link->getSource(),
+                        to = link->getDestin();
+                QPointF eventPos = mapToScene(event->pos());
+                //Look at ends of link and check if we clicked close enough to move them
+                if ((from - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
+                {
+                    m_changingLinkMode = true;
+                    m_linkSetsNewSource = true;
+                }
+                if ((to - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
+                {
+                    m_changingLinkMode = true;
+                    m_linkSetsNewSource = false;
+                }
             }
         }
     }

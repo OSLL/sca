@@ -113,7 +113,13 @@ void Node::removeTitle()
 void Node::setTitle(const QString &title)
 {
     removeTitle();
-    QString htmlTitle("<div style='background-color:#FFFFF0;'>" + title + "</div>");
+    QString temp = title;
+    temp    .replace('&', "&amp;")
+            .replace('>', "&gt;")
+            .replace('<', "&lt;");
+    QString htmlTitle("<div style='background-color:#FFFFF0;'>"
+                      + temp
+                      + "</div>");
     m_title = new QGraphicsTextItem(this);
     m_title->setHtml(htmlTitle);
     m_title->setX(-m_title->boundingRect().width() / 2);

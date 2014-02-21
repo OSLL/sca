@@ -75,10 +75,19 @@ MainWindow::MainWindow(QWidget *parent) :
     header->setContextMenuPolicy(Qt::CustomContextMenu);
 
     createConnections();
+}
 
-    runCommand("echo dom");
-     runCommand("echo dom");
-      runCommand("echo dom");
+void MainWindow::closeEvent(QCloseEvent *ev)
+{
+    if (checkChanges() == QMessageBox::Cancel)
+    {
+        ev->ignore();
+        return;
+    }
+    else
+    {
+        QWidget::closeEvent(ev);
+    }
 }
 
 void MainWindow::createConnections()
@@ -223,7 +232,7 @@ void MainWindow::createMenuBarConnections()
             m_ui->dockPropertyBrowser, SLOT(raise()));
 }
 
-void MainWindow::checkChanges()
+QMessageBox::StandardButton MainWindow::checkChanges()
 {
     //Check if user wants to save changes
     if (m_fileChanged)
@@ -238,10 +247,11 @@ void MainWindow::checkChanges()
         {
             saveFile();
         }
-        else if (button == QMessageBox::Cancel)
-        {
-            return;
-        }
+        return static_cast<QMessageBox::StandardButton>(button);
+    }
+    else
+    {
+        return QMessageBox::NoButton;
     }
 }
 
@@ -316,8 +326,9 @@ void MainWindow::saveToFile()
     if(fi.suffix() != QString("gm"))
         path += ".gm";
 
-    GraphSaver saver(path);
-    saver.save(m_model, m_scene);
+    GraphSaver *saver = new GraphSaver(path);
+    saver->save(m_model, m_scene);
+    delete saver;
     m_fileIsOnDisk = true;
     m_currentFileName = fi.fileName();
     m_currentFilePath = path;
@@ -341,8 +352,9 @@ void MainWindow::saveFile()
 {
     if (m_fileIsOnDisk)
     {
-        GraphSaver saver(m_currentFilePath);
-        saver.save(m_model, m_scene);
+        GraphSaver *saver = new GraphSaver(m_currentFilePath);
+        saver->save(m_model, m_scene);
+        delete saver;
         setFileChanged(false);
         statusBar()->showMessage(FILE_SAVE_SUCCESSFUL,
                                  STATUS_BAR_FILE_SAVED_TIMEOUT);
@@ -363,8 +375,10 @@ void MainWindow::openFile()
         return;
     }
     clearAll();
-    GraphLoader loader(path);
-    loader.loadGraph(m_model, m_scene);
+
+    GraphLoader *loader = new GraphLoader(path);
+    loader->loadGraph(m_model, m_scene);
+    delete loader;
 
     m_currentFilePath = path;
     QFileInfo fi(path);

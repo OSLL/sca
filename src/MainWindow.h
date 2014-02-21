@@ -26,7 +26,7 @@ private:
     void createCustomContextMenuConnections();
     void createSourceBrowserConnections();
     void createMenuBarConnections();
-    void checkChanges();
+    QMessageBox::StandardButton checkChanges();
     void clearAll();
 
     Ui::MainWindow *m_ui;
@@ -43,6 +43,7 @@ private:
     QProcess *process;
 public:
     explicit MainWindow(QWidget *parent = 0);
+    void closeEvent(QCloseEvent *);
     ~MainWindow();
 signals:
     
@@ -63,6 +64,7 @@ public slots:
     void showAdvancedFilter();
     void close();
     void runCommand(const QString &command);
+
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
 };

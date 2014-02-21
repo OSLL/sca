@@ -57,7 +57,7 @@ class GraphSaver
 {
 public:
   GraphSaver(const QString &path);
-  ~GraphSaver();
+  virtual ~GraphSaver();
 
   bool open(const QString &path);
   bool save(const GraphModel *model, const GraphScene *scene);

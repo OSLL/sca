@@ -150,7 +150,7 @@ int GraphModel::addObject(const QMimeData *mimeData)
 int GraphModel::addObject(IScaObject *object, int id, bool isShown)
 {
     QModelIndex changedIndex;
-    if(id < 0)
+    if (id < 0)
     {
         changedIndex = index(s_nextID, 0);
         setData(changedIndex, QVariant(isShown), isShownRole);
@@ -162,7 +162,7 @@ int GraphModel::addObject(IScaObject *object, int id, bool isShown)
         changedIndex = index(id, 0);
         setData(changedIndex, QVariant(isShown), isShownRole);
         setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
-        s_nextID  = (id > s_nextID) ? (id + 1): s_nextID;
+        s_nextID  = (id >= s_nextID) ? (id + 1): s_nextID;
         return id;
     }
 }
