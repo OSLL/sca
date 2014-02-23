@@ -63,7 +63,6 @@ SOURCES += \
     visual/IScaObjectTextBlockVisual.cpp \
     visual/Node.cpp \
     visual/ObjectVisual.cpp \
-    widgets/ViewsTabWidget.cpp \
     ScaMIMEDataProcessor.cpp \
     widgets/GraphViewContextMenu.cpp \
     widgets/SourceBrowserMenu.cpp \
@@ -83,7 +82,7 @@ SOURCES += \
     common/SCAFileSystemModel.cpp \
     widgets/TableView.cpp \
     widgets/PropertyBrowser.cpp \
-    ProcessView.cpp
+    widgets/ProcessView.cpp
 
 
 HEADERS += \
@@ -116,7 +115,6 @@ HEADERS += \
     visual/IScaObjectTextBlockVisual.h \
     visual/Node.h \
     visual/ObjectVisual.h \
-    widgets/ViewsTabWidget.h \
     ScaMIMEDataProcessor.h \
     widgets/GraphViewContextMenu.h \
     widgets/SourceBrowserMenu.h \
@@ -138,7 +136,7 @@ HEADERS += \
     widgets/PropertyBrowser.h \
     ../syntax_highlight/extreme_comment3.lang \
     ../syntax_highlight/extreme_comment4.lang \
-    ProcessView.h
+    widgets/ProcessView.h
 
 FORMS += \
     mainwindow.ui \

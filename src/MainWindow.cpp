@@ -13,7 +13,7 @@
 #include "widgets/SourceBrowser.h"
 #include "widgets/ObjectTextViewer.h"
 #include "widgets/FilterDialog.h"
-#include "ProcessView.h"
+#include "widgets/ProcessView.h"
 #include "FileLoader.h"
 #include "GraphScene.h"
 #include "GraphModel.h"
