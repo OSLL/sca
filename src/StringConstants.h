@@ -255,4 +255,9 @@ const QString PROPERTY_OBJECT_FROM  = "Object #1";
 const QString PROPERTY_OBJECT_TO    = "Object #2";
 //[End property browser strings]
 
+//[Run commands strings]
+const QString RUN_CUSTOM_COMMAND_TITLE = "Run custom command";
+const QString RUN_CUSTOM_COMMAND_TEXT =  "Enter command: ";
+//[End run commands strings]
+
 #endif // _StringConstats_H_B7EF2363_6151_4D99_88F1_D6C1BE57A090_INCLUDED_

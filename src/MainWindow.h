@@ -63,6 +63,7 @@ public slots:
     void annotateNoGraphObject();
     void showAdvancedFilter();
     void close();
+    void runCustomCommand();
     void runCommand(const QString &command);
 
 private slots:

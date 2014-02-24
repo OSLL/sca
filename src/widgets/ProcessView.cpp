@@ -32,6 +32,9 @@
 #include "ProcessView.h"
 
 #include <QDebug>
+#ifdef WIN32
+#include <windows.h>
+#endif
 /*! ---------------------------------------------------------------
  *
  * \file ProcessView.cpp
@@ -52,7 +55,7 @@ ProcessView::ProcessView(QWidget *parent):
 
 ProcessView::~ProcessView()
 {
-        m_process->terminate();
+    m_process->terminate();
 }
 
 void ProcessView::execute(const QString &command)
@@ -61,14 +64,19 @@ void ProcessView::execute(const QString &command)
     {
         return;
     }
+#ifdef WIN32
+    m_process->start("cmd\n");
+    m_process->write("chcp 65001\n");
+    m_process->write(QString(command + '\n').toStdString().c_str());
+    m_process->closeWriteChannel();
+#else
     m_process->start(command);
+#endif
 }
 
 void ProcessView::readProcessOutput()
 {
-    QString processOut = m_process->readAllStandardOutput();
-    qDebug() << "[Process]" << processOut;
+    QString processOut = QString::fromUtf8(m_process->readAllStandardOutput());
+    qDebug() << "[Process]: " << processOut;
     append(processOut);
 }
-
-#include "ProcessView.h"

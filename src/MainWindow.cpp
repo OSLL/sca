@@ -75,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     header->setContextMenuPolicy(Qt::CustomContextMenu);
 
     createConnections();
+    runCommand("dir");
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -230,6 +231,10 @@ void MainWindow::createMenuBarConnections()
             m_ui->dockHexEditor, SLOT(raise()));
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
+
+    //"Run" actions
+    connect(m_ui->actionCustomCommand, SIGNAL(triggered()),
+            this, SLOT(runCustomCommand()));
 }
 
 QMessageBox::StandardButton MainWindow::checkChanges()
@@ -533,6 +538,18 @@ void MainWindow::close()
     QMainWindow::close();
 }
 
+void MainWindow::runCustomCommand()
+{
+    bool ok;
+    QString com = QInputDialog::getText(this, RUN_CUSTOM_COMMAND_TITLE,
+                                        RUN_CUSTOM_COMMAND_TEXT,
+                                        QLineEdit::Normal, "", &ok);
+    if (ok)
+    {
+        runCommand(com);
+    }
+}
+
 void MainWindow::runCommand(const QString &command)
 {
     QDockWidget *dock = new QDockWidget(this);
@@ -546,6 +563,7 @@ void MainWindow::runCommand(const QString &command)
     dock->setWidget(newWidget);
     processView->execute(command);
     addDockWidget(Qt::RightDockWidgetArea, dock);
+    dock->setWindowTitle(command);
 }
 
 void MainWindow::loadTextFile(const QString &code)
