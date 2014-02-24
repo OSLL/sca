@@ -9,6 +9,7 @@
 #include <QFileSystemModel>
 #include <ui_mainwindow.h>
 #include <srchiliteqt/Qt4SyntaxHighlighter.h>
+#include "templates/settings/SettingsDialog.h"
 
 class GraphScene;
 class GraphModel;
@@ -40,7 +41,9 @@ private:
     SCAFileSystemModel *m_fileModel;
     bool m_fileChanged;
     bool m_fileIsOnDisk;
-    QProcess *process;
+    QProcess *m_process;
+    SettingsDialog *m_settingsDialog;
+    QSettings *m_settings;
 public:
     explicit MainWindow(QWidget *parent = 0);
     void closeEvent(QCloseEvent *);
@@ -57,7 +60,7 @@ public slots:
     void saveFile();
     void openFile();
     void setFileChanged(bool value = true);
-    void openHelp();
+    void openHelpDialog();
     void refreshFilterLine(const QString &text);
     void switchToObject(IScaObject *);
     void annotateNoGraphObject();

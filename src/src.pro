@@ -82,7 +82,9 @@ SOURCES += \
     common/SCAFileSystemModel.cpp \
     widgets/TableView.cpp \
     widgets/PropertyBrowser.cpp \
-    widgets/ProcessView.cpp
+    widgets/ProcessView.cpp \
+    templates/settings/ToolsForm.cpp \
+    templates/settings/SettingsDialog.cpp
 
 
 HEADERS += \
@@ -136,11 +138,16 @@ HEADERS += \
     widgets/PropertyBrowser.h \
     ../syntax_highlight/extreme_comment3.lang \
     ../syntax_highlight/extreme_comment4.lang \
-    widgets/ProcessView.h
+    widgets/ProcessView.h \
+    templates/settings/ToolsForm.h \
+    templates/settings/SettingsDialog.h
 
 FORMS += \
     mainwindow.ui \
-    FilterDialog.ui
+    FilterDialog.ui \
+    templates/settings/ToolsForm.ui \
+    templates/settings/SettingsDialog.ui \
+    templates/settings/AddToolDialog.ui
 
 RESOURCES += \
     resources/resources.qrc

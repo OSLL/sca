@@ -35,8 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_fileModel(new SCAFileSystemModel(m_model, this)),
     m_fileChanged(false),
     m_fileIsOnDisk(false),
-    process(new QProcess(this))
-
+    m_process(new QProcess(this)),
+    m_settingsDialog(new SettingsDialog(this))
 {
     m_ui->setupUi(this);
     setWindowIcon(QIcon(LOGO_PATH));
@@ -75,7 +75,6 @@ MainWindow::MainWindow(QWidget *parent) :
     header->setContextMenuPolicy(Qt::CustomContextMenu);
 
     createConnections();
-    runCommand("dir");
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -190,7 +189,7 @@ void MainWindow::createMenuBarConnections()
     connect(m_ui->actionAbout, SIGNAL(triggered()),
             this, SLOT(openAbout()));
     connect(m_ui->actionHelp, SIGNAL(triggered()),
-            this, SLOT(openHelp()));
+            this, SLOT(openHelpDialog()));
     connect(m_ui->advancedFilterButton, SIGNAL(clicked()),
             this, SLOT(showAdvancedFilter()));
     connect(m_ui->actionFilter, SIGNAL(triggered()),
@@ -235,6 +234,9 @@ void MainWindow::createMenuBarConnections()
     //"Run" actions
     connect(m_ui->actionCustomCommand, SIGNAL(triggered()),
             this, SLOT(runCustomCommand()));
+
+    connect(m_ui->actionSettings, SIGNAL(triggered()),
+            m_settingsDialog, SLOT(exec()));
 }
 
 QMessageBox::StandardButton MainWindow::checkChanges()
@@ -414,7 +416,7 @@ void MainWindow::setFileChanged(bool value)
     }
 }
 
-void MainWindow::openHelp()
+void MainWindow::openHelpDialog()
 {
     QString link = QApplication::applicationDirPath() +
                    QString(HELP_PATH);
