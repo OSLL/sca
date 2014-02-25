@@ -8,6 +8,7 @@
 #include <QPixmap>
 #include <QDesktopServices>
 #include <QGridLayout>
+#include <QStringList>
 
 #include "widgets/PropertyBrowser.h"
 #include "widgets/SourceBrowser.h"
@@ -37,7 +38,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_fileIsOnDisk(false),
     m_process(new QProcess(this)),
     m_settings(new QSettings("sca","sca", this)),
-    m_settingsDialog(new SettingsDialog(m_settings, this))
+    m_settingsDialog(new SettingsDialog(m_settings, this)),
+    m_toolsMenu(new QMenu(this)),
+    m_toolsSignalMapper(new QSignalMapper(this))
 {
     m_ui->setupUi(this);
     setWindowIcon(QIcon(LOGO_PATH));
@@ -76,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     header->setContextMenuPolicy(Qt::CustomContextMenu);
 
     createConnections();
+    createSourceBrowserToolsMenu();
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -150,7 +154,7 @@ void MainWindow::createCustomContextMenuConnections()
     connect(m_ui->tableView, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->tableView, SLOT(ShowContextMenu(QPoint)));
     connect(m_ui->sourceBrowser, SIGNAL(customContextMenuRequested(QPoint)),
-            m_ui->sourceBrowser, SLOT(ShowContextMenu(QPoint)));
+            m_ui->sourceBrowser, SLOT(showContextMenu(QPoint)));
     connect(m_ui->graphViewer, SIGNAL(customContextMenuRequested(QPoint)),
             m_ui->graphViewer, SLOT(ShowContextMenu(QPoint)));
 }
@@ -166,6 +170,9 @@ void MainWindow::createSourceBrowserConnections()
             this, SLOT(loadBinaryFile()));
     connect(m_ui->sourceBrowser, SIGNAL(annotate()),
             this, SLOT(annotateNoGraphObject()));
+
+    connect(m_ui->sourceBrowser, SIGNAL(runCommand(QString)),
+            this, SLOT(runCommand(QString)));
 }
 
 void MainWindow::createMenuBarConnections()
@@ -238,6 +245,28 @@ void MainWindow::createMenuBarConnections()
 
     connect(m_ui->actionSettings, SIGNAL(triggered()),
             m_settingsDialog, SLOT(exec()));
+}
+
+QMenu *MainWindow::createSourceBrowserToolsMenu()
+{
+    QStringList *tools = m_settingsDialog->getToolsList();
+
+    m_toolsMenu = new QMenu("Tools", this);
+    foreach(QString tool, *tools)
+    {
+        QAction *toolAction = new QAction(tool, this);
+        m_toolsMenu->addAction(toolAction);
+        connect(toolAction, SIGNAL(triggered()),
+                m_toolsSignalMapper, SLOT(map()));
+        m_toolsSignalMapper->setMapping(toolAction, tool);
+    }
+
+    connect(m_toolsSignalMapper, SIGNAL(mapped(QString)),
+            m_ui->sourceBrowser, SLOT(runTool(QString)));
+
+    m_ui->sourceBrowser->getMenu()->addMenu(m_toolsMenu);
+
+    return m_toolsMenu;
 }
 
 QMessageBox::StandardButton MainWindow::checkChanges()

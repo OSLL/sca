@@ -45,8 +45,8 @@
 
 #include <QTreeView>
 #include <QSignalMapper>
+#include <QFileInfo>
 
-#include "SourceBrowserMenu.h"
 class IScaObject;
 
 class SourceBrowser : public QTreeView
@@ -55,19 +55,29 @@ class SourceBrowser : public QTreeView
 public:
     explicit SourceBrowser(QWidget *parent = 0);
     ~SourceBrowser();
-    void setMenu(SourceBrowserMenu *_menu);
+
+    void setMenu(QMenu *menu);
+    QMenu *getMenu() const;
+
+    QFileInfo getCurrentFile();
 private:
-    SourceBrowserMenu *m_menu;
+    QMenu *m_menu;
     QSignalMapper *m_signalMapper;
+
+    void createContextMenu();
+
 signals:
     void addToScene();
     void openBinaryFile();
     void openFile();
     void openFileAs(const QString &);
     void annotate();
+    void contextMenuOnFile(bool);
+    void runCommand(const QString &str);
 public slots:
-    void ShowContextMenu(const QPoint &pos);
+    void showContextMenu(const QPoint &pos);
     void goToObject(IScaObject *object);
+    void runTool(const QString &tool);
 protected:
 };
 

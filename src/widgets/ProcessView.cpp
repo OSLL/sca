@@ -72,6 +72,8 @@ void ProcessView::execute(const QString &command)
 #else
     m_process->start(command);
 #endif
+
+    qDebug() << "[ProcessView]: Runned command: " << command;
 }
 
 void ProcessView::readProcessOutput()

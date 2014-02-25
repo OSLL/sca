@@ -48,25 +48,12 @@
 #include <QFileSystemModel>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QDebug>
 
 SourceBrowser::SourceBrowser(QWidget *parent) :
     QTreeView(parent)
 {
-    m_menu = new SourceBrowserMenu(this);
-    m_menu->connectActionByName(OPEN_IN_TEXT_VIEWER , this, SIGNAL(openFile()));
-    m_menu->connectActionByName(OPEN_IN_BINARY_VIEWER, this, SIGNAL(openBinaryFile()));
-    m_menu->connectActionByName(ANNOTATE_OBJECT, this, SIGNAL(annotate()));
-
-    m_signalMapper = new QSignalMapper (this);
-    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, UTF8, m_signalMapper, SLOT(map()));
-    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, CP866, m_signalMapper, SLOT(map()));
-    m_menu->connectActionByMenu(OPEN_IN_TEXT_VIEWER_AS, ISO885915, m_signalMapper, SLOT(map()));
-
-    m_signalMapper->setMapping(m_menu->getActionByName(UTF8, OPEN_IN_TEXT_VIEWER_AS), UTF8);
-    m_signalMapper->setMapping(m_menu->getActionByName(CP866, OPEN_IN_TEXT_VIEWER_AS), CP866);
-    m_signalMapper->setMapping(m_menu->getActionByName(ISO885915, OPEN_IN_TEXT_VIEWER_AS), ISO885915);
-
-    connect(m_signalMapper, SIGNAL(mapped(QString)), this, SIGNAL(openFileAs(QString))) ;
+    createContextMenu();
 }
 
 SourceBrowser::~SourceBrowser()
@@ -81,41 +68,42 @@ SourceBrowser::~SourceBrowser()
     }
 }
 
-void SourceBrowser::setMenu(SourceBrowserMenu *_menu)
+void SourceBrowser::setMenu(QMenu *menu)
 {
+    qDebug() << "Menu changed" << endl;
     m_menu->deleteLater();
-    m_menu = _menu;
+    m_menu = menu;
 }
 
-void SourceBrowser::ShowContextMenu(const QPoint &pos)
+QMenu *SourceBrowser::getMenu() const
 {
-    //Move menu
-    QPoint globalPos = viewport()->mapToGlobal(pos);
+    return m_menu;
+}
 
-    //Get current item selected and check if it is file
+QFileInfo SourceBrowser::getCurrentFile()
+{
     QFileSystemModel *fileModel = dynamic_cast<QFileSystemModel *>(this->model());
-    if (fileModel != NULL)
+    if (fileModel == NULL)
     {
-        QAction *openText = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER);
-        QAction *openAsText = m_menu->getActionByName(OPEN_IN_TEXT_VIEWER_AS);
-        QAction *openBinary = m_menu->getActionByName(OPEN_IN_BINARY_VIEWER);
-        QAction *annotate = m_menu->getActionByName(ANNOTATE_OBJECT);
-        QFileInfo currentFile = fileModel->fileInfo(this->currentIndex());
-        //Enable only if it is file
-        openText->setEnabled(currentFile.isFile());
-        openAsText->setEnabled(currentFile.isFile());
-        openBinary->setEnabled(currentFile.isFile());
-        //Annotate everything only if something selected
-        annotate->setEnabled(currentIndex().isValid());
+        return QFileInfo();
     }
+    QFileInfo currentFile = fileModel->fileInfo(this->currentIndex());
+    return currentFile;
+}
 
-    //Show menu and process input
-    QAction *action = NULL;
-    action = m_menu->exec(globalPos);
-    if (action == NULL)
+void SourceBrowser::showContextMenu(const QPoint &pos)
+{
+    QPoint globalPos = viewport()->mapToGlobal(pos);
+    if(!indexAt(pos).isValid())
     {
         return;
     }
+
+    //Get current item selected and check if it is file
+    QFileInfo currentFile = getCurrentFile();
+    emit contextMenuOnFile(currentFile.isFile());
+
+    m_menu->exec(globalPos);
 }
 
 void SourceBrowser::goToObject(IScaObject *object)
@@ -131,3 +119,54 @@ void SourceBrowser::goToObject(IScaObject *object)
     selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 }
 
+void SourceBrowser::runTool(const QString &tool)
+{
+    QFileInfo currentFile = getCurrentFile();
+
+    QString command(tool);
+    command.replace(QString("%f"), currentFile.filePath());
+    emit runCommand(command);
+}
+
+
+void SourceBrowser::createContextMenu()
+{
+    m_menu = new QMenu(this);
+    QAction *annotateAction   = m_menu->addAction(ANNOTATE_OBJECT);
+    QAction *openInTextAction = m_menu->addAction(OPEN_IN_TEXT_VIEWER);
+    QMenu *openTextAsMenu     = m_menu->addMenu(OPEN_IN_TEXT_VIEWER_AS);
+    QAction *openInHexAction  = m_menu->addAction(OPEN_IN_BINARY_VIEWER);
+
+    QAction *openAsUtf8Action  = openTextAsMenu->addAction(UTF8);
+    QAction *openAsCp866Action = openTextAsMenu->addAction(CP866);
+    QAction *openAsIsoAction   = openTextAsMenu->addAction(ISO885915);
+
+    connect(openInTextAction, SIGNAL(triggered()),
+            this, SIGNAL(openFile()));
+    connect(openInHexAction, SIGNAL(triggered()),
+            this, SIGNAL(openBinaryFile()));
+    connect(annotateAction, SIGNAL(triggered()),
+            this, SIGNAL(annotate()));
+
+    m_signalMapper = new QSignalMapper (this);
+    connect(openAsUtf8Action, SIGNAL(triggered()),
+            m_signalMapper, SLOT(map()));
+    connect(openAsCp866Action, SIGNAL(triggered()),
+            m_signalMapper, SLOT(map()));
+    connect(openAsIsoAction, SIGNAL(triggered()),
+            m_signalMapper, SLOT(map()));
+
+    m_signalMapper->setMapping(openAsUtf8Action, UTF8);
+    m_signalMapper->setMapping(openAsCp866Action, CP866);
+    m_signalMapper->setMapping(openAsIsoAction, ISO885915);
+
+    connect(m_signalMapper, SIGNAL(mapped(QString)),
+            this, SIGNAL(openFileAs(QString)));
+
+    connect(this, SIGNAL(contextMenuOnFile(bool)),
+            openInTextAction, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(contextMenuOnFile(bool)),
+            openTextAsMenu, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(contextMenuOnFile(bool)),
+            openInHexAction, SLOT(setEnabled(bool)));
+}

@@ -22,6 +22,8 @@ public:
     
     void setSettings(QSettings *settings);
 
+    QStringList *getToolsList() const;
+
 private:
     Ui::SettingsDialog *m_ui;
     QStringList *m_toolsList;

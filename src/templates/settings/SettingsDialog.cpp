@@ -67,3 +67,8 @@ void SettingsDialog::readSettings()
 
     m_toolsForm->setTools(m_toolsList);
 }
+
+QStringList *SettingsDialog::getToolsList() const
+{
+    return m_toolsList;
+}

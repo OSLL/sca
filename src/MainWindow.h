@@ -27,6 +27,7 @@ private:
     void createCustomContextMenuConnections();
     void createSourceBrowserConnections();
     void createMenuBarConnections();
+    QMenu *createSourceBrowserToolsMenu();
     QMessageBox::StandardButton checkChanges();
     void clearAll();
 
@@ -44,6 +45,10 @@ private:
     QProcess *m_process;
     QSettings *m_settings;
     SettingsDialog *m_settingsDialog;
+
+    QMenu *m_toolsMenu;
+    QSignalMapper *m_toolsSignalMapper;
+
 
 public:
     explicit MainWindow(QWidget *parent = 0);
