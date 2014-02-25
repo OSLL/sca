@@ -28,11 +28,11 @@ private:
     QSettings *m_settings;
     ToolsForm *m_toolsForm;
 
-    void readSettings();
 
 private slots:
     void saveSettings();
     void changePage(QListWidgetItem *index);
+    void readSettings();
 };
 
 #endif // SETTINGSDIALOG_H

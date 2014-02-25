@@ -19,6 +19,8 @@ SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
 
     connect(m_ui->buttonBox, SIGNAL(rejected()),
             this, SLOT(close()));
+    connect(m_ui->buttonBox, SIGNAL(rejected()),
+            this, SLOT(readSettings()));
     connect(m_ui->buttonBox, SIGNAL(accepted()),
             this, SLOT(saveSettings()));
     connect(m_ui->buttonBox, SIGNAL(accepted()),
