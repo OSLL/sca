@@ -36,7 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_fileChanged(false),
     m_fileIsOnDisk(false),
     m_process(new QProcess(this)),
-    m_settingsDialog(new SettingsDialog(this))
+    m_settings(new QSettings("sca","sca", this)),
+    m_settingsDialog(new SettingsDialog(m_settings, this))
 {
     m_ui->setupUi(this);
     setWindowIcon(QIcon(LOGO_PATH));

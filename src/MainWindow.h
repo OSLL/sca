@@ -42,8 +42,9 @@ private:
     bool m_fileChanged;
     bool m_fileIsOnDisk;
     QProcess *m_process;
-    SettingsDialog *m_settingsDialog;
     QSettings *m_settings;
+    SettingsDialog *m_settingsDialog;
+
 public:
     explicit MainWindow(QWidget *parent = 0);
     void closeEvent(QCloseEvent *);

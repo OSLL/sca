@@ -25,7 +25,7 @@
      <property name="handleWidth">
       <number>6</number>
      </property>
-     <widget class="QListWidget" name="listWidget">
+     <widget class="QListWidget" name="settingsList">
       <property name="maximumSize">
        <size>
         <width>150</width>
@@ -53,7 +53,10 @@
        </property>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
-         <widget class="ToolsForm" name="settingsForm" native="true"/>
+         <widget class="QStackedWidget" name="stackedWidget">
+          <widget class="QWidget" name="page_1"/>
+          <widget class="QWidget" name="page_2"/>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -72,14 +75,6 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>ToolsForm</class>
-   <extends>QWidget</extends>
-   <header>templates/settings/ToolsForm.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
