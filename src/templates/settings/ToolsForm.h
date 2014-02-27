@@ -16,18 +16,17 @@ class ToolsForm : public QWidget
     Q_OBJECT
     
 public:
-    explicit ToolsForm(QWidget *parent = 0);
+    explicit ToolsForm(QStringListModel *model, QWidget *parent = 0);
     ~ToolsForm();
 
-    void setTools(QStringList *value);
+    void setToolsModel(QStringListModel *model);
 
 private:
 
     Ui::ToolsForm *m_ui;
     Ui::AddToolDialog *m_toolUi;
     QDialog *m_toolDialog;
-    QStringList *m_toolsList;
-    QStringListModel m_toolsModel;
+    QStringListModel *m_toolsModel;
 
 public slots:
     void openAddDialog();

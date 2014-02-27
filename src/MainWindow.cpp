@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_process(new QProcess(this)),
     m_settings(new QSettings("sca","sca", this)),
     m_settingsDialog(new SettingsDialog(m_settings, this)),
-    m_toolsMenu(new QMenu(this)),
+    m_toolsMenu(NULL),
     m_toolsSignalMapper(new QSignalMapper(this))
 {
     m_ui->setupUi(this);
@@ -79,7 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     header->setContextMenuPolicy(Qt::CustomContextMenu);
 
     createConnections();
-    createSourceBrowserToolsMenu();
+    createToolsMenu();
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -101,6 +101,8 @@ void MainWindow::createConnections()
             this, SLOT(setFileChanged()));
     connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
             this, SLOT(setFileChanged()));
+    connect(m_settingsDialog->getToolsModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            this, SLOT(createToolsMenu()));
     createFilterConnections();
     createTableViewConnections();
     createGraphViewConnections();
@@ -247,27 +249,34 @@ void MainWindow::createMenuBarConnections()
             m_settingsDialog, SLOT(exec()));
 }
 
-QMenu *MainWindow::createSourceBrowserToolsMenu()
+void MainWindow::createToolsMenu()
 {
-    QStringList *tools = m_settingsDialog->getToolsList();
-
-    m_toolsMenu = new QMenu("Tools", this);
-    foreach(QString tool, *tools)
+    if(!m_toolsMenu)
     {
-        QAction *toolAction = new QAction(tool, this);
+        m_toolsMenu = new QMenu("Tools", this);
+        m_ui->sourceBrowser->getMenu()->addMenu(m_toolsMenu);
+        connect(m_toolsSignalMapper, SIGNAL(mapped(QString)),
+                m_ui->sourceBrowser, SLOT(runTool(QString)));
+    }
+    else
+    {
+        m_toolsMenu->clear();
+        m_toolsMenu->setTitle("Tools");
+    }
+
+    QStringList tools = m_settingsDialog->getToolsModel()->stringList();
+
+    foreach(QString tool, tools)
+    {
+        QAction *toolAction = new QAction(tool, m_toolsMenu);
         m_toolsMenu->addAction(toolAction);
         connect(toolAction, SIGNAL(triggered()),
                 m_toolsSignalMapper, SLOT(map()));
         m_toolsSignalMapper->setMapping(toolAction, tool);
     }
-
-    connect(m_toolsSignalMapper, SIGNAL(mapped(QString)),
-            m_ui->sourceBrowser, SLOT(runTool(QString)));
-
-    m_ui->sourceBrowser->getMenu()->addMenu(m_toolsMenu);
-
-    return m_toolsMenu;
 }
+
+
 
 QMessageBox::StandardButton MainWindow::checkChanges()
 {

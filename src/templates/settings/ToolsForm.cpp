@@ -3,16 +3,17 @@
 
 #include <QDebug>
 
-ToolsForm::ToolsForm(QWidget *parent) :
+ToolsForm::ToolsForm(QStringListModel *model, QWidget *parent) :
     QWidget(parent),
     m_ui(new Ui::ToolsForm),
     m_toolUi(new Ui::AddToolDialog),
     m_toolDialog(new QDialog(this)),
-    m_toolsList(NULL)
+    m_toolsModel(model)
 {
     m_ui->setupUi(this);
     m_toolUi->setupUi(m_toolDialog);
     m_toolDialog->layout()->setSizeConstraint( QLayout::SetFixedSize );
+    m_ui->toolsListView->setModel(m_toolsModel);
 
 
     connect(m_toolUi->buttonBox, SIGNAL(accepted()),
@@ -28,8 +29,6 @@ ToolsForm::ToolsForm(QWidget *parent) :
             this, SLOT(openEditDialog()));
     connect(m_ui->removeButton, SIGNAL(clicked()),
             this, SLOT(removeTool()));
-
-    m_ui->toolsListView->setModel(&m_toolsModel);
 }
 
 ToolsForm::~ToolsForm()
@@ -38,10 +37,10 @@ ToolsForm::~ToolsForm()
     delete m_toolUi;
 }
 
-void ToolsForm::setTools(QStringList *value)
+void ToolsForm::setToolsModel(QStringListModel *model)
 {
-    m_toolsList = value;
-    m_toolsModel.setStringList(*m_toolsList);
+    m_toolsModel = model;
+    m_ui->toolsListView->setModel(m_toolsModel);
 }
 
 void ToolsForm::openAddDialog()
@@ -49,10 +48,8 @@ void ToolsForm::openAddDialog()
     m_toolUi->buttonBox->show();
 
      m_toolUi->commandEdit->clear();
-     m_toolsList->append(QString());
-     m_toolsModel.setStringList(*m_toolsList);
-     int lastIndex = m_toolsList->size() - 1;
-     QModelIndex index =  m_toolsModel.index(lastIndex);
+     m_toolsModel->insertRow(m_toolsModel->rowCount());
+     QModelIndex index =  m_toolsModel->index(m_toolsModel->rowCount() - 1);
      m_ui->toolsListView->setCurrentIndex(index);
      m_toolUi->commandEdit->clear();
      m_toolDialog->exec();
@@ -65,8 +62,7 @@ void ToolsForm::removeTool()
     {
         return;
     }
-    m_toolsList->removeAt(index.row());
-    m_toolsModel.setStringList(*m_toolsList);
+    m_toolsModel->removeRow(index.row());
 }
 
 void ToolsForm::openEditDialog()
@@ -76,7 +72,7 @@ void ToolsForm::openEditDialog()
     {
         return;
     }
-    QString text = m_toolsList->at(index.row());
+    QString text = m_toolsModel->data(index, Qt::DisplayRole).toString();
     m_toolUi->commandEdit->setText(text);
     m_toolDialog->exec();
 }
@@ -90,7 +86,5 @@ void ToolsForm::editTool()
     {
         return;
     }
-    m_toolsList->replace(index.row(), m_toolUi->commandEdit->text());
-    m_toolsModel.setStringList(*m_toolsList);
+    m_toolsModel->setData(index, m_toolUi->commandEdit->text());
 }
-

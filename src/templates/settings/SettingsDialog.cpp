@@ -6,13 +6,11 @@
 SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
     QDialog(parent),
     m_ui(new Ui::SettingsDialog),
-    m_toolsList(new QStringList),
+    m_toolsModel(new QStringListModel(this)),
     m_settings(settings),
-    m_toolsForm(new ToolsForm(this))
+    m_toolsForm(new ToolsForm(m_toolsModel, this))
 {
     m_ui->setupUi(this);
-    m_toolsForm->setTools(m_toolsList);
-
     m_ui->stackedWidget->addWidget(m_toolsForm);
 
     readSettings();
@@ -38,9 +36,12 @@ SettingsDialog::~SettingsDialog()
 
 void SettingsDialog::saveSettings()
 {
+    qDebug() <<"[Save dialog] save:" << m_toolsModel->stringList();
     m_settings->beginGroup("Tools");
-    m_settings->setValue("toolsList", QVariant(*m_toolsList));
+    m_settings->setValue("toolsList", QVariant(m_toolsModel->stringList()));
     m_settings->endGroup();
+
+    m_settings->sync();
 }
 
 void SettingsDialog::changePage(QListWidgetItem *index)
@@ -61,14 +62,13 @@ void SettingsDialog::setSettings(QSettings *settings)
 void SettingsDialog::readSettings()
 {
     m_settings->beginGroup("Tools");
-    delete m_toolsList;
-    m_toolsList = new QStringList(m_settings->value("toolsList", QStringList()).toStringList());
+    QStringList m_toolsList = m_settings->value("toolsList", QStringList()).toStringList();
     m_settings->endGroup();
 
-    m_toolsForm->setTools(m_toolsList);
+    m_toolsModel->setStringList(m_toolsList);
 }
 
-QStringList *SettingsDialog::getToolsList() const
+QStringListModel *SettingsDialog::getToolsModel() const
 {
-    return m_toolsList;
+    return m_toolsModel;
 }

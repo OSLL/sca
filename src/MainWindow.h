@@ -27,7 +27,6 @@ private:
     void createCustomContextMenuConnections();
     void createSourceBrowserConnections();
     void createMenuBarConnections();
-    QMenu *createSourceBrowserToolsMenu();
     QMessageBox::StandardButton checkChanges();
     void clearAll();
 
@@ -74,9 +73,12 @@ public slots:
     void close();
     void runCustomCommand();
     void runCommand(const QString &command);
+    void createToolsMenu();
 
 private slots:
     void on_filterLine_textChanged(const QString &arg1);
+
+
 };
 
 #endif // MAINWINDOW_H

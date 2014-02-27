@@ -22,11 +22,11 @@ public:
     
     void setSettings(QSettings *settings);
 
-    QStringList *getToolsList() const;
+    QStringListModel *getToolsModel() const;
 
 private:
     Ui::SettingsDialog *m_ui;
-    QStringList *m_toolsList;
+    QStringListModel *m_toolsModel;
     QSettings *m_settings;
     ToolsForm *m_toolsForm;
 
