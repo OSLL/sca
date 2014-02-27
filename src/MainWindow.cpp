@@ -579,17 +579,6 @@ void MainWindow::close()
     QMainWindow::close();
 }
 
-void MainWindow::runCustomCommand()
-{
-    bool ok;
-    QString com = QInputDialog::getText(this, RUN_CUSTOM_COMMAND_TITLE,
-                                        RUN_CUSTOM_COMMAND_TEXT,
-                                        QLineEdit::Normal, "", &ok);
-    if (ok)
-    {
-        runCommand(com);
-    }
-}
 
 void MainWindow::runCommand(const QString &command)
 {

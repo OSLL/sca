@@ -103,16 +103,9 @@
     </widget>
     <addaction name="menuViews"/>
    </widget>
-   <widget class="QMenu" name="menuRun">
-    <property name="title">
-     <string>Run</string>
-    </property>
-    <addaction name="actionCustomCommand"/>
-   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuView"/>
-   <addaction name="menuRun"/>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>

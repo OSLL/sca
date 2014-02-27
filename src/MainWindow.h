@@ -71,7 +71,6 @@ public slots:
     void annotateNoGraphObject();
     void showAdvancedFilter();
     void close();
-    void runCustomCommand();
     void runCommand(const QString &command);
     void createToolsMenu();
 
