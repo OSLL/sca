@@ -1,5 +1,6 @@
 #include "ToolsForm.h"
 #include "ui_ToolsForm.h"
+#include "../../src/StringConstants.h"
 
 #include <QDebug>
 
@@ -45,14 +46,15 @@ void ToolsForm::setToolsModel(QStringListModel *model)
 
 void ToolsForm::openAddDialog()
 {
+    m_toolDialog->setWindowTitle(ADD_NEW_COMMAND_TITLE);
     m_toolUi->buttonBox->show();
 
-     m_toolUi->commandEdit->clear();
-     m_toolsModel->insertRow(m_toolsModel->rowCount());
-     QModelIndex index =  m_toolsModel->index(m_toolsModel->rowCount() - 1);
-     m_ui->toolsListView->setCurrentIndex(index);
-     m_toolUi->commandEdit->clear();
-     m_toolDialog->exec();
+    m_toolUi->commandEdit->clear();
+    m_toolsModel->insertRow(m_toolsModel->rowCount());
+    QModelIndex index =  m_toolsModel->index(m_toolsModel->rowCount() - 1);
+    m_ui->toolsListView->setCurrentIndex(index);
+    m_toolUi->commandEdit->clear();
+    m_toolDialog->exec();
 }
 
 void ToolsForm::removeTool()
@@ -67,6 +69,7 @@ void ToolsForm::removeTool()
 
 void ToolsForm::openEditDialog()
 {
+    m_toolDialog->setWindowTitle(EDIT_COMMAND_TITLE);
     QModelIndex index = m_ui->toolsListView->currentIndex();
     if(!index.isValid())
     {
