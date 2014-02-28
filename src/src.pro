@@ -141,9 +141,8 @@ HEADERS += \
 FORMS += \
     mainwindow.ui \
     FilterDialog.ui \
-    templates/settings/ToolsForm.ui \
     templates/settings/SettingsDialog.ui \
-    templates/settings/AddToolDialog.ui
+    templates/settings/ToolsForm.ui
 
 RESOURCES += \
     resources/resources.qrc

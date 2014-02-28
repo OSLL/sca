@@ -24,13 +24,15 @@ public:
 private:
 
     Ui::ToolsForm *m_ui;
+    Ui::AddToolDialog *m_toolUi;
+    QDialog *m_toolDialog;
     QStringListModel *m_toolsModel;
 
 public slots:
-    void addTool();
+    void openAddDialog();
     void removeTool();
-    void changeEditableTool(const QModelIndex &index);
-    void toolEdited(const QString &tool);
+    void openEditDialog();
+    void editTool();
 };
 
 #endif // TOOLSFORM_H
