@@ -4,8 +4,6 @@
 #include <QWidget>
 #include <QStringList>
 #include <QStringListModel>
-#include "ui_AddToolDialog.h"
-
 
 namespace Ui {
     class ToolsForm;
