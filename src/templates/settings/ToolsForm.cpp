@@ -1,5 +1,6 @@
 #include "ToolsForm.h"
 #include "ui_ToolsForm.h"
+#include "../../src/StringConstants.h"
 
 #include <QDebug>
 

@@ -245,7 +245,6 @@ void MainWindow::createMenuBarConnections()
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
 
-    //"Run" actionsZ
     connect(m_ui->actionSettings, SIGNAL(triggered()),
             m_settingsDialog, SLOT(exec()));
 }
