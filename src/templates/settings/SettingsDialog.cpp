@@ -27,6 +27,8 @@ SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
     connect(m_ui->settingsList, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(changePage(QListWidgetItem*)));
 
+    
+    
 }
 
 SettingsDialog::~SettingsDialog()

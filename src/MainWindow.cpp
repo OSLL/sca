@@ -101,8 +101,12 @@ void MainWindow::createConnections()
             this, SLOT(setFileChanged()));
     connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
             this, SLOT(setFileChanged()));
+
+    connect(m_settingsDialog->getToolsModel(), SIGNAL(rowsRemoved (QModelIndex, int, int)),
+            this, SLOT(createToolsMenu()));
     connect(m_settingsDialog->getToolsModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             this, SLOT(createToolsMenu()));
+
     createFilterConnections();
     createTableViewConnections();
     createGraphViewConnections();
@@ -241,10 +245,7 @@ void MainWindow::createMenuBarConnections()
     connect(m_ui->actionPropertyBrowser, SIGNAL(triggered()),
             m_ui->dockPropertyBrowser, SLOT(raise()));
 
-    //"Run" actions
-    connect(m_ui->actionCustomCommand, SIGNAL(triggered()),
-            this, SLOT(runCustomCommand()));
-
+    //"Run" actionsZ
     connect(m_ui->actionSettings, SIGNAL(triggered()),
             m_settingsDialog, SLOT(exec()));
 }
