@@ -64,7 +64,6 @@ SOURCES += \
     visual/Node.cpp \
     visual/ObjectVisual.cpp \
     ScaMIMEDataProcessor.cpp \
-    widgets/GraphViewContextMenu.cpp \
     widgets/ContextMenu.cpp \
     common/ScaObjectConverter.cpp \
     common/IScaObjectBinaryBlock.cpp \
@@ -117,7 +116,6 @@ HEADERS += \
     visual/Node.h \
     visual/ObjectVisual.h \
     ScaMIMEDataProcessor.h \
-    widgets/GraphViewContextMenu.h \
     widgets/ContextMenu.h \
     common/ScaObjectConverter.h \
     common/IScaObjectTextBlock.h \

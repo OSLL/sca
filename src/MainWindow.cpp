@@ -150,6 +150,9 @@ void MainWindow::createGraphViewConnections()
             m_propertyBrowser, SLOT(loadItem(int)));
     connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
             m_propertyBrowser, SLOT(itemMoved(int)));
+
+    connect(m_ui->graphViewer, SIGNAL(runCommand(QString)),
+            this, SLOT(runCommand(QString)));
 }
 
 void MainWindow::createCustomContextMenuConnections()
@@ -257,6 +260,9 @@ void MainWindow::createToolsMenu()
         m_ui->sourceBrowser->getMenu()->addMenu(m_toolsMenu);
         connect(m_toolsSignalMapper, SIGNAL(mapped(QString)),
                 m_ui->sourceBrowser, SLOT(runTool(QString)));
+        m_ui->graphViewer->getMenu()->addMenu(m_toolsMenu);
+        connect(m_toolsSignalMapper, SIGNAL(mapped(QString)),
+                m_ui->graphViewer, SLOT(runTool(QString)));
     }
     else
     {

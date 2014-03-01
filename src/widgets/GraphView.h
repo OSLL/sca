@@ -49,7 +49,7 @@
  *
  */
 #include <QGraphicsView>
-#include "widgets/GraphViewContextMenu.h"
+
 #include "GraphScene.h"
 class GraphFilter;
 class GraphModel;
@@ -62,8 +62,8 @@ public:
     explicit GraphView(GraphScene *scene, QWidget *parent = 0);
     GraphScene *scene() const;
 
-    GraphViewContextMenu *getMenu() const;
-    void setMenu(GraphViewContextMenu *menu);
+    QMenu *getMenu() const;
+    void setMenu(QMenu *menu);
 
     void exportToImage(const QString path);
 
@@ -76,14 +76,13 @@ private:
     //This is used for drag-n-drop technology
     ObjectVisual *m_temp;
     int m_tempId;
-    GraphViewContextMenu *m_menu;
+    QMenu *m_menu;
     GraphModel *m_model;
     bool m_changingLinkMode;
     bool m_linkSetsNewSource;
 
-public slots:
-    void ShowContextMenu(const QPoint &pos);
-    void moveTo(const QModelIndex &index);
+    void createContextMenu();
+
 
 protected:
     void mouseDoubleClickEvent(QMouseEvent *event);
@@ -96,10 +95,36 @@ protected:
     void dragLeaveEvent(QDragLeaveEvent *event = 0, bool = false);
     void dropEvent(QDropEvent * event);
     void keyPressEvent(QKeyEvent *event);
+
 signals:
     void goToObject(IScaObject *);
     void goToObject(int id);
     void itemMoved(int id);
+    void linkSelected(bool);
+    void nodeSelected(bool);
+    void objectsCanConnect(bool);
+    void objectSelected(bool);
+    void objectsSelected(bool);
+    void canConvertToText(bool);
+    void canConvertToIdent(bool);
+    void linkHasLeftArrow(bool);
+    void linkHasRightArrow(bool);
+
+    void runCommand(QString);
+
+public slots:
+    void ShowContextMenu(const QPoint &pos);
+    void moveTo(const QModelIndex &index);
+    void runTool(const QString &tool);
+    void removeSelectedObjects();
+    void connectSelectedObjects();
+    void setSelectedLinkLeftArrow(bool hasArrow);
+    void setSelectedLinkRightArrow(bool hasArrow);
+    void editSelectedAnnotation();
+    void convertSelectedNodeToText();
+    void convertSelectedNodeToIdentifier();
+
+
 }; // class GraphView
 
 

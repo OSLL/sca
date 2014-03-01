@@ -46,7 +46,8 @@
 #include <QDebug>
 #include <QUrl>
 #include <QTableView>
-#include "widgets/GraphViewContextMenu.h"
+#include <QMenu>
+
 #include "common/IScaObjectFile.h"
 #include "common/IScaObjectTextBlock.h"
 #include "common/IScaObjectBinaryBlock.h"
@@ -66,20 +67,24 @@ GraphView::GraphView(QWidget *parent) :
     QGraphicsView(parent),
     m_temp(NULL),
     m_model(NULL),
-    m_changingLinkMode(false)
+    m_changingLinkMode(false),
+    m_menu(new QMenu(this))
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    m_menu = new GraphViewContextMenu(this);
+
+    createContextMenu();
 }
 
 GraphView::GraphView(GraphScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent),
     m_temp(NULL),
     m_model(NULL),
-    m_changingLinkMode(false)
+    m_changingLinkMode(false),
+    m_menu(new QMenu(this))
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-    m_menu = new GraphViewContextMenu(this);
+
+    createContextMenu();
 }
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
@@ -169,146 +174,52 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     QList<LinkVisual *> links = scene()->selectedLinks();
     QList<ObjectVisual *> objects = scene()->selectedObjects();
 
-    ScaObjectConverter conv;
+    emit objectsSelected(objects.size());
+    emit objectsCanConnect(nodes.size() + links.size() == 2);
+    emit objectSelected(objects.size() == 1);
+    emit nodeSelected(nodes.size() == 1);
 
-    //Get actions to interact with
-    QAction *del = m_menu->getActionByName(DELETE_ITEMS);
-    QAction *toText = m_menu->getActionByName(TO_TEXT_BLOCK);
-    QAction *toIdentifier = m_menu->getActionByName(TO_IDENTIFIER);
-    QAction *conAct = m_menu->getActionByName(CONNECT_OBJECTS);
-    QAction *setLeftArrow = m_menu->getActionByName(LEFT_ARROW);
-    QAction *setRightArrow = m_menu->getActionByName(RIGHT_ARROW);
-    QAction *editAnnotationAct = m_menu->getActionByName(EDIT_ANNOTATION);
 
-    //#Setting up menu#//
-    //Reset to defaults
-    m_menu->resetToDefault();
-    //Setting connection available only if 2 nodes or links selected
-    conAct->setEnabled(nodes.size() + links.size() == 2);
-    //Editing annotation only if there is only one object under selection
-    editAnnotationAct->setEnabled(objects.size() == 1);
+    emit linkSelected(links.size() == 1);
 
-    if (!links.isEmpty())
-    {
-        m_tempId = scene()->getObjectId(links.at(0));
-    }
-    else if (!nodes.isEmpty())
-    {
-        m_tempId = scene()->getObjectId(nodes.at(0));
-    }
     if (links.size() == 1)
     {
-        setLeftArrow->setEnabled(true);
-        setRightArrow->setEnabled(true);
-        bool hasLeftArrow = false;
-        bool hasRightArrow = false;
-
         if(links.at(0)->getSource().x() < links.at(0)->getDestin().x())
         {
-            hasLeftArrow = links.at(0)->getSourceArrow() != NULL;
-            hasRightArrow = links.at(0)->getDestinArrow() != NULL;
+            emit linkHasLeftArrow(links.at(0)->getSourceArrow() != NULL);
+            emit linkHasRightArrow(links.at(0)->getDestinArrow() != NULL);
         }
         else
         {
-            hasRightArrow = links.at(0)->getSourceArrow() != NULL;
-            hasLeftArrow = links.at(0)->getDestinArrow() != NULL;
+            emit linkHasLeftArrow(links.at(0)->getDestinArrow() != NULL);
+            emit linkHasRightArrow(links.at(0)->getSourceArrow() != NULL);
         }
-        setLeftArrow->setChecked(hasLeftArrow);
-        setRightArrow->setChecked(hasRightArrow);
     }
     else
     {
-        setLeftArrow->setEnabled(false);
-        setRightArrow->setEnabled(false);
+        emit linkHasLeftArrow(false);
+        emit linkHasRightArrow(false);
     }
 
-
-    //Allow deleting only if something selected
-    del->setEnabled(!objects.isEmpty());
-
-    //Converting available for proper types
-    if (nodes.size() == 1)
+    if(nodes.size() == 1)
     {
+        ScaObjectConverter conv;
+
         Node *node = nodes.at(0);
         int id = scene()->getObjectId(node);
         QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
         IScaObject *obj = qvariant_cast<IScaObject *>(var);
-        toText->setEnabled(conv.canConvert(obj, IScaObject::TEXTBLOCK));
-        toIdentifier->setEnabled(conv.canConvert(obj, IScaObject::IDENTIFIER));
+
+        emit canConvertToText(conv.canConvert(obj, IScaObject::TEXTBLOCK));
+        emit canConvertToIdent(conv.canConvert(obj, IScaObject::IDENTIFIER));
+    }
+    else
+    {
+        emit canConvertToText(false);
+        emit canConvertToIdent(false);
     }
 
-    //Show menu
-    QAction *action = NULL;
-    action = m_menu->exec(globalPos);
-    if (action == NULL)
-    {
-        return;
-    }
-
-    //Process chosen action
-    if (action == conAct)
-    {
-        ObjectVisual *src, *dest;
-        if (nodes.size() == 2)
-        {
-            src = nodes.at(0);
-            dest = nodes.at(1);
-        }
-        else if (links.size() == 2)
-        {
-            src = links.at(0),
-            dest = links.at(1);
-        }
-        else
-        {
-            src = links.at(0);
-            dest = nodes.at(0);
-        }
-        int srcId = scene()->getObjectId(src);
-        int destId = scene()->getObjectId(dest);
-        m_model->connectObjects(srcId, destId);
-        return;
-    }
-    else if (action == toText)
-    {
-        m_model->convert(m_tempId, IScaObject::TEXTBLOCK);
-        return;
-    }
-    else if (action == toIdentifier)
-    {
-        m_model->convert(m_tempId, IScaObject::IDENTIFIER);
-        return;
-    }
-    else if (action == del)
-    {
-        foreach(LinkVisual *link, links)
-        {
-            m_model->removeObject(scene()->getObjectId(link));
-        }
-        foreach(Node *node, nodes)
-        {
-            m_model->removeObject(scene()->getObjectId(node));
-        }
-    }
-    else if (action == setLeftArrow)
-    {
-        if (setLeftArrow->isChecked())
-            links.at(0)->setDefaultArrows(true);
-        else
-            links.at(0)->removeLeftArrow();
-    }
-    else if (action == setRightArrow)
-    {
-        if (setRightArrow->isChecked())
-            links.at(0)->setDefaultArrows(false);
-        else
-            links.at(0)->removeRightArrow();
-    }
-    else if (action == editAnnotationAct)
-    {
-        int id = scene()->getObjectId(objects.at(0));
-        editAnnotation(id);
-    }
+    m_menu->exec(globalPos);
 }
 
 void GraphView::moveTo(const QModelIndex &index)
@@ -334,6 +245,44 @@ void GraphView::moveTo(const QModelIndex &index)
         qDebug() << "[GraphView]: moving to #" << modelRow <<
                     "(tabled as#" << index.row() << ")=" << obj;
         centerOn(obj);
+    }
+}
+
+void GraphView::runTool(const QString &tool)
+{
+    if(!hasFocus())
+    {
+        return;
+    }
+
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
+    if(objects.size() != 1)
+    {
+        return;
+    }
+
+    QString filePath;
+
+    int id = scene()->getObjectId(objects.at(0));
+    QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
+    IScaObject *object = qvariant_cast<IScaObject *>(var);
+    if(object->getType() == IScaObject::FILE | IScaObject::DIRECTORY)
+    {
+        filePath = object->getFile().filePath();
+    }
+
+    QString command(tool);
+    command.replace(QString("%f"), filePath);
+    emit runCommand(command);
+
+}
+
+void GraphView::removeSelectedObjects()
+{
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
+    foreach(ObjectVisual *object, objects)
+    {
+        m_model->removeObject(scene()->getObjectId(object));
     }
 }
 
@@ -366,48 +315,48 @@ void GraphView::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
     case Qt::Key_C:
+    {
+        QList<Node  *> nodes = scene()->selectedNodes();
+        QList<ObjectVisual *> items = scene()->selectedObjects();
+        QList<LinkVisual *> links = scene()->selectedLinks();
+        if (nodes.size() == 2)
         {
-            QList<Node  *> nodes = scene()->selectedNodes();
-            QList<ObjectVisual *> items = scene()->selectedObjects();
-            QList<LinkVisual *> links = scene()->selectedLinks();
-            if (nodes.size() == 2)
-            {
-                ObjectVisual *src = nodes.at(0);
-                ObjectVisual *dest = nodes.at(1);
-                int srcId = scene()->getObjectId(src);
-                int destId = scene()->getObjectId(dest);
-                m_model->connectObjects(srcId, destId);
-            }
-            else if (links.size() == 2)
-            {
-                ObjectVisual *src = links.at(0);
-                ObjectVisual *dest = links.at(1);
-                int srcId = scene()->getObjectId(src);
-                int destId = scene()->getObjectId(dest);
-                m_model->connectObjects(srcId, destId);
-            }
-            else if (items.size() == 2)
-            {
-                ObjectVisual *src = items.at(0);
-                ObjectVisual *dest = items.at(1);
-                int srcId = scene()->getObjectId(src);
-                int destId = scene()->getObjectId(dest);
-                m_model->connectObjects(srcId, destId);
-            }
+            ObjectVisual *src = nodes.at(0);
+            ObjectVisual *dest = nodes.at(1);
+            int srcId = scene()->getObjectId(src);
+            int destId = scene()->getObjectId(dest);
+            m_model->connectObjects(srcId, destId);
         }
+        else if (links.size() == 2)
+        {
+            ObjectVisual *src = links.at(0);
+            ObjectVisual *dest = links.at(1);
+            int srcId = scene()->getObjectId(src);
+            int destId = scene()->getObjectId(dest);
+            m_model->connectObjects(srcId, destId);
+        }
+        else if (items.size() == 2)
+        {
+            ObjectVisual *src = items.at(0);
+            ObjectVisual *dest = items.at(1);
+            int srcId = scene()->getObjectId(src);
+            int destId = scene()->getObjectId(dest);
+            m_model->connectObjects(srcId, destId);
+        }
+    }
         break;
     case Qt::Key_Delete:
+    {
+        foreach(LinkVisual *link, scene()->selectedLinks())
         {
-            foreach(LinkVisual *link, scene()->selectedLinks())
-            {
-                m_model->removeObject(scene()->getObjectId(link));
-            }
-            foreach(Node *node, scene()->selectedNodes())
-            {
-                m_model->removeObject(scene()->getObjectId(node));
-            }
-
+            m_model->removeObject(scene()->getObjectId(link));
         }
+        foreach(Node *node, scene()->selectedNodes())
+        {
+            m_model->removeObject(scene()->getObjectId(node));
+        }
+
+    }
         break;
     }
 }
@@ -417,12 +366,12 @@ GraphScene *GraphView::scene() const
     return dynamic_cast<GraphScene *>(QGraphicsView::scene());
 }
 
-GraphViewContextMenu *GraphView::getMenu() const
+QMenu *GraphView::getMenu() const
 {
     return m_menu;
 }
 
-void GraphView::setMenu(GraphViewContextMenu *menu)
+void GraphView::setMenu(QMenu *menu)
 {
     m_menu->deleteLater();
     m_menu = menu;
@@ -488,6 +437,61 @@ void GraphView::setScene(GraphScene *graphScene)
                 scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
     graphScene->setModel(m_model);
+}
+
+void GraphView::createContextMenu()
+{
+    QAction *connectAction = m_menu->addAction(CONNECT_OBJECTS);
+    QAction *removeAction = m_menu->addAction(DELETE_ITEMS);
+    m_menu->addSeparator();
+    QAction *toTextAction = m_menu->addAction(TO_TEXT_BLOCK);
+    QAction *toIdentAction = m_menu->addAction(TO_IDENTIFIER);
+    m_menu->addSeparator();
+    QAction *setLeftArrow = m_menu->addAction(LEFT_ARROW);
+    setLeftArrow->setCheckable(true);
+    QAction *setRightArrow = m_menu->addAction(RIGHT_ARROW);
+    setRightArrow->setCheckable(true);
+    m_menu->addSeparator();
+    QAction *editAnnotAction = m_menu->addAction(EDIT_ANNOTATION);
+
+    connect(this, SIGNAL(objectsCanConnect(bool)),
+            connectAction, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(objectsSelected(bool)),
+            removeAction, SLOT(setEnabled(bool)));
+
+    connect(this, SIGNAL(canConvertToText(bool)),
+            toTextAction, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(canConvertToIdent(bool)),
+            toIdentAction, SLOT(setEnabled(bool)));
+
+    connect(this, SIGNAL(linkSelected(bool)),
+            setLeftArrow, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(linkSelected(bool)),
+            setRightArrow, SLOT(setEnabled(bool)));
+
+    connect(this, SIGNAL(linkHasLeftArrow(bool)),
+            setLeftArrow, SLOT(setChecked(bool)));
+    connect(this, SIGNAL(linkHasRightArrow(bool)),
+            setRightArrow, SLOT(setChecked(bool)));
+
+    connect(this, SIGNAL(objectSelected(bool)),
+            editAnnotAction, SLOT(setEnabled(bool)));
+
+    connect(connectAction, SIGNAL(triggered()),
+            this, SLOT(connectSelectedObjects()));
+    connect(removeAction, SIGNAL(triggered()),
+            this, SLOT(removeSelectedObjects()));
+    connect(toTextAction, SIGNAL(triggered()),
+            this, SLOT(convertSelectedNodeToText()));
+    connect(toIdentAction, SIGNAL(triggered()),
+            this, SLOT(convertSelectedNodeToIdentifier()));
+    connect(setLeftArrow, SIGNAL(toggled(bool)),
+            this, SLOT(setSelectedLinkLeftArrow(bool)));
+    connect(setRightArrow, SIGNAL(toggled(bool)),
+            this, SLOT(setSelectedLinkRightArrow(bool)));
+    connect(editAnnotAction, SIGNAL(triggered()),
+            this, SLOT(editSelectedAnnotation()));
+
 }
 
 void GraphView::editAnnotation(int id)
@@ -637,7 +641,7 @@ void GraphView::mouseMoveEvent(QMouseEvent *event)
                     to = link->getDestin();
             QPointF eventPos = mapToScene(event->pos());
             if ((from - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS
-                || (to - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
+                    || (to - eventPos).manhattanLength() < CHANGE_LINK_CLICK_RADIUS)
             {
                 setCursor(Qt::PointingHandCursor);
             }
@@ -712,3 +716,75 @@ void GraphView::mouseReleaseEvent(QMouseEvent *event)
     }
     QGraphicsView::mouseReleaseEvent(event);
 }
+
+
+void GraphView::connectSelectedObjects()
+{
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
+
+    if(objects.size() != 2)
+    {
+        return;
+    }
+
+    int srcId = scene()->getObjectId(objects.at(0));
+    int destId = scene()->getObjectId(objects.at(1));
+    m_model->connectObjects(srcId, destId);
+}
+
+void GraphView::setSelectedLinkLeftArrow(bool hasArrow)
+{
+    QList<LinkVisual *> links = scene()->selectedLinks();
+    if(links.size() != 1)
+    {
+        return;
+    }
+
+    if (hasArrow)
+        links.at(0)->setDefaultArrows(true);
+    else
+        links.at(0)->removeLeftArrow();
+}
+
+
+void GraphView::setSelectedLinkRightArrow(bool hasArrow)
+{
+    QList<LinkVisual *> links = scene()->selectedLinks();
+    if(links.size() != 1)
+    {
+        return;
+    }
+
+    if (hasArrow)
+        links.at(0)->setDefaultArrows(false);
+    else
+        links.at(0)->removeRightArrow();
+
+}
+
+void GraphView::editSelectedAnnotation()
+{
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
+    if(objects.size() != 1)
+    {
+        return;
+    }
+
+    int id = scene()->getObjectId(objects.at(0));
+    editAnnotation(id);
+}
+
+void GraphView::convertSelectedNodeToText()
+{
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
+    m_tempId = scene()->getObjectId(objects.at(0));
+    m_model->convert(m_tempId, IScaObject::TEXTBLOCK);
+}
+
+void GraphView::convertSelectedNodeToIdentifier()
+{
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
+    m_tempId = scene()->getObjectId(objects.at(0));
+    m_model->convert(m_tempId, IScaObject::IDENTIFIER);
+}
+

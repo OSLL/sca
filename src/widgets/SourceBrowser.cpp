@@ -121,6 +121,11 @@ void SourceBrowser::goToObject(IScaObject *object)
 
 void SourceBrowser::runTool(const QString &tool)
 {
+    if(!hasFocus())
+    {
+        return;
+    }
+
     QFileInfo currentFile = getCurrentFile();
 
     QString command(tool);
