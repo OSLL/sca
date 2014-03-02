@@ -14,7 +14,7 @@
 	}
 	h2 {
 		font-family: 'Times New Roman', Times, serif;
-		font-size: 16pt;
+                font-size: 16pt;
 	}
 	h4 {
 		font-style: italic;
@@ -41,6 +41,7 @@
         <li><a href="#tableview">Table view</a></li>
         <li><a href="#propertybrowser">Property browser</a></li>
 	</ol>
+<li><a href="#externaltools">Using external tools</a></li>
 <li><a href="#annotating">Annotating objects</a></li>
 <li><a href="#objecttypes">Object types</a></li>
 <li><a href="#converting">Converting objects</a></li>
@@ -73,7 +74,7 @@
 
 <p>To use file you can use context menu or just drag'n'drop file to view which you want to use.</p>
 <p>File browser also supports <a href="#annotating">annotating</a> directories and files without creating objects. Simply call context menu on file/directory and select "Edit annotation".</p>
-<p><b>NOTE:</b> As a default, for <a href="#textview">Text view</a> it opens file using UTF-8 encoding, but you can force it to open in different encoding by calling context menu on file, selecting “Open in Text viewer as” and then selecting your preferable encoding out of supported ones.</a></p>
+<p><b>NOTE:</b> As a default, <a href="#textview">text view</a> opens file using UTF-8 encoding, but you can force it to open in different encoding by calling context menu on file, selecting “Open in Text viewer as” and then selecting your preferable encoding out of supported ones.</a></p>
 
 <h3><a href="#content">[up]</a><a name="textview">Text view</a></h3>
 <p>Text view provides viewing files in different encodings: UTF-8, CP-866, ISO-8859-15. </p>
@@ -81,7 +82,7 @@
 
 <h3><a href="#content">[up]</a><a name="binaryview">Binary view</a></h3>
 <p>Binary view provides viewing files as a HEX-files as any usual hex-editor. On the left you can see current offset of line in the table, in the next column - bytes loaded and separated by spaces, on the right you can see their symbolic representation.</p>
-<p>To use binary view's drag'n'drop select bytes you want and drag them to scene</p>
+<p>To use binary view's drag'n'drop select bytes you want and drag them to <a href="#graphview">graph view</a>.</p>
 
 <h3><a href="#content">[up]</a><a name="graphview">Graph view</a></h3>
 <p>Graph view is a workplace where you can <a href="#dragndrop">drag’n’drop.</a> object to.</p>
@@ -94,11 +95,15 @@
 
 <h3><a href="#content">[up]</a><a name="propertybrowser">Property browser</a></h3>
 <p>Property browser provides seeing some fields of objects on graph.</p>
-<p>We do not recommend to edit objects' path, but you can do it you e.g. renamed file object linked to.</p>
+<p>We do not recommend to edit objects' path, but you can do it (e.g. you renamed file object linked to and want to fix double-click moving to object).</p>
+
+<h2><a href="#content">[up]</a><a name="externaltools">Using external tools</a></h2>
+<p>While observing source, you may need to see what other tools make out of your objects. To use them, simply follow to the list of tools in menu Edit->Settings->Tools, then click add and follow hints of syntax. For the beginning, we added some tools for you by default, but if you wish, you can remove them.</p>
+<p>After making list of tools you wish to use, click OK. Now to call them right click on folders/files at <a href="#filebrowser">file browser</a> or directly on objects of <a href="#graphview">graph view</a>. Window with output of command appears and you can operate with that like with a text in <a href="#textview">text view</a>.</p>
 
 <h2><a href="#content">[up]</a><a name="annotating">Annotating</a></h2>
 <p>You can annotate any object on graph by right-clicking on it and selecting "Edit annotation" entry in menu. Annotation representation on graph supports HTML formatting.</p>
-<p>See also annotating directory/file in <a href="#filebrowse">file browser.</a></p>
+<p>See also annotating directory/file in <a href="#filebrowser">file browser.</a></p>
 
 <h2><a href="#content">[up]</a><a name="objecttypes">Object types</a></h2>
 
