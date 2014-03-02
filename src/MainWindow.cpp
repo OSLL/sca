@@ -44,6 +44,13 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     m_ui->setupUi(this);
     setWindowIcon(QIcon(LOGO_PATH));
+    m_settings->beginGroup("Global");
+    bool firstRun = !(m_settings->value("firstrun").toBool());
+    m_settings->endGroup();
+    if (firstRun)
+    {
+        processFirstRun();
+    }
 
     //Setup model and filter
     m_ui->graphViewer->setScene(m_scene);
@@ -314,6 +321,17 @@ void MainWindow::clearAll()
     m_filter->refreshRegExp();
     m_propertyBrowser->clear();
     m_tableProxy->updateMap();
+}
+
+void MainWindow::processFirstRun()
+{
+    //Do what you want here if it was first run of program
+    QStringList list;
+    list << "readelf -a %f" << "objdump -d %f";
+    m_settings->beginGroup("Global");
+    m_settings->setValue("firstrun", QVariant(true));
+    m_settings->endGroup();
+    m_settingsDialog->setToolList(list);
 }
 
 MainWindow::~MainWindow()

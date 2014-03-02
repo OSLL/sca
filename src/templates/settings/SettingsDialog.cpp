@@ -26,9 +26,6 @@ SettingsDialog::SettingsDialog(QSettings *settings, QWidget *parent) :
 
     connect(m_ui->settingsList, SIGNAL(itemClicked(QListWidgetItem*)),
             this, SLOT(changePage(QListWidgetItem*)));
-
-    
-    
 }
 
 SettingsDialog::~SettingsDialog()
@@ -59,6 +56,17 @@ void SettingsDialog::changePage(QListWidgetItem *index)
 void SettingsDialog::setSettings(QSettings *settings)
 {
     m_settings = settings;
+}
+
+QSettings *SettingsDialog::getSettings() const
+{
+    return m_settings;
+}
+
+void SettingsDialog::setToolList(const QStringList &list)
+{
+    m_toolsModel->setStringList(list);
+    saveSettings();
 }
 
 void SettingsDialog::readSettings()

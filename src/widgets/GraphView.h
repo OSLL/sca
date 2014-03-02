@@ -76,10 +76,10 @@ private:
     //This is used for drag-n-drop technology
     ObjectVisual *m_temp;
     int m_tempId;
-    QMenu *m_menu;
     GraphModel *m_model;
     bool m_changingLinkMode;
     bool m_linkSetsNewSource;
+    QMenu *m_menu;
 
     void createContextMenu();
 

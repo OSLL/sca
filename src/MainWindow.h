@@ -29,6 +29,7 @@ private:
     void createMenuBarConnections();
     QMessageBox::StandardButton checkChanges();
     void clearAll();
+    void processFirstRun();
 
     Ui::MainWindow *m_ui;
     QString m_currentFilePath;

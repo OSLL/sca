@@ -21,15 +21,16 @@ public:
     ~SettingsDialog();
     
     void setSettings(QSettings *settings);
+    QSettings *getSettings() const;
 
     QStringListModel *getToolsModel() const;
 
+    void setToolList(const QStringList &list);
 private:
     Ui::SettingsDialog *m_ui;
     QStringListModel *m_toolsModel;
     QSettings *m_settings;
     ToolsForm *m_toolsForm;
-
 
 private slots:
     void saveSettings();
