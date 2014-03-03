@@ -16,6 +16,8 @@ ToolsForm::ToolsForm(QStringListModel *model, QWidget *parent) :
             this, SLOT(addTool()));
     connect(m_ui->removeButton, SIGNAL(clicked()),
             this, SLOT(removeTool()));
+    connect(m_ui->removeButton, SIGNAL(clicked()),
+            m_ui->commandEdit, SLOT(clear()));
     connect(m_ui->toolsListView, SIGNAL(clicked(QModelIndex)),
             this, SLOT(changeEditableTool(QModelIndex)));
     connect(m_ui->commandEdit, SIGNAL(textEdited(QString)),
