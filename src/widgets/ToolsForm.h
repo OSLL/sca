@@ -4,6 +4,9 @@
 #include <QWidget>
 #include <QStringList>
 #include <QStringListModel>
+#include "ui_EditCommandDialog.h"
+#include <QDialog>
+
 
 namespace Ui {
     class ToolsForm;
@@ -21,14 +24,17 @@ public:
 
 private:
 
+    Ui::EditCommand *m_editCommandUi;
+    QDialog *m_editCommandDialog;
     Ui::ToolsForm *m_ui;
     QStringListModel *m_toolsModel;
 
 public slots:
     void addTool();
     void removeTool();
-    void changeEditableTool(const QModelIndex &index);
-    void toolEdited(const QString &tool);
+    void editTool();
+    void acceptEditedTool();
+    void rejectEditedTool();
 };
 
 #endif // TOOLSFORM_H

@@ -81,8 +81,8 @@ SOURCES += \
     widgets/TableView.cpp \
     widgets/PropertyBrowser.cpp \
     widgets/ProcessView.cpp \
-    templates/settings/ToolsForm.cpp \
-    templates/settings/SettingsDialog.cpp
+    widgets/ToolsForm.cpp \
+    widgets/SettingsDialog.cpp
 
 
 HEADERS += \
@@ -133,14 +133,15 @@ HEADERS += \
     widgets/TableView.h \
     widgets/PropertyBrowser.h \
     widgets/ProcessView.h \
-    templates/settings/ToolsForm.h \
-    templates/settings/SettingsDialog.h
+    widgets/ToolsForm.h \
+    widgets/SettingsDialog.h
 
 FORMS += \
     mainwindow.ui \
     FilterDialog.ui \
-    templates/settings/SettingsDialog.ui \
-    templates/settings/ToolsForm.ui
+    EditCommandDialog.ui \
+    ToolsForm.ui \
+    SettingsDialog.ui
 
 RESOURCES += \
     resources/resources.qrc

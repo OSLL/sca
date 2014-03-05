@@ -9,7 +9,7 @@
 #include <QFileSystemModel>
 #include <ui_mainwindow.h>
 #include <srchiliteqt/Qt4SyntaxHighlighter.h>
-#include "templates/settings/SettingsDialog.h"
+#include "widgets/SettingsDialog.h"
 
 class GraphScene;
 class GraphModel;
