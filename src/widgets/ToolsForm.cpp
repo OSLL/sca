@@ -13,6 +13,7 @@ ToolsForm::ToolsForm(QStringListModel *model, QWidget *parent) :
 {
     m_ui->setupUi(this);
     m_editCommandUi->setupUi(m_editCommandDialog);
+    m_ui->toolsListView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_ui->toolsListView->setModel(m_toolsModel);
 
     connect(m_ui->addButton, SIGNAL(clicked()),
@@ -30,6 +31,7 @@ ToolsForm::ToolsForm(QStringListModel *model, QWidget *parent) :
             this, SLOT(acceptEditedTool()));
     connect(m_editCommandDialog, SIGNAL(rejected()),
             this, SLOT(rejectEditedTool()));
+
 }
 
 ToolsForm::~ToolsForm()
