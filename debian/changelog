@@ -1,3 +1,12 @@
+sca (0.1.6-0extras13.10.1) saucy; urgency=low
+
+  New features:
+  * Command line tools support
+  * Syntax highlighting
+  * Added ability to change link's connection
+
+ -- Mark Zaslavskiy <mark.zaslavskiy@gmail.com>  Mon, 10 Mar 2014 12:51:26 +0400
+
 sca (0.1.5-0extras13.10.1) saucy; urgency=low
 
   New features:
