@@ -82,7 +82,9 @@ SOURCES += \
     widgets/PropertyBrowser.cpp \
     widgets/ProcessView.cpp \
     widgets/ToolsForm.cpp \
-    widgets/SettingsDialog.cpp
+    widgets/SettingsDialog.cpp \
+    common/IScaObjectGroup.cpp \
+    visual/IScaObjectGroupVisual.cpp
 
 
 HEADERS += \
@@ -134,7 +136,9 @@ HEADERS += \
     widgets/PropertyBrowser.h \
     widgets/ProcessView.h \
     widgets/ToolsForm.h \
-    widgets/SettingsDialog.h
+    widgets/SettingsDialog.h \
+    common/IScaObjectGroup.h \
+    visual/IScaObjectGroupVisual.h
 
 FORMS += \
     mainwindow.ui \

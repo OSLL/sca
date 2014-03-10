@@ -24,9 +24,9 @@ public:
 
 private:
 
+    Ui::ToolsForm *m_ui;
     Ui::EditCommand *m_editCommandUi;
     QDialog *m_editCommandDialog;
-    Ui::ToolsForm *m_ui;
     QStringListModel *m_toolsModel;
 
 public slots:
