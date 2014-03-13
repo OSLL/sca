@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
 
+
     QHeaderView *header = m_ui->tableView->horizontalHeader();
     m_ui->tableView->setModel(m_tableProxy);
     m_ui->tableView->setGridStyle(Qt::SolidLine);
@@ -592,6 +593,7 @@ void MainWindow::showAdvancedFilter()
     else
     {
         wid = new FilterDialog(m_filter, m_scene, this);
+        wid->setFixedSize(wid->size());
         qDebug() << "[Main window]: Advanced filter called";
     }
     wid->show();
