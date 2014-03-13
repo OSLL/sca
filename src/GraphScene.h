@@ -56,6 +56,7 @@
 #include "visual/IScaObjectSymbolVisual.h"
 #include "visual/IScaObjectLineVisual.h"
 #include "visual/IScaObjectIdentifierVisual.h"
+#include "visual/IScaObjectGroupVisual.h"
 #include "visual/Node.h"
 #include "visual/LinkVisual.h"
 #include "visual/ObjectVisual.h"
@@ -86,6 +87,8 @@ public:
 
     void refreshLinkPos(int linkId);
     void connectLink(IScaObject *object, int id);
+
+    QPoint centerOfMass(QList<int> ids);
 
     QList<int> getIds() const;
 private:

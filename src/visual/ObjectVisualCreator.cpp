@@ -53,6 +53,12 @@ ObjectVisualCreator::~ObjectVisualCreator()
 
 }
 
+IScaObjectGroupVisual *ObjectVisualCreator::createGroupVisual(IScaObject *object)
+{
+    IScaObjectGroup *groupObject = static_cast<IScaObjectGroup *>(object);
+    IScaObjectGroupVisual *node = new IScaObjectGroupVisual(groupObject);
+    return node;
+}
 
 IScaObjectFileVisual *ObjectVisualCreator::createFileVisual(IScaObject *object)
 {
@@ -162,6 +168,11 @@ ObjectVisual *ObjectVisualCreator::createObjectVisual(IScaObject *object)
         case IScaObject::LINK:
         {
             visObject = createLinkVisual(object);
+            break;
+        }
+        case IScaObject::GROUP:
+        {
+            visObject = createGroupVisual(object);
             break;
         }
         default:

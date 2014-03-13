@@ -271,6 +271,17 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     refreshLinkPos(linkId);
 }
 
+QPoint GraphScene::centerOfMass(QList<int> ids)
+{
+    QPoint res(0,0);
+    foreach (int i, ids)
+    {
+        res += m_objects[i]->pos().toPoint();
+    }
+    res /= ids.count();
+    return res;
+}
+
 QList<int> GraphScene::getIds() const
 {
     return m_objects.keys();
@@ -315,7 +326,14 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     visObject->setFiltered(filtered);
     m_objects.insert(id, visObject);
 
-    if(visObject->getType() == ObjectVisual::LINK)
+    if (object->getType() == IScaObject::GROUP)
+    {
+        //Set it's position to the middle of previous items
+        IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
+        QPoint groupPos = centerOfMass(group->getObjects());
+        visObject->setPos(groupPos);
+    }
+    if (visObject->getType() == ObjectVisual::LINK)
     {
         connectLink(object, id);
     }

@@ -46,6 +46,7 @@
 #include <QInputDialog>
 #include <QUrl>
 #include "common/ScaObjectConverter.h"
+#include "common/IScaObjectGroup.h"
 #include "StringConstants.h"
 
 //ID = -1 for objects, which doesn't exist in model
@@ -274,6 +275,14 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
         freeLink(id);
     }
 
+    if (object->getType() == IScaObject::GROUP)
+    {
+        IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
+        foreach (int i, group->getObjects())
+        {
+            setData(index(i, 0), true, isShownRole);
+        }
+    }
     //Start removing object itself
     beginRemoveRows(parent, id, id);
 
@@ -345,6 +354,15 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
             qDebug() << "[GraphModel]: Data set #" << id
                      << ", type: " << object->getTypeName()
                      << ", items total: " << m_objects.size();
+            if (object->getType() == IScaObject::GROUP)
+            {
+                //Recoursively set that object to unseen
+                IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
+                foreach (int i, group->getObjects())
+                {
+                    setData(this->index(i, 0), false, isShownRole);
+                }
+            }
             emit dataChanged(index, index);
             return true;
         }

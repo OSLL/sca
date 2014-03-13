@@ -50,6 +50,7 @@
 #include "visual/IScaObjectLineVisual.h"
 #include "visual/IScaObjectSymbolVisual.h"
 #include "visual/IScaObjectTextBlockVisual.h"
+#include "visual/IScaObjectGroupVisual.h"
 #include "visual/LinkVisual.h"
 /*!
  * Class description. May use HTML formatting
@@ -71,6 +72,7 @@ public:
     IScaObjectTextBlockVisual *createTextBlockVisual(IScaObject *object);
     LinkVisual *createLinkVisual(IScaObject *object);
     ObjectVisual *createObjectVisual(IScaObject *object);
+    IScaObjectGroupVisual *createGroupVisual(IScaObject *object);
 private:
 }; // class VisualObjectCreator
 
