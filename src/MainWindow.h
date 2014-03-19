@@ -27,6 +27,7 @@ private:
     void createCustomContextMenuConnections();
     void createSourceBrowserConnections();
     void createMenuBarConnections();
+    void createActions();
     QMessageBox::StandardButton checkChanges();
     void clearAll();
     void processFirstRun();

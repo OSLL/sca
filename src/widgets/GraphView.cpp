@@ -71,8 +71,6 @@ GraphView::GraphView(QWidget *parent) :
     m_menu(new QMenu(this))
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
-
-    createContextMenu();
 }
 
 GraphView::GraphView(GraphScene *scene, QWidget *parent) :
@@ -84,7 +82,7 @@ GraphView::GraphView(GraphScene *scene, QWidget *parent) :
 {
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
-    createContextMenu();
+    connect(this->scene(), SIGNAL(selectionChanged()), this, SLOT(updateActions()));
 }
 
 void GraphView::dragEnterEvent(QDragEnterEvent *event)
@@ -169,55 +167,7 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Move menu
     QPoint globalPos = viewport()->mapToGlobal(pos);
 
-    //Get what is selected
-    QList<Node *> nodes = scene()->selectedNodes();
-    QList<LinkVisual *> links = scene()->selectedLinks();
-    QList<ObjectVisual *> objects = scene()->selectedObjects();
 
-    emit objectsSelected(objects.size());
-    emit objectsCanConnect(nodes.size() + links.size() == 2);
-    emit objectSelected(objects.size() == 1);
-    emit nodeSelected(nodes.size() == 1);
-
-
-    emit linkSelected(links.size() == 1);
-
-    if (links.size() == 1)
-    {
-        if(links.at(0)->getSource().x() < links.at(0)->getDestin().x())
-        {
-            emit linkHasLeftArrow(links.at(0)->getSourceArrow() != NULL);
-            emit linkHasRightArrow(links.at(0)->getDestinArrow() != NULL);
-        }
-        else
-        {
-            emit linkHasLeftArrow(links.at(0)->getDestinArrow() != NULL);
-            emit linkHasRightArrow(links.at(0)->getSourceArrow() != NULL);
-        }
-    }
-    else
-    {
-        emit linkHasLeftArrow(false);
-        emit linkHasRightArrow(false);
-    }
-
-    if(nodes.size() == 1)
-    {
-        ScaObjectConverter conv;
-
-        Node *node = nodes.at(0);
-        int id = scene()->getObjectId(node);
-        QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
-        IScaObject *obj = qvariant_cast<IScaObject *>(var);
-
-        emit canConvertToText(conv.canConvert(obj, IScaObject::TEXTBLOCK));
-        emit canConvertToIdent(conv.canConvert(obj, IScaObject::IDENTIFIER));
-    }
-    else
-    {
-        emit canConvertToText(false);
-        emit canConvertToIdent(false);
-    }
 
     m_menu->exec(globalPos);
 }
@@ -429,6 +379,11 @@ void GraphView::setScene(GraphScene *graphScene)
                    scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
 
+    if(scene() != NULL)
+    {
+        disconnect(scene(), SIGNAL(selectionChanged()), this, SLOT(updateActions()));
+    }
+
     QGraphicsView::setScene(graphScene);
     if(m_model != NULL)
     {
@@ -438,61 +393,8 @@ void GraphView::setScene(GraphScene *graphScene)
                 scene(), SLOT(removeObject(QModelIndex,int,int)));
     }
     graphScene->setModel(m_model);
-}
 
-void GraphView::createContextMenu()
-{
-    QAction *connectAction = m_menu->addAction(CONNECT_OBJECTS);
-    QAction *removeAction = m_menu->addAction(DELETE_ITEMS);
-    m_menu->addSeparator();
-    QAction *toTextAction = m_menu->addAction(TO_TEXT_BLOCK);
-    QAction *toIdentAction = m_menu->addAction(TO_IDENTIFIER);
-    m_menu->addSeparator();
-    QAction *setLeftArrow = m_menu->addAction(LEFT_ARROW);
-    setLeftArrow->setCheckable(true);
-    QAction *setRightArrow = m_menu->addAction(RIGHT_ARROW);
-    setRightArrow->setCheckable(true);
-    m_menu->addSeparator();
-    QAction *editAnnotAction = m_menu->addAction(EDIT_ANNOTATION);
-
-    connect(this, SIGNAL(objectsCanConnect(bool)),
-            connectAction, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(objectsSelected(bool)),
-            removeAction, SLOT(setEnabled(bool)));
-
-    connect(this, SIGNAL(canConvertToText(bool)),
-            toTextAction, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canConvertToIdent(bool)),
-            toIdentAction, SLOT(setEnabled(bool)));
-
-    connect(this, SIGNAL(linkSelected(bool)),
-            setLeftArrow, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(linkSelected(bool)),
-            setRightArrow, SLOT(setEnabled(bool)));
-
-    connect(this, SIGNAL(linkHasLeftArrow(bool)),
-            setLeftArrow, SLOT(setChecked(bool)));
-    connect(this, SIGNAL(linkHasRightArrow(bool)),
-            setRightArrow, SLOT(setChecked(bool)));
-
-    connect(this, SIGNAL(objectSelected(bool)),
-            editAnnotAction, SLOT(setEnabled(bool)));
-
-    connect(connectAction, SIGNAL(triggered()),
-            this, SLOT(connectSelectedObjects()));
-    connect(removeAction, SIGNAL(triggered()),
-            this, SLOT(removeSelectedObjects()));
-    connect(toTextAction, SIGNAL(triggered()),
-            this, SLOT(convertSelectedNodeToText()));
-    connect(toIdentAction, SIGNAL(triggered()),
-            this, SLOT(convertSelectedNodeToIdentifier()));
-    connect(setLeftArrow, SIGNAL(toggled(bool)),
-            this, SLOT(setSelectedLinkLeftArrow(bool)));
-    connect(setRightArrow, SIGNAL(toggled(bool)),
-            this, SLOT(setSelectedLinkRightArrow(bool)));
-    connect(editAnnotAction, SIGNAL(triggered()),
-            this, SLOT(editSelectedAnnotation()));
-
+    connect(scene(), SIGNAL(selectionChanged()), this, SLOT(updateActions()));
 }
 
 void GraphView::editAnnotation(int id)
@@ -787,5 +689,55 @@ void GraphView::convertSelectedNodeToIdentifier()
     QList<ObjectVisual *> objects = scene()->selectedObjects();
     m_tempId = scene()->getObjectId(objects.at(0));
     m_model->convert(m_tempId, IScaObject::IDENTIFIER);
+}
+
+void GraphView::updateActions()
+{
+    QList<Node *> nodes = scene()->selectedNodes();
+    QList<LinkVisual *> links = scene()->selectedLinks();
+    QList<ObjectVisual *> objects = scene()->selectedObjects();
+
+    emit objectsSelected(objects.size());
+    emit objectsCanConnect(nodes.size() + links.size() == 2);
+    emit objectSelected(objects.size() == 1);
+    emit nodeSelected(nodes.size() == 1);
+    emit linkSelected(links.size() == 1);
+
+    if (links.size() == 1)
+    {
+        if(links.at(0)->getSource().x() < links.at(0)->getDestin().x())
+        {
+            emit linkHasLeftArrow(links.at(0)->getSourceArrow() != NULL);
+            emit linkHasRightArrow(links.at(0)->getDestinArrow() != NULL);
+        }
+        else
+        {
+            emit linkHasLeftArrow(links.at(0)->getDestinArrow() != NULL);
+            emit linkHasRightArrow(links.at(0)->getSourceArrow() != NULL);
+        }
+    }
+    else
+    {
+        emit linkHasLeftArrow(false);
+        emit linkHasRightArrow(false);
+    }
+
+    if(nodes.size() == 1)
+    {
+        ScaObjectConverter conv;
+
+        Node *node = nodes.at(0);
+        int id = scene()->getObjectId(node);
+        QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
+        IScaObject *obj = qvariant_cast<IScaObject *>(var);
+
+        emit canConvertToText(conv.canConvert(obj, IScaObject::TEXTBLOCK));
+        emit canConvertToIdent(conv.canConvert(obj, IScaObject::IDENTIFIER));
+    }
+    else
+    {
+        emit canConvertToText(false);
+        emit canConvertToIdent(false);
+    }
 }
 
