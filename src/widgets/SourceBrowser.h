@@ -73,7 +73,7 @@ signals:
     void openFileAs(const QString &);
     void annotate();
     void contextMenuOnFile(bool);
-    void runCommand(const QString &str);
+    void runCommand(const QString &, const QString &);
 public slots:
     void showContextMenu(const QPoint &pos);
     void goToObject(IScaObject *object);

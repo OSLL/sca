@@ -222,10 +222,7 @@ void GraphView::runTool(const QString &tool)
         filePath = object->getFile().filePath();
     }
 
-    QString command(tool);
-    command.replace(QString("%f"), filePath);
-    emit runCommand(command);
-
+    emit runCommand(tool, filePath);
 }
 
 void GraphView::removeSelectedObjects()

@@ -107,7 +107,7 @@ signals:
     void linkHasLeftArrow(bool);
     void linkHasRightArrow(bool);
 
-    void runCommand(QString);
+    void runCommand(QString, QString);
 
 public slots:
     void ShowContextMenu(const QPoint &pos);

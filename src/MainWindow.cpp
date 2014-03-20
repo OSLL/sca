@@ -160,8 +160,8 @@ void MainWindow::createGraphViewConnections()
     connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
             m_propertyBrowser, SLOT(itemMoved(int)));
 
-    connect(m_ui->graphViewer, SIGNAL(runCommand(QString)),
-            this, SLOT(runCommand(QString)));
+    connect(m_ui->graphViewer, SIGNAL(runCommand(QString, QString)),
+            this, SLOT(runCommand(QString, QString)));
 }
 
 void MainWindow::createCustomContextMenuConnections()
@@ -189,8 +189,8 @@ void MainWindow::createSourceBrowserConnections()
     connect(m_ui->sourceBrowser, SIGNAL(annotate()),
             this, SLOT(annotateNoGraphObject()));
 
-    connect(m_ui->sourceBrowser, SIGNAL(runCommand(QString)),
-            this, SLOT(runCommand(QString)));
+    connect(m_ui->sourceBrowser, SIGNAL(runCommand(QString, QString)),
+            this, SLOT(runCommand(QString, QString)));
 }
 
 void MainWindow::createMenuBarConnections()
@@ -688,10 +688,14 @@ void MainWindow::close()
 }
 
 
-void MainWindow::runCommand(const QString &command)
+void MainWindow::runCommand(const QString &tool, const QString &file)
 {
     QDockWidget *dock = new QDockWidget(this);
     ProcessView *processView = new ProcessView(dock);
+    processView->setCurrentPath(file);
+
+    QString command(tool);
+    command.replace(QString("%f"), file);
 
     QGridLayout *layout = new QGridLayout(dock);
     layout->addWidget(processView, 0, 0);

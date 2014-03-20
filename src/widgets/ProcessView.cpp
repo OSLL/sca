@@ -63,7 +63,7 @@ void ProcessView::execute(const QString &command)
     if(m_process->state() != QProcess::NotRunning)
     {
         return;
-    }
+    }    
 #ifdef WIN32
     m_process->start("cmd\n");
     m_process->write("chcp 65001\n");
