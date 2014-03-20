@@ -48,7 +48,7 @@
  * Class description. May use HTML formatting
  *
  */
-#include "common/IScaObject.h"
+#include "IScaObject.h"
 #include <QFileInfo>
 
 class IScaObjectDirectory: public IScaObject

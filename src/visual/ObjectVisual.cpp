@@ -1,5 +1,5 @@
 #include "ObjectVisual.h"
-#include "GraphScene.h"
+#include "../GraphScene.h"
 #include <QDebug>
 
 ObjectVisual::ObjectVisual(IScaObject *obj, ObjectVisualType type, QGraphicsItem *parent):

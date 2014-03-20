@@ -43,7 +43,7 @@
 #ifndef _Link_H_DCF3C0AC_DBF1_4D8D_B8BD_6E10F500FD33_INCLUDED_
 #define _Link_H_DCF3C0AC_DBF1_4D8D_B8BD_6E10F500FD33_INCLUDED_
 
-#include "common/IScaObject.h"
+#include "IScaObject.h"
 
 /*!
  * Class description. May use HTML formatting

@@ -40,17 +40,14 @@
 #include <QtCore/QtCore>
 #include <QApplication>
 
-
 // Test headers
 #include "${CLASS}_Test.h"
 
-
 int main(int c, char **v)
 {
-  QApplication app(c,v);
-
-  Test::Class_Test test;
-	QTest::qExec(&test);
+    QApplication app(c,v);
+    Test::${CLASS}_Test test;
+    QTest::qExec(&test);
 
 	return 0; 
 }

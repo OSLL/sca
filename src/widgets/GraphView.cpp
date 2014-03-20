@@ -335,6 +335,7 @@ void GraphView::exportToImage(const QString path)
     QImage img(width, height, QImage::Format_ARGB32_Premultiplied);
     img.fill(QColor(Qt::white).rgb());
     QPainter painter(&img);
+    painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     scene()->render(&painter, QRectF(0, 0, width, height), renderZone);
     painter.end();
     img.save(path);

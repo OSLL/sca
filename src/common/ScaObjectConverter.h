@@ -52,7 +52,7 @@ class IScaObjectTextBlock;
 class ObjectVisual;
 class Node;
 class GraphModel;
-#include "common/IScaObject.h"
+#include "IScaObject.h"
 
 /*!
  * Class description. May use HTML formatting

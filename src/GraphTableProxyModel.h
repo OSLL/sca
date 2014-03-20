@@ -44,7 +44,7 @@
 #define _GraphTableProxyModel_H_E4E7A8A9_534E_4D70_83B5_DB38BEAFD0AD_INCLUDED_
 #include <QAbstractProxyModel>
 #include <QMetaType>
-#include <GraphModel.h>
+#include "GraphModel.h"
 /*!
  * Class description. May use HTML formatting
  *
@@ -69,6 +69,7 @@ public slots:
     void removeRows(QModelIndex parent, int begin, int end);
 }; // class GraphTableProxyModel
 
+//These two lines below needed to pass QMap using QVariant so that table works a way faster
 typedef QMap<int, int> mapIntToInt;
 Q_DECLARE_METATYPE(mapIntToInt)
 

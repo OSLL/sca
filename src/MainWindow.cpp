@@ -372,8 +372,6 @@ void MainWindow::createToolsMenu()
     }
 }
 
-
-
 QMessageBox::StandardButton MainWindow::checkChanges()
 {
     //Check if user wants to save changes

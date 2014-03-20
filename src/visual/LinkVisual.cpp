@@ -39,8 +39,8 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "visual/LinkVisual.h"
-#include "StringConstants.h"
+#include "LinkVisual.h"
+#include "../StringConstants.h"
 
 #include <QBrush>
 #include <QPen>

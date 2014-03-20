@@ -42,7 +42,7 @@
 #ifndef _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
 #define _Node_H_E23A4930_0A72_4232_958D_F40D53C73449_INCLUDED_
 
-#include "visual/ObjectVisual.h"
+#include "ObjectVisual.h"
 #include "../NumericalConstants.h"
 #include <QGraphicsTextItem>
 

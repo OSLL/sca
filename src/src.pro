@@ -52,7 +52,6 @@ SOURCES += \
     widgets/commands.cpp \
     widgets/GraphView.cpp \
     common/IScaObjectDirectory.cpp \
-    common/DataCache.cpp \
     GraphScene.cpp \
     visual/LinkVisual.cpp \
     visual/IScaObjectSymbolVisual.cpp \
@@ -104,7 +103,6 @@ HEADERS += \
     widgets/GraphView.h \
     NumericalConstants.h \
     common/IScaObjectDirectory.h \
-    common/DataCache.h \
     GraphScene.h \
     visual/LinkVisual.h \
     visual/IScaObjectSymbolVisual.h \

@@ -40,7 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectBinaryBlock.h"
-#include "common/IScaObjectBinaryBlock.h"
+#include "IScaObjectBinaryBlock.h"
 #include <QDebug>
 
 IScaObjectBinaryBlock::IScaObjectBinaryBlock() :

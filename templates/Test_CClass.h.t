@@ -42,45 +42,39 @@
 #include <QSignalSpy>
 
 //include Application class
-//#include "../inc/${CLASS}.h"
-
-
+//#include "../src/${CLASS}.h"
 
 namespace Test
 {
-  class ${CLASS}_Test : public QObject
-  {
-    Q_OBJECT;
+    class ${CLASS}_Test : public QObject
+    {
+        Q_OBJECT
 
-		// ${CLASS}*  m_tstObject; // Object for testing
+        // ${CLASS} *m_tstObject; // Object for testing
   
-  public:
-    
-    ${CLASS}_Test(QObject *parent =NULL) : QObject(parent)
-    {
-  	  // initialization here
-			// m_tstObject = new ${CLASS};
-    }
-    
-    ~${CLASS}_Test()
-    {
-  	  // destroying  here
-			// delete m_tstObject;
-			// m_tstObject = NULL;
-    }
+    public:
+        ${CLASS}_Test(QObject *parent = NULL) : QObject(parent)
+        {
+            // initialization here
+		    // m_tstObject = new ${CLASS};
+        }
+        ~${CLASS}_Test()
+        {
+  	        // destroying  here
+		    // delete m_tstObject;
+		    // m_tstObject = NULL;
+        }
   
-  private slots:
-  
-    void test1()
-    {
-     // see docs: http://doc.qt.nokia.com/4.7/qtest.html
-  
-     //QCOMPARE();
-     //QWARN();
-     //QVERIFY();
-     //QTEST();
-    }
-  
-  }; // class ${CLASS}_Test
+    private slots:
+        void test1()
+        {
+             // see docs: http://doc.qt.nokia.com/4.7/qtest.html
+          
+             //QCOMPARE();
+             //QWARN();
+             //QVERIFY();
+             //QTEST();
+        }
+    }; // class ${CLASS}_Test
 
 } // end of namespace Test
