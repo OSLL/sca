@@ -48,8 +48,8 @@
  *
  */
 
-#include "common/IScaObject.h"
-#include "common/IScaObjectFile.h"
+#include "IScaObject.h"
+#include "IScaObjectFile.h"
 
 
 class IScaObjectSymbol: public IScaObject

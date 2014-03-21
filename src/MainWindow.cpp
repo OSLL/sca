@@ -60,8 +60,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //We need to create propertyBrowser in-code due to it's virtual functions
     //that are initialized only when we use 'new' operation and after m_ui->setupUi();.
     m_propertyBrowser = new PropertyBrowser(m_model, m_scene,
-                                          m_ui->dockPropertyBrowser),
-    m_ui->dockPropertyBrowser->setWidget(m_propertyBrowser);
+                                            m_ui->dockPropertyBrowser),
+            m_ui->dockPropertyBrowser->setWidget(m_propertyBrowser);
 
     //Set up file model
     m_fileModel->setRootPath("");
@@ -79,6 +79,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
 
+
     QHeaderView *header = m_ui->tableView->horizontalHeader();
     m_ui->tableView->setModel(m_tableProxy);
     m_ui->tableView->setGridStyle(Qt::SolidLine);
@@ -87,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     createConnections();
     createToolsMenu();
+    createActions();
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -158,8 +160,8 @@ void MainWindow::createGraphViewConnections()
     connect(m_ui->graphViewer, SIGNAL(itemMoved(int)),
             m_propertyBrowser, SLOT(itemMoved(int)));
 
-    connect(m_ui->graphViewer, SIGNAL(runCommand(QString)),
-            this, SLOT(runCommand(QString)));
+    connect(m_ui->graphViewer, SIGNAL(runCommand(QString, QString)),
+            this, SLOT(runCommand(QString, QString)));
 }
 
 void MainWindow::createCustomContextMenuConnections()
@@ -187,8 +189,8 @@ void MainWindow::createSourceBrowserConnections()
     connect(m_ui->sourceBrowser, SIGNAL(annotate()),
             this, SLOT(annotateNoGraphObject()));
 
-    connect(m_ui->sourceBrowser, SIGNAL(runCommand(QString)),
-            this, SLOT(runCommand(QString)));
+    connect(m_ui->sourceBrowser, SIGNAL(runCommand(QString, QString)),
+            this, SLOT(runCommand(QString, QString)));
 }
 
 void MainWindow::createMenuBarConnections()
@@ -259,6 +261,87 @@ void MainWindow::createMenuBarConnections()
             m_settingsDialog, SLOT(exec()));
 }
 
+void MainWindow::createActions()
+{
+
+    QMenu *menu;
+    //GraphView context menu
+    menu = m_ui->graphViewer->getMenu();
+
+    QAction *connectAction = menu->addAction(CONNECT_OBJECTS);
+    QAction *removeAction = menu->addAction(DELETE_ITEMS);
+    menu->addSeparator();
+    QAction *toTextAction = menu->addAction(TO_TEXT_BLOCK);
+    QAction *toIdentAction = menu->addAction(TO_IDENTIFIER);
+    menu->addSeparator();
+    QAction *setLeftArrow = menu->addAction(LEFT_ARROW);
+    setLeftArrow->setCheckable(true);
+    QAction *setRightArrow = menu->addAction(RIGHT_ARROW);
+    setRightArrow->setCheckable(true);
+    menu->addSeparator();
+    QAction *editAnnotAction = menu->addAction(EDIT_ANNOTATION);
+
+    connect(m_ui->graphViewer, SIGNAL(objectsCanConnect(bool)),
+            connectAction, SLOT(setEnabled(bool)));
+    connect(m_ui->graphViewer, SIGNAL(objectsSelected(bool)),
+            removeAction, SLOT(setEnabled(bool)));
+
+    connect(m_ui->graphViewer, SIGNAL(canConvertToText(bool)),
+            toTextAction, SLOT(setEnabled(bool)));
+    connect(m_ui->graphViewer, SIGNAL(canConvertToIdent(bool)),
+            toIdentAction, SLOT(setEnabled(bool)));
+
+    connect(m_ui->graphViewer, SIGNAL(linkSelected(bool)),
+            setLeftArrow, SLOT(setEnabled(bool)));
+    connect(m_ui->graphViewer, SIGNAL(linkSelected(bool)),
+            setRightArrow, SLOT(setEnabled(bool)));
+
+    connect(m_ui->graphViewer, SIGNAL(linkHasLeftArrow(bool)),
+            setLeftArrow, SLOT(setChecked(bool)));
+    connect(m_ui->graphViewer, SIGNAL(linkHasRightArrow(bool)),
+            setRightArrow, SLOT(setChecked(bool)));
+
+    connect(m_ui->graphViewer, SIGNAL(objectSelected(bool)),
+            editAnnotAction, SLOT(setEnabled(bool)));
+
+    connect(connectAction, SIGNAL(triggered()),
+            m_ui->graphViewer, SLOT(connectSelectedObjects()));
+    connect(removeAction, SIGNAL(triggered()),
+            m_ui->graphViewer, SLOT(removeSelectedObjects()));
+    connect(toTextAction, SIGNAL(triggered()),
+            m_ui->graphViewer, SLOT(convertSelectedNodeToText()));
+    connect(toIdentAction, SIGNAL(triggered()),
+            m_ui->graphViewer, SLOT(convertSelectedNodeToIdentifier()));
+    connect(setLeftArrow, SIGNAL(toggled(bool)),
+            m_ui->graphViewer, SLOT(setSelectedLinkLeftArrow(bool)));
+    connect(setRightArrow, SIGNAL(toggled(bool)),
+            m_ui->graphViewer, SLOT(setSelectedLinkRightArrow(bool)));
+    connect(editAnnotAction, SIGNAL(triggered()),
+            m_ui->graphViewer, SLOT(editSelectedAnnotation()));
+
+    connectAction->setDisabled(true);
+    removeAction->setDisabled(true);
+    toTextAction->setDisabled(true);
+    toIdentAction->setDisabled(true);
+    setLeftArrow->setDisabled(true);
+    setRightArrow->setDisabled(true);
+    editAnnotAction->setDisabled(true);
+    //----------------------------------------------------
+
+
+    m_ui->toolBar->addAction(m_ui->actionOpen);
+    m_ui->toolBar->addAction(m_ui->actionSave);
+    m_ui->toolBar->addSeparator();
+    m_ui->toolBar->addAction(connectAction);
+    m_ui->toolBar->addAction(removeAction);
+    m_ui->toolBar->addAction(editAnnotAction);
+    m_ui->toolBar->addSeparator();
+    m_ui->toolBar->addAction(setLeftArrow);
+    m_ui->toolBar->addAction(setRightArrow);
+    m_ui->toolBar->addSeparator();
+    m_ui->toolBar->addAction(m_ui->actionSettings);
+}
+
 void MainWindow::createToolsMenu()
 {
     if(!m_toolsMenu)
@@ -289,8 +372,6 @@ void MainWindow::createToolsMenu()
     }
 }
 
-
-
 QMessageBox::StandardButton MainWindow::checkChanges()
 {
     //Check if user wants to save changes
@@ -298,10 +379,10 @@ QMessageBox::StandardButton MainWindow::checkChanges()
     {
         int button =
                 QMessageBox::question(this, SAVE_CHANGED_FILE_QUESTION_TITLE,
-                              SAVE_CHANGED_FILE_QUESTION_TEXT.arg(m_currentFilePath),
-                              QMessageBox::Yes,
-                              QMessageBox::No,
-                              QMessageBox::Cancel);
+                                      SAVE_CHANGED_FILE_QUESTION_TEXT.arg(m_currentFilePath),
+                                      QMessageBox::Yes,
+                                      QMessageBox::No,
+                                      QMessageBox::Cancel);
         if (button == QMessageBox::Yes)
         {
             saveFile();
@@ -482,7 +563,7 @@ void MainWindow::setFileChanged(bool value)
 void MainWindow::openHelpDialog()
 {
     QString link = QApplication::applicationDirPath() +
-                   QString(HELP_PATH);
+            QString(HELP_PATH);
     QUrl url = QUrl::fromLocalFile(link);
     qDebug() << url;
     QDesktopServices::openUrl(url);
@@ -498,47 +579,47 @@ void MainWindow::switchToObject(IScaObject *obj)
     switch (obj->getType())
     {
     case IScaObject::TEXTBLOCK:
-        {
-            m_ui->textViewer->setFocus();
-            m_ui->dockTextEditor->raise();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        m_ui->dockTextEditor->raise();
+        break;
+    }
     case IScaObject::BINARYBLOCK:
-        {
-            m_ui->hexEditor->setFocus();
-            m_ui->dockHexEditor->raise();
-            break;
-        }
+    {
+        m_ui->hexEditor->setFocus();
+        m_ui->dockHexEditor->raise();
+        break;
+    }
     case IScaObject::DIRECTORY:
-        {
-            m_ui->sourceBrowser->setFocus();
-            m_ui->dockFileBrowser->raise();
-            break;
-        }
+    {
+        m_ui->sourceBrowser->setFocus();
+        m_ui->dockFileBrowser->raise();
+        break;
+    }
     case IScaObject::FILE:
-        {
-            m_ui->sourceBrowser->setFocus();
-            m_ui->dockFileBrowser->raise();
-            break;
-        }
+    {
+        m_ui->sourceBrowser->setFocus();
+        m_ui->dockFileBrowser->raise();
+        break;
+    }
     case IScaObject::IDENTIFIER:
-        {
-            m_ui->textViewer->setFocus();
-            m_ui->dockTextEditor->raise();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        m_ui->dockTextEditor->raise();
+        break;
+    }
     case IScaObject::LINE:
-        {
-            m_ui->textViewer->setFocus();
-            m_ui->dockTextEditor->raise();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        m_ui->dockTextEditor->raise();
+        break;
+    }
     case IScaObject::SYMBOL:
-        {
-            m_ui->textViewer->setFocus();
-            m_ui->dockTextEditor->raise();
-            break;
-        }
+    {
+        m_ui->textViewer->setFocus();
+        m_ui->dockTextEditor->raise();
+        break;
+    }
     default:
         break;
     }
@@ -592,6 +673,7 @@ void MainWindow::showAdvancedFilter()
     else
     {
         wid = new FilterDialog(m_filter, m_scene, this);
+        wid->setFixedSize(wid->size());
         qDebug() << "[Main window]: Advanced filter called";
     }
     wid->show();
@@ -604,10 +686,14 @@ void MainWindow::close()
 }
 
 
-void MainWindow::runCommand(const QString &command)
+void MainWindow::runCommand(const QString &tool, const QString &file)
 {
     QDockWidget *dock = new QDockWidget(this);
     ProcessView *processView = new ProcessView(dock);
+    processView->setCurrentPath(file);
+
+    QString command(tool);
+    command.replace(QString("%f"), file);
 
     QGridLayout *layout = new QGridLayout(dock);
     layout->addWidget(processView, 0, 0);

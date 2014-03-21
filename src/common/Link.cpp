@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/Link.h"
+#include "Link.h"
 #include <QDebug>
 
 Link::Link() :

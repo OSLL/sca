@@ -51,7 +51,7 @@
 #include <QString>
 #include <QVariant>
 #include <QFileInfo>
-#include "StringConstants.h"
+#include "../StringConstants.h"
 class Link;
 
 class IScaObject

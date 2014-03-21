@@ -40,7 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "IScaObjectBinaryBlockVisual.h"
-#include "NumericalConstants.h"
+#include "../NumericalConstants.h"
 #include <QPainter>
 #include <QDebug>
 

@@ -39,8 +39,8 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObjectLine.h"
-#include "common/IScaObjectFile.h"
+#include "IScaObjectLine.h"
+#include "IScaObjectFile.h"
 #include <QString>
 
 IScaObjectLine::IScaObjectLine() :

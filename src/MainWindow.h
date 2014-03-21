@@ -27,6 +27,7 @@ private:
     void createCustomContextMenuConnections();
     void createSourceBrowserConnections();
     void createMenuBarConnections();
+    void createActions();
     QMessageBox::StandardButton checkChanges();
     void clearAll();
     void processFirstRun();
@@ -72,7 +73,7 @@ public slots:
     void annotateNoGraphObject();
     void showAdvancedFilter();
     void close();
-    void runCommand(const QString &command);
+    void runCommand(const QString &tool, const QString &file);
     void createToolsMenu();
 
 private slots:

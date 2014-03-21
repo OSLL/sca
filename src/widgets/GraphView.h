@@ -81,9 +81,6 @@ private:
     bool m_linkSetsNewSource;
     QMenu *m_menu;
 
-    void createContextMenu();
-
-
 protected:
     void mouseDoubleClickEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
@@ -110,7 +107,7 @@ signals:
     void linkHasLeftArrow(bool);
     void linkHasRightArrow(bool);
 
-    void runCommand(QString);
+    void runCommand(QString, QString);
 
 public slots:
     void ShowContextMenu(const QPoint &pos);
@@ -123,7 +120,7 @@ public slots:
     void editSelectedAnnotation();
     void convertSelectedNodeToText();
     void convertSelectedNodeToIdentifier();
-
+    void updateActions();
 
 }; // class GraphView
 

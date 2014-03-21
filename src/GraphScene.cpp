@@ -271,7 +271,7 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     refreshLinkPos(linkId);
 }
 
-QPoint GraphScene::centerOfMass(QList<int> ids)
+QPoint GraphScene::centerOfMass(const QList<int> &ids)
 {
     QPoint res(0,0);
     foreach (int i, ids)

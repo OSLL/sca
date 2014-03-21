@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObjectIdentifier.h"
+#include "IScaObjectIdentifier.h"
 
 IScaObjectIdentifier::IScaObjectIdentifier() :
     IScaObject(IDENTIFIER),

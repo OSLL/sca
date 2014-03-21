@@ -42,16 +42,16 @@
 
 #ifndef _VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_
 #define _VisualObjectCreator_H_B48E3ABD_CC4B_4D94_8451_B779B955AD61_INCLUDED_
-#include "visual/ObjectVisual.h"
-#include "visual/IScaObjectBinaryBlockVisual.h"
-#include "visual/IScaObjectDirectoryVisual.h"
-#include "visual/IScaObjectFileVisual.h"
-#include "visual/IScaObjectIdentifierVisual.h"
-#include "visual/IScaObjectLineVisual.h"
-#include "visual/IScaObjectSymbolVisual.h"
-#include "visual/IScaObjectTextBlockVisual.h"
-#include "visual/IScaObjectGroupVisual.h"
-#include "visual/LinkVisual.h"
+#include "ObjectVisual.h"
+#include "IScaObjectBinaryBlockVisual.h"
+#include "IScaObjectDirectoryVisual.h"
+#include "IScaObjectFileVisual.h"
+#include "IScaObjectIdentifierVisual.h"
+#include "IScaObjectLineVisual.h"
+#include "IScaObjectSymbolVisual.h"
+#include "IScaObjectTextBlockVisual.h"
+#include "IScaObjectGroupVisual.h"
+#include "LinkVisual.h"
 /*!
  * Class description. May use HTML formatting
  *

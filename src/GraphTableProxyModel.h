@@ -69,6 +69,7 @@ public slots:
     void removeRows(QModelIndex parent, int begin, int end);
 }; // class GraphTableProxyModel
 
+//These two lines below needed to pass QMap using QVariant so that table works a way faster
 typedef QMap<int, int> mapIntToInt;
 Q_DECLARE_METATYPE(mapIntToInt)
 

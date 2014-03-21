@@ -39,8 +39,8 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "visual/Node.h"
-#include "visual/LinkVisual.h"
+#include "Node.h"
+#include "LinkVisual.h"
 #include <QPen>
 #include <QBrush>
 #include <QPainter>
@@ -48,7 +48,7 @@
 #include <QRectF>
 #include <QGraphicsScene>
 #include <QTextDocument>
-#include "GraphScene.h"
+#include "../GraphScene.h"
 
 Node::Node(QColor standardColor, QColor filterColor, IScaObject *obj) :
     ObjectVisual(obj, NODE),

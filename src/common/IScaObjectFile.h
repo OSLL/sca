@@ -48,7 +48,7 @@
  *
  */
 
-#include "common/IScaObject.h"
+#include "IScaObject.h"
 #include <QFileInfo>
 class QFile;
 

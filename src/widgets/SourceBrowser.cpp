@@ -127,10 +127,7 @@ void SourceBrowser::runTool(const QString &tool)
     }
 
     QFileInfo currentFile = getCurrentFile();
-
-    QString command(tool);
-    command.replace(QString("%f"), currentFile.filePath());
-    emit runCommand(command);
+    emit runCommand(tool, currentFile.filePath());
 }
 
 

@@ -39,7 +39,7 @@
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
-#include "common/IScaObjectTextBlock.h"
+#include "IScaObjectTextBlock.h"
 #include <QDebug>
 
 IScaObjectTextBlock::IScaObjectTextBlock() :

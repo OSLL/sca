@@ -1,5 +1,5 @@
 /*
- * Copyright 2013    exzo0mex@gmail.com
+ * Copyright 2014  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,42 +29,24 @@
  * The advertising clause requiring mention in adverts must never be included.
  */
 
-/*! ---------------------------------------------------------------
- *
- * \file DataCache.cpp
- * \brief DataCache implementation
- *
- * File description
+/*!
+ * \file main.cpp
+ * \brief Test suite for IScaObjectGroup
  *
  * PROJ: OSLL/sca
- * ---------------------------------------------------------------- */
+ * ------------------------------------------------------------------------ */
 
-#include "DataCache.h"
+#include <QtTest/QtTest>
+#include <QtCore/QtCore>
+#include <QtGui/QApplication>
 
-DataCache *DataCache::s_instance = NULL;
+// Test headers
+#include "IScaObjectGroup_Test.h"
 
-DataCache::DataCache()
+int main(int c, char **v)
 {
+    QApplication app(c, v);
+    Test::IScaObjectGroup_Test test;
+    QTest::qExec(&test);
+	return 0; 
 }
-
-
-DataCache *DataCache::instance()
-{
-    if(!s_instance)
-    {
-        s_instance = new DataCache;
-    }
-    return s_instance;
-}
-
-void DataCache::addDiretory(IScaObjectDirectory *object)
-{
-    QString name = object->getFile().path();
-    m_data.insert(name, object);
-}
-
-IScaObjectDirectory *DataCache::getDirectoryByName(const QString &name)
-{
-    return m_data[name];
-}
-

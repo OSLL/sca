@@ -42,7 +42,6 @@
 #include "ObjectVisualCreator.h"
 #include <QDebug>
 
-
 ObjectVisualCreator::ObjectVisualCreator()
 {
 

@@ -88,7 +88,7 @@ public:
     void refreshLinkPos(int linkId);
     void connectLink(IScaObject *object, int id);
 
-    QPoint centerOfMass(QList<int> ids);
+    QPoint centerOfMass(const QList<int> &ids);
 
     QList<int> getIds() const;
 private:
