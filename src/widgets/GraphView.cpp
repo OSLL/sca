@@ -216,13 +216,13 @@ void GraphView::runTool(const QString &tool)
     int id = scene()->getObjectId(objects.at(0));
     QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
     IScaObject *object = qvariant_cast<IScaObject *>(var);
-    if(object->getType() == IScaObject::FILE ||
-            object->getType() == IScaObject::DIRECTORY)
+    if((object != NULL) &&
+            (object->getType() == IScaObject::FILE ||
+            object->getType() == IScaObject::DIRECTORY))
     {
         filePath = object->getFile().filePath();
+        emit runCommand(tool, filePath);
     }
-
-    emit runCommand(tool, filePath);
 }
 
 void GraphView::removeSelectedObjects()
