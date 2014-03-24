@@ -35,11 +35,9 @@
  *
  * PROJ: OSLL/sca
  * ------------------------------------------------------------------------ */
-
 #include <QtTest/QtTest>
 #include <QtCore/QtCore>
 #include <QtGui/QApplication>
-
 // Test headers
 #include "IScaObjectGroup_Test.h"
 
