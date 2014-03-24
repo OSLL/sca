@@ -52,6 +52,7 @@
 class IScaObjectGroup : public IScaObject
 {
 public:
+    IScaObjectGroup(const QList<int> &objects);
     IScaObjectGroup(const QList<int> &objects,
                     const QStringList &fileNames,
                     const QStringList &paths,

@@ -55,7 +55,7 @@
 #include <QUrl>
 #include <QDebug>
 
-ScaMIMEDataProcessor::ScaMIMEDataProcessor(const QMimeData *mime) :
+ScaMimeDataProcessor::ScaMimeDataProcessor(const QMimeData *mime) :
     m_data(mime)
 {
     QString path;
@@ -73,22 +73,22 @@ ScaMIMEDataProcessor::ScaMIMEDataProcessor(const QMimeData *mime) :
     m_fileInfo.setFile(m_filePath);
 }
 
-ScaMIMEDataProcessor::~ScaMIMEDataProcessor()
+ScaMimeDataProcessor::~ScaMimeDataProcessor()
 {
 
 }
 
-const QMimeData *ScaMIMEDataProcessor::getData() const
+const QMimeData *ScaMimeDataProcessor::getData() const
 {
     return m_data;
 }
 
-void ScaMIMEDataProcessor::setData(const QMimeData *data)
+void ScaMimeDataProcessor::setData(const QMimeData *data)
 {
     m_data = data;
 }
 
-IScaObject *ScaMIMEDataProcessor::makeObject()
+IScaObject *ScaMimeDataProcessor::makeObject()
 {
     int offset     = m_data->property("position").toInt();
     int length     = m_data->property("length").toInt();
@@ -96,51 +96,41 @@ IScaObject *ScaMIMEDataProcessor::makeObject()
     int line       = m_data->property("line").toInt();
     int lineLength = m_data->property("lineLength").toInt();
     int endOffset  = m_data->property("endOffset").toInt();
+    QString text = m_data->text();
+    QString path = m_fileInfo.filePath();
+    QByteArray data = m_data->data(BINARY_DATA);
 
-    IScaObjectFile *objFile = new IScaObjectFile(m_fileInfo);
+    IScaObject::IScaObjectType type = IScaObject::FILE;
 
-    qDebug() << m_data->data(BINARY_DATA).mid(0, 1);
     if(!m_data->data(BINARY_DATA).isEmpty())
     {
-        QByteArray byteArray = m_data->data(BINARY_DATA);
-        IScaObjectBinaryBlock *objBinary = new IScaObjectBinaryBlock(objFile, offset, length, byteArray);
-        return objBinary;
+        type = IScaObject::BINARYBLOCK;
     }
-
-    if (m_data->hasText())   //IScaObjectTextBlock/Line/Symbol/Identifier
+    else if (m_data->hasText())   //IScaObjectTextBlock/Line/Symbol/Identifier
     {
-        //Symbol?
         if (m_data->text().length() == 1)
         {
-            char symbol = m_data->text().toAscii().at(0);
-            IScaObjectSymbol *objSymbol = new IScaObjectSymbol(objFile, offset, symbol);
-            return objSymbol;
+            type = IScaObject::SYMBOL;
         }
-
-        //Line?
-        if (lineLength == length
+        else if (lineLength == length
                 && (posInLine == 0 || posInLine == lineLength))
         {
-            IScaObjectLine *objLine = new IScaObjectLine(objFile, line, offset,
-                                                         endOffset, m_data->text());
-            return objLine;
+            type = IScaObject::LINE;
         }
-
-        IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, endOffset,
-                                                                length, m_data->text());
-        return objBlock;
+        else
+        {
+            type = IScaObject::TEXTBLOCK;
+        }
     }
-
-    if (m_fileInfo.isFile())  //IScaObjectFile
+    else if (m_fileInfo.isFile())  //IScaObjectFile
     {
-        return objFile;
+        type = IScaObject::FILE;
     }
-    if (m_fileInfo.isDir())   //IScaObjectDirectory
+    else if (m_fileInfo.isDir())   //IScaObjectDirectory
     {
-        delete objFile;
-        IScaObjectDirectory *objDir = new IScaObjectDirectory(m_fileInfo);
-        return objDir;
+        type = IScaObject::DIRECTORY;
     }
 
-    return new IScaObject();
+    return ObjectCreator::createObject(type, line, offset, endOffset, length,
+                                       path, text, data);
 }

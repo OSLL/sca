@@ -46,18 +46,26 @@ IScaObjectGroup::IScaObjectGroup() :
 {
 }
 
+IScaObjectGroup::IScaObjectGroup(const QList<int> &objects):
+    IScaObject(GROUP),
+    m_objects(objects)
+{
+
+}
+
 IScaObjectGroup::IScaObjectGroup(const QList<int> &objects,
                                  const QStringList &fileNames,
                                  const QStringList &paths,
                                  const QStringList &annotations,
                                  const QStringList &content) :
     IScaObject(GROUP),
-    m_objects(objects)
+    m_objects(objects),
+    m_fileNames(fileNames),
+    m_paths(paths),
+    m_annotations(annotations),
+    m_contet(content)
 {
-    m_fileNames = fileNames;
-    m_paths = paths;
-    m_annotations = annotations;
-    m_contet = content;
+
 }
 
 QStringList IScaObjectGroup::getContets() const

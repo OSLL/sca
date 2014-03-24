@@ -52,8 +52,9 @@ public:
     ~ObjectCreator();
     
 
-    IScaObject *createObject(int type, int line, int offset, int endoffset, int length, QString path,
-                             QString text, QByteArray data, QString annotation);
+    static IScaObject *createObject(int type, int line, int offset, int endoffset,
+                                    int length, QString path, QString text,
+                                    QByteArray data, QString annotation = QString());
     IScaObject *createGroup(const QList<IScaObject *> &objects, const QList<int> &ids);
 
 private:

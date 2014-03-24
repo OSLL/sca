@@ -140,7 +140,7 @@ int GraphModel::addObject(const QMimeData *mimeData)
     QString path = mimeData->property("fromPath").toString();
     qDebug() << "[GraphModel]: path = " << path;
 
-    ScaMIMEDataProcessor processor(mimeData);
+    ScaMimeDataProcessor processor(mimeData);
     IScaObject *objectFromData = processor.makeObject();
 
     //If we add object out of MIMEData, then show it
