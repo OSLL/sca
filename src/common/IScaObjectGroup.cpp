@@ -46,10 +46,28 @@ IScaObjectGroup::IScaObjectGroup() :
 {
 }
 
-IScaObjectGroup::IScaObjectGroup(const QList<int> &l) :
+IScaObjectGroup::IScaObjectGroup(const QList<int> &objects,
+                                 const QStringList &fileNames,
+                                 const QStringList &paths,
+                                 const QStringList &annotations,
+                                 const QStringList &content) :
     IScaObject(GROUP),
-    m_objects(l)
+    m_objects(objects)
 {
+    m_fileNames = fileNames;
+    m_paths = paths;
+    m_annotations = annotations;
+    m_contet = content;
+}
+
+QStringList IScaObjectGroup::getContets() const
+{
+    return m_contet;
+}
+
+void IScaObjectGroup::setContets(const QStringList &value)
+{
+    m_contet = value;
 }
 
 IScaObjectGroup::~IScaObjectGroup()
@@ -84,4 +102,66 @@ void IScaObjectGroup::addObject(int id)
 void IScaObjectGroup::removeObject(int id)
 {
     m_objects.removeOne(id);
+}
+
+QString IScaObjectGroup::getInfo(const QString &pattern) const
+{
+
+    QString fileNames = m_name;
+    foreach(QString str, m_fileNames)
+    {
+        fileNames += str;
+    }
+    QString paths;
+    foreach(QString str, m_paths)
+    {
+        paths += str;
+    }
+    QString annotations;
+    foreach(QString str, m_annotations)
+    {
+        annotations += str;
+    }
+    QString content;
+    foreach(QString str, m_contet)
+    {
+        content += str;
+    }
+
+    return  pattern
+            .arg(m_type)
+            .arg(fileNames)
+            .arg(paths)
+            .arg(annotations)
+            .arg(content);
+}
+
+QStringList IScaObjectGroup::getFileNames() const
+{
+    return m_fileNames;
+}
+
+void IScaObjectGroup::setFileNames(const QStringList &value)
+{
+    m_fileNames = value;
+}
+
+QStringList IScaObjectGroup::getPaths() const
+{
+    return m_paths;
+}
+
+void IScaObjectGroup::setPaths(const QStringList &value)
+{
+    m_paths = value;
+}
+
+QStringList IScaObjectGroup::getAnnotations() const
+{
+    return m_annotations;
+}
+
+void IScaObjectGroup::setAnnotations(const QStringList &value)
+{
+    m_annotations = value;
 }

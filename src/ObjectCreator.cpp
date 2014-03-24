@@ -47,7 +47,7 @@
 #include "common/IScaObjectIdentifier.h"
 #include "common/IScaObjectLine.h"
 #include "common/IScaObjectSymbol.h"
-
+#include "common/IScaObjectGroup.h"
 
 
 ObjectCreator::ObjectCreator()
@@ -136,4 +136,25 @@ IScaObject *ObjectCreator::createObject(int type, int line,
     }
 
     return new IScaObject();
+}
+
+IScaObject *ObjectCreator::createGroup(const QList<IScaObject *> &objects,
+                                       const QList<int> &ids)
+{
+    QStringList fileNames;
+    QStringList paths;
+    QStringList annotations;
+    QStringList content;
+    foreach(IScaObject *object, objects)
+    {
+        fileNames.append(object->getFile().fileName());
+        paths.append(object->getFile().filePath());
+        annotations.append(object->getAnnotation());
+        content.append(object->getContent());
+    }
+
+    IScaObjectGroup *group = new IScaObjectGroup(ids, fileNames, paths,
+                                                 annotations, content);
+
+    return group;
 }
