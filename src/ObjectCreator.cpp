@@ -40,6 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "ObjectCreator.h"
+#include "GraphModel.h"
 #include "common/IScaObjectTextBlock.h"
 #include "common/IScaObjectBinaryBlock.h"
 #include "common/IScaObjectDirectory.h"
@@ -138,15 +139,20 @@ IScaObject *ObjectCreator::createObject(int type, int line,
     return new IScaObject();
 }
 
-IScaObject *ObjectCreator::createGroup(const QList<IScaObject *> &objects,
-                                       const QList<int> &ids)
+IScaObjectGroup *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *model)
 {
     QStringList fileNames;
     QStringList paths;
     QStringList annotations;
     QStringList content;
-    foreach(IScaObject *object, objects)
+    IScaObject *object;
+    foreach(int id, ids)
     {
+        object = model->getObjectById(id);
+        if (object == NULL)
+        {
+            continue;
+        }
         fileNames.append(object->getFile().fileName());
         paths.append(object->getFile().filePath());
         annotations.append(object->getAnnotation());

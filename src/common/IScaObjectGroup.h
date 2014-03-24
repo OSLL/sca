@@ -52,13 +52,12 @@
 class IScaObjectGroup : public IScaObject
 {
 public:
-    IScaObjectGroup(const QList<int> &objects);
+    IScaObjectGroup();
     IScaObjectGroup(const QList<int> &objects,
                     const QStringList &fileNames = QStringList(),
                     const QStringList &paths = QStringList(),
                     const QStringList &annotations = QStringList(),
-                    const QStringList &content = QStringList());
-    IScaObjectGroup();
+                    const QStringList &contents = QStringList());
     ~IScaObjectGroup();
     
     QString getContent() const;
@@ -71,9 +70,6 @@ public:
 
     QString getInfo(const QString &pattern) const;
 
-    QStringList getContets() const;
-    void setContets(const QStringList &value);
-
     QStringList getAnnotations() const;
     void setAnnotations(const QStringList &value);
 
@@ -83,6 +79,9 @@ public:
     QStringList getFileNames() const;
     void setFileNames(const QStringList &value);
 
+    QStringList getContents() const;
+    void setContents(const QStringList &contents);
+
 private:
     QList<int> m_objects;
     QList<QStringList> m_info;
@@ -90,7 +89,7 @@ private:
     QStringList m_fileNames;
     QStringList m_paths;
     QStringList m_annotations;
-    QStringList m_contet;
+    QStringList m_contents;
 }; // class IScaObjectGroup
 
 

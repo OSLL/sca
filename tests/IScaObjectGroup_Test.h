@@ -126,19 +126,26 @@ namespace Test
             QCOMPARE(objId2, 1);
             QList<int> ids;
             ids << 0 << 1;
-            IScaObjectGroup *group = new IScaObjectGroup(ids);
+
+            ObjectVisual *vis1 = m_tstScene->getObjectById(objId1),
+                         *vis2 = m_tstScene->getObjectById(objId2);
+            vis1->setPos(2, 2);
+            vis2->setPos(0, 0);
+            QVERIFY(vis1 != NULL);
+            QVERIFY(vis1->isVisible() == true);
+            QVERIFY(vis2 != NULL);
+            QVERIFY(vis2->isVisible() == true);
+
+            IScaObjectGroup *group = ObjectCreator::createGroup(ids, m_tstModel);
             int groupId = m_tstModel->addObject(group, -1, true);
-            QCOMPARE(groupId, 2);
-            ObjectVisual *vis = m_tstScene->getObjectById(objId1);
+            ObjectVisual *visGroup = m_tstScene->getObjectById(groupId);
             //Old objects should have disappeared
-            QVERIFY(vis != NULL);
-            QVERIFY(vis->isVisible() == false);
-            vis = m_tstScene->getObjectById(objId2);
-            QVERIFY(vis != NULL);
-            QVERIFY(vis->isVisible() == false);
-            vis = m_tstScene->getObjectById(groupId);
-            QVERIFY(vis != NULL);
-            QVERIFY(vis->getStandardColor() == DEFAULT_GROUP_COLOR);
+            QVERIFY(vis1->isVisible() == false);
+            QVERIFY(vis2->isVisible() == false);
+            QVERIFY(visGroup->pos() == QPointF(1, 1));
+            QCOMPARE(groupId, 2);
+            QVERIFY(visGroup != NULL);
+            QVERIFY(visGroup->getStandardColor() == DEFAULT_GROUP_COLOR);
             m_tstScene->clear();
             m_tstModel->clear();
         }
