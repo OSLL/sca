@@ -111,7 +111,8 @@ enum GraphModelRole{
     rawObjectRole = Qt::UserRole,
     highlightRole = Qt::UserRole + 1,
     objectIdListRole = Qt::UserRole + 2,
-    isShownRole = Qt::UserRole + 3
+    onSceneRole = Qt::UserRole + 3,
+    isVisibleRole = Qt::UserRole + 4
 };
 
 //Status bar timeouts

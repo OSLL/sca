@@ -172,7 +172,7 @@ bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &par
         {
             QModelIndex index = m_source->index(id, 0);
             bool filtered = m_source->data(index, highlightRole).toBool(),
-                 isShown =  m_source->data(index, isShownRole).toBool();
+                 isShown =  m_source->data(index, onSceneRole).toBool();
             //Check if it matches filter and should be shown
             if (filtered && isShown)
             {
@@ -189,7 +189,7 @@ bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &par
             foreach (int id, list)
             {
                 QModelIndex index = m_source->index(id, 0);
-                bool isShown = m_source->data(index, isShownRole).toBool();
+                bool isShown = m_source->data(index, onSceneRole).toBool();
                 if (!isShown)
                 {
                     //It shouldnt be shown anyway, skip it

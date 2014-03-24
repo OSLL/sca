@@ -44,6 +44,7 @@
 //include Application class
 #include "../src/GraphModel.h"
 #include "../src/GraphScene.h"
+#include "../src/ObjectCreator.h"
 
 namespace Test
 {
@@ -93,15 +94,21 @@ namespace Test
         }
         void canSceneConnect()
         {
-            QMimeData mime;
-            mime.setProperty("fromPath", QDir::currentPath());
-            int obj1 = m_tstModel->addObject(&mime),
-                obj2 = m_tstModel->addObject(&mime);
+            QMimeData *mime = new QMimeData();
+            mime->setProperty("fromPath", QDir::currentPath());
+            int obj1 = m_tstModel->addObject(mime),
+                obj2 = m_tstModel->addObject(mime);
+            QVERIFY(obj1 == 0);
+            QVERIFY(obj2 == 1);
             int link = m_tstModel->connectObjects(obj1, obj2);
+            QVERIFY(link == 2);
             ObjectVisual *visLink = m_tstScene->getObjectById(link);
+            QVERIFY(visLink != NULL);
             QVERIFY(visLink->getType() == ObjectVisual::LINK);
             ObjectVisual *vis1 = m_tstScene->getObjectById(obj1),
                          *vis2 = m_tstScene->getObjectById(obj2);
+            QVERIFY(vis1 != NULL);
+            QVERIFY(vis2 != NULL);
             QVERIFY(vis1->getType() == ObjectVisual::NODE);
             QVERIFY(vis2->getType() == ObjectVisual::NODE);
             QVERIFY(vis1->getLinks().size() == 1);
@@ -124,9 +131,11 @@ namespace Test
             QCOMPARE(groupId, 2);
             ObjectVisual *vis = m_tstScene->getObjectById(objId1);
             //Old objects should have disappeared
-            QVERIFY(vis == NULL);
+            QVERIFY(vis != NULL);
+            QVERIFY(vis->isVisible() == false);
             vis = m_tstScene->getObjectById(objId2);
-            QVERIFY(vis == NULL);
+            QVERIFY(vis != NULL);
+            QVERIFY(vis->isVisible() == false);
             vis = m_tstScene->getObjectById(groupId);
             QVERIFY(vis != NULL);
             QVERIFY(vis->getStandardColor() == DEFAULT_GROUP_COLOR);

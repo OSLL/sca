@@ -102,7 +102,8 @@ public:
 private:
     static int s_nextID;
     QHash<int, IScaObject *> m_objects;
-    QMap<int, bool> m_isShown;
+    QMap<int, bool> m_onScene;
+    QMap<int, bool> m_isVisible;
 }; // class GraphModel
 
 Q_DECLARE_METATYPE( QList<int> )

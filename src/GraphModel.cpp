@@ -65,7 +65,6 @@ GraphModel::~GraphModel()
 
 int GraphModel::connectObjects(int source, int dest, int id, QString annotation)
 {
-    //qDebug() << "Connecting " << source << " to " << dest;
     int objectId = 0;
     if(id < 0 || m_objects.contains(id))
     {
@@ -87,7 +86,7 @@ int GraphModel::connectObjects(int source, int dest, int id, QString annotation)
     {
         qDebug() << "[GraphModel]: Couldn\'t set data.";
     }
-    setData(linkIndex, QVariant(true), isShownRole);
+    setData(linkIndex, QVariant(true), onSceneRole);
 
     s_nextID = (id > s_nextID) ? id + 1 : s_nextID + 1;
     return objectId;
@@ -154,14 +153,14 @@ int GraphModel::addObject(IScaObject *object, int id, bool isShown)
     if (id < 0)
     {
         changedIndex = index(s_nextID, 0);
-        setData(changedIndex, QVariant(isShown), isShownRole);
+        setData(changedIndex, QVariant(isShown), onSceneRole);
         setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
         return s_nextID++;
     }
     else
     {
         changedIndex = index(id, 0);
-        setData(changedIndex, QVariant(isShown), isShownRole);
+        setData(changedIndex, QVariant(isShown), onSceneRole);
         setData(changedIndex, QVariant::fromValue(object), rawObjectRole);
         s_nextID  = (id >= s_nextID) ? (id + 1): s_nextID;
         return id;
@@ -221,9 +220,13 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
         {
             return QVariant(m_objects[id]->getInfo());
         }
-    case isShownRole:
+    case onSceneRole:
         {
-            return QVariant(m_isShown.value(id, false));
+            return QVariant(m_onScene.value(id, false));
+        }
+    case isVisibleRole:
+        {
+            return QVariant(m_isVisible.value(id, true));
         }
     case rawObjectRole:    //For graphics representation return full object
         {
@@ -280,7 +283,7 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
         IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
         foreach (int i, group->getObjects())
         {
-            setData(index(i, 0), true, isShownRole);
+            setData(index(i, 0), true, onSceneRole);
         }
     }
     //Start removing object itself
@@ -288,7 +291,7 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
 
     //Remove from container
     m_objects.remove(id);
-    m_isShown.remove(id);
+    m_onScene.remove(id);
     //Remove it from memory
     delete object;
 
@@ -360,19 +363,24 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
                 IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
                 foreach (int i, group->getObjects())
                 {
-                    setData(this->index(i, 0), false, isShownRole);
+                    setData(this->index(i, 0), false, isVisibleRole);
                 }
             }
-            emit dataChanged(index, index);
-            return true;
+            break;
         }
-    case isShownRole:
+    case onSceneRole:
         {
-            m_isShown[id] = value.toBool();
+            m_onScene[id] = value.toBool();
+            qDebug() << "[GraphModel]: " << (value.toBool()?"ToScene":"FromScene")
+                     << " #" << id;
+            break;
+        }
+    case isVisibleRole:
+        {
+            m_isVisible[id] = value.toBool();
             qDebug() << "[GraphModel]: " << (value.toBool()?"Showing":"Hiding")
                      << " #" << id;
-            emit dataChanged(index, index);
-            return true;
+            break;
         }
     default:
         {
@@ -380,6 +388,8 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
             break;
         }
     }
+    emit dataChanged(index, index);
+    return true;
 }
 
 //Returns true if item existed
@@ -459,7 +469,7 @@ bool GraphModel::editAnnotation(int id)
 
 void GraphModel::setAnnotation(int id, const QString &annotation)
 {
-    bool showed = m_isShown.value(id, false);
+    bool showed = m_onScene.value(id, false);
     if (annotation.isEmpty()
         && (showed == false))
     {
@@ -495,6 +505,6 @@ void GraphModel::clear()
         delete obj;
     }
     m_objects.clear();
-    m_isShown.clear();
+    m_onScene.clear();
     s_nextID = 0;
 }

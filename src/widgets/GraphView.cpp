@@ -99,7 +99,7 @@ void GraphView::dragEnterEvent(QDragEnterEvent *event)
         return;
     }
     QModelIndex index = m_model->index(m_tempId, 0);
-    m_model->setData(index, QVariant(true), isShownRole);
+    m_model->setData(index, QVariant(true), onSceneRole);
 
     event->acceptProposedAction();
     scene()->clearSelection();
@@ -145,7 +145,7 @@ void GraphView::dragLeaveEvent(QDragLeaveEvent *event)
         else
         {
             qDebug() << "[GraphView]: Annotation not empty -> hide element";
-            m_model->setData(index, QVariant(false), isShownRole);
+            m_model->setData(index, QVariant(false), onSceneRole);
         }
     }
     scene()->update();

@@ -649,7 +649,7 @@ void MainWindow::annotateNoGraphObject()
         return;
     }
     int id = m_model->addObject(object);
-    m_model->setData(m_model->index(id, 0), QVariant(false), isShownRole);
+    m_model->setData(m_model->index(id, 0), QVariant(false), onSceneRole);
     if (m_model->editAnnotation(id) == false)
     {
         //User clicked cancel, delete object

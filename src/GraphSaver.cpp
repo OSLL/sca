@@ -226,7 +226,7 @@ void GraphSaver::saveModel(const GraphModel *model)
         else
         {
             //Check if object is shown and save that state
-            var = model->data(index, isShownRole);
+            var = model->data(index, onSceneRole);
             insertNode(object, id, var.toBool());
         }
     }

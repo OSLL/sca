@@ -275,7 +275,6 @@ QPoint GraphScene::centerOfMass(const QList<int> &ids)
 {
     qDebug() << "[GraphScene]: centerOfMass(" << ids << ")";
     QPoint res(0,0);
-    Q_ASSERT(!ids.isEmpty());
     foreach (int i, ids)
     {
         // TODO (LeoSko) This crashes on adding group object cuz there are no objects!
@@ -382,7 +381,7 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     }
     //Otherwise it should be VisualObject::NODE
     QModelIndex index = m_model->index(id, 0);
-    bool isShown = m_model->data(index, isShownRole).toBool();
+    bool isShown = m_model->data(index, onSceneRole).toBool();
     //Take it from scene
     ObjectVisual *objectVis = m_objects.take(id);
     Node *node = static_cast<Node *>(objectVis);
@@ -432,6 +431,9 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     //Update for object filtering
     QVariant filtered = m_model->data(index, highlightRole);
     newObject->setFiltered(filtered.toBool());
+
+    bool isVisible = m_model->data(index, isVisibleRole).toBool();
+    newObject->setVisible(isVisible);
 }
 
 void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
@@ -444,8 +446,7 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
         {
             return;
         }
-        int linksCount = obj->getLinks().size();
-        Q_ASSERT(linksCount == 0);
+        Q_ASSERT(obj->getLinks().size() == 0);
         qDebug() << "[GraphScene]: Removing #" << i;
         if (obj->getType() == ObjectVisual::LINK)
         {
@@ -463,6 +464,22 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
         }
         removeItem(obj);
         delete obj;
+    }
+}
+
+void GraphScene::hideObject(int id)
+{
+    if (m_objects.contains(id))
+    {
+        m_objects[id]->setVisible(false);
+    }
+}
+
+void GraphScene::showObject(int id)
+{
+    if (m_objects.contains(id))
+    {
+        m_objects[id]->setVisible(true);
     }
 }
 
@@ -487,14 +504,15 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     QVariant var = m_model->data(leftTop, rawObjectRole);
     IScaObject *object = NULL;
     object = qvariant_cast<IScaObject *>(var);
-    bool isShown = m_model->data(leftTop, isShownRole).toBool();
+    bool onScene = m_model->data(leftTop, onSceneRole).toBool(),
+         isVisible = m_model->data(leftTop, isVisibleRole).toBool();
 
     if (object == NULL)
     {
         object = qvariant_cast<Link *>(var);
     }
 
-    if (object == NULL || !isShown)
+    if (object == NULL || !onScene)
     {
         if (m_objects.contains(id))
         {
@@ -504,6 +522,7 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
         }
         return;
     }
+
     //Maybe it is already on scene?
     ObjectVisual *visObject = getObjectById(id);
 
@@ -515,8 +534,16 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     }
     else
     {
-        //It is on scene and in model, update representation
-        updateObjectVisual(object, id);
+        if (isVisible)
+        {
+            // It is on scene and in model, update representation
+            // (also shows up object)
+            updateObjectVisual(object, id);
+        }
+        else
+        {
+            hideObject(id);
+        }
         return;
     }
 }

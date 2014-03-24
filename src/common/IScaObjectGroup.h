@@ -54,10 +54,10 @@ class IScaObjectGroup : public IScaObject
 public:
     IScaObjectGroup(const QList<int> &objects);
     IScaObjectGroup(const QList<int> &objects,
-                    const QStringList &fileNames,
-                    const QStringList &paths,
-                    const QStringList &annotations,
-                    const QStringList &content);
+                    const QStringList &fileNames = QStringList(),
+                    const QStringList &paths = QStringList(),
+                    const QStringList &annotations = QStringList(),
+                    const QStringList &content = QStringList());
     IScaObjectGroup();
     ~IScaObjectGroup();
     

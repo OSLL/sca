@@ -102,8 +102,9 @@ public slots:
     void updateObjects(QModelIndex topLeft, QModelIndex rightBottom);
     void updateObjectVisual(IScaObject *object, int id);
     void removeObject(const QModelIndex & parent, int first, int last);
+    void hideObject(int id);
+    void showObject(int id);
     void clear();
-
 }; // class GraphScene
 
 
