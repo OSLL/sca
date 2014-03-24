@@ -64,7 +64,9 @@ public:
     QPainterPath shape() const;
     void setLine(const QLineF &line);
 
+#ifndef QT_NO_DEBUG_OUTPUT
     friend QDebug operator<< (QDebug d, LinkVisual &edge);
+#endif
 
     QGraphicsPathItem *getSourceArrow();
     QGraphicsPathItem *getDestinArrow();

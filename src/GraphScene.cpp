@@ -273,9 +273,12 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
 
 QPoint GraphScene::centerOfMass(const QList<int> &ids)
 {
+    qDebug() << "[GraphScene]: centerOfMass(" << ids << ")";
     QPoint res(0,0);
+    Q_ASSERT(!ids.isEmpty());
     foreach (int i, ids)
     {
+        // TODO (LeoSko) This crashes on adding group object cuz there are no objects!
         res += m_objects[i]->pos().toPoint();
     }
     res /= ids.count();
@@ -316,9 +319,11 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         return NULL;
     }
 
+    qDebug() << "[GraphScene]: addObjectVisual(" << object << ", " << id << ")";
     ObjectVisual *visObject = NULL;
     ObjectVisualCreator creator;
     visObject = creator.createObjectVisual(object);
+    Q_ASSERT(visObject != NULL);
 
     addItem(visObject);
     QModelIndex index = m_model->index(id, 0);
@@ -333,7 +338,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         QPoint groupPos = centerOfMass(group->getObjects());
         visObject->setPos(groupPos);
     }
-    if (visObject->getType() == ObjectVisual::LINK)
+    else if (visObject->getType() == ObjectVisual::LINK)
     {
         connectLink(object, id);
     }
@@ -359,7 +364,7 @@ void GraphScene::setModel(QAbstractItemModel *model)
 
 void GraphScene::updateObjectVisual(IScaObject *object, int id)
 {
-    //qDebug() << "Updating existing #" << id << " in scene.";
+    qDebug() << "Updating existing #" << id << " in scene.";
 
     if (object == NULL || !m_objects.contains(id))
     {

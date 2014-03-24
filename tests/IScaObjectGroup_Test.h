@@ -76,15 +76,62 @@ namespace Test
         void isSceneWorks()
         {
             //Create simple dir-like object
-            QMimeData *mime = new QMimeData();
-            mime->setProperty("fromPath", QDir::currentPath());
-            int objId = m_tstModel->addObject(mime);
+            QMimeData mime;
+            mime.setProperty("fromPath", QDir::currentPath());
+            int objId = m_tstModel->addObject(&mime);
             IScaObject *obj = m_tstModel->getObjectById(objId);
             QCOMPARE(obj->getType(), IScaObject::DIRECTORY);
             QCOMPARE(objId, 0);
             ObjectVisual *vis = m_tstScene->getObjectById(objId);
             QVERIFY(vis != NULL);
             QVERIFY(vis->getType() == ObjectVisual::NODE);
+            m_tstModel->removeObject(objId);
+            vis = m_tstScene->getObjectById(objId);
+            QVERIFY(vis == NULL);
+            m_tstScene->clear();
+            m_tstModel->clear();
+        }
+        void canSceneConnect()
+        {
+            QMimeData mime;
+            mime.setProperty("fromPath", QDir::currentPath());
+            int obj1 = m_tstModel->addObject(&mime),
+                obj2 = m_tstModel->addObject(&mime);
+            int link = m_tstModel->connectObjects(obj1, obj2);
+            ObjectVisual *visLink = m_tstScene->getObjectById(link);
+            QVERIFY(visLink->getType() == ObjectVisual::LINK);
+            ObjectVisual *vis1 = m_tstScene->getObjectById(obj1),
+                         *vis2 = m_tstScene->getObjectById(obj2);
+            QVERIFY(vis1->getType() == ObjectVisual::NODE);
+            QVERIFY(vis2->getType() == ObjectVisual::NODE);
+            QVERIFY(vis1->getLinks().size() == 1);
+            QVERIFY(vis2->getLinks().size() == 1);
+            m_tstScene->clear();
+            m_tstModel->clear();
+        }
+        void canSceneAddGroup()
+        {
+            QMimeData *mime = new QMimeData();
+            mime->setProperty("fromPath", QDir::currentPath());
+            int objId1 = m_tstModel->addObject(mime),
+                objId2 = m_tstModel->addObject(mime);
+            QCOMPARE(objId1, 0);
+            QCOMPARE(objId2, 1);
+            QList<int> ids;
+            ids << 0 << 1;
+            IScaObjectGroup *group = new IScaObjectGroup(ids);
+            int groupId = m_tstModel->addObject(group, -1, true);
+            QCOMPARE(groupId, 2);
+            ObjectVisual *vis = m_tstScene->getObjectById(objId1);
+            //Old objects should have disappeared
+            QVERIFY(vis == NULL);
+            vis = m_tstScene->getObjectById(objId2);
+            QVERIFY(vis == NULL);
+            vis = m_tstScene->getObjectById(groupId);
+            QVERIFY(vis != NULL);
+            QVERIFY(vis->getStandardColor() == DEFAULT_GROUP_COLOR);
+            m_tstScene->clear();
+            m_tstModel->clear();
         }
     }; // class IScaObjectGroup_Test
 

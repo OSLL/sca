@@ -170,12 +170,14 @@ QGraphicsPathItem *LinkVisual::getDestinArrow()
     return m_destinArrow;
 }
 
+#ifndef QT_NO_DEBUG_OUTPUT
 QDebug operator<<(QDebug d, LinkVisual &edge)
 {
     d << "LinkVisual: "
       << edge.m_source << " to " << edge.m_destin;
     return d;
 }
+#endif
 
 void LinkVisual::setSourceArrow(QGraphicsPathItem *arrow)
 {
