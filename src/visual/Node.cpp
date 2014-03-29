@@ -141,6 +141,7 @@ void Node::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWid
 
 void Node::refreshColor()
 {
+    qDebug() << "[Node]: refreshColor() ";
     if (isFiltered())
     {
         setColor(m_filterColor);

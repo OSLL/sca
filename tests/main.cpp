@@ -35,18 +35,19 @@
  *
  * PROJ: OSLL/sca
  * ------------------------------------------------------------------------ */
-
 #include <QtTest/QtTest>
 #include <QtCore/QtCore>
 #include <QtGui/QApplication>
-
 // Test headers
 #include "IScaObjectGroup_Test.h"
+#include "GraphFilter_Test.h"
 
 int main(int c, char **v)
 {
     QApplication app(c, v);
     Test::IScaObjectGroup_Test test;
+    Test::GraphFilter_Test filterTest;
     QTest::qExec(&test);
+    QTest::qExec(&filterTest);
 	return 0; 
 }

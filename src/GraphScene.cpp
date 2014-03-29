@@ -61,7 +61,7 @@ GraphScene::~GraphScene()
     QList<Node *> nodes;
     QList<LinkVisual *> links;
     items = this->items();
-    foreach(QGraphicsItem *item, items)
+    foreach (QGraphicsItem *item, items)
     {
         LinkVisual *link = NULL;
         Node *node = NULL;
@@ -82,7 +82,7 @@ GraphScene::~GraphScene()
 QList<Node *> GraphScene::selectedNodes()
 {
     QList<Node *> nodes;
-    foreach(QGraphicsItem *item, selectedItems())
+    foreach (QGraphicsItem *item, selectedItems())
     {
         Node *node = NULL;
         node = dynamic_cast<Node *>(item);
@@ -97,7 +97,7 @@ QList<Node *> GraphScene::selectedNodes()
 QList<LinkVisual *> GraphScene::selectedLinks()
 {
     QList<LinkVisual *> links;
-    foreach(QGraphicsItem *item, selectedItems())
+    foreach (QGraphicsItem *item, selectedItems())
     {
         LinkVisual *link = NULL;
         link = dynamic_cast<LinkVisual *>(item);
@@ -109,10 +109,35 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
+QList<int> GraphScene::selectedObjectsIds()
+{
+    QList<int> ids;
+    foreach (int i, m_objects.keys())
+    {
+        if (m_objects[i]->isSelected())
+            ids.push_back(i);
+    }
+    return ids;
+}
+
+QList<int> GraphScene::selectedNodesIds()
+{
+    QList<int> ids;
+    foreach (int i, m_objects.keys())
+    {
+        ObjectVisual *vis = m_objects[i];
+        if (vis->isSelected() && vis->getType() == ObjectVisual::NODE)
+        {
+            ids.push_back(i);
+        }
+    }
+    return ids;
+}
+
 QList<ObjectVisual *> GraphScene::selectedObjects()
 {
     QList<ObjectVisual *> objects;
-    foreach(QGraphicsItem *item, selectedItems())
+    foreach (QGraphicsItem *item, selectedItems())
     {
         ObjectVisual *link = NULL;
         link = dynamic_cast<ObjectVisual *>(item);
@@ -126,7 +151,7 @@ QList<ObjectVisual *> GraphScene::selectedObjects()
 
 void GraphScene::clearSelection()
 {
-    foreach(ObjectVisual *object, m_objects)
+    foreach (ObjectVisual *object, m_objects)
     {
         object->setSelected(false);
     }
@@ -271,6 +296,20 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     refreshLinkPos(linkId);
 }
 
+QPoint GraphScene::centerOfMass(const QList<int> &ids)
+{
+    qDebug() << "[GraphScene]: centerOfMass(" << ids << ")";
+    qreal x = 0, y = 0;
+    foreach (int i, ids)
+    {
+        // TODO (LeoSko) This crashes on adding group object cuz there are no objects!
+        x += m_objects[i]->pos().x();
+        y += m_objects[i]->pos().y();
+    }
+
+    return QPoint(x/ids.count(), y/ids.count());
+}
+
 QList<int> GraphScene::getIds() const
 {
     return m_objects.keys();
@@ -280,7 +319,7 @@ void GraphScene::refreshAll()
 {
     qDebug() << "[GraphScene]: Refresh all visual objects";
     QList<QModelIndex> indeces;
-    foreach(int id, m_objects.keys())
+    foreach (int id, m_objects.keys())
     {
         //qDebug() << "index #" << id;
         indeces.append(m_model->index(id, 0));
@@ -305,9 +344,11 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
         return NULL;
     }
 
+    qDebug() << "[GraphScene]: addObjectVisual(" << object << ", " << id << ")";
     ObjectVisual *visObject = NULL;
     ObjectVisualCreator creator;
     visObject = creator.createObjectVisual(object);
+    Q_ASSERT(visObject != NULL);
 
     addItem(visObject);
     QModelIndex index = m_model->index(id, 0);
@@ -315,7 +356,14 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     visObject->setFiltered(filtered);
     m_objects.insert(id, visObject);
 
-    if(visObject->getType() == ObjectVisual::LINK)
+    if (object->getType() == IScaObject::GROUP)
+    {
+        //Set it's position to the middle of previous items
+        IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
+        QPoint groupPos = centerOfMass(group->getObjects());
+        visObject->setPos(groupPos);
+    }
+    else if (visObject->getType() == ObjectVisual::LINK)
     {
         connectLink(object, id);
     }
@@ -341,7 +389,7 @@ void GraphScene::setModel(QAbstractItemModel *model)
 
 void GraphScene::updateObjectVisual(IScaObject *object, int id)
 {
-    //qDebug() << "Updating existing #" << id << " in scene.";
+    qDebug() << "Updating existing #" << id << " in scene.";
 
     if (object == NULL || !m_objects.contains(id))
     {
@@ -359,7 +407,7 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     }
     //Otherwise it should be VisualObject::NODE
     QModelIndex index = m_model->index(id, 0);
-    bool isShown = m_model->data(index, isShownRole).toBool();
+    bool isShown = m_model->data(index, onSceneRole).toBool();
     //Take it from scene
     ObjectVisual *objectVis = m_objects.take(id);
     Node *node = static_cast<Node *>(objectVis);
@@ -409,6 +457,9 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     //Update for object filtering
     QVariant filtered = m_model->data(index, highlightRole);
     newObject->setFiltered(filtered.toBool());
+
+    bool isVisible = m_model->data(index, isVisibleRole).toBool();
+    newObject->setVisible(isVisible);
 }
 
 void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
@@ -421,8 +472,7 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
         {
             return;
         }
-        int linksCount = obj->getLinks().size();
-        Q_ASSERT(linksCount == 0);
+        Q_ASSERT(obj->getLinks().size() == 0);
         qDebug() << "[GraphScene]: Removing #" << i;
         if (obj->getType() == ObjectVisual::LINK)
         {
@@ -440,6 +490,22 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
         }
         removeItem(obj);
         delete obj;
+    }
+}
+
+void GraphScene::hideObject(int id)
+{
+    if (m_objects.contains(id))
+    {
+        m_objects[id]->setVisible(false);
+    }
+}
+
+void GraphScene::showObject(int id)
+{
+    if (m_objects.contains(id))
+    {
+        m_objects[id]->setVisible(true);
     }
 }
 
@@ -464,14 +530,15 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     QVariant var = m_model->data(leftTop, rawObjectRole);
     IScaObject *object = NULL;
     object = qvariant_cast<IScaObject *>(var);
-    bool isShown = m_model->data(leftTop, isShownRole).toBool();
+    bool onScene = m_model->data(leftTop, onSceneRole).toBool(),
+         isVisible = m_model->data(leftTop, isVisibleRole).toBool();
 
     if (object == NULL)
     {
         object = qvariant_cast<Link *>(var);
     }
 
-    if (object == NULL || !isShown)
+    if (object == NULL || !onScene)
     {
         if (m_objects.contains(id))
         {
@@ -481,6 +548,7 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
         }
         return;
     }
+
     //Maybe it is already on scene?
     ObjectVisual *visObject = getObjectById(id);
 
@@ -492,8 +560,17 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     }
     else
     {
-        //It is on scene and in model, update representation
-        updateObjectVisual(object, id);
+        if (isVisible)
+        {
+            // It is on scene and in model, update representation
+            // (also show up object)
+            showObject(id);
+            updateObjectVisual(object, id);
+        }
+        else
+        {
+            hideObject(id);
+        }
         return;
     }
 }

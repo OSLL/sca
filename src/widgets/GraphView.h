@@ -104,6 +104,7 @@ signals:
     void objectsSelected(bool);
     void canConvertToText(bool);
     void canConvertToIdent(bool);
+    void canCreateGroup(bool);
     void linkHasLeftArrow(bool);
     void linkHasRightArrow(bool);
 
@@ -121,6 +122,7 @@ public slots:
     void convertSelectedNodeToText();
     void convertSelectedNodeToIdentifier();
     void updateActions();
+    void createGroupFromSelection();
 
 }; // class GraphView
 

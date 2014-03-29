@@ -44,6 +44,7 @@
 //include Application class
 #include "../src/GraphModel.h"
 #include "../src/GraphScene.h"
+#include "../src/ObjectCreator.h"
 
 namespace Test
 {
@@ -76,15 +77,77 @@ namespace Test
         void isSceneWorks()
         {
             //Create simple dir-like object
-            QMimeData *mime = new QMimeData();
-            mime->setProperty("fromPath", QDir::currentPath());
-            int objId = m_tstModel->addObject(mime);
+            QMimeData mime;
+            mime.setProperty("fromPath", QDir::currentPath());
+            int objId = m_tstModel->addObject(&mime);
             IScaObject *obj = m_tstModel->getObjectById(objId);
             QCOMPARE(obj->getType(), IScaObject::DIRECTORY);
             QCOMPARE(objId, 0);
             ObjectVisual *vis = m_tstScene->getObjectById(objId);
             QVERIFY(vis != NULL);
             QVERIFY(vis->getType() == ObjectVisual::NODE);
+            m_tstModel->removeObject(objId);
+            vis = m_tstScene->getObjectById(objId);
+            QVERIFY(vis == NULL);
+            m_tstScene->clear();
+            m_tstModel->clear();
+        }
+        void canSceneConnect()
+        {
+            QMimeData *mime = new QMimeData();
+            mime->setProperty("fromPath", QDir::currentPath());
+            int obj1 = m_tstModel->addObject(mime),
+                obj2 = m_tstModel->addObject(mime);
+            QVERIFY(obj1 == 0);
+            QVERIFY(obj2 == 1);
+            int link = m_tstModel->connectObjects(obj1, obj2);
+            QVERIFY(link == 2);
+            ObjectVisual *visLink = m_tstScene->getObjectById(link);
+            QVERIFY(visLink != NULL);
+            QVERIFY(visLink->getType() == ObjectVisual::LINK);
+            ObjectVisual *vis1 = m_tstScene->getObjectById(obj1),
+                         *vis2 = m_tstScene->getObjectById(obj2);
+            QVERIFY(vis1 != NULL);
+            QVERIFY(vis2 != NULL);
+            QVERIFY(vis1->getType() == ObjectVisual::NODE);
+            QVERIFY(vis2->getType() == ObjectVisual::NODE);
+            QVERIFY(vis1->getLinks().size() == 1);
+            QVERIFY(vis2->getLinks().size() == 1);
+            m_tstScene->clear();
+            m_tstModel->clear();
+        }
+        void canSceneAddGroup()
+        {
+            QMimeData *mime = new QMimeData();
+            mime->setProperty("fromPath", QDir::currentPath());
+            int objId1 = m_tstModel->addObject(mime),
+                objId2 = m_tstModel->addObject(mime);
+            QCOMPARE(objId1, 0);
+            QCOMPARE(objId2, 1);
+            QList<int> ids;
+            ids << 0 << 1;
+
+            ObjectVisual *vis1 = m_tstScene->getObjectById(objId1),
+                         *vis2 = m_tstScene->getObjectById(objId2);
+            vis1->setPos(2, 2);
+            vis2->setPos(0, 0);
+            QVERIFY(vis1 != NULL);
+            QVERIFY(vis1->isVisible() == true);
+            QVERIFY(vis2 != NULL);
+            QVERIFY(vis2->isVisible() == true);
+
+            IScaObjectGroup *group = static_cast<IScaObjectGroup*>(ObjectCreator::createGroup(ids, m_tstModel));
+            int groupId = m_tstModel->addObject(group, -1, true);
+            ObjectVisual *visGroup = m_tstScene->getObjectById(groupId);
+            //Old objects should have disappeared
+            QVERIFY(vis1->isVisible() == false);
+            QVERIFY(vis2->isVisible() == false);
+            QVERIFY(visGroup->pos() == QPointF(1, 1));
+            QCOMPARE(groupId, 2);
+            QVERIFY(visGroup != NULL);
+            QVERIFY(visGroup->getStandardColor() == DEFAULT_GROUP_COLOR);
+            m_tstScene->clear();
+            m_tstModel->clear();
         }
     }; // class IScaObjectGroup_Test
 

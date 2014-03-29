@@ -56,6 +56,7 @@
 #include "visual/IScaObjectSymbolVisual.h"
 #include "visual/IScaObjectLineVisual.h"
 #include "visual/IScaObjectIdentifierVisual.h"
+#include "visual/IScaObjectGroupVisual.h"
 #include "visual/Node.h"
 #include "visual/LinkVisual.h"
 #include "visual/ObjectVisual.h"
@@ -87,7 +88,11 @@ public:
     void refreshLinkPos(int linkId);
     void connectLink(IScaObject *object, int id);
 
+    QPoint centerOfMass(const QList<int> &ids);
+
     QList<int> getIds() const;
+    QList<int> selectedObjectsIds();
+    QList<int> selectedNodesIds();
 private:
     QHash<int, ObjectVisual *> m_objects;
 
@@ -99,8 +104,9 @@ public slots:
     void updateObjects(QModelIndex topLeft, QModelIndex rightBottom);
     void updateObjectVisual(IScaObject *object, int id);
     void removeObject(const QModelIndex & parent, int first, int last);
+    void hideObject(int id);
+    void showObject(int id);
     void clear();
-
 }; // class GraphScene
 
 

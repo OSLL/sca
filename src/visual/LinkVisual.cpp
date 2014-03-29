@@ -170,12 +170,14 @@ QGraphicsPathItem *LinkVisual::getDestinArrow()
     return m_destinArrow;
 }
 
+#ifndef QT_NO_DEBUG_OUTPUT
 QDebug operator<<(QDebug d, LinkVisual &edge)
 {
     d << "LinkVisual: "
       << edge.m_source << " to " << edge.m_destin;
     return d;
 }
+#endif
 
 void LinkVisual::setSourceArrow(QGraphicsPathItem *arrow)
 {
@@ -199,6 +201,7 @@ void LinkVisual::setDestinArrow(QGraphicsPathItem *arrow)
 
 void LinkVisual::setDefaultArrows(bool source, bool destin)
 {
+    qDebug() << "[LinkVisual]: setDefaultArrows(" << source << ", " << destin << ")";
     if (source)
     {
         createSourceArrow();
@@ -211,8 +214,35 @@ void LinkVisual::setDefaultArrows(bool source, bool destin)
     refreshGeometry(m_source, m_destin);
 }
 
+bool LinkVisual::hasDestinArrow() const
+{
+    return (m_destinArrow != NULL);
+}
+
+bool LinkVisual::hasSourceArrow() const
+{
+    return (m_sourceArrow != NULL);
+}
+
+bool LinkVisual::hasRightArrow() const
+{
+    if (m_source.x() > m_destin.x())
+        return hasSourceArrow();
+    else
+        return hasDestinArrow();
+}
+
+bool LinkVisual::hasLeftArrow() const
+{
+    if (m_source.x() > m_destin.x())
+        return hasDestinArrow();
+    else
+        return hasSourceArrow();
+}
+
 void LinkVisual::setDefaultArrows(bool left)
 {
+    qDebug() << "[LinkVisual]: setDefaultArrows(" << left << ")";
     bool sourceSet = m_source.x() > m_destin.x();
     if (left)
     {

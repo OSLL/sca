@@ -45,6 +45,9 @@
 #include "common/IScaObject.h"
 #include <QByteArray>
 
+class GraphModel;
+class IScaObjectGroup;
+
 class ObjectCreator
 {
 public:
@@ -52,8 +55,11 @@ public:
     ~ObjectCreator();
     
 
-    IScaObject *createObject(int type, int line, int offset, int endoffset, int length, QString path,
-                             QString text, QByteArray data, QString annotation);
+    static IScaObject *createObject(int type, int line, int offset, int endoffset,
+                                    int length, QString path, QString text,
+                                    QByteArray data, QString annotation = QString());
+    static IScaObjectGroup *createGroup(const QList<int> &ids, GraphModel *model);
+
 private:
 
 

@@ -49,15 +49,16 @@
  */
 
 #include "common/IScaObject.h"
+#include "ObjectCreator.h"
 #include <QFileInfo>
 class QMimeData;
 
-class ScaMIMEDataProcessor
+class ScaMimeDataProcessor
 {
 public:
-  ScaMIMEDataProcessor(const QMimeData *mime);
+  ScaMimeDataProcessor(const QMimeData *mime);
 
-  ~ScaMIMEDataProcessor();
+  ~ScaMimeDataProcessor();
   
   const QMimeData *getData() const;
   void setData(const QMimeData *data);
@@ -65,6 +66,7 @@ public:
   IScaObject *makeObject();
 
 private:
+  ObjectCreator *m_creator;
   const QMimeData *m_data;
   QString m_filePath;
   QFileInfo m_fileInfo;

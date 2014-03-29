@@ -55,6 +55,7 @@ const QString LEFT_ARROW = "Left arrow";
 const QString RIGHT_ARROW = "Right arrow";
 const QString EDIT_ANNOTATION = "Edit annotation";
 const QString EDIT_ANNOTATION_LABEL = "Enter annotation: ";
+const QString CREATE_GROUP = "Create group";
 //[End GraphView's strings]
 
 //[Header data strings]
@@ -90,6 +91,14 @@ const QString FILE_SAVE_SUCCESSFUL = "File saved successfully.";
 
 //[MIMEData]
 const QString BINARY_DATA = "Binary Data";
+const QString POSITION = "position";
+const QString LENGHT = "lenght";
+const QString POS_IN_LINE = "posInLine";
+const QString LINE_NUMBER = "line";
+const QString LINE_LENGHT = "lineLenght";
+const QString END_OFFSET = "endOffset";
+const QString FROM_PATH = "fromPath";
+
 const QString SCA_OBJECT = "Object";
 const QString SCA_DIRECTORY = "Directory";
 const QString SCA_FILE = "File";

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2014  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,51 +30,37 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file ScaObjectConverter.h
- * \brief Header of ScaObjectConverter
- * \todo Fix canConvert(Node *obj, IScaObject::IScaObjectType toType)
- * \todo Fix ScaObjectConverter
+ *
+ * \file IScaObjectGroupVisual.cpp
+ * \brief IScaObjectGroupVisual implementation
  *
  * File description
  *
  * PROJ: OSLL/sca
  * ---------------------------------------------------------------- */
 
+#include "IScaObjectGroupVisual.h"
+#include <QPainter>
 
-#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
-class IScaObjectTextBlockVisual;
-class IScaObjectIdentifierVisual;
-class IScaObjectFileVisual;
-class IScaObjectIdentifier;
-class IScaObjectTextBlock;
-class ObjectVisual;
-class Node;
-class GraphModel;
-#include "IScaObject.h"
-
-/*!
- * Class description. May use HTML formatting
- *
- */
-class ScaObjectConverter
+IScaObjectGroupVisual::IScaObjectGroupVisual(IScaObjectGroup *obj) :
+    Node(DEFAULT_GROUP_COLOR, FILTERED_GROUP_COLOR, obj)
 {
-public:
-    ScaObjectConverter();
+    m_rect = QRectF(-DEFAULT_GROUP_VISUAL_WIDTH / 2,
+                    -DEFAULT_GROUP_VISUAL_HEIGHT / 2,
+                    DEFAULT_GROUP_VISUAL_WIDTH,
+                    DEFAULT_GROUP_VISUAL_HEIGHT);
+    setTitle(obj->getContent());
+}
 
-    ~ScaObjectConverter();
+void IScaObjectGroupVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    painter->setBrush(brush());
+    painter->setPen(pen());
+    painter->drawRect(m_rect);
+    Node::paint(painter, option, widget);
+}
 
-    static bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
+IScaObjectGroupVisual::~IScaObjectGroupVisual()
+{
 
-    static IScaObject *convert(IScaObject *obj, IScaObject::IScaObjectType toType);
-
-    static IScaObjectTextBlock *makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
-
-    static IScaObjectIdentifier *makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
-    static bool canConvert(IScaObject *obj, IScaObject::IScaObjectType toType);
-}; // class ScaObjectConverter
-  
-
-#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
+}

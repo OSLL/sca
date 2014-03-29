@@ -81,7 +81,7 @@ public:
     QList<int> getLinks() const;
     void setLinks(const QList<int> &links);
 
-    QString getInfo(const QString &pattern = OBJECT_INFO_PATTERN) const;
+    virtual QString getInfo(const QString &pattern = OBJECT_INFO_PATTERN) const;
 
     void disconnectLink(int link);
     void addLink(int link);

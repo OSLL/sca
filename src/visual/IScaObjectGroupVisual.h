@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2014  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,10 +30,9 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file ScaObjectConverter.h
- * \brief Header of ScaObjectConverter
- * \todo Fix canConvert(Node *obj, IScaObject::IScaObjectType toType)
- * \todo Fix ScaObjectConverter
+ * \file IScaObjectGroupVisual.h
+ * \brief Header of IScaObjectGroupVisual
+ * \todo add comment here
  *
  * File description
  *
@@ -41,40 +40,29 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
+#ifndef _IScaObjectGroupVisual_H_B5D56744_33D9_4C4A_92DA_E831F0832170_INCLUDED_
+#define _IScaObjectGroupVisual_H_B5D56744_33D9_4C4A_92DA_E831F0832170_INCLUDED_
 
-class IScaObjectTextBlockVisual;
-class IScaObjectIdentifierVisual;
-class IScaObjectFileVisual;
-class IScaObjectIdentifier;
-class IScaObjectTextBlock;
-class ObjectVisual;
-class Node;
-class GraphModel;
-#include "IScaObject.h"
+#include "Node.h"
+#include "../common/IScaObjectGroup.h"
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-class ScaObjectConverter
+class IScaObjectGroupVisual : public Node
 {
 public:
-    ScaObjectConverter();
+    explicit IScaObjectGroupVisual(IScaObjectGroup* obj);
 
-    ~ScaObjectConverter();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    static bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
+    ~IScaObjectGroupVisual();
 
-    static IScaObject *convert(IScaObject *obj, IScaObject::IScaObjectType toType);
+private:
 
-    static IScaObjectTextBlock *makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
-
-    static IScaObjectIdentifier *makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
-    static bool canConvert(IScaObject *obj, IScaObject::IScaObjectType toType);
-}; // class ScaObjectConverter
+}; // class IScaObjectGroupVisual
   
 
-#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
+#endif //_IScaObjectGroupVisual_H_B5D56744_33D9_4C4A_92DA_E831F0832170_INCLUDED_
 

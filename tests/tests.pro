@@ -2,6 +2,7 @@ TEMPLATE = app
 TARGET = sca_tests
 
 QT += core testlib sql
+#DEFINES += QT_NO_WARNING_OUTPUT QT_NO_DEBUG_OUTPUT
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -37,7 +38,9 @@ SOURCES += \
     ../src/visual/LinkVisual.cpp \
     ../src/visual/Node.cpp \
     ../src/visual/ObjectVisual.cpp \
-    ../src/visual/ObjectVisualCreator.cpp
+    ../src/visual/ObjectVisualCreator.cpp \
+    ../src/visual/IScaObjectGroupVisual.cpp \
+    ../src/common/IScaObjectGroup.cpp
 
 HEADERS += \
     IScaObjectGroup_Test.h \
@@ -73,4 +76,7 @@ HEADERS += \
     ../src/visual/LinkVisual.h \
     ../src/visual/Node.h \
     ../src/visual/ObjectVisual.h \
-    ../src/visual/ObjectVisualCreator.h
+    ../src/visual/ObjectVisualCreator.h \
+    ../src/visual/IScaObjectGroupVisual.h \
+    ../src/common/IScaObjectGroup.h \
+    GraphFilter_Test.h

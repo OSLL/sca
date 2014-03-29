@@ -1,5 +1,5 @@
 /*
- * Copyright 2013  Leonid Skorospelov  leosko94@gmail.com
+ * Copyright 2014  Leonid Skorospelov  leosko94@gmail.com
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,10 +30,9 @@
  */
 
 /*! ---------------------------------------------------------------
- * \file ScaObjectConverter.h
- * \brief Header of ScaObjectConverter
- * \todo Fix canConvert(Node *obj, IScaObject::IScaObjectType toType)
- * \todo Fix ScaObjectConverter
+ * \file IScaObjectGroup.h
+ * \brief Header of IScaObjectGroup
+ * \todo add comment here
  *
  * File description
  *
@@ -41,40 +40,58 @@
  * ---------------------------------------------------------------- */
 
 
-#ifndef _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-#define _ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
-
-class IScaObjectTextBlockVisual;
-class IScaObjectIdentifierVisual;
-class IScaObjectFileVisual;
-class IScaObjectIdentifier;
-class IScaObjectTextBlock;
-class ObjectVisual;
-class Node;
-class GraphModel;
-#include "IScaObject.h"
+#ifndef _IScaObjectGroup_H_3D32BAC3_EECE_4F3E_A32B_E1F2E30FA1B9_INCLUDED_
+#define _IScaObjectGroup_H_3D32BAC3_EECE_4F3E_A32B_E1F2E30FA1B9_INCLUDED_
 
 /*!
  * Class description. May use HTML formatting
  *
  */
-class ScaObjectConverter
+#include "IScaObject.h"
+
+class IScaObjectGroup : public IScaObject
 {
 public:
-    ScaObjectConverter();
+    IScaObjectGroup();
+    IScaObjectGroup(const QList<int> &objects,
+                    const QStringList &fileNames = QStringList(),
+                    const QStringList &paths = QStringList(),
+                    const QStringList &annotations = QStringList(),
+                    const QStringList &contents = QStringList());
+    ~IScaObjectGroup();
+    
+    QString getContent() const;
 
-    ~ScaObjectConverter();
+    void addObject(int id);
+    void removeObject(int id);
+    QList<int> getObjects() const;
+    QString getName() const;
+    void setName(const QString &name);
 
-    static bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
+    QString getInfo(const QString &pattern) const;
 
-    static IScaObject *convert(IScaObject *obj, IScaObject::IScaObjectType toType);
+    QStringList getAnnotations() const;
+    void setAnnotations(const QStringList &value);
 
-    static IScaObjectTextBlock *makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
+    QStringList getPaths() const;
+    void setPaths(const QStringList &value);
 
-    static IScaObjectIdentifier *makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
-    static bool canConvert(IScaObject *obj, IScaObject::IScaObjectType toType);
-}; // class ScaObjectConverter
-  
+    QStringList getFileNames() const;
+    void setFileNames(const QStringList &value);
 
-#endif //_ScaObjectConverter_H_A80D37F3_681F_400A_8E4B_4BE4E91A326E_INCLUDED_
+    QStringList getContents() const;
+    void setContents(const QStringList &contents);
+
+private:
+    QList<int> m_objects;
+    QList<QStringList> m_info;
+    QString m_name;
+    QStringList m_fileNames;
+    QStringList m_paths;
+    QStringList m_annotations;
+    QStringList m_contents;
+}; // class IScaObjectGroup
+
+
+#endif //_IScaObjectGroup_H_3D32BAC3_EECE_4F3E_A32B_E1F2E30FA1B9_INCLUDED_
 
