@@ -1341,9 +1341,9 @@ QMimeData *QHexEditPrivate::createMimeDataFromSelection()
     QByteArray data = _xData.data().mid(getSelectionBegin(), getSelectionEnd() - getSelectionBegin());
     mime->setData(BINARY_DATA, data);
 
-    mime->setProperty("fromPath", getCurrentPath());
-    mime->setProperty("position", getSelectionBegin());
-    mime->setProperty("length", getSelectionEnd() - getSelectionBegin());
+    mime->setData(FROM_PATH, getCurrentPath().toUtf8());
+    mime->setData(POSITION, QByteArray::number(getSelectionBegin()));
+    mime->setData(LENGHT, QByteArray::number(getSelectionEnd() - getSelectionBegin()));
 
     return mime;
 }

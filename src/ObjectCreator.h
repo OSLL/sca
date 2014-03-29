@@ -58,7 +58,7 @@ public:
     static IScaObject *createObject(int type, int line, int offset, int endoffset,
                                     int length, QString path, QString text,
                                     QByteArray data, QString annotation = QString());
-    static IScaObject *createGroup(const QList<int> &ids, GraphModel *model);
+    static IScaObjectGroup *createGroup(const QList<int> &ids, GraphModel *model);
 
 private:
 

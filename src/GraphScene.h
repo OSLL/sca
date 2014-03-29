@@ -91,6 +91,8 @@ public:
     QPoint centerOfMass(const QList<int> &ids);
 
     QList<int> getIds() const;
+    QList<int> selectedObjectsIds();
+    QList<int> selectedNodesIds();
 private:
     QHash<int, ObjectVisual *> m_objects;
 

@@ -71,6 +71,7 @@ void ObjectVisual::setSelected(bool arg)
 {
     m_selected = arg;
     refreshColor();
+    QGraphicsItem::setSelected(arg);
 }
 
 void ObjectVisual::disconnectLink(int linkId)

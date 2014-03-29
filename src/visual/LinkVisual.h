@@ -76,6 +76,11 @@ public:
     void setDefaultArrows(bool left);
     void setDefaultArrows(bool source, bool destin);
 
+    bool hasDestinArrow() const;
+    bool hasSourceArrow() const;
+    bool hasRightArrow() const;
+    bool hasLeftArrow() const;
+
     void removeLeftArrow();
     void removeRightArrow();
 

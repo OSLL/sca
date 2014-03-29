@@ -269,6 +269,7 @@ void MainWindow::createActions()
     menu = m_ui->graphViewer->getMenu();
 
     QAction *connectAction = menu->addAction(CONNECT_OBJECTS);
+    QAction *createGroup = menu->addAction(CREATE_GROUP);
     QAction *removeAction = menu->addAction(DELETE_ITEMS);
     menu->addSeparator();
     QAction *toTextAction = menu->addAction(TO_TEXT_BLOCK);
@@ -280,6 +281,9 @@ void MainWindow::createActions()
     setRightArrow->setCheckable(true);
     menu->addSeparator();
     QAction *editAnnotAction = menu->addAction(EDIT_ANNOTATION);
+
+    connect(m_ui->graphViewer, SIGNAL(canCreateGroup(bool)),
+            createGroup, SLOT(setEnabled(bool)));
 
     connect(m_ui->graphViewer, SIGNAL(objectsCanConnect(bool)),
             connectAction, SLOT(setEnabled(bool)));
@@ -318,6 +322,8 @@ void MainWindow::createActions()
             m_ui->graphViewer, SLOT(setSelectedLinkRightArrow(bool)));
     connect(editAnnotAction, SIGNAL(triggered()),
             m_ui->graphViewer, SLOT(editSelectedAnnotation()));
+    connect(createGroup, SIGNAL(triggered()),
+            m_ui->graphViewer, SLOT(createGroupFromSelection()));
 
     connectAction->setDisabled(true);
     removeAction->setDisabled(true);

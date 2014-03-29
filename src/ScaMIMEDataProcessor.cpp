@@ -65,7 +65,7 @@ ScaMimeDataProcessor::ScaMimeDataProcessor(const QMimeData *mime) :
     }
     else
     {
-        path = m_data->property("fromPath").toString();
+        path = QString(m_data->data(FROM_PATH));
     }
     qDebug() << "[ScaMIMEDataProcessor]: filePath - " << path;
     //Q_ASSERT(!path.isEmpty());
@@ -90,12 +90,12 @@ void ScaMimeDataProcessor::setData(const QMimeData *data)
 
 IScaObject *ScaMimeDataProcessor::makeObject()
 {
-    int offset     = m_data->property("position").toInt();
-    int length     = m_data->property("length").toInt();
-    int posInLine  = m_data->property("posInLine").toInt();
-    int line       = m_data->property("line").toInt();
-    int lineLength = m_data->property("lineLength").toInt();
-    int endOffset  = m_data->property("endOffset").toInt();
+    int offset     = m_data->data(POSITION).toInt();
+    int length     = m_data->data(LENGHT).toInt();
+    int posInLine  = m_data->data(POS_IN_LINE).toInt();
+    int line       = m_data->data(LINE_NUMBER).toInt();
+    int lineLength = m_data->data(LINE_LENGHT).toInt();
+    int endOffset  = m_data->data(END_OFFSET).toInt();
     QString text = m_data->text();
     QString path = m_fileInfo.filePath();
     QByteArray data = m_data->data(BINARY_DATA);

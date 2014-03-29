@@ -285,15 +285,15 @@ QMimeData *ObjectTextViewer::createMimeDataFromSelection() const
     QTextCursor cursor = textCursor();
 
     mime->setText(cursor.selectedText());
-    mime->setProperty("fromPath", getCurrentPath());
-    mime->setProperty("position", cursor.selectionStart());
-    mime->setProperty("length", cursor.selectionEnd() - cursor.selectionStart());
-    mime->setProperty("posInLine", cursor.positionInBlock());
-    mime->setProperty("endOffset", cursor.selectionEnd());
+    mime->setData(FROM_PATH, getCurrentPath().toUtf8());
+    mime->setData(POSITION, QByteArray::number(cursor.selectionStart()));
+    mime->setData(LENGHT, QByteArray::number(cursor.selectionEnd() - cursor.selectionStart()));
+    mime->setData(POS_IN_LINE, QByteArray::number(cursor.positionInBlock()));
+    mime->setData(END_OFFSET, QByteArray::number(cursor.selectionEnd()));
 
     int line = currentLineNumber();
-    mime->setProperty("line", line);
-    mime->setProperty("lineLength", symbolsInCurrentLine() - 1);
+    mime->setData(LINE_NUMBER, QByteArray::number(line));
+    mime->setData(LINE_LENGHT, QByteArray::number(symbolsInCurrentLine() - 1));
 
     qDebug() << "FromPath: " << getCurrentPath();
     qDebug() << "Line: " << currentLineNumber();

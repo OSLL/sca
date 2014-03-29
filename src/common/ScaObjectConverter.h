@@ -61,18 +61,18 @@ class GraphModel;
 class ScaObjectConverter
 {
 public:
-    explicit ScaObjectConverter();
+    ScaObjectConverter();
 
     ~ScaObjectConverter();
 
-    bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
+    static bool canConvert(IScaObject::IScaObjectType fromType, IScaObject::IScaObjectType toType);
 
-    IScaObject *convert(IScaObject *obj, IScaObject::IScaObjectType toType);
+    static IScaObject *convert(IScaObject *obj, IScaObject::IScaObjectType toType);
 
-    IScaObjectTextBlock *makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
+    static IScaObjectTextBlock *makeTextBlockFromIdentifier(IScaObjectIdentifier *obj, bool autoDel = false);
 
-    IScaObjectIdentifier *makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
-    bool canConvert(IScaObject *obj, IScaObject::IScaObjectType toType);
+    static IScaObjectIdentifier *makeIdentifierFromBlock(IScaObjectTextBlock *obj, bool autoDel = false);
+    static bool canConvert(IScaObject *obj, IScaObject::IScaObjectType toType);
 }; // class ScaObjectConverter
   
 

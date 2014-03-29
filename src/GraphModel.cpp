@@ -283,7 +283,7 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
         IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
         foreach (int i, group->getObjects())
         {
-            setData(index(i, 0), true, onSceneRole);
+            setData(index(i, 0), true, isVisibleRole);
         }
     }
     //Start removing object itself
@@ -359,7 +359,7 @@ bool GraphModel::setData(const QModelIndex &index, const QVariant &value, int ro
                      << ", items total: " << m_objects.size();
             if (object->getType() == IScaObject::GROUP)
             {
-                //Recoursively set that object to unseen
+                // Set objects to unseen
                 IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
                 foreach (int i, group->getObjects())
                 {

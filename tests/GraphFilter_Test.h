@@ -95,8 +95,8 @@ namespace Test
                 ids.append(id);
             }
 
-            IScaObject *group = ObjectCreator::createGroup(ids, m_tstModel);
-            int id = m_tstModel->addObject(group);
+            IScaObjectGroup *group = ObjectCreator::createGroup(ids, m_tstModel);
+            int id = m_tstModel->addObject((IScaObject *)(group));
 
             for(int i = 0; i < paths.size(); i++)
             {
@@ -114,7 +114,6 @@ namespace Test
             //Test group on not acception
             QModelIndex index = m_tstModel->index(id, 0);
 
-
             m_tstObject->setFilePath("Wrong path");
             bool acepted = m_tstObject->data(index, highlightRole).toBool();
             QVERIFY(!acepted);
@@ -129,7 +128,7 @@ namespace Test
             m_tstObject->refreshRegExp();
             acepted = m_tstObject->data(index, highlightRole).toBool();
             QVERIFY(!acepted);
-
+            m_tstModel->clear();
         }
     }; // class GraphFilter_Test
 

@@ -55,6 +55,7 @@
 #include "common/IScaObjectSymbol.h"
 #include "common/IScaObjectLine.h"
 #include "common/IScaObjectIdentifier.h"
+#include "common/IScaObjectGroup.h"
 #include "common/ScaObjectConverter.h"
 #include "ScaMIMEDataProcessor.h"
 #include "GraphModel.h"
@@ -167,8 +168,6 @@ void GraphView::ShowContextMenu(const QPoint &pos)
     //Move menu
     QPoint globalPos = viewport()->mapToGlobal(pos);
 
-
-
     m_menu->exec(globalPos);
 }
 
@@ -227,10 +226,24 @@ void GraphView::runTool(const QString &tool)
 
 void GraphView::removeSelectedObjects()
 {
-    QList<ObjectVisual *> objects = scene()->selectedObjects();
-    foreach(ObjectVisual *object, objects)
+    QList<int> ids = scene()->selectedObjectsIds();
+    QList<int> objectsToSelect;
+    IScaObject *obj;
+    foreach(int id, ids)
     {
-        m_model->removeObject(scene()->getObjectId(object));
+        obj = m_model->getObjectById(id);
+        if (obj->getType() == IScaObject::GROUP)
+        {
+            IScaObjectGroup *group = static_cast<IScaObjectGroup *>(obj);
+            objectsToSelect += group->getObjects();
+        }
+        m_model->removeObject(id);
+    }
+    qDebug() << "[GraphView]: removeSelectedObject(), toSelect: " << objectsToSelect;
+    scene()->clearSelection();
+    foreach (int id, objectsToSelect)
+    {
+        scene()->getObjectById(id)->setSelected(true);
     }
 }
 
@@ -263,49 +276,15 @@ void GraphView::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
     case Qt::Key_C:
-    {
-        QList<Node  *> nodes = scene()->selectedNodes();
-        QList<ObjectVisual *> items = scene()->selectedObjects();
-        QList<LinkVisual *> links = scene()->selectedLinks();
-        if (nodes.size() == 2)
         {
-            ObjectVisual *src = nodes.at(0);
-            ObjectVisual *dest = nodes.at(1);
-            int srcId = scene()->getObjectId(src);
-            int destId = scene()->getObjectId(dest);
-            m_model->connectObjects(srcId, destId);
+            connectSelectedObjects();
+            break;
         }
-        else if (links.size() == 2)
-        {
-            ObjectVisual *src = links.at(0);
-            ObjectVisual *dest = links.at(1);
-            int srcId = scene()->getObjectId(src);
-            int destId = scene()->getObjectId(dest);
-            m_model->connectObjects(srcId, destId);
-        }
-        else if (items.size() == 2)
-        {
-            ObjectVisual *src = items.at(0);
-            ObjectVisual *dest = items.at(1);
-            int srcId = scene()->getObjectId(src);
-            int destId = scene()->getObjectId(dest);
-            m_model->connectObjects(srcId, destId);
-        }
-    }
-        break;
     case Qt::Key_Delete:
-    {
-        foreach(LinkVisual *link, scene()->selectedLinks())
         {
-            m_model->removeObject(scene()->getObjectId(link));
+            removeSelectedObjects();
+            break;
         }
-        foreach(Node *node, scene()->selectedNodes())
-        {
-            m_model->removeObject(scene()->getObjectId(node));
-        }
-
-    }
-        break;
     }
 }
 
@@ -641,10 +620,18 @@ void GraphView::setSelectedLinkLeftArrow(bool hasArrow)
         return;
     }
 
+    LinkVisual *link = links.at(0);
     if (hasArrow)
-        links.at(0)->setDefaultArrows(true);
+    {
+        if (!link->hasLeftArrow())
+        {
+            links.at(0)->setDefaultArrows(true);
+        }
+    }
     else
+    {
         links.at(0)->removeLeftArrow();
+    }
 }
 
 
@@ -656,11 +643,18 @@ void GraphView::setSelectedLinkRightArrow(bool hasArrow)
         return;
     }
 
+    LinkVisual *link = links.at(0);
     if (hasArrow)
-        links.at(0)->setDefaultArrows(false);
+    {
+        if (!link->hasRightArrow())
+        {
+            links.at(0)->setDefaultArrows(false);
+        }
+    }
     else
+    {
         links.at(0)->removeRightArrow();
-
+    }
 }
 
 void GraphView::editSelectedAnnotation()
@@ -700,6 +694,7 @@ void GraphView::updateActions()
     emit objectSelected(objects.size() == 1);
     emit nodeSelected(nodes.size() == 1);
     emit linkSelected(links.size() == 1);
+    emit canCreateGroup(nodes.size() > 1);
 
     if (links.size() == 1)
     {
@@ -722,15 +717,13 @@ void GraphView::updateActions()
 
     if(nodes.size() == 1)
     {
-        ScaObjectConverter conv;
-
         Node *node = nodes.at(0);
         int id = scene()->getObjectId(node);
         QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
         IScaObject *obj = qvariant_cast<IScaObject *>(var);
 
-        emit canConvertToText(conv.canConvert(obj, IScaObject::TEXTBLOCK));
-        emit canConvertToIdent(conv.canConvert(obj, IScaObject::IDENTIFIER));
+        emit canConvertToText(ScaObjectConverter::canConvert(obj, IScaObject::TEXTBLOCK));
+        emit canConvertToIdent(ScaObjectConverter::canConvert(obj, IScaObject::IDENTIFIER));
     }
     else
     {
@@ -739,3 +732,82 @@ void GraphView::updateActions()
     }
 }
 
+void GraphView::createGroupFromSelection()
+{
+    QList<int> ids = scene()->selectedObjectsIds();
+    QPointF pointToAdd = scene()->centerOfMass(ids);
+    QSet<int> groupIds = QSet<int>::fromList(ids);
+    foreach (int id, ids)
+    {
+        IScaObject *obj = m_model->getObjectById(id);
+        QList<IScaObject *> rollBack;
+        rollBack += obj;
+        while (!rollBack.empty())
+        {
+            // We form list with links to add to group like we do with them in GraphLoader::loadLinks()
+            QList<int> links = rollBack.takeFirst()->getLinks();
+            foreach (int linkId, links)
+            {
+                groupIds += linkId;
+                rollBack += m_model->getObjectById(linkId);
+            }
+        }
+    }
+    // Remove outer group links that were accidentially selected
+    foreach (int id, groupIds)
+    {
+        IScaObject *obj = m_model->getObjectById(id);
+        if (obj->getType() == IScaObject::LINK)
+        {
+            Link *link = static_cast<Link *>(obj);
+            if (!groupIds.contains(link->getObjectFrom()) &&
+                !groupIds.contains(link->getObjectTo()))
+            {
+                groupIds.remove(id);
+            }
+        }
+    }
+
+    qDebug() << "[GraphView]: group: " << groupIds;
+    // Now in groupIds we have all needed objects to include in group
+    IScaObjectGroup *group = ObjectCreator::createGroup(groupIds.toList(), m_model);
+    int groupId = m_model->addObject(group, -1, true);
+    ObjectVisual *groupVis = scene()->getObjectById(groupId);
+    groupVis->setPos(pointToAdd);
+
+    // Object are hidden, just add needed links to outer objects
+    foreach (int id, groupIds)
+    {
+        IScaObject *obj = m_model->getObjectById(id);
+        if (obj->getType() == IScaObject::LINK)
+        {
+            Link *link = static_cast<Link *>(obj);
+            if (groupIds.contains(link->getObjectTo()) &&
+                !groupIds.contains(link->getObjectFrom()))
+            {
+                int linkId = m_model->connectObjects(groupId, link->getObjectFrom());
+                m_model->setAnnotation(linkId, link->getAnnotation());
+                scene()->refreshLinkPos(linkId);
+                LinkVisual *linkVis = static_cast<LinkVisual *>(scene()->getObjectById(linkId));
+                LinkVisual *oldLink = static_cast<LinkVisual *>(scene()->getObjectById(id));
+                linkVis->setDefaultArrows(oldLink->hasSourceArrow(), oldLink->hasDestinArrow());
+            }
+            else if (groupIds.contains(link->getObjectFrom()) &&
+                     !groupIds.contains(link->getObjectTo()))
+            {
+                int linkId = m_model->connectObjects(groupId, link->getObjectTo());
+                m_model->setAnnotation(linkId, link->getAnnotation());
+                scene()->refreshLinkPos(linkId);
+                LinkVisual *linkVis = static_cast<LinkVisual *>(scene()->getObjectById(linkId));
+                LinkVisual *oldLink = static_cast<LinkVisual *>(scene()->getObjectById(id));
+                linkVis->setDefaultArrows(oldLink->hasSourceArrow(), oldLink->hasDestinArrow());
+            }
+            else
+            {
+                // Do nothing, it is inner group link
+            }
+        }
+        // Unselect old objects
+        scene()->getObjectById(id)->setSelected(false);
+    }
+}

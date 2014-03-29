@@ -171,10 +171,18 @@ bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &par
         foreach (int id, list)
         {
             QModelIndex index = m_source->index(id, 0);
+            QVariant var = m_source->data(index, rawObjectRole);
+            IScaObject *obj = NULL;
+            obj = qvariant_cast<IScaObject *>(var);
+            if (obj == NULL)
+            {
+                obj = qvariant_cast<Link *>(var);
+            }
             bool filtered = m_source->data(index, highlightRole).toBool(),
-                 isShown =  m_source->data(index, onSceneRole).toBool();
+                 isShown =  m_source->data(index, isVisibleRole).toBool(),
+                 isNode = (obj->getType() != IScaObject::LINK);
             //Check if it matches filter and should be shown
-            if (filtered && isShown)
+            if (filtered && isShown && isNode)
             {
                 qDebug() << "[ProxyTableModel]: " << i << "->" << id;
                 beginInsertRows(QModelIndex(), i, i);
@@ -189,7 +197,7 @@ bool GraphTableProxyModel::insertRows(int row, int count, const QModelIndex &par
             foreach (int id, list)
             {
                 QModelIndex index = m_source->index(id, 0);
-                bool isShown = m_source->data(index, onSceneRole).toBool();
+                bool isShown = m_source->data(index, isVisibleRole).toBool();
                 if (!isShown)
                 {
                     //It shouldnt be shown anyway, skip it

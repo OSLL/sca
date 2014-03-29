@@ -61,7 +61,7 @@ GraphScene::~GraphScene()
     QList<Node *> nodes;
     QList<LinkVisual *> links;
     items = this->items();
-    foreach(QGraphicsItem *item, items)
+    foreach (QGraphicsItem *item, items)
     {
         LinkVisual *link = NULL;
         Node *node = NULL;
@@ -82,7 +82,7 @@ GraphScene::~GraphScene()
 QList<Node *> GraphScene::selectedNodes()
 {
     QList<Node *> nodes;
-    foreach(QGraphicsItem *item, selectedItems())
+    foreach (QGraphicsItem *item, selectedItems())
     {
         Node *node = NULL;
         node = dynamic_cast<Node *>(item);
@@ -97,7 +97,7 @@ QList<Node *> GraphScene::selectedNodes()
 QList<LinkVisual *> GraphScene::selectedLinks()
 {
     QList<LinkVisual *> links;
-    foreach(QGraphicsItem *item, selectedItems())
+    foreach (QGraphicsItem *item, selectedItems())
     {
         LinkVisual *link = NULL;
         link = dynamic_cast<LinkVisual *>(item);
@@ -109,10 +109,35 @@ QList<LinkVisual *> GraphScene::selectedLinks()
     return links;
 }
 
+QList<int> GraphScene::selectedObjectsIds()
+{
+    QList<int> ids;
+    foreach (int i, m_objects.keys())
+    {
+        if (m_objects[i]->isSelected())
+            ids.push_back(i);
+    }
+    return ids;
+}
+
+QList<int> GraphScene::selectedNodesIds()
+{
+    QList<int> ids;
+    foreach (int i, m_objects.keys())
+    {
+        ObjectVisual *vis = m_objects[i];
+        if (vis->isSelected() && vis->getType() == ObjectVisual::NODE)
+        {
+            ids.push_back(i);
+        }
+    }
+    return ids;
+}
+
 QList<ObjectVisual *> GraphScene::selectedObjects()
 {
     QList<ObjectVisual *> objects;
-    foreach(QGraphicsItem *item, selectedItems())
+    foreach (QGraphicsItem *item, selectedItems())
     {
         ObjectVisual *link = NULL;
         link = dynamic_cast<ObjectVisual *>(item);
@@ -126,7 +151,7 @@ QList<ObjectVisual *> GraphScene::selectedObjects()
 
 void GraphScene::clearSelection()
 {
-    foreach(ObjectVisual *object, m_objects)
+    foreach (ObjectVisual *object, m_objects)
     {
         object->setSelected(false);
     }
@@ -274,14 +299,15 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
 QPoint GraphScene::centerOfMass(const QList<int> &ids)
 {
     qDebug() << "[GraphScene]: centerOfMass(" << ids << ")";
-    QPoint res(0,0);
+    qreal x = 0, y = 0;
     foreach (int i, ids)
     {
         // TODO (LeoSko) This crashes on adding group object cuz there are no objects!
-        res += m_objects[i]->pos().toPoint();
+        x += m_objects[i]->pos().x();
+        y += m_objects[i]->pos().y();
     }
-    res /= ids.count();
-    return res;
+
+    return QPoint(x/ids.count(), y/ids.count());
 }
 
 QList<int> GraphScene::getIds() const
@@ -293,7 +319,7 @@ void GraphScene::refreshAll()
 {
     qDebug() << "[GraphScene]: Refresh all visual objects";
     QList<QModelIndex> indeces;
-    foreach(int id, m_objects.keys())
+    foreach (int id, m_objects.keys())
     {
         //qDebug() << "index #" << id;
         indeces.append(m_model->index(id, 0));
@@ -537,7 +563,8 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
         if (isVisible)
         {
             // It is on scene and in model, update representation
-            // (also shows up object)
+            // (also show up object)
+            showObject(id);
             updateObjectVisual(object, id);
         }
         else
