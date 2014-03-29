@@ -139,7 +139,7 @@ IScaObject *ObjectCreator::createObject(int type, int line,
     return new IScaObject();
 }
 
-IScaObjectGroup *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *model)
+IScaObject *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *model)
 {
     QStringList fileNames;
     QStringList paths;

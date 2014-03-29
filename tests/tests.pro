@@ -78,4 +78,5 @@ HEADERS += \
     ../src/visual/ObjectVisual.h \
     ../src/visual/ObjectVisualCreator.h \
     ../src/visual/IScaObjectGroupVisual.h \
-    ../src/common/IScaObjectGroup.h
+    ../src/common/IScaObjectGroup.h \
+    GraphFilter_Test.h

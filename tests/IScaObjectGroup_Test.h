@@ -136,7 +136,7 @@ namespace Test
             QVERIFY(vis2 != NULL);
             QVERIFY(vis2->isVisible() == true);
 
-            IScaObjectGroup *group = ObjectCreator::createGroup(ids, m_tstModel);
+            IScaObjectGroup *group = static_cast<IScaObjectGroup*>(ObjectCreator::createGroup(ids, m_tstModel));
             int groupId = m_tstModel->addObject(group, -1, true);
             ObjectVisual *visGroup = m_tstScene->getObjectById(groupId);
             //Old objects should have disappeared
