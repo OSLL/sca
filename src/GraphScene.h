@@ -87,7 +87,14 @@ public:
     void refreshLinkPos(int linkId);
     void connectLink(IScaObject *object, int id);
 
+    int getLinkSource(int linkId);
+    int getLinkDestin(int linkId);
+
+    Link *getLink(int linkId);
+
     QList<int> getIds() const;
+    QHash<int, ObjectVisual *> *getObjects();
+
 private:
     QHash<int, ObjectVisual *> m_objects;
 

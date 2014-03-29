@@ -32,7 +32,7 @@ QT += core gui declarative sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 win32: LIBS += -lsource-highlight-qt42 -lsource-highlight3
-unix: LIBS += -lsource-highlight-qt4
+unix: LIBS += -lsource-highlight-qt4 -lOGDF -lpthread -lCOIN
 
 SOURCES += \
     main.cpp \
@@ -82,7 +82,9 @@ SOURCES += \
     widgets/PropertyBrowser.cpp \
     widgets/ProcessView.cpp \
     widgets/ToolsForm.cpp \
-    widgets/SettingsDialog.cpp
+    widgets/SettingsDialog.cpp \
+    GraphPlanarizer.cpp \
+    OgdfConverter.cpp
 
 
 HEADERS += \
@@ -134,7 +136,9 @@ HEADERS += \
     widgets/PropertyBrowser.h \
     widgets/ProcessView.h \
     widgets/ToolsForm.h \
-    widgets/SettingsDialog.h
+    widgets/SettingsDialog.h \
+    GraphPlanarizer.h \
+    OgdfConverter.h
 
 FORMS += \
     mainwindow.ui \

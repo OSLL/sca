@@ -180,9 +180,9 @@ void GraphSaver::insertLink(Link *link, int id)
 {
     m_query->prepare(SQL_INSERT_LINK_PATTERN);
     m_query->bindValue(":id", id);
-    qDebug() << "[GraphSaver]: Save connection:" << link->getObjectFrom() << "->" << link->getObjectTo();
-    m_query->bindValue(":source", link->getObjectFrom());
-    m_query->bindValue(":destin", link->getObjectTo());
+    qDebug() << "[GraphSaver]: Save connection:" << link->getSource() << "->" << link->getTarget();
+    m_query->bindValue(":source", link->getSource());
+    m_query->bindValue(":destin", link->getTarget());
     m_query->bindValue(":annotation", link->getAnnotation());
     if(!m_query->exec())
     {

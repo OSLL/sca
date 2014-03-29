@@ -145,8 +145,8 @@ void GraphScene::refreshLinkPos(int linkId)
     QVariant var = m_model->data(index, rawObjectRole);
     Link *objLink = qvariant_cast<Link *>(var);
 
-    int fromId = objLink->getObjectFrom(),
-        toId   = objLink->getObjectTo();
+    int fromId = objLink->getSource(),
+        toId   = objLink->getTarget();
     // TODO (LeoSko) It really seems we don't have nice interface there, right?
     ObjectVisual *from = getObjectById(fromId),
                  *to   = getObjectById(toId);
@@ -261,8 +261,8 @@ void GraphScene::refreshLinkPos(int linkId)
 void GraphScene::connectLink(IScaObject *object, int linkId)
 {
     Link *link = static_cast<Link *>(object);
-    int sourceId = link->getObjectFrom();
-    int destinId = link->getObjectTo();
+    int sourceId = link->getSource();
+    int destinId = link->getTarget();
     ObjectVisual *source = static_cast<ObjectVisual *>(m_objects.value(sourceId, NULL));
     ObjectVisual *destin = static_cast<ObjectVisual *>(m_objects.value(destinId, NULL));
     source->addLink(linkId);
@@ -271,9 +271,32 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     refreshLinkPos(linkId);
 }
 
+int GraphScene::getLinkSource(int linkId)
+{
+    QModelIndex index = m_model->index(linkId, 0);
+    QVariant var = m_model->data(index, rawObjectRole);
+    Link *objLink = qvariant_cast<Link *>(var);
+
+    return objLink->getSource();
+}
+
+int GraphScene::getLinkDestin(int linkId)
+{
+    QModelIndex index = m_model->index(linkId, 0);
+    QVariant var = m_model->data(index, rawObjectRole);
+    Link *objLink = qvariant_cast<Link *>(var);
+
+    return objLink->getTarget();
+}
+
 QList<int> GraphScene::getIds() const
 {
     return m_objects.keys();
+}
+
+QHash<int, ObjectVisual *> *GraphScene::getObjects()
+{
+    return &m_objects;
 }
 
 void GraphScene::refreshAll()
@@ -430,8 +453,8 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
             QVariant var = m_model->data(index, rawObjectRole);
             Link *l = qvariant_cast<Link *>(var);
             Q_ASSERT(l != NULL);
-            int fromId = l->getObjectFrom(),
-                    toId = l->getObjectTo();
+            int fromId = l->getSource(),
+                    toId = l->getTarget();
             Node *from = static_cast<Node *>(m_objects[fromId]);
             Node *to = static_cast<Node *>(m_objects[toId]);
             Q_ASSERT(from != NULL && to != NULL);

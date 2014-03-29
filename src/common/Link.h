@@ -56,10 +56,10 @@ public:
     Link(int objectFrom, int objectTo);
     ~Link();
 
-    int getObjectFrom() const;
-    void setObjectFrom(int objectFrom);
+    int getSource() const;
+    void setTarget(int objectFrom);
 
-    int getObjectTo() const;
+    int getTarget() const;
     void setObjectTo(int objectTo);
 
     QString getAnnotation() const;

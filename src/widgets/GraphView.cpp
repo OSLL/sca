@@ -686,17 +686,17 @@ void GraphView::mouseReleaseEvent(QMouseEvent *event)
             if (m_linkSetsNewSource)
             {
                 //Disconnect from old objects
-                int oldFromId = currentLink->getObjectFrom();
+                int oldFromId = currentLink->getSource();
                 IScaObject *oldFrom = m_model->getObjectById(oldFromId);
                 ObjectVisual *oldConnectedObj = scene()->getObjectById(oldFromId);
                 oldFrom->disconnectLink(m_tempId);
                 oldConnectedObj->disconnectLink(m_tempId);
                 //Refresh link in link
-                currentLink->setObjectFrom(idAboutToBeLinked);
+                currentLink->setTarget(idAboutToBeLinked);
             }
             else
             {
-                int oldToId = currentLink->getObjectTo();
+                int oldToId = currentLink->getTarget();
                 IScaObject *oldTo = m_model->getObjectById(oldToId);
                 ObjectVisual *oldConnectedObj = scene()->getObjectById(oldToId);
                 oldTo->disconnectLink(m_tempId);

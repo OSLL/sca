@@ -384,8 +384,8 @@ bool GraphModel::freeLink(int link)
     }
 
     Link *l = static_cast<Link *>(m_objects[link]);
-    int source = l->getObjectFrom();
-    int destin = l->getObjectTo();
+    int source = l->getSource();
+    int destin = l->getTarget() ;
 
     qDebug() << "[GraphModel]: Freeing link #" << link << "("
              << source << ";" << destin << ")";

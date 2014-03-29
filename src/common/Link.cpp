@@ -62,7 +62,7 @@ Link::~Link()
 {
 }
 
-int Link::getObjectTo() const
+int Link::getTarget() const
 {
     return m_objectTo;
 }
@@ -91,17 +91,17 @@ QString Link::getContent() const
 
 QDebug operator<<(QDebug d, Link &link)
 {
-    d << "Link(" << link.getObjectFrom() << ";" << link.getObjectTo() << ";ann="
+    d << "Link(" << link.getSource() << ";" << link.getTarget() << ";ann="
       << link.getAnnotation() << ")";
     return d;
 }
 
-int Link::getObjectFrom() const
+int Link::getSource() const
 {
     return m_objectFrom;
 }
 
-void Link::setObjectFrom(int objectFrom)
+void Link::setTarget(int objectFrom)
 {
     m_objectFrom = objectFrom;
 }

@@ -309,8 +309,8 @@ void PropertyBrowser::processLink(Link *object)
 {
     QtProperty *property;
 
-    int fromId = object->getObjectFrom(),
-        toId = object->getObjectTo();
+    int fromId = object->getSource(),
+        toId = object->getTarget();
     IScaObject *from = m_model->getObjectById(fromId),
                *to = m_model->getObjectById(toId);
     Q_ASSERT(from != NULL && to != NULL);
