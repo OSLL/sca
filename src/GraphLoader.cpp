@@ -62,6 +62,7 @@ GraphLoader::GraphLoader(const QString &path)
 
 GraphLoader::~GraphLoader()
 {
+    m_query->finish();
     m_query->clear();
     m_db.removeDatabase("QSQLITE");
     m_db.close();

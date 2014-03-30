@@ -54,7 +54,7 @@ void logToFile(QtMsgType type, const char *msg)
 int main(int c, char **v)
 {
     qInstallMsgHandler(logToFile);
-    qDebug() << "SCA started @" << QTime::currentTime();
+    qDebug() << "SCA started @" << QTime::currentTime() << QDate::currentDate().toString("dd.MM.yyyy");
     QApplication app(c,v);
 
     MainWindow mw;
