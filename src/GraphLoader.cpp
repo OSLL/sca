@@ -113,7 +113,6 @@ void GraphLoader::loadNodes()
 
     QSqlRecord rec = m_query->record();
 
-    ObjectCreator creator;
     while (m_query->next())
     {
         int id             = m_query->value(rec.indexOf("id")).toInt();
@@ -128,7 +127,7 @@ void GraphLoader::loadNodes()
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
         bool isShown       = m_query->value(rec.indexOf("shown")).toBool();
 
-        IScaObject *object = creator.createObject(type, line, offset, endoffset, length, path, text, data, annotation);
+        IScaObject *object = ObjectCreator::createObject(type, line, offset, endoffset, length, path, text, data, annotation);
         m_model->addObject(object, id, isShown);
     }
 }
