@@ -111,9 +111,13 @@ void GraphLoader::loadNodes()
         qDebug() << "[GraphLoader]:" <<  m_query->lastError().text();
     }
 
-    QSqlRecord rec = m_query->record();
+    QSqlRecord rec = m_query->record();    
 
-    ObjectCreator creator;
+    //Lists for creating groups later
+    QList<int > groupIds;
+    QList<QString> inGroupIds;
+    QList<bool> groupsShown;
+
     while (m_query->next())
     {
         int id             = m_query->value(rec.indexOf("id")).toInt();
@@ -127,9 +131,41 @@ void GraphLoader::loadNodes()
         QByteArray data    = m_query->value(rec.indexOf("data")).toByteArray();
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
         bool isShown       = m_query->value(rec.indexOf("shown")).toBool();
+        QString strIds        = m_query->value(rec.indexOf("ids")).toString();
 
-        IScaObject *object = creator.createObject(type, line, offset, endoffset, length, path, text, data, annotation);
-        m_model->addObject(object, id, isShown);
+        if(type != IScaObject::GROUP)
+        {
+            IScaObject *object = ObjectCreator::createObject(type, line, offset, endoffset, length, path, text, data, annotation);
+            m_model->addObject(object, id, isShown);
+        }
+        else
+        {
+            groupIds.append(id);
+            inGroupIds.append(strIds);
+            groupsShown.append(isShown);
+        }
+
+    }
+
+    for(int i = 0; i < groupIds.size(); i++)
+    {
+        QList<int> ids;
+        foreach(QString strId, inGroupIds.at(i).split(" "))
+        {
+            bool converted;
+            int curId = strId.toInt(&converted);
+            if(!converted)
+            {
+                qDebug() << "[GraphLoader] Error while trying convert str: " << strId << " to int";
+            }
+            else
+            {
+                ids.append(curId);
+            }
+        }
+
+        IScaObject *object = ObjectCreator::createGroup(ids, m_model);
+        m_model->addObject(object, groupIds.at(i), groupsShown.at(i));
     }
 }
 

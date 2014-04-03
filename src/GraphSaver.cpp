@@ -88,55 +88,73 @@ void GraphSaver::insertNode(IScaObject *object, int id, bool isShown)
     m_query->bindValue(":annotation", object->getAnnotation());
     m_query->bindValue(":shown", isShown);
 
+    QString strIds;
+
     int type = object->getType();
     switch(type)
     {
-    case IScaObject::TEXTBLOCK:
-    {
-        IScaObjectTextBlock *textBlock = static_cast<IScaObjectTextBlock *>(object);
-        m_query->bindValue(":offset", textBlock->getOffset());
-        m_query->bindValue(":endoffset", textBlock->getEndOffset());
-        m_query->bindValue(":length", textBlock->getLength());
-    }
-        break;
+        case IScaObject::TEXTBLOCK:
+        {
+            IScaObjectTextBlock *textBlock = static_cast<IScaObjectTextBlock *>(object);
+            m_query->bindValue(":offset", textBlock->getOffset());
+            m_query->bindValue(":endoffset", textBlock->getEndOffset());
+            m_query->bindValue(":length", textBlock->getLength());
+        }
+            break;
 
-    case IScaObject::IDENTIFIER:
-    {
-        IScaObjectIdentifier *ident = static_cast<IScaObjectIdentifier *>(object);
-        m_query->bindValue(":endoffset", ident->getEndOffset());
-        m_query->bindValue(":offset", ident->getOffset());
-    }
-        break;
+        case IScaObject::IDENTIFIER:
+        {
+            IScaObjectIdentifier *ident = static_cast<IScaObjectIdentifier *>(object);
+            m_query->bindValue(":endoffset", ident->getEndOffset());
+            m_query->bindValue(":offset", ident->getOffset());
+        }
+            break;
 
-    case IScaObject::LINE:
-    {
-        IScaObjectLine *line = static_cast<IScaObjectLine *>(object);
-        m_query->bindValue(":line", line->getLineNumber());
-        m_query->bindValue(":offset", line->getOffset());
-        m_query->bindValue(":endoffset", line->getEndOffset());
-    }
-        break;
+        case IScaObject::LINE:
+        {
+            IScaObjectLine *line = static_cast<IScaObjectLine *>(object);
+            m_query->bindValue(":line", line->getLineNumber());
+            m_query->bindValue(":offset", line->getOffset());
+            m_query->bindValue(":endoffset", line->getEndOffset());
+        }
+            break;
 
-    case IScaObject::SYMBOL:
-    {
-        IScaObjectSymbol *symbol = static_cast<IScaObjectSymbol *>(object);
-        m_query->bindValue(":offset", symbol->getOffset());
-    }
-        break;
+        case IScaObject::SYMBOL:
+        {
+            IScaObjectSymbol *symbol = static_cast<IScaObjectSymbol *>(object);
+            m_query->bindValue(":offset", symbol->getOffset());
+        }
+            break;
 
-    case IScaObject::BINARYBLOCK:
-    {
-        IScaObjectBinaryBlock *binary = static_cast<IScaObjectBinaryBlock *>(object);
-        m_query->bindValue(":offset", binary->getOffset());
-        m_query->bindValue(":length", binary->getLength());
-        m_query->bindValue(":data", binary->getData());
+        case IScaObject::BINARYBLOCK:
+        {
+            IScaObjectBinaryBlock *binary = static_cast<IScaObjectBinaryBlock *>(object);
+            m_query->bindValue(":offset", binary->getOffset());
+            m_query->bindValue(":length", binary->getLength());
+            m_query->bindValue(":data", binary->getData());
+        }
+            break;
+
+        case IScaObject::GROUP:
+        {
+            IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
+            QList<int> ids = group->getObjects();
+            foreach(int id, ids)
+            {
+                strIds += QString::number(id) + QString(" ");
+            }
+        }
+            break;
     }
-        break;
-    }
+    m_query->bindValue(":ids", strIds);
+
+
 
 
     if(!m_query->exec())
     {
+
+        qDebug() << "[GraphSaver] Error on: " << m_query->lastQuery();
         qDebug() << "[GraphSaver]: " <<  m_query->lastError().text();
     }
 }
