@@ -50,7 +50,26 @@ IScaObjectGroupVisual::IScaObjectGroupVisual(IScaObjectGroup *obj) :
                     DEFAULT_GROUP_VISUAL_WIDTH,
                     DEFAULT_GROUP_VISUAL_HEIGHT);
     setTitle(obj->getContent());
+
+    m_firstPos = pos();
 }
+
+void IScaObjectGroupVisual::savePoint()
+{
+    m_firstPos = pos();
+}
+
+QPointF IScaObjectGroupVisual::getFirstPos() const
+{
+    return m_firstPos;
+}
+
+void IScaObjectGroupVisual::setFirstPos(const QPoint &pos)
+{
+    m_firstPos = pos;
+}
+
+
 
 void IScaObjectGroupVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {

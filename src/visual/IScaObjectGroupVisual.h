@@ -55,12 +55,18 @@ class IScaObjectGroupVisual : public Node
 public:
     explicit IScaObjectGroupVisual(IScaObjectGroup* obj);
 
+    void savePoint();
+    QPointF getFirstPos() const;
+    void setFirstPos(const QPoint &pos);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    void setPos();
 
     ~IScaObjectGroupVisual();
 
 private:
 
+    QPointF m_firstPos;
 }; // class IScaObjectGroupVisual
   
 

@@ -498,6 +498,11 @@ bool GraphModel::hasIndex(int row, int column, const QModelIndex &parent) const
     return m_objects.contains(row);
 }
 
+int GraphModel::getMaxId()
+{
+    return s_nextID;
+}
+
 void GraphModel::clear()
 {
     foreach(IScaObject *obj, m_objects)

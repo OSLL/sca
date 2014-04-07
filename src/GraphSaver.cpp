@@ -143,6 +143,7 @@ void GraphSaver::insertNode(IScaObject *object, int id, bool isShown)
             {
                 strIds += QString::number(id) + QString(" ");
             }
+
         }
             break;
     }
@@ -209,13 +210,14 @@ void GraphSaver::insertLink(Link *link, int id)
     }
 }
 
-bool GraphSaver::save(const GraphModel *model, const GraphScene *scene)
+bool GraphSaver::save(GraphModel *model, GraphScene *scene)
 {
 
     if(!m_db.isOpen())
         return false;
 
     createTables();
+
     saveModel(model);
     saveScene(scene);
 
@@ -251,7 +253,7 @@ void GraphSaver::saveModel(const GraphModel *model)
     }
 }
 
-void GraphSaver::saveScene(const GraphScene *scene)
+void GraphSaver::saveScene(GraphScene *scene)
 {
     QList<int> ids = scene->getIds();
     foreach (int id, ids)
@@ -285,6 +287,8 @@ void GraphSaver::insertNodeVisual(Node *node, int id)
     m_query->bindValue(":colorB", node->getStandardColor().blue());
     m_query->bindValue(":width", node->getRect().width());
     m_query->bindValue(":height", node->getRect().height());
+    m_query->bindValue(":firstPosX", node->getFirstPos().x());
+    m_query->bindValue(":firstPosY", node->getFirstPos().y());
 
     if(!m_query->exec())
     {
@@ -305,6 +309,8 @@ void GraphSaver::insertLinkVisual(LinkVisual *link, int id)
     m_query->bindValue(":colorR", link->getStandardColor().red());
     m_query->bindValue(":colorG", link->getStandardColor().green());
     m_query->bindValue(":colorB", link->getStandardColor().blue());
+
+
 
     if(!m_query->exec())
     {

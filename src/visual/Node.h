@@ -57,7 +57,7 @@ class LinkVisual;
 class Node : public ObjectVisual
 {
 public:
-    explicit Node(QColor standardColor, QColor filterColor, IScaObject *obj);
+    explicit Node(QColor standardColor, QColor filterColor, IScaObject *objz);
     ~Node();
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);

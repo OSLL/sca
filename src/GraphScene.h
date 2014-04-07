@@ -93,6 +93,8 @@ public:
     QList<int> getIds() const;
     QList<int> selectedObjectsIds();
     QList<int> selectedNodesIds();
+
+    void adjustNodesToGroup(QList<int> ids, int groupId);
 private:
     QHash<int, ObjectVisual *> m_objects;
 

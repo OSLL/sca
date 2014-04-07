@@ -126,12 +126,33 @@ QList<int> GraphScene::selectedNodesIds()
     foreach (int i, m_objects.keys())
     {
         ObjectVisual *vis = m_objects[i];
-        if (vis->isSelected() && vis->getType() == ObjectVisual::NODE)
+        if (vis->isSelected() && (vis->getType() == ObjectVisual::NODE))
         {
             ids.push_back(i);
         }
     }
     return ids;
+}
+
+void GraphScene::adjustNodesToGroup(QList<int> ids, int groupId)
+{
+    ObjectVisual *objVis = getObjectById(groupId);
+    IScaObjectGroupVisual *grVis = static_cast<IScaObjectGroupVisual *>(objVis);
+    if (grVis != NULL)
+    {
+        int dx = grVis->pos().x() - grVis->getFirstPos().x(),
+            dy = grVis->pos().y() - grVis->getFirstPos().y();
+
+        foreach (int i, ids)
+        {
+            objVis = getObjectById(i);
+            if (objVis != NULL)
+            {
+                objVis->moveBy(dx, dy);
+            }
+        }
+    }
+    grVis->savePoint();
 }
 
 QList<ObjectVisual *> GraphScene::selectedObjects()
@@ -556,6 +577,10 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     {
         //It is not on scene, but it is in model
         addObjectVisual(object, id);
+        if(!isVisible)
+        {
+            hideObject(id);
+        }
         return;
     }
     else

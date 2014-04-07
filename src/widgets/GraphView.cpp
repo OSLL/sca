@@ -238,15 +238,24 @@ void GraphView::removeSelectedObjects()
         if (obj->getType() == IScaObject::GROUP)
         {
             IScaObjectGroup *group = static_cast<IScaObjectGroup *>(obj);
-            objectsToSelect += group->getObjects();
+            QList<int> objectsFromGroup = group->getObjects();
+            scene()->adjustNodesToGroup(objectsFromGroup, id);
+
+            objectsToSelect += objectsFromGroup;
         }
         m_model->removeObject(id);
     }
     qDebug() << "[GraphView]: removeSelectedObject(), toSelect: " << objectsToSelect;
     scene()->clearSelection();
+    ObjectVisual *objVis = NULL;
     foreach (int id, objectsToSelect)
     {
-        scene()->getObjectById(id)->setSelected(true);
+        objVis = scene()->getObjectById(id);
+        objVis->setSelected(true);
+        if (objVis->getType() == ObjectVisual::LINK)
+        {
+            scene()->refreshLinkPos(id);
+        }
     }
 }
 
@@ -777,6 +786,13 @@ void GraphView::createGroupFromSelection()
     int groupId = m_model->addObject(group, -1, true);
     ObjectVisual *groupVis = scene()->getObjectById(groupId);
     groupVis->setPos(pointToAdd);
+    //Save this point to later move it's objects
+    IScaObjectGroupVisual *grVis = static_cast<IScaObjectGroupVisual *>(groupVis);
+    if (grVis != NULL)
+    {
+        grVis->savePoint();
+        grVis->setSelected(true);
+    }
 
     // Object are hidden, just add needed links to outer objects
     foreach (int id, groupIds)
