@@ -95,12 +95,34 @@ void GraphLoader::loadGraph(GraphModel *model, GraphScene *scene)
     m_model = model;
     m_scene = scene;
 
+    QObject::disconnect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+               m_scene, SLOT(updateObjects(QModelIndex, QModelIndex)));
+    QObject::disconnect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+               m_scene, SLOT(removeObject(QModelIndex, int, int)));
+
     m_model->clear();
 
     //don't change this order
     loadNodes();
-    loadNodesVisual();
     loadLinks();
+
+
+
+
+    QObject::connect(m_model, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+            m_scene, SLOT(updateObjects(QModelIndex, QModelIndex)));
+    QObject::connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+            m_scene, SLOT(removeObject(QModelIndex, int, int)));
+
+    m_scene->clear();
+
+    for(int i = 0; i <  m_model->getMaxId(); i++)
+    {
+        QModelIndex index = m_model->index(i, 0);
+        m_scene->updateObjects(index, QModelIndex());
+    }
+
+    loadNodesVisual();
     loadLinksVisual();
 }
 
@@ -111,7 +133,12 @@ void GraphLoader::loadNodes()
         qDebug() << "[GraphLoader]:" <<  m_query->lastError().text();
     }
 
-    QSqlRecord rec = m_query->record();
+    QSqlRecord rec = m_query->record();    
+
+    //Lists for creating groups later
+    QList<int > groupIds;
+    QList<QString> inGroupIds;
+    QList<bool> groupsShown;
 
     while (m_query->next())
     {
@@ -126,9 +153,41 @@ void GraphLoader::loadNodes()
         QByteArray data    = m_query->value(rec.indexOf("data")).toByteArray();
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
         bool isShown       = m_query->value(rec.indexOf("shown")).toBool();
+        QString strIds        = m_query->value(rec.indexOf("ids")).toString();
 
-        IScaObject *object = ObjectCreator::createObject(type, line, offset, endoffset, length, path, text, data, annotation);
-        m_model->addObject(object, id, isShown);
+        if(type != IScaObject::GROUP)
+        {
+            IScaObject *object = ObjectCreator::createObject(type, line, offset, endoffset, length, path, text, data, annotation);
+            m_model->addObject(object, id, isShown);
+        }
+        else
+        {
+            groupIds.append(id);
+            inGroupIds.append(strIds);
+            groupsShown.append(isShown);
+        }
+
+    }
+
+    for(int i = 0; i < groupIds.size(); i++)
+    {
+        QList<int> ids;
+        foreach(QString strId, inGroupIds.at(i).split(" "))
+        {
+            bool converted;
+            int curId = strId.toInt(&converted);
+            if(!converted)
+            {
+                qDebug() << "[GraphLoader] Error while trying convert str: " << strId << " to int";
+            }
+            else
+            {
+                ids.append(curId);
+            }
+        }
+
+        IScaObject *object = ObjectCreator::createGroup(ids, m_model);
+        m_model->addObject(object, groupIds.at(i), groupsShown.at(i));
     }
 }
 
@@ -191,19 +250,23 @@ void GraphLoader::loadNodesVisual()
 
     while (m_query->next())
     {
-        int id     = m_query->value(rec.indexOf("id")).toInt();
-        qreal posX = m_query->value(rec.indexOf("posX")).toReal();
-        qreal posY = m_query->value(rec.indexOf("posY")).toReal();
-        int height = m_query->value(rec.indexOf("height")).toInt();
-        int width  = m_query->value(rec.indexOf("width")).toInt();
-        int red    = m_query->value(rec.indexOf("colorR")).toInt();
-        int green  = m_query->value(rec.indexOf("colorG")).toInt();
-        int blue   = m_query->value(rec.indexOf("colorB")).toInt();
+        int id          = m_query->value(rec.indexOf("id")).toInt();
+        qreal posX      = m_query->value(rec.indexOf("posX")).toReal();
+        qreal posY      = m_query->value(rec.indexOf("posY")).toReal();
+        int height      = m_query->value(rec.indexOf("height")).toInt();
+        int width       = m_query->value(rec.indexOf("width")).toInt();
+        int red         = m_query->value(rec.indexOf("colorR")).toInt();
+        int green       = m_query->value(rec.indexOf("colorG")).toInt();
+        int blue        = m_query->value(rec.indexOf("colorB")).toInt();
+        qreal firstPosX = m_query->value(rec.indexOf("firstPosX")).toReal();
+        qreal firstPosY = m_query->value(rec.indexOf("firstPosY")).toReal();
+
 
         Node *node = static_cast<Node *>(m_scene->getObjectById(id));
         if (node == NULL)
             continue;
         node->setPos(QPointF(posX, posY));
+        node->setFirstPos(QPoint(firstPosX, firstPosY));
         node->setStandardColor(QColor(red, green, blue));
         node->setSize(QSize(width, height));
         //Workaround for wrong selection after loading
@@ -236,5 +299,7 @@ void GraphLoader::loadLinksVisual()
         //Workaround for wrong selection
         link->setSelected(true);
         link->setSelected(false);
+
+        m_scene->refreshLinkPos(id);
     }
 }

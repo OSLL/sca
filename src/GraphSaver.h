@@ -60,14 +60,14 @@ public:
   virtual ~GraphSaver();
 
   bool open(const QString &path);
-  bool save(const GraphModel *model, const GraphScene *scene);
+  bool save(GraphModel *model, GraphScene *scene);
   void close();
 
 private:
   bool createTables();
 
   void saveModel(const GraphModel *model);
-  void saveScene(const GraphScene *scene);
+  void saveScene(GraphScene *scene);
 
   void insertNode(IScaObject *object, int id, bool isShown = true);
   void insertLink(Link *link, int id);

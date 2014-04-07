@@ -103,6 +103,16 @@ void ObjectVisual::setFiltered(bool filtered)
     refreshColor();
 }
 
+void ObjectVisual::setFirstPos(const QPointF &pos)
+{
+    Q_UNUSED(pos);
+}
+
+QPointF ObjectVisual::getFirstPos() const
+{
+    return pos();
+}
+
 QVariant ObjectVisual::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
 {
     switch(change)

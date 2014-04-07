@@ -49,6 +49,9 @@ public:
 
     virtual void refreshColor() = 0;
 
+    virtual void setFirstPos(const QPointF &pos);
+    virtual QPointF getFirstPos() const;
+
     friend QDebug operator<<(QDebug d, ObjectVisual &node);
 protected:
     bool m_selected;

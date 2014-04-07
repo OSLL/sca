@@ -126,12 +126,34 @@ QList<int> GraphScene::selectedNodesIds()
     foreach (int i, m_objects.keys())
     {
         ObjectVisual *vis = m_objects[i];
-        if (vis->isSelected() && vis->getType() == ObjectVisual::NODE)
+        if (vis->isSelected() && (vis->getType() == ObjectVisual::NODE))
         {
             ids.push_back(i);
         }
     }
     return ids;
+}
+
+void GraphScene::adjustNodesToGroup(QList<int> ids, int groupId)
+{
+    ObjectVisual *objVis = getObjectById(groupId);
+    IScaObjectGroupVisual *grVis = static_cast<IScaObjectGroupVisual *>(objVis);
+    if (grVis != NULL)
+    {
+        qreal dx = grVis->pos().x() - grVis->getFirstPos().x(),
+              dy = grVis->pos().y() - grVis->getFirstPos().y();
+        qDebug() << "[GraphScene]: Adjusting nodes " << ids << " by " << dx << " " << dy;
+
+        foreach (int i, ids)
+        {
+            objVis = getObjectById(i);
+            if (objVis != NULL)
+            {
+                objVis->moveBy(dx, dy);
+            }
+        }
+    }
+    grVis->savePoint();
 }
 
 QList<ObjectVisual *> GraphScene::selectedObjects()
@@ -296,18 +318,18 @@ void GraphScene::connectLink(IScaObject *object, int linkId)
     refreshLinkPos(linkId);
 }
 
-QPoint GraphScene::centerOfMass(const QList<int> &ids)
+QPointF GraphScene::centerOfMass(const QList<int> &ids)
 {
-    qDebug() << "[GraphScene]: centerOfMass(" << ids << ")";
     qreal x = 0, y = 0;
     foreach (int i, ids)
     {
-        // TODO (LeoSko) This crashes on adding group object cuz there are no objects!
         x += m_objects[i]->pos().x();
         y += m_objects[i]->pos().y();
     }
 
-    return QPoint(x/ids.count(), y/ids.count());
+    QPointF res(x/ids.count(), y/ids.count());
+    qDebug() << "[GraphScene]: centerOfMass(" << ids << ") is " << res;
+    return res;
 }
 
 QList<int> GraphScene::getIds() const
@@ -360,7 +382,7 @@ ObjectVisual *GraphScene::addObjectVisual(IScaObject *object, int id)
     {
         //Set it's position to the middle of previous items
         IScaObjectGroup *group = static_cast<IScaObjectGroup *>(object);
-        QPoint groupPos = centerOfMass(group->getObjects());
+        QPointF groupPos = centerOfMass(group->getObjects());
         visObject->setPos(groupPos);
     }
     else if (visObject->getType() == ObjectVisual::LINK)
@@ -405,21 +427,23 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
         link->setFiltered(filtered.toBool());
         return;
     }
-    //Otherwise it should be VisualObject::NODE
+    // Otherwise it should be VisualObject::NODE
     QModelIndex index = m_model->index(id, 0);
-    bool isShown = m_model->data(index, onSceneRole).toBool();
+    bool onScene = m_model->data(index, onSceneRole).toBool();
     //Take it from scene
     ObjectVisual *objectVis = m_objects.take(id);
     Node *node = static_cast<Node *>(objectVis);
 
-    //We re-create object, saving some old parameters of it
+    // TODO (LeoSko) Bugs from this code are coming soon...
+    // We re-create object, saving some old parameters of it
     QPointF pos = objectVis->pos();
+    QPointF grOldPos(0, 0);
     QList<int> links = objectVis->getLinks();
     QString annotation = object->getAnnotation();
     QColor standardColor = node->getStandardColor();
     QSize size = node->boundingRect().size().toSize();
 
-    //In case we didn't change standart color, but converted object, set new color
+    // In case we didn't change standart color, but converted object, set new color
     if (standardColor == DEFAULT_IDENTIFIER_COLOR
         && object->getType() == IScaObject::TEXTBLOCK)
     {
@@ -431,22 +455,31 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
         standardColor = DEFAULT_IDENTIFIER_COLOR;
     }
 
-    //Remove old one
+    if (object->getType() == IScaObject::GROUP)
+    {
+        grOldPos = objectVis->getFirstPos();
+    }
+
+    // Remove old one
     removeItem(objectVis);
     delete objectVis;
-    //If is shouldnt be shown we just removed it
-    if (!isShown)
+    // If is shouldnt be shown we just removed it
+    if (!onScene)
     {
         return;
     }
 
-    //Get new object in case it should be shown
+    // Get new object in case it should be shown
     QVariant var = m_model->data(index, rawObjectRole);
     IScaObject *obj = qvariant_cast<IScaObject *>(var);
     Q_ASSERT(obj != NULL);
 
-    //Adds object with old id so we save associations for links
+    // Adds object with old id so we save associations for links
     ObjectVisual *newObject = addObjectVisual(obj, id);
+    if (object->getType() == IScaObject::GROUP)
+    {
+        newObject->setFirstPos(grOldPos);
+    }
     newObject->setPos(pos);
     newObject->setLinks(links);
     newObject->setAnnotation(annotation);
@@ -454,7 +487,7 @@ void GraphScene::updateObjectVisual(IScaObject *object, int id)
     node->setStandardColor(standardColor);
     node->setSize(size);
 
-    //Update for object filtering
+    // Update for object filtering
     QVariant filtered = m_model->data(index, highlightRole);
     newObject->setFiltered(filtered.toBool());
 
@@ -495,6 +528,7 @@ void GraphScene::removeObject(const QModelIndex &parent, int first, int last)
 
 void GraphScene::hideObject(int id)
 {
+    qDebug() << "[GraphScene]: hiding " << id;
     if (m_objects.contains(id))
     {
         m_objects[id]->setVisible(false);
@@ -503,6 +537,7 @@ void GraphScene::hideObject(int id)
 
 void GraphScene::showObject(int id)
 {
+    qDebug() << "[GraphScene]: showing " << id;
     if (m_objects.contains(id))
     {
         m_objects[id]->setVisible(true);
@@ -556,6 +591,10 @@ void GraphScene::updateObjects(QModelIndex leftTop, QModelIndex rightBottom)
     {
         //It is not on scene, but it is in model
         addObjectVisual(object, id);
+        if(!isVisible)
+        {
+            hideObject(id);
+        }
         return;
     }
     else

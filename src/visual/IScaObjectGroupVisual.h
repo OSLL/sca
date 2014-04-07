@@ -57,7 +57,10 @@ public:
 
     void savePoint();
     QPointF getFirstPos() const;
+    void setFirstPos(const QPointF &pos);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+    void setPos();
 
     ~IScaObjectGroupVisual();
 

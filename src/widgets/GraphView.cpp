@@ -882,21 +882,7 @@ void GraphView::ungroupSelectedObjects()
         {
             IScaObjectGroup *group = static_cast<IScaObjectGroup *>(obj);
             QList<int> objectsFromGroup = group->getObjects();
-            ObjectVisual *objVis = scene()->getObjectById(id);
-            IScaObjectGroupVisual *grVis = static_cast<IScaObjectGroupVisual *>(objVis);
-            if (grVis != NULL)
-            {
-                int dx = grVis->pos().x() - grVis->getFirstPos().x(),
-                    dy = grVis->pos().y() - grVis->getFirstPos().y();
-                foreach (int i, objectsFromGroup)
-                {
-                    objVis = scene()->getObjectById(i);
-                    if (objVis != NULL)
-                    {
-                        objVis->moveBy(dx, dy);
-                    }
-                }
-            }
+            scene()->adjustNodesToGroup(objectsFromGroup, id);
 
             objectsToSelect += objectsFromGroup;
             m_model->removeObject(id);

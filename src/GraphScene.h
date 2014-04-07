@@ -88,11 +88,13 @@ public:
     void refreshLinkPos(int linkId);
     void connectLink(IScaObject *object, int id);
 
-    QPoint centerOfMass(const QList<int> &ids);
+    QPointF centerOfMass(const QList<int> &ids);
 
     QList<int> getIds() const;
     QList<int> selectedObjectsIds();
     QList<int> selectedNodesIds();
+
+    void adjustNodesToGroup(QList<int> ids, int groupId);
 private:
     QHash<int, ObjectVisual *> m_objects;
 
