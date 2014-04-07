@@ -56,10 +56,8 @@ SOURCES += \
     ../src/widgets/PropertyBrowser.cpp \
     ../src/widgets/qhexedit.cpp \
     ../src/widgets/qhexedit_p.cpp \
-    ../src/widgets/SettingsDialog.cpp \
     ../src/widgets/SourceBrowser.cpp \
     ../src/widgets/TableView.cpp \
-    ../src/widgets/ToolsForm.cpp \
     ../src/widgets/xbytearray.cpp
 
 HEADERS += \
@@ -109,8 +107,6 @@ HEADERS += \
     ../src/widgets/PropertyBrowser.h \
     ../src/widgets/qhexedit.h \
     ../src/widgets/qhexedit_p.h \
-    ../src/widgets/SettingsDialog.h \
     ../src/widgets/SourceBrowser.h \
     ../src/widgets/TableView.h \
-    ../src/widgets/ToolsForm.h \
     ../src/widgets/xbytearray.h
