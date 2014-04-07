@@ -56,6 +56,7 @@ const QString RIGHT_ARROW = "Right arrow";
 const QString EDIT_ANNOTATION = "Edit annotation";
 const QString EDIT_ANNOTATION_LABEL = "Enter annotation: ";
 const QString CREATE_GROUP = "Create group";
+const QString UNGROUP_OBJECTS = "Ungroup";
 //[End GraphView's strings]
 
 //[Header data strings]

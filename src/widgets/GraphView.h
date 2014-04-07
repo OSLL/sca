@@ -50,7 +50,7 @@
  */
 #include <QGraphicsView>
 
-#include "GraphScene.h"
+#include "../GraphScene.h"
 class GraphFilter;
 class GraphModel;
 
@@ -105,6 +105,7 @@ signals:
     void canConvertToText(bool);
     void canConvertToIdent(bool);
     void canCreateGroup(bool);
+    void canUngroup(bool);
     void linkHasLeftArrow(bool);
     void linkHasRightArrow(bool);
 
@@ -123,9 +124,8 @@ public slots:
     void convertSelectedNodeToIdentifier();
     void updateActions();
     void createGroupFromSelection();
+    void ungroupSelectedObjects();
 
 }; // class GraphView
 
-
 #endif //_GraphView_H_04F3BA35_873F_445D_88DC_4D314948D9C9_INCLUDED_
-

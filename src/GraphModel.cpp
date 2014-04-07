@@ -506,5 +506,6 @@ void GraphModel::clear()
     }
     m_objects.clear();
     m_onScene.clear();
+    m_isVisible.clear();
     s_nextID = 0;
 }

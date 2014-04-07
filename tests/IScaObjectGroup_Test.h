@@ -78,24 +78,24 @@ namespace Test
         {
             //Create simple dir-like object
             QMimeData mime;
-            mime.setProperty("fromPath", QDir::currentPath());
+            mime.setData(FROM_PATH, QDir::currentPath().toUtf8());
             int objId = m_tstModel->addObject(&mime);
             IScaObject *obj = m_tstModel->getObjectById(objId);
-            QCOMPARE(obj->getType(), IScaObject::DIRECTORY);
-            QCOMPARE(objId, 0);
+            QVERIFY(obj->getType() == IScaObject::DIRECTORY);
+            QVERIFY(objId == 0);
             ObjectVisual *vis = m_tstScene->getObjectById(objId);
             QVERIFY(vis != NULL);
             QVERIFY(vis->getType() == ObjectVisual::NODE);
             m_tstModel->removeObject(objId);
             vis = m_tstScene->getObjectById(objId);
             QVERIFY(vis == NULL);
-            m_tstScene->clear();
             m_tstModel->clear();
+            m_tstScene->clear();
         }
         void canSceneConnect()
         {
             QMimeData *mime = new QMimeData();
-            mime->setProperty("fromPath", QDir::currentPath());
+            mime->setData(FROM_PATH, QDir::currentPath().toUtf8());
             int obj1 = m_tstModel->addObject(mime),
                 obj2 = m_tstModel->addObject(mime);
             QVERIFY(obj1 == 0);
@@ -113,13 +113,13 @@ namespace Test
             QVERIFY(vis2->getType() == ObjectVisual::NODE);
             QVERIFY(vis1->getLinks().size() == 1);
             QVERIFY(vis2->getLinks().size() == 1);
-            m_tstScene->clear();
             m_tstModel->clear();
+            m_tstScene->clear();
         }
         void canSceneAddGroup()
         {
             QMimeData *mime = new QMimeData();
-            mime->setProperty("fromPath", QDir::currentPath());
+            mime->setData(FROM_PATH, QDir::currentPath().toUtf8());
             int objId1 = m_tstModel->addObject(mime),
                 objId2 = m_tstModel->addObject(mime);
             QCOMPARE(objId1, 0);
@@ -146,8 +146,8 @@ namespace Test
             QCOMPARE(groupId, 2);
             QVERIFY(visGroup != NULL);
             QVERIFY(visGroup->getStandardColor() == DEFAULT_GROUP_COLOR);
-            m_tstScene->clear();
             m_tstModel->clear();
+            m_tstScene->clear();
         }
     }; // class IScaObjectGroup_Test
 

@@ -7,7 +7,7 @@
 
 #include <QMainWindow>
 #include <QFileSystemModel>
-#include <ui_mainwindow.h>
+#include "ui_mainwindow.h"
 #include <srchiliteqt/Qt4SyntaxHighlighter.h>
 #include "widgets/SettingsDialog.h"
 

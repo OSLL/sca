@@ -6,7 +6,7 @@
 #include <QSettings>
 #include <QSignalMapper>
 #include <QListWidgetItem>
-#include "widgets/ToolsForm.h"
+#include "ToolsForm.h"
 
 namespace Ui {
 class SettingsDialog;

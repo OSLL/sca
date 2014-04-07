@@ -40,14 +40,22 @@
 #include <QtGui/QApplication>
 // Test headers
 #include "IScaObjectGroup_Test.h"
+#include "GraphView_Test.h"
 #include "GraphFilter_Test.h"
 
 int main(int c, char **v)
 {
     QApplication app(c, v);
-    Test::IScaObjectGroup_Test test;
-    Test::GraphFilter_Test filterTest;
-    QTest::qExec(&test);
-    QTest::qExec(&filterTest);
+    QObjectList objs;
+    objs << new Test::IScaObjectGroup_Test
+         << new Test::GraphView_Test
+         << new Test::GraphFilter_Test;
+
+    foreach (QObject *tst, objs)
+    {
+        QTest::qExec(tst);
+        delete tst;
+    }
+
 	return 0; 
 }

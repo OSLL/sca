@@ -48,19 +48,19 @@
 #include <QTableView>
 #include <QMenu>
 
-#include "common/IScaObjectFile.h"
-#include "common/IScaObjectTextBlock.h"
-#include "common/IScaObjectBinaryBlock.h"
-#include "common/IScaObjectDirectory.h"
-#include "common/IScaObjectSymbol.h"
-#include "common/IScaObjectLine.h"
-#include "common/IScaObjectIdentifier.h"
-#include "common/IScaObjectGroup.h"
-#include "common/ScaObjectConverter.h"
-#include "ScaMIMEDataProcessor.h"
-#include "GraphModel.h"
-#include "GraphFilter.h"
-#include "GraphTableProxyModel.h"
+#include "../common/IScaObjectFile.h"
+#include "../common/IScaObjectTextBlock.h"
+#include "../common/IScaObjectBinaryBlock.h"
+#include "../common/IScaObjectDirectory.h"
+#include "../common/IScaObjectSymbol.h"
+#include "../common/IScaObjectLine.h"
+#include "../common/IScaObjectIdentifier.h"
+#include "../common/IScaObjectGroup.h"
+#include "../common/ScaObjectConverter.h"
+#include "../ScaMIMEDataProcessor.h"
+#include "../GraphModel.h"
+#include "../GraphFilter.h"
+#include "../GraphTableProxyModel.h"
 #include "../visual/ObjectVisual.h"
 #include "../NumericalConstants.h"
 
@@ -226,50 +226,50 @@ void GraphView::runTool(const QString &tool)
 
 void GraphView::removeSelectedObjects()
 {
-    QList<int> ids = scene()->selectedObjectsIds();
+    QSet<int> ids = scene()->selectedObjectsIds().toSet();
     qDebug() << "[GraphView]: removing " << ids;
-    QList<int> objectsToSelect;
     IScaObject *obj;
+    QSet<int> rawIdsToRemove;
+    rawIdsToRemove += ids;
+    //First get all objects that are inside each other
     foreach (int id, ids)
     {
         obj = m_model->getObjectById(id);
         if (obj == NULL)
+        {
             continue;
+        }
+        //Find first group
         if (obj->getType() == IScaObject::GROUP)
         {
             IScaObjectGroup *group = static_cast<IScaObjectGroup *>(obj);
-            QList<int> objectsFromGroup = group->getObjects();
-            ObjectVisual *objVis = scene()->getObjectById(id);
-            IScaObjectGroupVisual *grVis = static_cast<IScaObjectGroupVisual *>(objVis);
-            if (grVis != NULL)
+            QList<IScaObjectGroup *> rollback;
+            rollback += group;
+            //Recoursively delete groups' objects
+            while (!rollback.empty())
             {
-                int dx = grVis->pos().x() - grVis->getFirstPos().x(),
-                    dy = grVis->pos().y() - grVis->getFirstPos().y();
-                foreach (int i, objectsFromGroup)
+                IScaObject *obj = rollback.takeFirst();
+                if (obj->getType() == IScaObject::GROUP)
                 {
-                    objVis = scene()->getObjectById(i);
-                    if (objVis != NULL)
+                    IScaObjectGroup *gr = static_cast<IScaObjectGroup *>(obj);
+                    foreach(int i, gr->getObjects())
                     {
-                        objVis->moveBy(dx, dy);
+                        IScaObject *maybeGroup = m_model->getObjectById(i);
+                        if (maybeGroup->getType() == IScaObject::GROUP)
+                        {
+                            rollback.push_back(static_cast<IScaObjectGroup *>(maybeGroup));
+                        }
+                        //Add these object to delete too
+                        rawIdsToRemove += i;
                     }
                 }
             }
-
-            objectsToSelect += objectsFromGroup;
         }
-        m_model->removeObject(id);
     }
-    qDebug() << "[GraphView]: removeSelectedObject(), toSelect: " << objectsToSelect;
-    scene()->clearSelection();
-    ObjectVisual *objVis = NULL;
-    foreach (int id, objectsToSelect)
+    //Just delete everything now
+    foreach (int id, rawIdsToRemove)
     {
-        objVis = scene()->getObjectById(id);
-        objVis->setSelected(true);
-        if (objVis->getType() == ObjectVisual::LINK)
-        {
-            scene()->refreshLinkPos(id);
-        }
+        m_model->removeObject(id);
     }
 }
 
@@ -402,6 +402,7 @@ void GraphView::setScene(GraphScene *graphScene)
 
 void GraphView::editAnnotation(int id)
 {
+    // TODO (LeoSko) "Edit annotation" probably shouldn't be in model
     m_model->editAnnotation(id);
 }
 
@@ -715,6 +716,26 @@ void GraphView::updateActions()
     QList<LinkVisual *> links = scene()->selectedLinks();
     QList<ObjectVisual *> objects = scene()->selectedObjects();
 
+    if (nodes.size() > 0)
+    {
+        bool hasGroup = false;
+        foreach (Node *node, nodes)
+        {
+            int id = scene()->getObjectId(node);
+            IScaObject *obj = m_model->getObjectById(id);
+            if (obj == NULL)
+            {
+                continue;
+            }
+            if (obj->getType() == IScaObject::GROUP)
+            {
+                hasGroup = true;
+                break;
+            }
+        }
+        emit canUngroup(hasGroup);
+    }
+
     emit objectsSelected(objects.size());
     emit objectsCanConnect(nodes.size() + links.size() == 2);
     emit objectSelected(objects.size() == 1);
@@ -745,8 +766,7 @@ void GraphView::updateActions()
     {
         Node *node = nodes.at(0);
         int id = scene()->getObjectId(node);
-        QVariant var = m_model->data(m_model->index(id, 0), rawObjectRole);
-        IScaObject *obj = qvariant_cast<IScaObject *>(var);
+        IScaObject *obj = m_model->getObjectById(id);
 
         emit canConvertToText(ScaObjectConverter::canConvert(obj, IScaObject::TEXTBLOCK));
         emit canConvertToIdent(ScaObjectConverter::canConvert(obj, IScaObject::IDENTIFIER));
@@ -842,5 +862,55 @@ void GraphView::createGroupFromSelection()
         }
         // Unselect old objects
         scene()->getObjectById(id)->setSelected(false);
+    }
+}
+
+void GraphView::ungroupSelectedObjects()
+{
+    QList<int> ids = scene()->selectedObjectsIds();
+    qDebug() << "[GraphView]: ungrouping " << ids;
+    QList<int> objectsToSelect;
+    IScaObject *obj;
+    foreach (int id, ids)
+    {
+        obj = m_model->getObjectById(id);
+        if (obj == NULL)
+        {
+            continue;
+        }
+        if (obj->getType() == IScaObject::GROUP)
+        {
+            IScaObjectGroup *group = static_cast<IScaObjectGroup *>(obj);
+            QList<int> objectsFromGroup = group->getObjects();
+            ObjectVisual *objVis = scene()->getObjectById(id);
+            IScaObjectGroupVisual *grVis = static_cast<IScaObjectGroupVisual *>(objVis);
+            if (grVis != NULL)
+            {
+                int dx = grVis->pos().x() - grVis->getFirstPos().x(),
+                    dy = grVis->pos().y() - grVis->getFirstPos().y();
+                foreach (int i, objectsFromGroup)
+                {
+                    objVis = scene()->getObjectById(i);
+                    if (objVis != NULL)
+                    {
+                        objVis->moveBy(dx, dy);
+                    }
+                }
+            }
+
+            objectsToSelect += objectsFromGroup;
+            m_model->removeObject(id);
+        }
+    }
+    qDebug() << "[GraphView]: ungroupSelectedObjects(), toSelect: " << objectsToSelect;
+    ObjectVisual *objVis = NULL;
+    foreach (int id, objectsToSelect)
+    {
+        objVis = scene()->getObjectById(id);
+        objVis->setSelected(true);
+        if (objVis->getType() == ObjectVisual::LINK)
+        {
+            scene()->refreshLinkPos(id);
+        }
     }
 }

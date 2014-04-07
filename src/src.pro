@@ -70,7 +70,6 @@ SOURCES += \
     GraphModel.cpp \
     common/IScaObjectTextBlock.cpp \
     GraphFilter.cpp \
-    widgets/FilterDialog.cpp \
     visual/ObjectVisualCreator.cpp \
     GraphTableProxyModel.cpp \
     GraphSaver.cpp \
@@ -83,7 +82,8 @@ SOURCES += \
     widgets/ToolsForm.cpp \
     widgets/SettingsDialog.cpp \
     common/IScaObjectGroup.cpp \
-    visual/IScaObjectGroupVisual.cpp
+    visual/IScaObjectGroupVisual.cpp \
+    widgets/FilterDialog.cpp
 
 
 HEADERS += \

@@ -48,7 +48,7 @@
  *
  */
 
-#include "widgets/ObjectTextViewer.h"
+#include "ObjectTextViewer.h"
 #include <QProcess>
 
 class ProcessView: public ObjectTextViewer

@@ -46,7 +46,7 @@
 #include <QDialog>
 #include "../GraphFilter.h"
 #include "../GraphScene.h"
-#include <ui_FilterDialog.h>
+#include "../ui_FilterDialog.h"
 #include <QSignalMapper>
 
 class FilterDialog : public QDialog

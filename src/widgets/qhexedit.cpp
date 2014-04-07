@@ -1,8 +1,8 @@
 #include <QtGui>
 
 #include "qhexedit.h"
-#include "StringConstants.h"
-#include <FileLoader.h>
+#include "../StringConstants.h"
+#include "../FileLoader.h"
 /*LICENCE
  *GNU LESSER GENERAL PUBLIC LICENSE
      Version 2.1, February 1999

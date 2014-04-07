@@ -52,7 +52,7 @@
 
 #include <srchiliteqt/Qt4SyntaxHighlighter.h>
 
-#include "StringConstants.h"
+#include "../StringConstants.h"
 class IScaObject;
 class IScaObjectTextBlock;
 class IScaObjectLine;

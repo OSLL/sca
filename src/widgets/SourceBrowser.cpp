@@ -40,7 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "SourceBrowser.h"
-#include "common/IScaObject.h"
+#include "../common/IScaObject.h"
 #include <QTextDocument>
 #include <QFile>
 #include <QMenu>

@@ -2,8 +2,8 @@
 
 #include "qhexedit_p.h"
 #include "commands.h"
-#include "NumericalConstants.h"
-#include "StringConstants.h"
+#include "../NumericalConstants.h"
+#include "../StringConstants.h"
 #include <QDrag>
 #include "../common/IScaObject.h"
 #include "../common/IScaObjectFile.h"

@@ -40,7 +40,7 @@
  * ---------------------------------------------------------------- */
 
 #include "ContextMenu.h"
-#include "StringConstants.h"
+#include "../StringConstants.h"
 #include <QDebug>
 #include <QList>
 
