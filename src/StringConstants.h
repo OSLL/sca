@@ -75,7 +75,7 @@ const QString ISO885915 = "ISO-8859-15";
 
 //[Preferences]
 const QString DEFAULT_ENCODING = UTF8;
-const QString APPLICATION_VERSION = "0.1.5";
+const QString APPLICATION_VERSION = "0.1.7";
 const QString APPLICATION_AUTORS =
         QString("Kirill Krinkin\n") +
         QString("Mark Zaslavskiy\n") +
@@ -99,7 +99,6 @@ const QString LINE_NUMBER = "line";
 const QString LINE_LENGHT = "lineLenght";
 const QString END_OFFSET = "endOffset";
 const QString FROM_PATH = "fromPath";
-
 const QString SCA_OBJECT = "Object";
 const QString SCA_DIRECTORY = "Directory";
 const QString SCA_FILE = "File";
@@ -135,6 +134,8 @@ const QString OBJECT_TOOLTIP_PATTERN =  QString("Type: %1 <br />")
                                     + QString("Annotation: %4 <br />")
                                     + QString("Content: %5");
 const QString OBJECT_INFO_PATTERN = "Type:%1,Filename:%2,Abs.Path:%3,Annotation:%4,Content:%5";
+const QString SCA_GROUP_INFO_SEPARATOR = ";";
+const QString DEFAULT_GROUP_NAME = "Group";
 //[End Object info patterns strings]
 
 //[GraphFilter strings]
@@ -269,6 +270,7 @@ const QString PROPERTY_COLOR        = "Color";
 const QString PROPERTY_SIZE         = "Size";
 const QString PROPERTY_OBJECT_FROM  = "Object #1";
 const QString PROPERTY_OBJECT_TO    = "Object #2";
+const QString PROPERTY_NAME         = "Name";
 //[End property browser strings]
 
 //[Run commands strings]

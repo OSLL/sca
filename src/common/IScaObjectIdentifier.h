@@ -62,7 +62,6 @@ public:
                        QString identifier);
   ~IScaObjectIdentifier();
 
-  QFileInfo getFile() const;
   void setFile(const QFileInfo &file);
 
   QString getContent() const;

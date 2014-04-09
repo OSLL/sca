@@ -67,11 +67,6 @@ IScaObjectIdentifier::~IScaObjectIdentifier()
 
 }
 
-QFileInfo IScaObjectIdentifier::getFile() const
-{
-    return m_file;
-}
-
 void IScaObjectIdentifier::setFile(const QFileInfo &file)
 {
     m_file = file;

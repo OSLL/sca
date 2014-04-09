@@ -49,7 +49,7 @@ IScaObjectGroupVisual::IScaObjectGroupVisual(IScaObjectGroup *obj) :
                     -DEFAULT_GROUP_VISUAL_HEIGHT / 2,
                     DEFAULT_GROUP_VISUAL_WIDTH,
                     DEFAULT_GROUP_VISUAL_HEIGHT);
-    setTitle(obj->getContent());
+    setTitle(obj->getName());
 
     m_firstPos = pos();
 }

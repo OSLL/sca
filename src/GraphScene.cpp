@@ -546,10 +546,10 @@ void GraphScene::showObject(int id)
 
 void GraphScene::clear()
 {
-    foreach(ObjectVisual *obj, m_objects)
+    /*foreach(ObjectVisual *obj, m_objects)
     {
         delete obj;
-    }
+    }*/
     m_objects.clear();
     QGraphicsScene::clear();
 }

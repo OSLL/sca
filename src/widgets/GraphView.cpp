@@ -271,6 +271,7 @@ void GraphView::removeSelectedObjects()
     {
         m_model->removeObject(id);
     }
+    emit goToObject(WRONG_OBJECT_INDEX);
 }
 
 void GraphView::mouseDoubleClickEvent(QMouseEvent *event)
@@ -309,6 +310,7 @@ void GraphView::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Delete:
         {
             removeSelectedObjects();
+            emit goToObject(WRONG_OBJECT_INDEX);
             break;
         }
     }
@@ -404,6 +406,7 @@ void GraphView::editAnnotation(int id)
 {
     // TODO (LeoSko) "Edit annotation" probably shouldn't be in model
     m_model->editAnnotation(id);
+    emit goToObject(id);
 }
 
 void GraphView::mousePressEvent(QMouseEvent *event)
@@ -694,6 +697,7 @@ void GraphView::editSelectedAnnotation()
 
     int id = scene()->getObjectId(objects.at(0));
     editAnnotation(id);
+    emit goToObject(id);
 }
 
 void GraphView::convertSelectedNodeToText()
@@ -701,6 +705,7 @@ void GraphView::convertSelectedNodeToText()
     QList<ObjectVisual *> objects = scene()->selectedObjects();
     m_tempId = scene()->getObjectId(objects.at(0));
     m_model->convert(m_tempId, IScaObject::TEXTBLOCK);
+    emit goToObject(m_tempId);
 }
 
 void GraphView::convertSelectedNodeToIdentifier()
@@ -708,6 +713,7 @@ void GraphView::convertSelectedNodeToIdentifier()
     QList<ObjectVisual *> objects = scene()->selectedObjects();
     m_tempId = scene()->getObjectId(objects.at(0));
     m_model->convert(m_tempId, IScaObject::IDENTIFIER);
+    emit goToObject(m_tempId);
 }
 
 void GraphView::updateActions()
@@ -762,7 +768,7 @@ void GraphView::updateActions()
         emit linkHasRightArrow(false);
     }
 
-    if(nodes.size() == 1)
+    if (nodes.size() == 1)
     {
         Node *node = nodes.at(0);
         int id = scene()->getObjectId(node);
@@ -863,6 +869,7 @@ void GraphView::createGroupFromSelection()
         // Unselect old objects
         scene()->getObjectById(id)->setSelected(false);
     }
+    emit goToObject(groupId);
 }
 
 void GraphView::ungroupSelectedObjects()
@@ -899,4 +906,5 @@ void GraphView::ungroupSelectedObjects()
             scene()->refreshLinkPos(id);
         }
     }
+    emit goToObject(WRONG_OBJECT_INDEX);
 }

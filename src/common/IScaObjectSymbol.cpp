@@ -76,6 +76,7 @@ void IScaObjectSymbol::setFile(const QFileInfo &file)
     m_file = file;
     m_fileObject->setFile(file);
 }
+
 char IScaObjectSymbol::getSymbol() const
 {
     return m_symbol;
@@ -99,8 +100,3 @@ QString IScaObjectSymbol::getContent() const
 {
     return QString(m_symbol);
 }
-
-
-
-
-

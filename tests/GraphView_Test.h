@@ -68,6 +68,7 @@ namespace Test
 
     public:
         GraphView_Test(QObject *parent = NULL) : QObject(parent),
+            m_tstView(new GraphView()),
             m_tstScene(new GraphScene(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT, this)),
             m_tstModel(new GraphModel)
         {
@@ -77,7 +78,6 @@ namespace Test
                     m_tstScene, SLOT(updateObjects(QModelIndex, QModelIndex)));
             connect(m_tstModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
                     m_tstScene, SLOT(removeObject(QModelIndex,int,int)));
-            m_tstView = new GraphView();
             m_tstView->setScene(m_tstScene);
             m_tstView->setModel(m_tstModel);
         }
@@ -224,6 +224,13 @@ namespace Test
             {
                 QCOMPARE(objs[i] != NULL, states[i]);
                 QCOMPARE(visObj[i] != NULL, states[i]);
+            }
+            for (int i = 0; i < TEST_OBJECTS_COUNT + GROUP_OBJECTS_COUNT - 1; i++)
+            {
+                if (visObj[i] != NULL)
+                {
+                    visObj[i]->setSelected(false);
+                }
             }
             clear();
         }

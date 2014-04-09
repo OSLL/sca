@@ -66,19 +66,19 @@ namespace Test
         {
             delete m_tstObject;
             delete m_tstModel;
-
-            m_tstObject = NULL;
         }
   
     private slots:
-        void test1()
+        void filtersOk()
         {
             QList<IScaObject::IScaObjectType> types;
             QStringList paths;
             QStringList annotations;
             QStringList content;
             types << IScaObject::DIRECTORY << IScaObject::DIRECTORY << IScaObject::TEXTBLOCK;
-            paths << "/" << "C://" << "/";
+            paths << QDir::rootPath()
+                  << QDir::rootPath() + "Windows/"
+                  << QDir::rootPath() + "text.txt";
             annotations << "Root" << "Windows" << "Text";
             content << "" << "" << "Text";
 
@@ -97,37 +97,38 @@ namespace Test
 
             IScaObjectGroup *group = ObjectCreator::createGroup(ids, m_tstModel);
             int id = m_tstModel->addObject((IScaObject *)(group));
+            QModelIndex grIndex = m_tstModel->index(id, 0);
 
-            for(int i = 0; i < paths.size(); i++)
+            for (int i = 0; i < paths.size(); i++)
             {
                 m_tstObject->setFilePath(paths[i]);
                 m_tstObject->setAnnotation(annotations[i]);
                 m_tstObject->setContent(content[i]);
-                m_tstObject->refreshRegExp();
 
-                QModelIndex index = m_tstModel->index(id, 0);
+                QModelIndex index = m_tstModel->index(i, 0);
 
-                bool acepted = m_tstObject->data(index, highlightRole).toBool();
-                QVERIFY(acepted);
+                bool accepted = m_tstObject->data(index, highlightRole).toBool();
+                QVERIFY(accepted);
+                accepted = m_tstObject->data(grIndex, highlightRole).toBool();
+                QVERIFY(accepted);
             }
 
             //Test group on not acception
             QModelIndex index = m_tstModel->index(id, 0);
 
             m_tstObject->setFilePath("Wrong path");
-            bool acepted = m_tstObject->data(index, highlightRole).toBool();
-            QVERIFY(!acepted);
-
+            bool accepted = m_tstObject->data(index, highlightRole).toBool();
+            QVERIFY(!accepted);
 
             m_tstObject->setAnnotation("Wrong annotation");
             m_tstObject->refreshRegExp();
-            acepted = m_tstObject->data(index, highlightRole).toBool();
-            QVERIFY(!acepted);
+            accepted = m_tstObject->data(index, highlightRole).toBool();
+            QVERIFY(!accepted);
 
             m_tstObject->setContent("Wrong content");
             m_tstObject->refreshRegExp();
-            acepted = m_tstObject->data(index, highlightRole).toBool();
-            QVERIFY(!acepted);
+            accepted = m_tstObject->data(index, highlightRole).toBool();
+            QVERIFY(!accepted);
             m_tstModel->clear();
         }
     }; // class GraphFilter_Test

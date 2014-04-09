@@ -58,9 +58,7 @@ public:
     IScaObjectDirectory();
     IScaObjectDirectory(const QFileInfo &fileInfo);
 
-    QFileInfo getFile() const;
     void setFile(const QString &filePath);
-    void setFile(const QFileInfo &file);
 private:
 
 }; // class IScaObjectDirectory

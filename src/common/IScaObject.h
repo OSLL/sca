@@ -88,8 +88,10 @@ public:
 
     friend QDebug operator<<(QDebug d, IScaObject &node);
 
-    virtual QFileInfo getFile();
-    virtual void setFile(const QFileInfo &file);
+    QFileInfo getFile() const;
+    virtual QString getFileName() const;
+    virtual QString getFilePath() const;
+    void setFile(const QFileInfo &file);
 
     virtual QString getContent() const;
 private:

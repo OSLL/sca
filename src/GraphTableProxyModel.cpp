@@ -45,6 +45,7 @@
 #include <QInputDialog>
 #include <QVariant>
 #include "common/IScaObject.h"
+#include "common/IScaObjectGroup.h"
 #include "common/Link.h"
 
 GraphTableProxyModel::GraphTableProxyModel(QAbstractItemModel *source, QObject *parent) :
@@ -139,9 +140,9 @@ QVariant GraphTableProxyModel::data(const QModelIndex &index, int role) const
             case 0:
                 return QVariant(obj->getTypeName());
             case 1:
-                return QVariant(obj->getFile().fileName());
+                return QVariant(obj->getFileName());
             case 2:
-                return QVariant(obj->getFile().absoluteFilePath());
+                return QVariant(obj->getFilePath());
             case 3:
                 return QVariant(obj->getAnnotation());
             case 4:

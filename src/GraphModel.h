@@ -96,7 +96,7 @@ public:
     void addLinkTo(IScaObject *obj, int link);
     bool editAnnotation(int id);
     void setAnnotation(int id, const QString &annotation);
-    void setFilePath(int id, const QString &path);
+    bool setFilePath(int id, const QString &path);
 
     bool hasIndex(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
 

@@ -66,7 +66,6 @@ public:
     QString getLine() const;
     void setLine(const QString &line);
 
-    QFileInfo getFile() const;
     void setFile(const QFileInfo &file);
 
     QString getContent() const;

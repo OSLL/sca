@@ -55,6 +55,7 @@
 #include "../common/IScaObjectLine.h"
 #include "../common/IScaObjectIdentifier.h"
 #include "../common/IScaObjectBinaryBlock.h"
+#include "../common/IScaObjectGroup.h"
 #include "../common/Link.h"
 
 #include "../GraphScene.h"
@@ -161,7 +162,9 @@ void PropertyBrowser::processObject(IScaObject *object)
     if (object->getType() != IScaObject::LINK)
     {
         property = m_stringManager->addProperty(PROPERTY_FILEPATH);
-        m_stringManager->setValue(property, object->getFile().absoluteFilePath());
+        m_stringManager->setValue(property, object->getFilePath());
+        if (object->getType() == IScaObject::GROUP)
+            m_stringManager->setReadOnly(property, true);
         addProperty(property, PROPERTY_FILEPATH);
     }
 
@@ -188,6 +191,12 @@ void PropertyBrowser::processObject(IScaObject *object)
         break;
     case IScaObject::LINK:
         processLink(static_cast<Link *>(object));
+        break;
+    case IScaObject::GROUP:
+        processGroup(static_cast<IScaObjectGroup *>(object));
+        break;
+    case IScaObject::DIRECTORY:
+    case IScaObject::FILE:
         break;
     default:
         qDebug() << "[PropertyManager]: unknown type while processing, " << object->getType();
@@ -278,6 +287,15 @@ void PropertyBrowser::processSymbol(IScaObjectSymbol *object)
     m_stringManager->setReadOnly(property, true);
     m_stringManager->setValue(property, QString(object->getSymbol()));
     addProperty(property, PROPERTY_SYMBOL);
+}
+
+void PropertyBrowser::processGroup(IScaObjectGroup *object)
+{
+    QtProperty *property;
+
+    property = m_stringManager->addProperty(PROPERTY_NAME);
+    m_stringManager->setValue(property, object->getName());
+    addProperty(property, PROPERTY_NAME);
 }
 
 void PropertyBrowser::processLine(IScaObjectLine *object)
@@ -482,8 +500,23 @@ void PropertyBrowser::valueChanged(QtProperty *property, const QString &value)
     }
     else if (id == PROPERTY_FILEPATH)
     {
-        m_model->setFilePath(m_currentId, value);
+        IScaObject *object = m_model->getObjectById(m_currentId);
+        QString oldPath = object->getFilePath();
+        bool correct = m_model->setFilePath(m_currentId, value);
+        if (!correct)
+        {
+            m_stringManager->setValue(property, oldPath);
+        }
     }
+    else if (id == PROPERTY_NAME)
+    {
+        IScaObjectGroup *group = dynamic_cast<IScaObjectGroup *>(m_model->getObjectById(m_currentId));
+        if (group != NULL)
+        {
+            group->setName(value);
+        }
+    }
+    m_scene->refreshAll();
     m_scene->update();
 }
 

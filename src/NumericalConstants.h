@@ -24,6 +24,7 @@ const qreal PI = 3.1415926;
 const long MAX_BINARY_FILE_SIZE = 50*1024*1024;
 const long MAX_TEXT_FILE_SIZE = 50*1024*1024;
 const long SCROLLED_BINARY_FILE_MAX_SIZE = 15*1024*1024 - 1;
+const int WRONG_OBJECT_INDEX = -1;
 
 //QHexEdit consts
 const int HEXCHARS_IN_LINE = 47;

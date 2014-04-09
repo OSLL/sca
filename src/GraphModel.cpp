@@ -292,6 +292,7 @@ bool GraphModel::removeRow(int id, const QModelIndex &parent)
     //Remove from container
     m_objects.remove(id);
     m_onScene.remove(id);
+    m_isVisible.remove(id);
     //Remove it from memory
     delete object;
 
@@ -483,12 +484,18 @@ void GraphModel::setAnnotation(int id, const QString &annotation)
     emit dataChanged(ind, ind);
 }
 
-void GraphModel::setFilePath(int id, const QString &path)
+bool GraphModel::setFilePath(int id, const QString &path)
 {
-    if (!m_objects.contains(id))
+    if (m_objects.contains(id))
     {
+        QString oldPath = m_objects[id]->getFilePath();
         m_objects[id]->setFile(QFileInfo(path));
+        // If it didnt change, return false
+        if (m_objects[id]->getFilePath() == oldPath)
+            return false;
+        return true;
     }
+    return false;
 }
 
 bool GraphModel::hasIndex(int row, int column, const QModelIndex &parent) const

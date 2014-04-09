@@ -47,6 +47,7 @@ class IScaObjectLine;
 class IScaObjectSymbol;
 class IScaObjectIdentifier;
 class IScaObjectBinaryBlock;
+class IScaObjectGroup;
 class Link;
 class QtDoublePropertyManager;
 class QtStringPropertyManager;
@@ -95,6 +96,7 @@ private:
     void processIdentifier(IScaObjectIdentifier *object);
     void processTextBlock(IScaObjectTextBlock *object);
     void processSymbol(IScaObjectSymbol *object);
+    void processGroup(IScaObjectGroup *object);
     void processLine(IScaObjectLine *object);
     void processLink(Link *object);
     void processVisualObject(ObjectVisual *object);

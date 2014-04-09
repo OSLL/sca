@@ -67,7 +67,6 @@ public:
     unsigned int getOffset() const;
     void setOffset(unsigned int offset);
 
-    QFileInfo getFile() const;
     void setFile(const QFileInfo &file);
 
     unsigned int getLength() const;

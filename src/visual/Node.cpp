@@ -123,6 +123,7 @@ void Node::setTitle(const QString &title)
     m_title = new QGraphicsTextItem(this);
     m_title->setHtml(htmlTitle);
     m_title->setX(-m_title->boundingRect().width() / 2);
+    m_title->setY(m_rect.height() / 2);
 }
 
 void Node::setTitle(QGraphicsTextItem *title)

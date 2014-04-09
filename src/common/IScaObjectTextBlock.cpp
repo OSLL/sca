@@ -82,11 +82,6 @@ void IScaObjectTextBlock::setOffset(unsigned int offset)
     m_offset = offset;
 }
 
-QFileInfo IScaObjectTextBlock::getFile() const
-{
-    return m_file;
-}
-
 void IScaObjectTextBlock::setFile(const QFileInfo &file)
 {
     m_file = file;

@@ -46,6 +46,7 @@ IScaObject::IScaObject(IScaObjectType type, QFileInfo file) :
     m_type(type),
     m_file(file)
 {
+    m_file.makeAbsolute();
 }
 
 IScaObject::~IScaObject()
@@ -113,9 +114,19 @@ void IScaObject::addLink(int link)
     m_links.append(link);
 }
 
-QFileInfo IScaObject::getFile()
+QFileInfo IScaObject::getFile() const
 {
     return m_file;
+}
+
+QString IScaObject::getFileName() const
+{
+    return m_file.fileName();
+}
+
+QString IScaObject::getFilePath() const
+{
+    return m_file.absoluteFilePath();
 }
 
 void IScaObject::setFile(const QFileInfo &file)

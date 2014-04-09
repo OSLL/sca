@@ -140,7 +140,7 @@ void FilterDialog::on_typeComboBox_currentIndexChanged(int index)
     m_ui->fileNameLineEdit->setEnabled(!isLink && !isDir);
 
     bool hasContent = index == IScaObject::IDENTIFIER || index == IScaObject::TEXTBLOCK || index == IScaObject::LINE
-                       || index == IScaObject::SYMBOL || index == IScaObject::BINARYBLOCK;
+                       || index == IScaObject::SYMBOL || index == IScaObject::BINARYBLOCK || index == IScaObject::GROUP;
 
     m_ui->contentLineEdit->setEnabled(hasContent);
 }

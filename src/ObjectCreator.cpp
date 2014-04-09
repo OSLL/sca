@@ -144,7 +144,11 @@ IScaObjectGroup *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *m
     QStringList fileNames;
     QStringList paths;
     QStringList annotations;
-    QStringList content;
+    QStringList contents;
+    QString fileName,
+            filePath,
+            annotation,
+            content;
     IScaObject *object;
     foreach(int id, ids)
     {
@@ -153,12 +157,21 @@ IScaObjectGroup *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *m
         {
             continue;
         }
-        fileNames.append(object->getFile().fileName());
-        paths.append(object->getFile().filePath());
-        annotations.append(object->getAnnotation());
-        content.append(object->getContent());
+        fileName = object->getFileName();
+        filePath = object->getFilePath();
+        annotation = object->getAnnotation();
+        content = object->getContent();
+        // Append only unempty strings
+        if (!fileName.isEmpty())
+            fileNames.append(fileName);
+        if (!filePath.isEmpty())
+            paths.append(filePath);
+        if (!annotation.isEmpty())
+            annotations.append(annotation);
+        if (!content.isEmpty())
+            contents.append(content);
     }
 
     return new IScaObjectGroup(ids, fileNames, paths,
-                               annotations, content);
+                               annotations, contents);
 }

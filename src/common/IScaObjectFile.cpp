@@ -56,11 +56,6 @@ IScaObjectFile::~IScaObjectFile()
 
 }
 
-QFileInfo IScaObjectFile::getFile() const
-{
-    return m_file;
-}
-
 void IScaObjectFile::setFile(const QString &filePath)
 {
     m_file.setFile(filePath);

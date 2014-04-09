@@ -88,22 +88,15 @@ bool GraphFilter::filterAcceptsId(const QModelIndex &index) const
         qDebug() << "[GraphFilter]: This filter acceptable only for GraphModel";
         return false;
     }
-    QVariant var = model->data(index, rawObjectRole);
-    IScaObject *object = NULL;
-    object = qvariant_cast<IScaObject *>(var);
+    IScaObject *object = model->getObjectById(index.row());
     if (object == NULL)
     {
-        object = qvariant_cast<Link *>(var);
-        if (object == NULL)
-        {
-            qDebug() << "[GraphFilter]: Can't get object";
-            return false;
-        }
+        qDebug() << "[GraphFilter]: Can't get object";
+        return false;
     }
-
     bool acceptable = checkRegExp(object);
 
-    qDebug() << "[GraphFilter]: Path:" << object->getFile().absoluteFilePath();
+    qDebug() << "[GraphFilter]: objectInfo: " << object->getInfo();
     if (acceptable)
         qDebug() << "[GraphFilter]: Object #" << index.row() << "acceptable";
     else
@@ -184,6 +177,7 @@ void GraphFilter::refreshRegExp()
 
     m_regExp->setPattern(pattern);
 
+    qDebug() << "[GraphFilter]: regEx: " << m_regExp->pattern();
     emit validRegExpState(m_regExp->isValid());
     emit filterChanged();
 }

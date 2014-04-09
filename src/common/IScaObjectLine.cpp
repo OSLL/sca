@@ -83,11 +83,6 @@ void IScaObjectLine::setLine(const QString &line)
     m_line = line;
 }
 
-QFileInfo IScaObjectLine::getFile() const
-{
-    return m_file;
-}
-
 void IScaObjectLine::setFile(const QFileInfo &file)
 {
     m_file = file;
