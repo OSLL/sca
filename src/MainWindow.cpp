@@ -424,11 +424,11 @@ void MainWindow::loadSettings()
 
 void MainWindow::updateActions()
 {
-    m_ui->actionHexView->setEnabled(m_ui->dockHexEditor->isVisible());
-    m_ui->actionPropertyBrowser->setEnabled(m_ui->dockPropertyBrowser->isVisible());
-    m_ui->actionTableView->setEnabled(m_ui->dockTableView->isVisible());
-    m_ui->actionSourceTree->setEnabled(m_ui->dockFileBrowser->isVisible());
-    m_ui->actionTextView->setEnabled(m_ui->dockTextEditor->isVisible());
+    m_ui->actionHexView->setChecked(!m_ui->dockHexEditor->isHidden());
+    m_ui->actionPropertyBrowser->setChecked(!m_ui->dockPropertyBrowser->isHidden());
+    m_ui->actionTableView->setChecked(!m_ui->dockTableView->isHidden());
+    m_ui->actionSourceTree->setChecked(!m_ui->dockFileBrowser->isHidden());
+    m_ui->actionTextView->setChecked(!m_ui->dockTextEditor->isHidden());
 }
 
 void MainWindow::saveSettings()
