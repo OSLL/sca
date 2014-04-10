@@ -37,20 +37,13 @@ MainWindow::MainWindow(QWidget *parent) :
     m_fileChanged(false),
     m_fileIsOnDisk(false),
     m_process(new QProcess(this)),
-    m_settings(new QSettings("sca","sca", this)),
+    m_settings(new QSettings(this)),
     m_settingsDialog(new SettingsDialog(m_settings, this)),
     m_toolsMenu(NULL),
     m_toolsSignalMapper(new QSignalMapper(this))
 {
     m_ui->setupUi(this);
     setWindowIcon(QIcon(LOGO_PATH));
-    m_settings->beginGroup("Global");
-    bool firstRun = !(m_settings->value("firstrun").toBool());
-    m_settings->endGroup();
-    if (firstRun)
-    {
-        processFirstRun();
-    }
 
     //Setup model and filter
     m_ui->graphViewer->setScene(m_scene);
@@ -79,7 +72,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_ui->sourceBrowser->setContextMenuPolicy(Qt::CustomContextMenu);
     m_ui->graphViewer->setContextMenuPolicy(Qt::CustomContextMenu);
 
-
     QHeaderView *header = m_ui->tableView->horizontalHeader();
     m_ui->tableView->setModel(m_tableProxy);
     m_ui->tableView->setGridStyle(Qt::SolidLine);
@@ -89,6 +81,7 @@ MainWindow::MainWindow(QWidget *parent) :
     createConnections();
     createToolsMenu();
     createActions();
+    loadSettings();
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -100,6 +93,7 @@ void MainWindow::closeEvent(QCloseEvent *ev)
     }
     else
     {
+        saveSettings();
         QWidget::closeEvent(ev);
     }
 }
@@ -409,6 +403,44 @@ QMessageBox::StandardButton MainWindow::checkChanges()
     }
 }
 
+void MainWindow::loadSettings()
+{
+    m_settings->beginGroup(SETTINGS_GLOBAL);
+    bool firstRun = !(m_settings->value(SETTINGS_FIRST_RUN).toBool());
+    m_settings->endGroup();
+    if (firstRun)
+    {
+        processFirstRun();
+    }
+    m_settings->sync();
+    qDebug() << "[MainWindow]: loading settings, keys: " << m_settings->allKeys();
+    m_settings->beginGroup(SETTINGS_WIDGET);
+    restoreState(m_settings->value(SETTINGS_STATE).toByteArray());
+    restoreGeometry(m_settings->value(SETTINGS_GEOMETRY).toByteArray());
+    m_settings->endGroup();
+
+    updateActions();
+}
+
+void MainWindow::updateActions()
+{
+    m_ui->actionHexView->setEnabled(m_ui->dockHexEditor->isVisible());
+    m_ui->actionPropertyBrowser->setEnabled(m_ui->dockPropertyBrowser->isVisible());
+    m_ui->actionTableView->setEnabled(m_ui->dockTableView->isVisible());
+    m_ui->actionSourceTree->setEnabled(m_ui->dockFileBrowser->isVisible());
+    m_ui->actionTextView->setEnabled(m_ui->dockTextEditor->isVisible());
+}
+
+void MainWindow::saveSettings()
+{
+    m_settings->beginGroup(SETTINGS_WIDGET);
+    m_settings->setValue(SETTINGS_GEOMETRY, saveGeometry());
+    m_settings->setValue(SETTINGS_STATE, saveState());
+    m_settings->endGroup();
+    m_settings->sync();
+    qDebug() << "[MainWindow]: saving settings, keys: " << m_settings->allKeys();
+}
+
 void MainWindow::clearAll()
 {
     m_scene->clear();
@@ -692,13 +724,6 @@ void MainWindow::showAdvancedFilter()
     }
     wid->show();
 }
-
-void MainWindow::close()
-{
-    checkChanges();
-    QMainWindow::close();
-}
-
 
 void MainWindow::runCommand(const QString &tool, const QString &file)
 {

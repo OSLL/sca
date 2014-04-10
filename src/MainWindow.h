@@ -29,6 +29,8 @@ private:
     void createMenuBarConnections();
     void createActions();
     QMessageBox::StandardButton checkChanges();
+    void loadSettings();
+    void saveSettings();
     void clearAll();
     void processFirstRun();
 
@@ -49,8 +51,6 @@ private:
 
     QMenu *m_toolsMenu;
     QSignalMapper *m_toolsSignalMapper;
-
-
 public:
     explicit MainWindow(QWidget *parent = 0);
     void closeEvent(QCloseEvent *);
@@ -72,9 +72,9 @@ public slots:
     void switchToObject(IScaObject *);
     void annotateNoGraphObject();
     void showAdvancedFilter();
-    void close();
     void runCommand(const QString &tool, const QString &file);
     void createToolsMenu();
+    void updateActions();
 
 private slots:
     void on_filterLine_textChanged(const QString &arg1);

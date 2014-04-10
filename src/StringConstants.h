@@ -82,6 +82,8 @@ const QString APPLICATION_AUTORS =
         QString("Leonid Skorospelov\n") +
         QString("Nikita Razdobreev");
 const QString APPLICATION_NAME = "Source Code Analyzer";
+const QString APPLICATION_ORG = "OSLL";
+const QString APPLICATION_ORG_DOMAIN = "http://dev.osll.ru/";
 const QString APPLICATION_COPYRIGHT = "\xA9 Open Source & Linux Lab, 2013";
 const QString MAINWINDOW_TITLE = "%1 - " + APPLICATION_NAME;
 const QString DEFAULT_NEW_FILE_NAME = "New graph.gm";
@@ -89,6 +91,14 @@ const QString SAVE_CHANGED_FILE_QUESTION_TITLE = "Save changes?";
 const QString SAVE_CHANGED_FILE_QUESTION_TEXT = "%1 has been changed. Do you want to save changes?";
 const QString FILE_SAVE_SUCCESSFUL = "File saved successfully.";
 //[End preferences]
+
+//[Settings]
+const QString SETTINGS_WIDGET = "widgets";
+const QString SETTINGS_GEOMETRY = "geometry";
+const QString SETTINGS_STATE = "state";
+const QString SETTINGS_FIRST_RUN = "firstRun";
+const QString SETTINGS_GLOBAL = "global";
+//[End settings]
 
 //[MIMEData]
 const QString BINARY_DATA = "Binary Data";
