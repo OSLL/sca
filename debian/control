@@ -9,7 +9,7 @@ Package: sca
 Architecture: amd64 i386
 Section: devel
 Priority: optional
-Depends: ${shlibs:Depends}, libqt4-core, libqt4-gui, libsource-highlight-qt4-3 
+Depends: ${shlibs:Depends}, libqt4-core, libqt4-gui, libsource-highlight-qt4-3, libqt4-sql-sqlite
 Description: Source Code Analyzer
  Tool for intellectual sources analyzing and graph representation 
 
