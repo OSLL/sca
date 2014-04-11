@@ -20,19 +20,21 @@
 
 const qreal PI = 3.1415926;
 
-//Alerts consts
+//[Alerts consts]
 const long MAX_BINARY_FILE_SIZE = 50*1024*1024;
 const long MAX_TEXT_FILE_SIZE = 50*1024*1024;
 const long SCROLLED_BINARY_FILE_MAX_SIZE = 15*1024*1024 - 1;
 const int WRONG_OBJECT_INDEX = -1;
+//[End alerts consts]
 
-//QHexEdit consts
+//[QHexEdit consts]
 const int HEXCHARS_IN_LINE = 47;
 const int GAP_ADR_HEX = 10;
 const int GAP_HEX_ASCII = 16;
 const int BYTES_PER_LINE = 16;
+//[End QHexEdit consts]
 
-//Visual consts
+//[Visual consts]
 const int DEFAULT_SCENE_WIDTH = 2000;
 const int DEFAULT_SCENE_HEIGHT = 1000;
 
@@ -103,12 +105,15 @@ const qreal MIN_LINK_LENGTH = 15;
 const QPen DEFAULT_LINK_PEN(QBrush(Qt::black), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
 const QPen SELECTED_LINK_PEN(QBrush(QColor(Qt::black).lighter(150)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
 const QPen FILTERED_LINK_PEN(QBrush(QColor(155, 0, 186)), DEFAULT_LINK_WIDTH, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin);
+//[End visual consts]
 
-//Default export image size
+//[Default export image size]
 const int DEFAULT_IMAGE_WIDTH = 800;
 const int DEFAULT_IMAGE_HEIGHT = 600;
+//[End default export image size]
 
-enum GraphModelRole{
+enum GraphModelRole
+{
     rawObjectRole = Qt::UserRole,
     highlightRole = Qt::UserRole + 1,
     objectIdListRole = Qt::UserRole + 2,
@@ -116,8 +121,13 @@ enum GraphModelRole{
     isVisibleRole = Qt::UserRole + 4
 };
 
-//Status bar timeouts
+//[Status bar timeouts]
 const int STATUS_BAR_FILE_SAVED_TIMEOUT = 5000;
+//[End status bar timeouts]
 
+//[Widgets preferences]
 const int GRAPH_TABLE_PROXY_COLUMN_COUNT = 5;
+const int SOURCE_BROWSER_NAME_COLUMN_WIDTH = 400;
+//[End widgets preferences]
+
 #endif //_NumericalConstants_H_B55D9E18_0180_4F9B_B243_BC6FD77B58FD_INCLUDED_

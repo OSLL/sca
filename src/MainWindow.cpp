@@ -66,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         m_ui->sourceBrowser->hideColumn(i);
     }
+    m_ui->sourceBrowser->goToPath(QDir::currentPath());
+    m_ui->sourceBrowser->header()->resizeSection(0, SOURCE_BROWSER_NAME_COLUMN_WIDTH);
 
     //Set some flags for widgets
     m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);

@@ -77,6 +77,7 @@ signals:
 public slots:
     void showContextMenu(const QPoint &pos);
     void goToObject(IScaObject *object);
+    void goToPath(const QString &path);
     void runTool(const QString &tool);
 protected:
 };

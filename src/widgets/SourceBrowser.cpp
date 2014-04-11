@@ -113,6 +113,11 @@ void SourceBrowser::goToObject(IScaObject *object)
     {
         return;
     }
+    goToPath(path);
+}
+
+void SourceBrowser::goToPath(const QString &path)
+{
     QFileSystemModel *m = static_cast<QFileSystemModel *>(model());
     QModelIndex index = m->index(path);
     scrollTo(index, QAbstractItemView::PositionAtCenter);
