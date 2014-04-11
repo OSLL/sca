@@ -57,26 +57,7 @@ GraphScene::GraphScene(qreal x, qreal y, qreal width, qreal height,
 
 GraphScene::~GraphScene()
 {
-    QList<QGraphicsItem *> items;
-    QList<Node *> nodes;
-    QList<LinkVisual *> links;
-    items = this->items();
-    foreach (QGraphicsItem *item, items)
-    {
-        LinkVisual *link = NULL;
-        Node *node = NULL;
-        node = dynamic_cast<Node *>(item);
-        if (node != NULL)
-        {
-            nodes.push_back(node);
-            continue;
-        }
-        link = dynamic_cast<LinkVisual *>(item);
-        if (link != NULL)
-        {
-            links.push_back(link);
-        }
-    }
+    this->clearSelection();
 }
 
 QList<Node *> GraphScene::selectedNodes()

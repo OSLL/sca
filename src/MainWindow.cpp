@@ -56,18 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                             m_ui->dockPropertyBrowser),
             m_ui->dockPropertyBrowser->setWidget(m_propertyBrowser);
 
-    //Set up file model
-    m_fileModel->setRootPath("");
-    m_ui->sourceBrowser->setModel(m_fileModel);
     m_ui->filterLine->setText("");
-
-    //Leave only "name"(zero) column in SourceBrowser and last "Annotation"
-    for (int i = 1; i < m_fileModel->columnCount() - 1; i++)
-    {
-        m_ui->sourceBrowser->hideColumn(i);
-    }
-    m_ui->sourceBrowser->goToPath(QDir::currentPath());
-    m_ui->sourceBrowser->header()->resizeSection(0, SOURCE_BROWSER_NAME_COLUMN_WIDTH);
 
     //Set some flags for widgets
     m_ui->textViewer->setWordWrapMode(QTextOption::NoWrap);
@@ -84,6 +73,21 @@ MainWindow::MainWindow(QWidget *parent) :
     createToolsMenu();
     createActions();
     loadSettings();
+
+    //Set up file model
+    m_fileModel->setRootPath("");
+    m_ui->sourceBrowser->setModel(m_fileModel);
+    //Leave only "name"(zero) column in SourceBrowser and last "Annotation"
+    for (int i = 1; i < m_fileModel->columnCount() - 1; i++)
+    {
+        m_ui->sourceBrowser->hideColumn(i);
+    }
+    m_ui->sourceBrowser->goToCurrentPath();
+    // We need to wait some time while m_fileModel loads file system
+    // so we call goToCurrentPath a couple seconds later
+    // Notice, that there is no signal that can show that file system is loaded,
+    // thanks to Digia and hope some time there will be one.
+    QTimer::singleShot(CURRENT_PATH_TIMER, m_ui->sourceBrowser, SLOT(goToCurrentPath()));
 }
 
 void MainWindow::closeEvent(QCloseEvent *ev)
@@ -465,8 +469,6 @@ void MainWindow::processFirstRun()
 
 MainWindow::~MainWindow()
 {
-    if (m_scene != NULL)
-        delete m_scene;
     if (m_fileModel != NULL)
         delete m_fileModel;
     if (m_ui != NULL)

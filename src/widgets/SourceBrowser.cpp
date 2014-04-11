@@ -120,8 +120,9 @@ void SourceBrowser::goToPath(const QString &path)
 {
     QFileSystemModel *m = static_cast<QFileSystemModel *>(model());
     QModelIndex index = m->index(path);
-    scrollTo(index, QAbstractItemView::PositionAtCenter);
+    scrollTo(index, QAbstractItemView::PositionAtTop);
     selectionModel()->select(index, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
+    resizeColumnToContents(0);
 }
 
 void SourceBrowser::runTool(const QString &tool)
@@ -135,6 +136,19 @@ void SourceBrowser::runTool(const QString &tool)
     emit runCommand(tool, currentFile.filePath());
 }
 
+void SourceBrowser::goToCurrentPath()
+{
+    qDebug() << "[SourceBrowser]: going to currentPath";
+    goToPath(QDir::currentPath());
+    expandByPath(QDir::currentPath());
+}
+
+void SourceBrowser::expandByPath(const QString &path)
+{
+    QFileSystemModel *m = static_cast<QFileSystemModel *>(model());
+    QModelIndex index = m->index(path);
+    this->expand(index);
+}
 
 void SourceBrowser::createContextMenu()
 {

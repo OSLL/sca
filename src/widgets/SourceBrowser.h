@@ -74,12 +74,14 @@ signals:
     void annotate();
     void contextMenuOnFile(bool);
     void runCommand(const QString &, const QString &);
+
 public slots:
     void showContextMenu(const QPoint &pos);
     void goToObject(IScaObject *object);
     void goToPath(const QString &path);
     void runTool(const QString &tool);
-protected:
+    void goToCurrentPath();
+    void expandByPath(const QString &path);
 };
 
 #endif //_SourceBrowser_H_FFA4491B_B282_4A61_972A_1470A2944293_INCLUDED_

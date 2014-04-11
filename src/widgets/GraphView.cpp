@@ -472,7 +472,7 @@ void GraphView::mousePressEvent(QMouseEvent *event)
     {
         //no item under cursor->clear selection
         scene()->clearSelection();
-        emit goToObject(-1);
+        emit goToObject(WRONG_OBJECT_INDEX);
     }
 
     //Process availability to change link's connection

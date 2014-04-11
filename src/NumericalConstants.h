@@ -20,6 +20,10 @@
 
 const qreal PI = 3.1415926;
 
+//[Common preferences]
+const int CURRENT_PATH_TIMER = 2000;
+//[End common preferences]
+
 //[Alerts consts]
 const long MAX_BINARY_FILE_SIZE = 50*1024*1024;
 const long MAX_TEXT_FILE_SIZE = 50*1024*1024;
