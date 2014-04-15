@@ -114,8 +114,11 @@ void Node::removeTitle()
 
 void Node::setTitle(const QString &title)
 {
+
     removeTitle();
     QString temp = title;
+    if(temp.length() > MAX_TITLE_LENGTH)
+    temp = temp.mid(0, MAX_TITLE_LENGTH) + "...";
     temp    .replace('&', "&amp;")
             .replace('>', "&gt;")
             .replace('<', "&lt;");
