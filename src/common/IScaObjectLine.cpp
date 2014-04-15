@@ -50,6 +50,7 @@ IScaObjectLine::IScaObjectLine() :
     m_lineNumber(0),
     m_fileObject(NULL)
 {
+    setTitle(m_line);
 }
 
 IScaObjectLine::IScaObjectLine(IScaObjectFile *file,
@@ -65,6 +66,8 @@ IScaObjectLine::IScaObjectLine(IScaObjectFile *file,
     m_fileObject(file)
 {
     IScaObject::setFile(file->getFile());
+
+    setTitle(m_line);
 }
 
 IScaObjectLine::~IScaObjectLine()

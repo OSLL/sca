@@ -138,6 +138,24 @@ QString IScaObject::getContent() const
 {
     return QString();
 }
+QString IScaObject::getTitle() const
+{
+    return m_title;
+}
+
+void IScaObject::setTitle(const QString &value)
+{
+
+    if(value.size() > MAX_TITLE_LENGTH)
+    {
+        m_title = value.mid(0, 15) + "...";
+    }
+    else
+    {
+        m_title = value;
+    }
+}
+
 
 void IScaObject::setLinks(const QList<int> &links)
 {

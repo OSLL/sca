@@ -44,6 +44,7 @@
 IScaObjectGroup::IScaObjectGroup() :
     IScaObject(GROUP)
 {
+    setTitle(DEFAULT_GROUP_NAME);
 }
 
 IScaObjectGroup::IScaObjectGroup(const QList<int> &objects,
@@ -53,13 +54,12 @@ IScaObjectGroup::IScaObjectGroup(const QList<int> &objects,
                                  const QStringList &contents) :
     IScaObject(GROUP),
     m_objects(objects),
-    m_name(DEFAULT_GROUP_NAME),
     m_fileNames(fileNames),
     m_paths(paths),
     m_annotations(annotations),
     m_contents(contents)
 {
-
+    setTitle(DEFAULT_GROUP_NAME);
 }
 
 IScaObjectGroup::~IScaObjectGroup()
@@ -71,19 +71,9 @@ QList<int> IScaObjectGroup::getObjects() const
     return m_objects;
 }
 
-QString IScaObjectGroup::getName() const
-{
-    return m_name;
-}
-
-void IScaObjectGroup::setName(const QString &name)
-{
-    m_name = name;
-}
-
 QString IScaObjectGroup::getContent() const
 {
-    return m_name;
+    return getTitle();
 }
 
 void IScaObjectGroup::addObject(int id)

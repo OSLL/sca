@@ -45,20 +45,12 @@
 IScaObjectIdentifierVisual::IScaObjectIdentifierVisual(IScaObjectIdentifier *obj) :
     Node(DEFAULT_IDENTIFIER_COLOR, FILTERED_IDENTIFIER_COLOR, obj)
 {
-    QString identifier = obj->getIdentifier();
     m_rect = QRectF(-DEFAULT_IDENTIFIER_VISUAL_WIDTH / 2,
                     -DEFAULT_IDENTIFIER_VISUAL_HEIGHT / 2,
                     DEFAULT_IDENTIFIER_VISUAL_WIDTH,
                     DEFAULT_IDENTIFIER_VISUAL_HEIGHT);
 
-    if (identifier != NULL)
-    {
-        if(identifier.size() > MAX_TITLE_LENGTH)
-        {
-            identifier = identifier.mid(0, 15) + "...";
-        }
-        setTitle(identifier);
-    }
+
 }
 
 void IScaObjectIdentifierVisual::paint(QPainter *painter,

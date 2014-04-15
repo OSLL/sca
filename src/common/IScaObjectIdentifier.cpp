@@ -48,6 +48,7 @@ IScaObjectIdentifier::IScaObjectIdentifier() :
     m_identifier(QString("")),
     m_fileObject(NULL)
 {
+    setTitle(m_identifier);
 }
 
 IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, int offset, int endOffset, QString identifier) :
@@ -58,6 +59,8 @@ IScaObjectIdentifier::IScaObjectIdentifier(IScaObjectFile *file, int offset, int
     m_fileObject(file)
 {
     IScaObject::setFile(file->getFile());
+
+    setTitle(m_identifier);
 }
 
 IScaObjectIdentifier::~IScaObjectIdentifier()

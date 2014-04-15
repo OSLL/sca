@@ -50,6 +50,8 @@ IScaObjectBinaryBlock::IScaObjectBinaryBlock() :
     m_data(QByteArray()),
     m_fileObject(NULL)
 {
+    QString str = getReadableData();
+    setTitle(str);
 }
 
 IScaObjectBinaryBlock::IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int offset,
@@ -61,6 +63,9 @@ IScaObjectBinaryBlock::IScaObjectBinaryBlock(IScaObjectFile *file, unsigned int 
     m_fileObject(file)
 {
     IScaObject::setFile(file->getFile());
+
+    QString str = getReadableData();
+    setTitle(str);
 }
 
 IScaObjectBinaryBlock::~IScaObjectBinaryBlock()

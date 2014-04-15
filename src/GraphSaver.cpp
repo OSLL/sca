@@ -148,7 +148,7 @@ void GraphSaver::insertNode(IScaObject *object, int id, bool isShown)
             break;
     }
     m_query->bindValue(":ids", strIds);
-
+    m_query->bindValue(":title", object->getTitle());
 
 
 

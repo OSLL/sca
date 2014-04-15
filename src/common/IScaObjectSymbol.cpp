@@ -48,6 +48,7 @@ IScaObjectSymbol::IScaObjectSymbol():
     m_offset(0),
     m_fileObject(NULL)
 {
+    setTitle(QString(m_symbol));
 }
 
 IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset,
@@ -58,6 +59,7 @@ IScaObjectSymbol::IScaObjectSymbol(IScaObjectFile *file, unsigned int offset,
     m_fileObject(file)
 {
     IScaObject::setFile(file->getFile());
+    setTitle(QString(m_symbol));
 }
 
 IScaObjectSymbol::~IScaObjectSymbol()

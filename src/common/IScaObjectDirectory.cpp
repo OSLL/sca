@@ -44,11 +44,20 @@
 IScaObjectDirectory::IScaObjectDirectory():
     IScaObject(DIRECTORY)
 {
+    QFileInfo fileInfo = getFile();
+    if (fileInfo.isRoot())
+        setTitle(fileInfo.absoluteFilePath().section('/', 0, 0));
+    else
+        setTitle(fileInfo.absoluteFilePath().section('/', -1));
 }
 
 IScaObjectDirectory::IScaObjectDirectory(const QFileInfo &fileInfo):
     IScaObject(DIRECTORY, fileInfo)
 {
+    if (fileInfo.isRoot())
+        setTitle(fileInfo.absoluteFilePath().section('/', 0, 0));
+    else
+        setTitle(fileInfo.absoluteFilePath().section('/', -1));
 }
 
 void IScaObjectDirectory::setFile(const QString &filePath)

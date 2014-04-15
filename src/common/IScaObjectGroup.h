@@ -66,8 +66,6 @@ public:
     void removeObject(int id);
     QList<int> getObjects() const;
 
-    QString getName() const;
-    void setName(const QString &name);
 
     QString getInfo(const QString &pattern) const;
 
@@ -87,7 +85,6 @@ public:
     QString getFilePath() const;
 private:
     QList<int> m_objects;
-    QString m_name;
     QStringList m_fileNames;
     QStringList m_paths;
     QStringList m_annotations;

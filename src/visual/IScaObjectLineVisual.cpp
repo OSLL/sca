@@ -45,14 +45,11 @@
 IScaObjectLineVisual::IScaObjectLineVisual(IScaObjectLine *obj) :
     Node(DEFAULT_LINE_COLOR, FILTERED_LINE_COLOR, obj)
 {
-    QString identifier = obj->getLine();
     m_rect = QRectF(-DEFAULT_LINE_VISUAL_WIDTH / 2,
                     -DEFAULT_LINE_VISUAL_HEIGHT / 2,
                     DEFAULT_LINE_VISUAL_WIDTH,
                     DEFAULT_LINE_VISUAL_HEIGHT);
 
-    identifier = identifier.mid(0, MAX_TITLE_LENGTH);
-    setTitle(identifier);
 }
 
 void IScaObjectLineVisual::paint(QPainter *painter,

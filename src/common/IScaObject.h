@@ -94,8 +94,12 @@ public:
     void setFile(const QFileInfo &file);
 
     virtual QString getContent() const;
+    QString getTitle() const;
+    void setTitle(const QString &value);
+
 private:
     QString m_annotation;
+    QString m_title;
 
 protected:
     QList<int> m_links;

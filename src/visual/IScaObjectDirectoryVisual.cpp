@@ -49,11 +49,7 @@ IScaObjectDirectoryVisual::IScaObjectDirectoryVisual(IScaObjectDirectory *obj) :
                     -DEFAULT_DIR_VISUAL_HEIGHT / 2,
                     DEFAULT_DIR_VISUAL_WIDTH,
                     DEFAULT_DIR_VISUAL_HEIGHT);
-    QFileInfo fileInfo = obj->getFile();
-    if (fileInfo.isRoot())
-        setTitle(fileInfo.absoluteFilePath().section('/', 0, 0));
-    else
-        setTitle(fileInfo.absoluteFilePath().section('/', -1));
+
 }
 
 void IScaObjectDirectoryVisual::paint(QPainter *painter,

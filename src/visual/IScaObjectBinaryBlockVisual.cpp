@@ -51,15 +51,6 @@ IScaObjectBinaryBlockVisual::IScaObjectBinaryBlockVisual(IScaObjectBinaryBlock *
                     -DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT / 2,
                     DEFAULT_BINARY_BLOCK_VISUAL_WIDTH,
                     DEFAULT_BINARY_BLOCK_VISUAL_HEIGHT);
-
-    QString str = obj->getReadableData();
-    if (str.length() >= MAX_TITLE_LENGTH - 1)
-    {
-        //Remove from max_lenght to last symbol
-        str = str.remove(MAX_TITLE_LENGTH, str.length() - MAX_TITLE_LENGTH);
-        str += "...";
-    }
-    setTitle(str);
 }
 
 void IScaObjectBinaryBlockVisual::paint(QPainter *painter,

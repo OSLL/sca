@@ -181,6 +181,11 @@ ObjectVisual *ObjectVisualCreator::createObjectVisual(IScaObject *object)
         }
     }
     visObject->setAnnotation(object->getAnnotation());
+    if(visObject->getType() == ObjectVisual::NODE)
+    {
+        Node *node = static_cast<Node *>(visObject);
+        node->setTitle(object->getTitle());
+    }
     //qDebug() << "Successfully createed object to scene.";
     return visObject;
 }

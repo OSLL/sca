@@ -294,7 +294,7 @@ void PropertyBrowser::processGroup(IScaObjectGroup *object)
     QtProperty *property;
 
     property = m_stringManager->addProperty(PROPERTY_NAME);
-    m_stringManager->setValue(property, object->getName());
+    m_stringManager->setValue(property, object->getTitle());
     addProperty(property, PROPERTY_NAME);
 }
 
@@ -513,7 +513,7 @@ void PropertyBrowser::valueChanged(QtProperty *property, const QString &value)
         IScaObjectGroup *group = dynamic_cast<IScaObjectGroup *>(m_model->getObjectById(m_currentId));
         if (group != NULL)
         {
-            group->setName(value);
+            group->setTitle(value);
         }
     }
     m_scene->refreshAll();

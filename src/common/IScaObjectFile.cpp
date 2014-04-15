@@ -43,12 +43,13 @@
 
 IScaObjectFile::IScaObjectFile() :
     IScaObject(FILE)
-{
+{    
 }
 
 IScaObjectFile::IScaObjectFile(const QFileInfo &fileInfo) :
     IScaObject(FILE, fileInfo)
 {
+    setTitle(fileInfo.fileName());
 }
 
 IScaObjectFile::~IScaObjectFile()

@@ -65,7 +65,7 @@ IScaObject *ObjectCreator::createObject(int type, int line,
                                         int offset, int endoffset,
                                         int length, QString path,
                                         QString text, QByteArray data,
-                                        QString annotation)
+                                        QString annotation, QString title)
 {
     IScaObjectFile *objFile = new IScaObjectFile(QFileInfo(path));
 
@@ -75,6 +75,10 @@ IScaObject *ObjectCreator::createObject(int type, int line,
         {
             IScaObjectBinaryBlock *objBinary = new IScaObjectBinaryBlock(objFile, offset, length, data);
             objBinary->setAnnotation(annotation);
+            if(title != QString())
+            {
+                objBinary->setTitle(title);
+            }
 
             return objBinary;
         }
@@ -84,7 +88,10 @@ IScaObject *ObjectCreator::createObject(int type, int line,
         {
             IScaObjectIdentifier *objIdent = new IScaObjectIdentifier(objFile, offset, endoffset, text);
             objIdent->setAnnotation(annotation);
-
+            if(title != QString())
+            {
+                objIdent->setTitle(title);
+            }
             return objIdent;
         }
         break;
@@ -94,7 +101,10 @@ IScaObject *ObjectCreator::createObject(int type, int line,
             char symbol = text.toAscii().at(0);
             IScaObjectSymbol *objSymbol = new IScaObjectSymbol(objFile, offset, symbol);
             objSymbol->setAnnotation(annotation);
-
+            if(title != QString())
+            {
+                objSymbol->setTitle(title);
+            }
             return objSymbol;
         }
         break;
@@ -103,7 +113,10 @@ IScaObject *ObjectCreator::createObject(int type, int line,
         {
             IScaObjectLine *objLine = new IScaObjectLine(objFile, line, offset, endoffset, text);
             objLine->setAnnotation(annotation);
-
+            if(title != QString())
+            {
+                objLine->setTitle(title);
+            }
             return objLine;
         }
         break;
@@ -112,7 +125,10 @@ IScaObject *ObjectCreator::createObject(int type, int line,
         {
             IScaObjectTextBlock *objBlock = new IScaObjectTextBlock(objFile, offset, endoffset, length, text);
             objBlock->setAnnotation(annotation);
-
+            if(title != QString())
+            {
+                objBlock->setTitle(title);
+            }
             return objBlock;
         }
         break;
@@ -121,7 +137,10 @@ IScaObject *ObjectCreator::createObject(int type, int line,
         {
             IScaObjectDirectory *objDir = new IScaObjectDirectory(QFileInfo(path));
             objDir->setAnnotation(annotation);
-
+            if(title != QString())
+            {
+                objDir->setTitle(title);
+            }
             return objDir;
         }
         break;
@@ -129,7 +148,10 @@ IScaObject *ObjectCreator::createObject(int type, int line,
         case IScaObject::FILE:
         {
             objFile->setAnnotation(annotation);
-
+            if(title != QString())
+            {
+                objFile->setTitle(title);
+            }
             return objFile;
         }
         break;
@@ -139,7 +161,7 @@ IScaObject *ObjectCreator::createObject(int type, int line,
     return new IScaObject();
 }
 
-IScaObjectGroup *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *model)
+IScaObjectGroup *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *model, QString title)
 {
     QStringList fileNames;
     QStringList paths;
@@ -172,6 +194,8 @@ IScaObjectGroup *ObjectCreator::createGroup(const QList<int> &ids, GraphModel *m
             contents.append(content);
     }
 
-    return new IScaObjectGroup(ids, fileNames, paths,
-                               annotations, contents);
+    IScaObjectGroup *group = new IScaObjectGroup(ids, fileNames, paths,
+                                                 annotations, contents);
+    group->setTitle(title);
+    return group;
 }

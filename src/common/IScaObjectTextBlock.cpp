@@ -49,6 +49,7 @@ IScaObjectTextBlock::IScaObjectTextBlock() :
     m_text(QString("")),
     m_fileObject(NULL)
 {
+    setTitle(m_text);
 }
 
 IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file,
@@ -64,6 +65,7 @@ IScaObjectTextBlock::IScaObjectTextBlock(IScaObjectFile *file,
     m_fileObject(file)
 {
     IScaObject::setFile(file->getFile());
+    setTitle(m_text);
 }
 
 IScaObjectTextBlock::~IScaObjectTextBlock()

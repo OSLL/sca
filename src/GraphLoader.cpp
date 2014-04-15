@@ -139,6 +139,7 @@ void GraphLoader::loadNodes()
     QList<int > groupIds;
     QList<QString> inGroupIds;
     QList<bool> groupsShown;
+    QList<QString> groupsTitles;
 
     while (m_query->next())
     {
@@ -153,11 +154,14 @@ void GraphLoader::loadNodes()
         QByteArray data    = m_query->value(rec.indexOf("data")).toByteArray();
         QString annotation = m_query->value(rec.indexOf("annotation")).toString();
         bool isShown       = m_query->value(rec.indexOf("shown")).toBool();
-        QString strIds        = m_query->value(rec.indexOf("ids")).toString();
+        QString strIds     = m_query->value(rec.indexOf("ids")).toString();
+        QString title      = m_query->value(rec.indexOf("title")).toString();
+
 
         if(type != IScaObject::GROUP)
         {
-            IScaObject *object = ObjectCreator::createObject(type, line, offset, endoffset, length, path, text, data, annotation);
+            IScaObject *object = ObjectCreator::createObject(type, line, offset, endoffset, length,
+                                                             path, text, data, annotation, title);
             m_model->addObject(object, id, isShown);
         }
         else
@@ -165,6 +169,7 @@ void GraphLoader::loadNodes()
             groupIds.append(id);
             inGroupIds.append(strIds);
             groupsShown.append(isShown);
+            groupsTitles.append(title);
         }
 
     }
@@ -186,7 +191,7 @@ void GraphLoader::loadNodes()
             }
         }
 
-        IScaObject *object = ObjectCreator::createGroup(ids, m_model);
+        IScaObject *object = ObjectCreator::createGroup(ids, m_model, groupsTitles.at(i));
         m_model->addObject(object, groupIds.at(i), groupsShown.at(i));
     }
 }

@@ -45,12 +45,10 @@
 IScaObjectSymbolVisual::IScaObjectSymbolVisual(IScaObjectSymbol *obj) :
     Node(DEFAULT_SYMBOL_COLOR, FILTERED_SYMBOL_COLOR, obj)
 {
-    char symbol = obj->getSymbol();
     m_rect = QRectF(-DEFAULT_SYMBOL_VISUAL_WIDTH / 2,
                     -DEFAULT_SYMBOL_VISUAL_HEIGHT / 2,
                     DEFAULT_SYMBOL_VISUAL_WIDTH,
                     DEFAULT_SYMBOL_VISUAL_HEIGHT);
-    setTitle(QString(symbol));
 }
 
 void IScaObjectSymbolVisual::paint(QPainter *painter,

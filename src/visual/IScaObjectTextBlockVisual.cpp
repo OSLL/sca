@@ -45,17 +45,10 @@
 IScaObjectTextBlockVisual::IScaObjectTextBlockVisual(IScaObjectTextBlock *obj) :
     Node(DEFAULT_TEXT_BLOCK_COLOR, FILTERED_TEXT_BLOCK_COLOR, obj)
 {
-    QString text = obj->getText();
     m_rect = QRectF(-DEFAULT_TEXT_BLOCK_VISUAL_WIDTH / 2,
                     -DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT / 2,
                     DEFAULT_TEXT_BLOCK_VISUAL_WIDTH,
                     DEFAULT_TEXT_BLOCK_VISUAL_HEIGHT);
-
-    if(text.size() > MAX_TITLE_LENGTH)
-    {
-        text = text.mid(0, MAX_TITLE_LENGTH) + "...";
-    }
-    setTitle(text);
 }
 
 void IScaObjectTextBlockVisual::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

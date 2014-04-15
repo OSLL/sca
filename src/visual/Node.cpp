@@ -59,6 +59,8 @@ Node::Node(QColor standardColor, QColor filterColor, IScaObject *obj) :
     setCacheMode(DeviceCoordinateCache);
     setFlags(ItemIsMovable | ItemIsSelectable | ItemSendsGeometryChanges);
     setZValue(1);
+
+    setTitle(obj->getTitle());
 }
 
 Node::~Node()
