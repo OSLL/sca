@@ -51,11 +51,12 @@ int main(int c, char **v)
          << new Test::GraphView_Test
          << new Test::GraphFilter_Test;
 
+    int res = 0;
     foreach (QObject *tst, objs)
     {
-        QTest::qExec(tst);
+        res += (QTest::qExec(tst) != 0);
         delete tst;
     }
 
-	return 0; 
+    return res;
 }
