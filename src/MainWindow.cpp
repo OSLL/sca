@@ -268,20 +268,20 @@ void MainWindow::createActions()
     //GraphView context menu
     menu = m_ui->graphViewer->getMenu();
 
-    QAction *connectAction = menu->addAction(CONNECT_OBJECTS);
+    QAction *connectAction = menu->addAction(QIcon(ICON_CONNECT_PATH), CONNECT_OBJECTS);
     QAction *createGroup = menu->addAction(CREATE_GROUP);
-    QAction *removeAction = menu->addAction(DELETE_ITEMS);
+    QAction *removeAction = menu->addAction(QIcon(ICON_REMOVE_PATH), DELETE_ITEMS);
     QAction *ungroupAction = menu->addAction(UNGROUP_OBJECTS);
     menu->addSeparator();
     QAction *toTextAction = menu->addAction(TO_TEXT_BLOCK);
     QAction *toIdentAction = menu->addAction(TO_IDENTIFIER);
     menu->addSeparator();
-    QAction *setLeftArrow = menu->addAction(LEFT_ARROW);
+    QAction *setLeftArrow = menu->addAction(QIcon(ICON_LEFT_ARROW_PATH), LEFT_ARROW);
     setLeftArrow->setCheckable(true);
-    QAction *setRightArrow = menu->addAction(RIGHT_ARROW);
+    QAction *setRightArrow = menu->addAction(QIcon(ICON_RIGHT_ARROW_PATH), RIGHT_ARROW);
     setRightArrow->setCheckable(true);
     menu->addSeparator();
-    QAction *editAnnotAction = menu->addAction(EDIT_ANNOTATION);
+    QAction *editAnnotAction = menu->addAction(QIcon(ICON_EDIT_ANNOTATION_PATH), EDIT_ANNOTATION);
 
     connect(m_ui->graphViewer, SIGNAL(canCreateGroup(bool)),
             createGroup, SLOT(setEnabled(bool)));
@@ -361,6 +361,7 @@ void MainWindow::createToolsMenu()
     if(!m_toolsMenu)
     {
         m_toolsMenu = new QMenu("Tools", this);
+        m_toolsMenu->setIcon(QIcon(ICON_TERMINAL_PATH));
         m_ui->sourceBrowser->getMenu()->addMenu(m_toolsMenu);
         connect(m_toolsSignalMapper, SIGNAL(mapped(QString)),
                 m_ui->sourceBrowser, SLOT(runTool(QString)));
@@ -544,7 +545,7 @@ void MainWindow::newFile()
 
     clearAll();
     m_currentFileName = DEFAULT_NEW_FILE_NAME;
-    m_currentFilePath = "";
+    m_currentFilePath = DEFAULT_NEW_FILE_NAME;
     setFileChanged(false);
     m_fileIsOnDisk = false;
 }

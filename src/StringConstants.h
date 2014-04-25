@@ -134,6 +134,14 @@ const QString ABOUT_TEXT =
 //[Files paths]
 const QString HELP_PATH = "/resources/sca_help.html";
 const QString LOGO_PATH = ":logo/icons/logo.png";
+const QString ICON_CONNECT_PATH = ":logo/icons/create-link.png";
+const QString ICON_REMOVE_PATH = ":logo/icons/delete.png";
+const QString ICON_LEFT_ARROW_PATH = ":logo/icons/left-arrow.png";
+const QString ICON_RIGHT_ARROW_PATH = ":logo/icons/right-arrow.png";
+const QString ICON_EDIT_ANNOTATION_PATH = ":logo/icons/edit-annotation.png";
+const QString ICON_TERMINAL_PATH = ":logo/icons/terminal.png";
+const QString ICON_TEXT_VIEW_PATH = ":logo/icons/text-view.png";
+const QString ICON_HEX_VIEW_PATH = ":logo/icons/hex-view.png";
 const QString LOG_PATH = "log.txt";
 //[End files paths]
 

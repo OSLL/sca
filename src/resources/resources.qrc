@@ -1,5 +1,18 @@
 <RCC>
     <qresource prefix="/logo">
         <file>icons/logo.png</file>
+        <file>icons/create-link.png</file>
+        <file>icons/delete.png</file>
+        <file>icons/edit-annotation.png</file>
+        <file>icons/hex-view.png</file>
+        <file>icons/left-arrow.png</file>
+        <file>icons/new-file.png</file>
+        <file>icons/open-file.png</file>
+        <file>icons/right-arrow.png</file>
+        <file>icons/save.png</file>
+        <file>icons/save-as.png</file>
+        <file>icons/settings.png</file>
+        <file>icons/terminal.png</file>
+        <file>icons/text-view.png</file>
     </qresource>
 </RCC>

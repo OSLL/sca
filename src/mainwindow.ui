@@ -235,11 +235,19 @@
    </attribute>
   </widget>
   <action name="actionOpenInTextViewer">
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/logo/icons/text-view.png</normaloff>:/logo/icons/text-view.png</iconset>
+   </property>
    <property name="text">
     <string>Open in Text Viewer</string>
    </property>
   </action>
   <action name="actionOpenInBinaryView">
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/logo/icons/hex-view.png</normaloff>:/logo/icons/hex-view.png</iconset>
+   </property>
    <property name="text">
     <string>Open in Binary View</string>
    </property>
@@ -277,6 +285,10 @@
    </property>
   </action>
   <action name="actionSave">
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/logo/icons/save.png</normaloff>:/logo/icons/save.png</iconset>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -285,6 +297,10 @@
    </property>
   </action>
   <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/logo/icons/open-file.png</normaloff>:/logo/icons/open-file.png</iconset>
+   </property>
    <property name="text">
     <string>Open</string>
    </property>
@@ -353,6 +369,10 @@
    </property>
   </action>
   <action name="actionNew">
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/logo/icons/new-file.png</normaloff>:/logo/icons/new-file.png</iconset>
+   </property>
    <property name="text">
     <string>New</string>
    </property>
@@ -361,15 +381,18 @@
    </property>
   </action>
   <action name="actionSaveAs">
+   <property name="icon">
+    <iconset resource="resources/resources.qrc">
+     <normaloff>:/logo/icons/save-as.png</normaloff>:/logo/icons/save-as.png</iconset>
+   </property>
    <property name="text">
     <string>Save As...</string>
    </property>
   </action>
   <action name="actionSettings">
    <property name="icon">
-    <iconset theme="preferences-system">
-     <normaloff/>
-    </iconset>
+    <iconset theme="preferences-system" resource="resources/resources.qrc">
+     <normaloff>:/logo/icons/settings.png</normaloff>:/logo/icons/settings.png</iconset>
    </property>
    <property name="text">
     <string>Settings</string>
@@ -410,7 +433,9 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources/resources.qrc"/>
+ </resources>
  <connections/>
  <slots>
   <slot>loadTextFile()</slot>

@@ -153,10 +153,10 @@ void SourceBrowser::expandByPath(const QString &path)
 void SourceBrowser::createContextMenu()
 {
     m_menu = new QMenu(this);
-    QAction *annotateAction   = m_menu->addAction(ANNOTATE_OBJECT);
-    QAction *openInTextAction = m_menu->addAction(OPEN_IN_TEXT_VIEWER);
+    QAction *annotateAction   = m_menu->addAction(QIcon(ICON_EDIT_ANNOTATION_PATH), ANNOTATE_OBJECT);
+    QAction *openInTextAction = m_menu->addAction(QIcon(ICON_TEXT_VIEW_PATH), OPEN_IN_TEXT_VIEWER);
     QMenu *openTextAsMenu     = m_menu->addMenu(OPEN_IN_TEXT_VIEWER_AS);
-    QAction *openInHexAction  = m_menu->addAction(OPEN_IN_BINARY_VIEWER);
+    QAction *openInHexAction  = m_menu->addAction(QIcon(ICON_HEX_VIEW_PATH), OPEN_IN_BINARY_VIEWER);
 
     QAction *openAsUtf8Action  = openTextAsMenu->addAction(UTF8);
     QAction *openAsCp866Action = openTextAsMenu->addAction(CP866);
