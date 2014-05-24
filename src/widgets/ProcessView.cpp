@@ -67,7 +67,9 @@ void ProcessView::execute(const QString &command)
 #ifdef WIN32
     m_process->start("cmd\n");
     m_process->write("chcp 65001\n");
-    m_process->write(QString(command + '\n').toStdString().c_str());
+    QString com = command;
+    com.replace("/", "\\");
+    m_process->write(QString(com + '\n').toStdString().c_str());
     m_process->closeWriteChannel();
 #else
     m_process->start(command);

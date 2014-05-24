@@ -496,21 +496,13 @@ void MainWindow::openAbout()
 
 void MainWindow::exportToImage()
 {
-    QString selectedFilter = tr("Png(*.png)");
+    QString selectedFilter = tr("PNG (*.png)");
     QString path = QFileDialog::getSaveFileName(this, tr("Export to"), QDir::homePath(),
                                                 tr("PNG (*.png);;JPEG (*.jpg *.jpeg);;BMP (*.bmp)"),
                                                 &selectedFilter);
-    if (selectedFilter == tr("PNG (*.png)"))
+    if (path.isEmpty())
     {
-        path += ".png";
-    }
-    if (selectedFilter == tr("JPEG (*.jpg *.jpeg)"))
-    {
-        path += ".jpg";
-    }
-    if (selectedFilter == tr("BMP (*.bmp)"))
-    {
-        path += ".bmp";
+        return;
     }
 
     m_ui->graphViewer->exportToImage(path);
@@ -525,8 +517,6 @@ void MainWindow::saveToFile()
         return;
     }
     QFileInfo fi(path);
-    if(fi.suffix() != QString("gm"))
-        path += ".gm";
 
     GraphSaver *saver = new GraphSaver(path);
     saver->save(m_model, m_scene);
