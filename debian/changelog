@@ -1,3 +1,12 @@
+sca (0.1.7-0extras13.10.1) saucy; urgency=low
+
+  New features:
+  * Ability to group abjects
+  * Toolbar with actions
+  * Saving widgets state
+
+ -- Leonid Skorospelov <leosko94@gmail.com>  Sun, 18 May 2014 17:52:26 +0400
+
 sca (0.1.6-0extras13.10.1) saucy; urgency=low
 
   New features:
