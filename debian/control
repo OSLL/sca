@@ -3,7 +3,7 @@ Section: devel
 Priority: optional
 Maintainer: Mark Zaslavskiy <sca-support@osll.ru>
 Standards-Version: 3.9.3.0
-Build-Depends: debhelper (>= 7), g++, make, libqt4-dev, qt4-qmake, libsource-highlight-qt4-3
+Build-Depends: debhelper (>= 7), g++, make, libqt4-dev, qt4-qmake, libsource-highlight-qt4-3-dev, libqt4-sql-sqlite
 
 Package: sca
 Architecture: amd64 i386
