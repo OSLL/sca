@@ -65,7 +65,7 @@ public:
     QMenu *getMenu() const;
     void setMenu(QMenu *menu);
 
-    void exportToImage(const QString path);
+    void exportToImage(const QString &path);
 
     void editAnnotation(int id);
     GraphModel *getModel() const;

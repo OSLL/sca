@@ -89,6 +89,8 @@ const QString MAINWINDOW_TITLE = "%1 - " + APPLICATION_NAME;
 const QString DEFAULT_NEW_FILE_NAME = "New graph.gm";
 const QString SAVE_CHANGED_FILE_QUESTION_TITLE = "Save changes?";
 const QString SAVE_CHANGED_FILE_QUESTION_TEXT = "%1 has been changed. Do you want to save changes?";
+const QString IMAGE_SAVE_ERROR_TITLE = "Error exporting image.";
+const QString IMAGE_SAVE_ERROR_TEXT = "There was an error saving file, check your permissions to write data in %1.";
 const QString FILE_SAVE_SUCCESSFUL = "File saved successfully.";
 //[End preferences]
 

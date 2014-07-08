@@ -114,6 +114,7 @@ const QPen FILTERED_LINK_PEN(QBrush(QColor(155, 0, 186)), DEFAULT_LINK_WIDTH, Qt
 //[Default export image size]
 const int DEFAULT_IMAGE_WIDTH = 800;
 const int DEFAULT_IMAGE_HEIGHT = 600;
+const int DEFAULT_IMAGE_ADJUSTING = 10;
 //[End default export image size]
 
 enum GraphModelRole

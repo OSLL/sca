@@ -47,6 +47,7 @@
 #include <QUrl>
 #include <QTableView>
 #include <QMenu>
+#include <QMessageBox>
 
 #include "../common/IScaObjectFile.h"
 #include "../common/IScaObjectTextBlock.h"
@@ -332,10 +333,10 @@ void GraphView::setMenu(QMenu *menu)
     m_menu = menu;
 }
 
-void GraphView::exportToImage(const QString path)
+void GraphView::exportToImage(const QString &path)
 {
     QRectF renderZone = scene()->itemsBoundingRect();
-    renderZone.adjust(-10, -10, 10, 10);
+    renderZone.adjust(-DEFAULT_IMAGE_ADJUSTING, -DEFAULT_IMAGE_ADJUSTING, DEFAULT_IMAGE_ADJUSTING, DEFAULT_IMAGE_ADJUSTING);
     const int width = renderZone.width();
     const int height = renderZone.height();
 
@@ -345,7 +346,10 @@ void GraphView::exportToImage(const QString path)
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     scene()->render(&painter, QRectF(0, 0, width, height), renderZone);
     painter.end();
-    img.save(path);
+    if (!img.save(path))
+    {
+        QMessageBox::warning(this, IMAGE_SAVE_ERROR_TITLE, IMAGE_SAVE_ERROR_TEXT.arg(path), QMessageBox::Ok);
+    }
 }
 GraphModel *GraphView::getModel() const
 {
