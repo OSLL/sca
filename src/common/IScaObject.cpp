@@ -138,6 +138,7 @@ QString IScaObject::getContent() const
 {
     return QString();
 }
+
 QString IScaObject::getTitle() const
 {
     return m_title;
@@ -145,17 +146,8 @@ QString IScaObject::getTitle() const
 
 void IScaObject::setTitle(const QString &value)
 {
-
-    if(value.size() > MAX_TITLE_LENGTH)
-    {
-        m_title = value.mid(0, 15) + "...";
-    }
-    else
-    {
-        m_title = value;
-    }
+    m_title = value;
 }
-
 
 void IScaObject::setLinks(const QList<int> &links)
 {
@@ -174,7 +166,8 @@ QString IScaObject::getInfo(const QString &pattern) const
 
 QDebug operator<<(QDebug d, IScaObject &object)
 {
-    d << "IScaObject(type=" << object.getType() << ";cons=" << object.getLinks().size()
+    d << "IScaObject(type=" << object.getType()
+      << ";cons=" << object.getLinks().size()
       << ";ann=" << object.getAnnotation() << ")";
     return d;
 }

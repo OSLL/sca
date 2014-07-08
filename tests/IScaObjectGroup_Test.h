@@ -40,11 +40,15 @@
 #include <QObject>
 #include <QtTest/QtTest>
 #include <QSignalSpy>
+#include <QString>
 
 //include Application class
 #include "../src/GraphModel.h"
 #include "../src/GraphScene.h"
 #include "../src/ObjectCreator.h"
+
+const QString LONG_GROUP_NAME  = "123456789012345678901234567890";
+const QString SHORT_GROUP_NAME = LONG_GROUP_NAME.mid(0, 15) + "...";
 
 namespace Test
 {
@@ -52,7 +56,7 @@ namespace Test
     {
         Q_OBJECT
 
-        GraphModel *m_tstModel; // Object for testing
+        GraphModel *m_tstModel;
         GraphScene *m_tstScene;
   
     public:
@@ -146,6 +150,27 @@ namespace Test
             QCOMPARE(groupId, 2);
             QVERIFY(visGroup != NULL);
             QVERIFY(visGroup->getStandardColor() == DEFAULT_GROUP_COLOR);
+            m_tstModel->clear();
+            m_tstScene->clear();
+        }
+        void isTitleOk()
+        {
+            // Init simple group in program
+            QMimeData *mime = new QMimeData();
+            mime->setData(FROM_PATH, QDir::currentPath().toUtf8());
+            int objId1 = m_tstModel->addObject(mime),
+                objId2 = m_tstModel->addObject(mime);
+            QList<int> ids;
+            ids << objId1 << objId2;
+
+            IScaObjectGroup *group = static_cast<IScaObjectGroup*>(ObjectCreator::createGroup(ids, m_tstModel));
+            group->setTitle(LONG_GROUP_NAME);
+            int groupId = m_tstModel->addObject(group, -1, true);
+            IScaObjectGroupVisual *visGroup = static_cast<IScaObjectGroupVisual *>(m_tstScene->getObjectById(groupId));
+
+            QCOMPARE(group->getTitle().compare(LONG_GROUP_NAME), 0);
+            QCOMPARE(visGroup->getTitleText().compare(SHORT_GROUP_NAME), 0);
+
             m_tstModel->clear();
             m_tstScene->clear();
         }

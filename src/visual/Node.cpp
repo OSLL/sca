@@ -99,6 +99,15 @@ QGraphicsTextItem *Node::getTitle() const
     return m_title;
 }
 
+QString Node::getTitleText() const
+{
+    if (m_title == NULL)
+    {
+        return QString();
+    }
+    return m_title->document()->toPlainText();
+}
+
 void Node::removeTitle()
 {
     if (m_title != NULL)
@@ -114,7 +123,6 @@ void Node::removeTitle()
 
 void Node::setTitle(const QString &title)
 {
-
     removeTitle();
     QString temp = title;
     if(temp.length() > MAX_TITLE_LENGTH)

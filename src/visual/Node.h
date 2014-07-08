@@ -69,6 +69,7 @@ public:
     void setSize(const QSize &size);
 
     QGraphicsTextItem *getTitle() const;
+    QString getTitleText() const;
     void setTitle(QGraphicsTextItem *title);
     void setTitle(const QString &title);
 

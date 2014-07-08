@@ -91,8 +91,9 @@ QString Link::getContent() const
 
 QDebug operator<<(QDebug d, Link &link)
 {
-    d << "Link(" << link.getObjectFrom() << ";" << link.getObjectTo() << ";ann="
-      << link.getAnnotation() << ")";
+    d << "Link(" << link.getObjectFrom()
+      << ";" << link.getObjectTo()
+      << ";ann=" << link.getAnnotation() << ")";
     return d;
 }
 

@@ -66,7 +66,6 @@ public:
     void removeObject(int id);
     QList<int> getObjects() const;
 
-
     QString getInfo(const QString &pattern) const;
 
     QStringList getAnnotations() const;
