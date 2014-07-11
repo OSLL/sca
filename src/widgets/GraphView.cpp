@@ -333,7 +333,7 @@ void GraphView::setMenu(QMenu *menu)
     m_menu = menu;
 }
 
-void GraphView::exportToImage(const QString &path)
+void GraphView::exportToImage(const QString &path, const QString &ext)
 {
     QRectF renderZone = scene()->itemsBoundingRect();
     renderZone.adjust(-DEFAULT_IMAGE_ADJUSTING, -DEFAULT_IMAGE_ADJUSTING, DEFAULT_IMAGE_ADJUSTING, DEFAULT_IMAGE_ADJUSTING);
@@ -346,9 +346,31 @@ void GraphView::exportToImage(const QString &path)
     painter.setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
     scene()->render(&painter, QRectF(0, 0, width, height), renderZone);
     painter.end();
+    // getFileSaveName() on UNIX doesn't provide correct extensions,
+    // so we check for them kinda manually using Qt's source solution for Windows
     if (!img.save(path))
     {
-        QMessageBox::warning(this, IMAGE_SAVE_ERROR_TITLE, IMAGE_SAVE_ERROR_TEXT.arg(path), QMessageBox::Ok);
+        QString toSave = path;
+        int idx = ext.indexOf("(*.");
+        idx += 3;
+        int endPos = ext.indexOf(QLatin1Char(';'), idx + 1);
+        if (endPos < 0)
+        {
+            endPos = ext.indexOf(QLatin1Char(')'), idx + 1);
+        }
+        if (idx < 0 || endPos < 0)
+        {
+            QMessageBox::warning(this,
+                                 INTERNAL_ERROR,
+                                 IMAGE_SAVE_INTERNAL_EXT_ERROR_TEXT.arg(path).arg(ext),
+                                 QMessageBox::Ok);
+            return;
+        }
+        toSave = toSave + "." + ext.mid(idx, endPos - idx);
+        if (!img.save(toSave))
+        {
+            QMessageBox::warning(this, IMAGE_SAVE_ERROR_TITLE, IMAGE_SAVE_ERROR_TEXT.arg(toSave), QMessageBox::Ok);
+        }
     }
 }
 GraphModel *GraphView::getModel() const
